@@ -21,7 +21,7 @@
 # Required fields for generating any report using the RoCA::CreateReport() function
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/filter_read/filter_read.Rmd 
 #template: filter_read.Rmd 
-output: examples/1000genome                                                    # Where to write all the output files
+output: examples/1000genome                                                            # Where to write all the output files
 home: http://1000genomes.org                                                           # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                     # Name of the analyst
 zip: no                                                                                # Whether to zip all output files
@@ -40,11 +40,11 @@ description:
 ######################
 # Prepared input data, saved in .rds format using the saveRDS() function
 input:  # Location of input files
-  range: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/1000genome/small_region.bed # GRanges object, usually chromosomes of a species, reads out of the range will be removed
-  sample:   # Sequence reads saved as Galignments objects, SAM fields, flag, mapq, and cigar, are also saved 
-    NA21130:
+  range: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/genomic.region/small_region.bed # GRanges object, usually chromosomes of a species, reads out of the range will be removed
+  sample:         # Sequence reads saved as Galignments objects, SAM fields, flag, mapq, and cigar, are also saved 
+    NA21130:      # Sample name to be used in the report
     - ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/phase3/data/NA21130/alignment/NA21130.mapped.ILLUMINA.bwa.GIH.low_coverage.20130415.bam
-    - ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/phase3/data/NA21130/alignment/NA21130.mapped.ILLUMINA.bwa.GIH.low_coverage.20130415.bam.bai
+    - ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/phase3/data/NA21130/alignment/NA21130.mapped.ILLUMINA.bwa.GIH.low_coverage.20130415.bam.bai # Could be a local file if already downloaded
     NA21133:
     - ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/phase3/data/NA21133/alignment/NA21133.mapped.ILLUMINA.bwa.GIH.low_coverage.20130415.bam
     - ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/phase3/data/NA21133/alignment/NA21133.mapped.ILLUMINA.bwa.GIH.low_coverage.20130415.bam.bai
