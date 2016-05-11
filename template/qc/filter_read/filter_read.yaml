@@ -19,8 +19,8 @@
 ##### REQUIRED #####
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
-#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/filter_read/filter_read.Rmd 
-template: filter_read.Rmd 
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/filter_read/filter_read.Rmd 
+#template: filter_read.Rmd 
 output: examples/1000genome                                                    # Where to write all the output files
 home: http://1000genomes.org                                                           # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                     # Name of the analyst
