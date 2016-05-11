@@ -10,9 +10,10 @@
 ##### REQUIRED #####
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/adjust_batch/adjust_batch.Rmd  # URL or file name of the .Rmd template file provided by the developer
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/adjust_batch/adjust_batch.Rmd      
+template: adjust_batch.Rmd      
 output: examples/circadian_rhythm/                                                                                # Where to write all the output files
-home: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426                                                  # URL or path to the project home page. Leave it empty if the page doesn't exist.
+home: http://zhezhangsh.github.io/RoCA                                                                            # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                                                # Name of the analyst
 zip: no                                                                                                           # Whether to zip all output files
 
@@ -35,8 +36,8 @@ description:
 ######################
 # Prepared input data, saved in .rds format using the saveRDS() function
 input:
-  matrix: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr.rds        # Full matrix of processed gene expression matrix, before batch adjustment 
-  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample.rds      # A data.frame of sample features. Rows match columns of the data matrix
+  matrix: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr_wt.rds        # Full matrix of processed gene expression matrix, before batch adjustment 
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample_wt.rds      # A data.frame of sample features. Rows match columns of the data matrix
 
 ######################
 ##### PARAMETERS #####
@@ -49,4 +50,4 @@ parameter:
   batch: Replicate  # column name in the sample data.frame corresponding to the batches
   nsv: 5            # number of surogate variables to estimate when running the sva() function
   iteration: 20     # number of iterations when running the irwsva algorithm implemented in the sva() function
-  anova: 0.01       # 
+  anova: 0.01       # cutoff of ANOVA p value indicating the correlation between sample features and surrogate variables

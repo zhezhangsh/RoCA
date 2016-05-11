@@ -1,7 +1,7 @@
 ---
 title: "Summarize & filter sequence reads"
 author: "Zhe Zhang"
-date: "2016-05-10"
+date: "2016-05-11"
 output:
   html_document:
     self_contained: no
@@ -34,14 +34,14 @@ Finally, the reads will be filtered based on given criteria covering 4 possible 
 
 
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Description
 
 ## Project
 
 
-H3K4me3 of SLE in immune cells
+[H3K4me3 of SLE in immune cells](http://grantome.com/grant/NIH/R01-AR058547-03)
 
 
 ## Experiment
@@ -61,7 +61,7 @@ Aligned single-ended ChIP-seq reads were loaded into R as GAlignments objects an
 
 
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Summary statistics
 
@@ -79,7 +79,7 @@ Each alignment software could assign a bitwise value as a combination of FLAGs t
 **Figure 1** Numbers of reads aligned to the forward and reverse strands. Outliers were identified via fitting linear models (Sigma > 3.0). The solid blue line corresponds to the same 50%-50% of the reads aligned to the 2 strands, and the dashed lines is the actual fitting lines of a linear model. The percents of reads aligned to the forward strand the are between 49.1171% and 50.8829% (mean = 50%). For paired end reads, only the first read of each pair was used.
 </div>
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 ## Mapping quality ***MAPQ***
 
@@ -105,7 +105,7 @@ Each alignment software could use its own algorithm to assign an alignment score
 **Figure 3** Each plot shows the distribution of read frequencies with the lowest, highest, and the most common mapping quality scores. 
 </div>
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 ## ***CIGAR*** operations
 
@@ -124,7 +124,7 @@ CIGAR string indicates the internal structure of each alignment such as the base
 **Figure 4** Each cell indicates the relative frequency of reads with a given character in their CIGAR strings, comparing to all the other samples. 
 </div>
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 ## Matching length
 
@@ -146,7 +146,7 @@ The matching length (total number of matched bases) of each read can be retrieve
 **Figure 6** Numbers of total reads vs. the reads with longest matching length in each library. Outliers were identified via fitting linear models (Sigma > 3.0). The blue lines is the fitting to the linear model using all libraries. 
 </div>
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Read filtering
 
@@ -173,7 +173,7 @@ The number and percent of remaining reads after each filter step are listed [her
 **Figure 7.** Each box represents the distribution of remaining read percents of all samples. 
 </div>
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 ## Final filtering result
 
@@ -187,7 +187,9 @@ The final remaining percents of original reads after all filtering steps were co
 **Figure 8** Numbers of reads before and after filtering. 
 </div>
 
-<div align='right'>_[Go to project home](http://grantome.com/grant/NIH/R01-AR058547-03)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+
 
 ***
 **END_OF_DOCUMENT**

@@ -558,5 +558,9 @@ write.csv(tbl, paste(path.tbl, 'read_count.csv', sep='/'));
 
 `r home.url`
 
+```{r clean_up, include=FALSE}
+if (prms$cleanup) file.remove(paste(path.input, dir(path.input), sep='/')); 
+```
+
 ***
 **END_OF_DOCUMENT**

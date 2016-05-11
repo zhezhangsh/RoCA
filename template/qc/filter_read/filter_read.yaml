@@ -1,6 +1,6 @@
 ##################################################################################################################################
 # To run this analysis, prepare the following input data
-# <range>  a text, Excel, or R file in BED format, specify the read subsets mapped to the given regions 
+# <range>  a text, Excel, or R file in BED-like format, specify the read subsets mapped to the given regions 
 #  - no column and row names
 #  - the first 3 columns are chromosome name, start position, and end position 
 #  - chromosome names must match chromosome names of the reference the reads were mapped to
@@ -22,7 +22,7 @@
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/filter_read/filter_read.Rmd 
 #template: filter_read.Rmd 
 output: examples/1000genome                                                            # Where to write all the output files
-home: http://1000genomes.org                                                           # URL or path to the project home page. Leave it empty if the page doesn't exist.
+home: http://zhezhangsh.github.io/RoCA                                                 # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                     # Name of the analyst
 zip: no                                                                                # Whether to zip all output files
 
@@ -31,9 +31,11 @@ zip: no                                                                         
 #################
 # Description of this analysis, could be any name/text pairs
 description:
-  Project: 1000 Genomes Project
+  Project: "[1000 Genomes Project](http://www.1000genomes.org)"
   Experiment: The goal of the 1000 Genomes Project was to find most genetic variants with frequencies of at least 1% in the populations studied.
-  Analysis: This is a testing of retrieving, summarizing, and filtering sequencing reads mapped to a few small genomic regions from a small number of 1000 Genomes samples.
+  Analysis: This analysis is a testing that fetches, summarizes, and filters sequencing reads of 1000 Genomes samples mapped to a few small genomic regions.
+            It can be used as an example to fetch a small number of reads from all 1000 Genomes samples. 
+            To routinely run this analysis, it's strongly recommended to download and save all .bai files, so they can be reused.
 
 ######################
 ##### INPUT DATA #####

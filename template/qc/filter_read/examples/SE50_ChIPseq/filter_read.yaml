@@ -21,7 +21,7 @@
 # Required fields for generating any report using the RoCA::CreateReport() function
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/filter_read/filter_read.Rmd 
 output: examples/SE50_ChIPseq                         # Where to write all the output files
-home: http://grantome.com/grant/NIH/R01-AR058547-03   # URL or path to the project home page. Leave it empty if the page doesn't exist.
+home: http://zhezhangsh.github.io/RoCA                # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                    # Name of the analyst
 zip: no                                               # Whether to zip all output files
 
@@ -30,7 +30,7 @@ zip: no                                               # Whether to zip all outpu
 #################
 # Description of this analysis, could be any name/text pairs
 description:
-  Project: H3K4me3 of SLE in immune cells
+  Project: "[H3K4me3 of SLE in immune cells](http://grantome.com/grant/NIH/R01-AR058547-03)"
   Experiment: H3K4me3 was measured in  B cell, T cell, and monocyte via ChIP-seq
   Analysis: Aligned single-ended ChIP-seq reads were loaded into R as GAlignments objects and filtered by their length, map quality, etc. 
             Only a small portion of the total reads of each library were randomly selected as input for demo purpose
@@ -69,6 +69,7 @@ input:  # Location of input files
 parameter:
   loaded: yes # Whether the BAM file has been loaded into R as GAlignments or GAlignmentPairs object
   paired: no  # Whether to load reads from BAM as pair-ended or single-ended. Ignored if the reads were already loaded
+  cleanup: no # Whether to clean up temparory files downloaded to the input/ subfolder, such as .bai files
   flag:       # Filtering rule: values of the SAM field FLAG must be one of given values; no filtering if -1
   - 0 
   - 16
