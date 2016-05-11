@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>RoCA by zhezhangsh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">RoCA</h1>
+      <h2 class="project-tagline">Reporting of Custom Analysis</h2>
+      <a href="https://github.com/zhezhangsh/RoCA" class="btn">View on GitHub</a>
+      <a href="https://github.com/zhezhangsh/RoCA/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/zhezhangsh/RoCA/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h3>
+<a id="roca" class="anchor" href="#roca" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong><em>RoCA</em></strong>
+</h3>
+
+<p><strong><em>R</em></strong>eporting <strong><em>o</em></strong>f <strong><em>C</em></strong>ustom <strong><em>A</em></strong>nalysis</p>
+
+<p>The goal of RoCA is to set up a paradigm of reproducible data analysis. It provides a framework for data analysts to conveniently re-run custom analysis using their own data and parameters. Each run will generates a self-contained output file folder and an <em>index.html</em> file as a summary report. </p>
+
+<p><a href="https://github.com/zhezhangsh/RoCA/blob/master/template/demo/plot_heat/examples/circadian_rhythm.zip?raw=true">Download an example</a> (unzip the file and open the index.html file to view report)</p>
+
+<hr>
+
+<p><a name="toc"></a></p>
+
+<h5>
+<a id="table-of-contents" class="anchor" href="#table-of-contents" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Table of contents</h5>
+
+<ul>
+<li>
+<a href="#howto">How to use</a>
+
+<ul>
+<li><a href="#installR">Install R packages</a></li>
+<li><a href="#prepare">Prepare for an analysis</a></li>
+<li><a href="#report">Generate a report</a></li>
+</ul>
+</li>
+<li><a href="#develop">Develop a template</a></li>
+</ul>
+
+<hr>
+
+<p><a name="howto"></a></p>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
+
+<p><a name="installR"></a></p>
+
+<h3>
+<a id="install-r-packages" class="anchor" href="#install-r-packages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install R packages</h3>
+
+<p>Use the code below to install default R packages. Please note that individual R Markdown templates might require extra packages. Read instruction of each template for details. Before start,</p>
+
+<ul>
+<li>make sure that base R version <em>3.2.3</em> or newer was installed through <strong>RStudio</strong> or <strong>R Console</strong>
+</li>
+<li>and open <strong>RStudio</strong> or <strong>R Console</strong> to start a new R session.</li>
+</ul>
+
+<pre><code>
+# install.packages(c('devtools', 'RCurl')); # if packages have not been installed
+require(devtools); 
+require(RCurl);
+
+devtools::install_github("zhezhangsh/RoCA/R"); # Install the RoCA package itself from GitHub
+
+# Install default packages from Cran, GitHub, or Bioconductor, used by the RoCA package and Rmarkdown templates
+# Note that individual Rmarkdown templates might require more packages
+installed &lt;- RoCA::InstallDependency(reinstall=FALSE) # Use reinstall=TRUE to force re-installing all packages
+</code></pre>
+
+<p><a name="prepare"></a></p>
+
+<h3>
+<a id="prepare-for-an-analysis" class="anchor" href="#prepare-for-an-analysis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Prepare for an analysis</h3>
+
+<ol>
+<li><p>Clone the whole RoCA GitHub repo</p></li>
+<li><p>Download and edit a YAML file</p></li>
+</ol>
+
+<p><a name="report"></a></p>
+
+<h3>
+<a id="generate-a-report" class="anchor" href="#generate-a-report" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generate a report</h3>
+
+<ol>
+<li><p>Use the RoCA::CreateReport() function</p></li>
+<li><p>Use RStudio</p></li>
+<li><p>Use the knitr::knit() function</p></li>
+</ol>
+
+<p><em><div align="right"><a href="#toc">back to top</a></div></em></p>
+
+<p><a name="develop"></a></p>
+
+<h2>
+<a id="develop-a-template" class="anchor" href="#develop-a-template" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Develop a template</h2>
+
+<h3>
+<a id="r-markdown-in-a-nutshell" class="anchor" href="#r-markdown-in-a-nutshell" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>R Markdown in a nutshell</h3>
+
+<h3>
+<a id="the-r-markdownyaml-pair" class="anchor" href="#the-r-markdownyaml-pair" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The R Markdown/YAML pair</h3>
+
+<h3>
+<a id="required-yaml-fields" class="anchor" href="#required-yaml-fields" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Required YAML fields</h3>
+
+<p><em><div align="right"><a href="#toc">back to top</a></div></em></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/zhezhangsh/RoCA">RoCA</a> is maintained by <a href="https://github.com/zhezhangsh">zhezhangsh</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
