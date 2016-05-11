@@ -1,0 +1,12 @@
+PASS	Basic Statistics	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+PASS	Per base sequence quality	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+FAIL	Per tile sequence quality	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+PASS	Per sequence quality scores	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+FAIL	Per base sequence content	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+FAIL	Per sequence GC content	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+WARN	Per base N content	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+WARN	Sequence Length Distribution	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+FAIL	Sequence Duplication Levels	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+FAIL	Overrepresented sequences	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+PASS	Adapter Content	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq
+FAIL	Kmer Content	Unaligned_CtrlM201A2_S16_L001_R1_001.fastq

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-05-09" />
+
+<title>Select variables to plot a heatmap</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="index_files/highlight/default.css"
+      type="text/css" />
+<script src="index_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="index_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Select variables to plot a heatmap</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-05-09</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<strong>Introduction</strong> This analysis runs a simple procedure that identifies variables significantly different across sample groups via ANOVA and then plots a heatmap of these variables.
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. (<strong><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">GSE67426</a></strong>)</p>
+</div>
+<div id="pubmed" class="section level2">
+<h2><span class="header-section-number">1.2</span> PubMed</h2>
+<p>Jouffe C, Gobet C, Martin E, Métairon S et al. <strong><em>Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism.</em></strong> Sci Rep 2016 Apr 21;6:24631. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/27097688">27097688</a>.</p>
+</div>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">1.3</span> Experimental design</h2>
+<p>Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 2 hours during 3 consecutive days.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.4</span> Analysis</h2>
+<p>Circadian rhythm in mouse liver, wild type mice only, 3 replicates every 2 hours (12 groups). Each gene was adjusted to its 0 hour mean and rescaled to make its standard deviation equal to 0.</p>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="summary-statistics" class="section level1">
+<h1><span class="header-section-number">2</span> Summary statistics</h1>
+<p>The input data matrix has</p>
+<ul>
+<li>12 sample groups</li>
+<li>36 total samples</li>
+<li>12065 total variables
+<ul>
+<li>there are no variables including missing values.</li>
+</ul></li>
+</ul>
+<div style="color:darkblue; padding:0 3cm">
+<strong>Table 1.</strong> The mean, standard deviation, and range of all variables.
+</div>
+<div align="center" ,="" style="padding:0 3cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="center">Min.</th>
+<th align="center">1st Qu.</th>
+<th align="center">Median</th>
+<th align="center">Mean</th>
+<th align="center">3rd Qu.</th>
+<th align="center">Max.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Mean</td>
+<td align="center">-1.982</td>
+<td align="center">-0.4139</td>
+<td align="center">-0.009352</td>
+<td align="center">-0.02012</td>
+<td align="center">0.3797</td>
+<td align="center">1.970</td>
+</tr>
+<tr class="even">
+<td align="left">SD</td>
+<td align="center">1.000</td>
+<td align="center">1.0000</td>
+<td align="center">1.000000</td>
+<td align="center">1.00000</td>
+<td align="center">1.0000</td>
+<td align="center">1.000</td>
+</tr>
+<tr class="odd">
+<td align="left">Range</td>
+<td align="center">2.752</td>
+<td align="center">3.9950</td>
+<td align="center">4.318000</td>
+<td align="center">4.39400</td>
+<td align="center">4.7100</td>
+<td align="center">6.938</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+</div>
+<div id="variable-selection" class="section level1">
+<h1><span class="header-section-number">3</span> Variable selection</h1>
+<div id="run-anova" class="section level2">
+<h2><span class="header-section-number">3.1</span> Run ANOVA</h2>
+<p>Run 1-way ANOVA on each variable to identify those significantly different across all sample groups.</p>
+<div align="center">
+<img src="figure/hist_p-1.png" title="plot of chunk hist_p" alt="plot of chunk hist_p" width="480px" />
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<strong>Figure 1.</strong> Distribution of ANOVA p values. Number of variables with p values within each 0.01 interval.
+</div>
+</div>
+<div id="select-variables" class="section level2">
+<h2><span class="header-section-number">3.2</span> Select variables</h2>
+<p>Significant variables were selected using the following criteria:</p>
+<ul>
+<li>Select variables with ANOVA p values less than <strong>0.001</strong></li>
+<li>Stop if the number of remaining variables is between <strong>50</strong> and <strong>500</strong>, else
+<ul>
+<li>if the number remaining variable is less than 50, select the top 50 variables with the smallest p values</li>
+<li>if the number remaining variable is greater than 500, select the top 500 variables with the smallest p values</li>
+</ul></li>
+</ul>
+<p>As a result, <strong>500</strong> variables were selected. Click <a href="table/selected.html">here</a> to view these variables.</p>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="heatmap" class="section level1">
+<h1><span class="header-section-number">4</span> Heatmap</h1>
+<div align="center">
+<img src="figure/heatmap-1.png" title="plot of chunk heatmap" alt="plot of chunk heatmap" width="720px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 2.</strong> Color-coded data of selected variables different across sample groups (red = higher). Variables (rows) were clustered based on their correlation to each other and samples were arranged by groups.
+</div>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

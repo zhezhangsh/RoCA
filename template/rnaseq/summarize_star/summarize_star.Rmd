@@ -1,0 +1,226 @@
+---
+title: "Summary of STAR alignment"
+author: "Jim Zhang"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: yes
+    toc: yes
+    toc_float: true
+---
+
+```{r global_setup, include=FALSE}
+knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+
+library(knitr);
+
+# Loading inputs from yaml file
+#fn.yaml<-"/nas/is1/zhangz/projects/simmons/2016-02_RNAseq/star/SummarizeStar.yml"; 
+#yml <- yaml::yaml.load_file(fn.yaml);  
+# writeLines(yaml::as.yaml(yml), '/nas/is1/zhangz/projects/simmons/2016-02_RNAseq/star/SummarizeStar.yml')
+fn.log<-sapply(yml$file, function(f) f$log);
+
+opt<-yml$options;
+lns<-paste('  -', names(opt), '=', as.vector(opt));
+lns<-paste(lns, collapse='\n'); 
+```
+
+```{r parse_log, include=FALSE}
+parseLog<-function(fn) {
+  lns<-scan(fn, what='', sep='\n', flush=TRUE); 
+  lns<-c('GLOBAL', lns);
+  prs<-strsplit(lns, '\\|');
+  prs<-lapply(prs, function(x) sub('^[ :\t]+', '', x));
+  prs<-lapply(prs, function(x) sub('[ :\t]+$', '', x));
+  prs<-lapply(prs, function(x) x[x!='']);
+  prs<-prs[sapply(prs, length)>0];
+  n<-sapply(prs, length);
+  ind<-which(n==1);
+  ind<-c(ind, length(prs)+1);
+  grp<-lapply(1:(length(ind)-1), function(i) prs[(ind[i]+1):(ind[i+1]-1)]); 
+  grp<-lapply(grp, function(x) {
+    y<-sapply(x, function(x) x[2]);
+    names(y)<-sapply(x, function(x) x[1]);
+    y;
+  }); 
+  names(grp)<-unlist(prs[ind[1:(length(ind)-1)]]);
+  grp; 
+}
+
+parseLogs<-function(fns) {
+  logs<-lapply(fns, parseLog); 
+  
+  # run summary
+  t1<-t(sapply(logs, function(log) log[[1]][c(2, 3, 4, 6, 5)]));
+  t1<-data.frame(t1, stringsAsFactors = FALSE);
+  for (i in 3:5) t1[[i]]<-format(as.numeric(t1[[i]]), big.mark=','); 
+  names(t1)<-c('Mapping_star', 'Mapping_end', 'Speed', 'Read_length', 'Number_reads');
+  
+  # read count
+  t3<-t2<-t(sapply(logs, function(log) as.numeric(c(log[[1]][5], log[[2]][1], log[[2]][4], log[[3]][1], log[[5]][1])))); 
+  t2<-apply(t2, 2, function(x) format(x, big.mark=','));
+  colnames(t2)<-c('Input', 'Unique', 'Splice', 'Multiple', 'Chimeric'); 
+  
+  # percentage
+  t3<-apply(t3, 2, function(x) round(100*x/t3[, 1], 2));
+  colnames(t3)<-colnames(t2);
+  
+  # splice site
+  t4<-t(sapply(logs, function(log) as.numeric(log[[2]][c(4, 5, 6, 7, 8, 9)]))); 
+  t4<-apply(t4, 2, function(x) format(x, big.mark=','));
+  colnames(t4)<-c('Total', 'Annotated', 'GT/AG', 'GC/AG', 'AT/AC', 'Non-canonical'); 
+  
+  # mismatch and indels
+  t5<-t(sapply(logs, function(log) log[[2]][c(10, 11, 13, 12, 14)])); 
+  colnames(t5)<-c('Mismatch_rate', 'Deletion_rate', 'Insertion_rate', 'Avg_deletion_length', 'Avg_insertion_length');
+  
+  # unmapped and outliers
+  t6<-t(sapply(logs, function(log) c(log[[3]][4], log[[4]]))); 
+  colnames(t6)<-c('Too_many_loci', 'Too_many_mismatch', 'Too_short', 'Other'); 
+  
+  list(t1, t2, t3, t4, t5, t6);
+}
+
+tbls<-parseLogs(fn.log);
+tbls<-lapply(tbls, as.matrix); 
+```
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
+# Introduction
+
+This report is a summary of STAR runs on a RNA-seq data set. It uses information provided by the *_Log.final.out file generated from each STAR run. 
+
+  - **Output directory**: `r yml$output`
+  - **STAR program**: `r yml$star`
+  - **Samtools program**: `r yml$samtools`
+  - **Passes**: `r yml$pass`
+  - **qsub**: `r yml$qsub$will`
+
+STAR Parameters:
+
+`r lns`
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
+# Summary statistics
+
+```{r summary_statistics, include=TRUE}
+stat<-cbind(
+  "Total input, million reads" = round(as.numeric(gsub(',', '', tbls[[1]][, 5]))/10^6, 2),
+  "Alignment rate (%), unique mapping" = tbls[[3]][, 2], 
+  "Alignment rate (%), unique + multiple" = tbls[[3]][, 2] + tbls[[3]][, 4], 
+  "Mismatch rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 1])),
+  "Deletion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 2])),
+  "Insertion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 3])),
+  "Too many loci (%)" = as.numeric(sub('%', '', tbls[[6]][, 1])),
+  "Too many mismatch (%)" = as.numeric(sub('%', '', tbls[[6]][, 2])),
+  "Too short (%)" = as.numeric(sub('%', '', tbls[[6]][, 3]))
+)
+smm<-apply(stat, 2, summary); 
+```
+
+`r kable(t(smm))`
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
+# Figures
+
+## Alignment rate
+
+Total input vs. uniquely aligned, read count
+
+```{r alignment_rate, include=TRUE, fig.width=6, fig.height=6}
+x<-as.numeric(gsub(',', '', tbls[[2]][,1]))/10^6;
+y<-as.numeric(gsub(',', '', tbls[[2]][,2]))/10^6;
+par(mar=c(5,5,2,2));
+plot(x, y, col='#88888888', pch=19, cex=2, xlab='Total input (million)', ylab='Uniquely mapped (million)', cex.lab=2); 
+abline(lm(y~x), col='blue', lty=2);
+```
+
+## Unique vs. multiple mapping
+
+Unique vs. multiple mapping, percentage
+
+```{r unique_multiple, include=TRUE, fig.width=6, fig.height=6}
+x<-tbls[[3]][, 2];
+y<-tbls[[3]][, 4]
+par(mar=c(5,5,2,2));
+plot(x, y, col='#88888888', pch=19, cex=2, xlab='Unique mapping (%)', ylab='Multiple mapping (%)', cex.lab=2); 
+```
+
+## Non-canonical splice sites
+
+Number of non-canonical splice sites identified from each library
+
+```{r splice_noncanonical, include=TRUE, fig.width=8, fig.height=6}
+ct<-tbls[[4]][, 'Non-canonical'];
+ct<-as.numeric(gsub(',', '', ct));
+par(mar=c(8,5,2,2));
+barplot(ct/1000, las=3, names.arg=names(yml$file), ylab='Reads mapped to non-canonical splice sites (thousand)', cex.lab=1.25); 
+```
+
+## Mismatches and INDELs
+
+Percentage of mismatches and INDELs
+
+```{r mismatch_indel, include=TRUE, fig.width=8, fig.height=6}
+x<-apply(tbls[[5]][, 3:1], 2, function(x) as.numeric(gsub('%', '', x)));
+par(mar=c(8,5,2,2));
+barplot(t(x), las=3, names.arg=names(yml$file), ylab='Percentage of total reads (%)', cex.lab=1.5, legend=sub('_rate', '', colnames(x))); 
+```
+
+## Outliers
+
+Outlier reads: mapped to too many loci, too many mismatches, too short, and others
+
+```{r unmapped_outlier, include=TRUE, fig.width=8, fig.height=6}
+x<-apply(tbls[[6]], 2, function(x) as.numeric(gsub('%', '', x)));
+x<-x[, ncol(x):1];
+par(mar=c(8,5,2,2));
+barplot(t(x), las=3, names.arg=names(yml$file), ylab='Percentage of total reads (%)', cex.lab=1.5, legend=colnames(x)); 
+```
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
+# Tables
+
+## Run information
+
+`r kable(as.matrix(tbls[[1]]), align=rep('c', ncol(tbls[[1]])))`
+
+* Speed: mapping speed, million of reads per hour
+
+## Mapping results
+
+### Mapped reads, count
+
+`r kable(as.matrix(tbls[[2]]), align=rep('c', ncol(tbls[[2]])))`
+
+* Unique: reads mapped to one and only one genomic loci
+* Splice: reads mapped to splice junctions
+* Multiple: reads mapped to multiple genomic loci
+
+### Mapped reads, percentage
+
+`r kable(as.matrix(tbls[[3]]), align=rep('c', ncol(tbls[[3]])))`
+
+### Splice sites, count
+
+`r kable(as.matrix(tbls[[4]]), align=rep('c', ncol(tbls[[4]])))`
+
+### Mismatches and INDELs
+
+`r kable(as.matrix(tbls[[5]]), align=rep('c', ncol(tbls[[5]])))`
+
+* Rates are per base
+
+### Outliers
+
+`r kable(as.matrix(tbls[[6]]), align=rep('c', ncol(tbls[[6]])))`
+
+<div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
+
+***
+_END OF DOCUMENT_
+

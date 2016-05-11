@@ -1,0 +1,26 @@
+load("/Users/zhangz/Desktop/RoCA/data/gex/NCI60/sample.rds")
+s<-readRDS('sample.rds')
+dim(s)
+s
+s[1:2, ]
+s<-s[, c('Organ', 'Cell', 'Disease', 'Sex', 'Age', 'Treatment', 'MDR_Function', 'p53_Status')]
+saveRDS(s, 'sample_slim.rds')
+table(s[, 1])
+s[, 2]
+s[, 3]
+s<-s[, -2]
+s<-s[, -2]
+names(s)
+table(s[, 2])
+table(s[, 3])
+s<-s[, -3]
+table(s[,3 ])
+names(s)
+s<-s[, -3]
+table(s[, 3])
+table(s[, 4])
+s<-s[, -3]
+dim(s)
+names(s)
+saveRDS(s, file='sample_p53.rds')
+file.remove('sample_slim.rds')

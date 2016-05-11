@@ -1,0 +1,12 @@
+PASS	Basic Statistics	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+PASS	Per base sequence quality	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+WARN	Per tile sequence quality	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+PASS	Per sequence quality scores	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+FAIL	Per base sequence content	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+PASS	Per sequence GC content	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+PASS	Per base N content	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+WARN	Sequence Length Distribution	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+WARN	Sequence Duplication Levels	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+PASS	Overrepresented sequences	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+PASS	Adapter Content	Aligned_CtrlM201A2_S16_L001_R2_001.fastq
+FAIL	Kmer Content	Aligned_CtrlM201A2_S16_L001_R2_001.fastq

@@ -1,0 +1,103 @@
+---
+title: "Random sampling of a normal distribution"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    self_contained: no
+    number_sections: yes
+    toc: yes
+    toc_float: 
+      collapsed: no
+---
+
+**Introduction** This is a procedure that randomly generates a vector of _X_ values following a normal distribution, with given mean and standard deviation.
+
+```{r initiate, include=FALSE}
+require(yaml);
+require(knitr);
+
+if (!exists('yml'))                               # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists('sample_normal.yaml'))          # assume the pairing YAML file exists in the current folder with the same name
+      yml<-yaml.load_file('sample_normal.yaml');   
+ 
+path<-yml$output; 
+if (!file.exists(path)) dir.create(path, recursive=TRUE); 
+
+```
+
+# Description
+
+```{r description, eval=TRUE, include=FALSE}
+
+lns<-lapply(names(yml$description), function(nm) {
+  c(paste('##', nm), '\n', yml$description[[nm]], '\n'); 
+});
+lns<-paste(do.call('c', lns), collapse='\n'); 
+```
+
+`r lns`
+
+# Sampling
+
+## Summary statistics
+
+```{r sampling, include=FALSE}
+len0<-len1<-yml$parameter$length;
+mn0<-yml$parameter$mean; 
+sd0<-yml$parameter$sd; 
+v<-rnorm(len0, mean=mn0, sd=sd0); 
+mn1<-mean(v);
+sd1<-sd(v);
+```
+
+<div align='center'>**Table 1** Sampling results: expected vs. actual mean and standard deviation</div>
+
+|              | Length   | Mean    | Standard deviation |
+|:-------------|---------:|--------:|-------------------:|                  
+| **Expected** | `r len0` | `r mn0` | `r sd0`            |
+| **Actual**   | `r len1` | `r mn1` | `r sd1`            |
+
+
+```{r shapiro_test, echo=FALSE, comment='', collapse=TRUE}
+cat('Summary statistics:'); 
+summary(v); 
+cat('\n'); 
+print(shapiro.test(v)); 
+```
+
+## Plot distribution
+
+<div align='center'>
+```{r distribution, include=TRUE, echo=FALSE, fig.width=8, fig.height=6, out.width='600px'}
+x<-qnorm(seq(0, 1, 0.01), mn0, sd0);
+par(mar=c(5,5,3,2));
+dens<-density(x);
+dens0<-density(v); 
+plot(dens, col='white', ylab='Density', xlab='Value', ylim=c(0, max(0.2, 1.05*max(dens0$y))), yaxs='i', main='Normal distribution: expected vs. actual', cex.lab=2, cex.main=2);
+polygon(dens, col='#33333333', border='white'); 
+lines(density(v), col='blue', lwd=2, lty=2);
+box(); 
+```
+</div>
+
+**Figure 1** This figure compares the expected data distribution with given mean and standard deviation (grey) and actual distribution of sampled data vector (blue line). 
+
+## Outputs
+
+```{r write_out, echo=FALSE, include=FALSE}
+saveRDS(v, paste(path, 'vector.rds', sep='/')); 
+write.csv(v, paste(path, 'vector.csv', sep='/'));
+```
+
+The output folder, <**`r rev(strsplit(path, '/')[[1]])[1]`**>, includes the following files: 
+
+  - **sample_normal.Rmd**: The Rmarkdown file that generates this report
+  - **sample_normal.yml**: The Yaml configuration file that specifies this run
+  - **index.html**: The Html index file of this report
+  - **vector.rds**: The randomly generated values saved as an R vector
+  - **vector.csv**: The randomly generated values saved as text file
+  
+
+***
+**END_OF_DOCUMENT**

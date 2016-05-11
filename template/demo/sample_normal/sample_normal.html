@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-04-27" />
+
+<title>Random sampling of a normal distribution</title>
+
+<script src="sample_normal_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="sample_normal_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="sample_normal_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="sample_normal_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="sample_normal_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="sample_normal_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="sample_normal_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="sample_normal_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="sample_normal_files/highlight/default.css"
+      type="text/css" />
+<script src="sample_normal_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="sample_normal_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: "h1.title, .toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+<h1 class="title">Random sampling of a normal distribution</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-04-27</em></h4>
+
+</div>
+
+
+<p><strong>Introduction</strong> This is a procedure that randomly generates a vector of <em>X</em> values following a normal distribution, with given mean and standard deviation.</p>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Reporting of customized workflow (RoCA)</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.2</span> Analysis</h2>
+<p>This is a demo of the RoCA framework that generates random values with normal distribution.</p>
+</div>
+</div>
+<div id="sampling" class="section level1">
+<h1><span class="header-section-number">2</span> Sampling</h1>
+<div id="summary-statistics" class="section level2">
+<h2><span class="header-section-number">2.1</span> Summary statistics</h2>
+<div align="center">
+<strong>Table 1</strong> Sampling results: expected vs. actual mean and standard deviation
+</div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Length</th>
+<th align="right">Mean</th>
+<th align="right">Standard deviation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Expected</strong></td>
+<td align="right">100</td>
+<td align="right">20</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Actual</strong></td>
+<td align="right">100</td>
+<td align="right">20.0196029</td>
+<td align="right">2.1022428</td>
+</tr>
+</tbody>
+</table>
+<pre><code>Summary statistics:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  15.39   18.48   19.95   20.02   21.56   25.98 
+
+    Shapiro-Wilk normality test
+
+data:  v
+W = 0.98578, p-value = 0.3609</code></pre>
+</div>
+<div id="plot-distribution" class="section level2">
+<h2><span class="header-section-number">2.2</span> Plot distribution</h2>
+<div align="center">
+<img src="sample_normal_files/figure-html/distribution-1.png" title="" alt="" width="600px" />
+</div>
+<p><strong>Figure 1</strong> This figure compares the expected data distribution with given mean and standard deviation (grey) and actual distribution of sampled data vector (blue line).</p>
+</div>
+<div id="outputs" class="section level2">
+<h2><span class="header-section-number">2.3</span> Outputs</h2>
+<p>The output folder, &lt;<strong>output</strong>&gt;, includes the following files:</p>
+<ul>
+<li><strong>sample_normal.Rmd</strong>: The Rmarkdown file that generates this report</li>
+<li><strong>sample_normal.yml</strong>: The Yaml configuration file that specifies this run</li>
+<li><strong>index.html</strong>: The Html index file of this report</li>
+<li><strong>vector.rds</strong>: The randomly generated values saved as an R vector</li>
+<li><strong>vector.csv</strong>: The randomly generated values saved as text file</li>
+</ul>
+<hr />
+<p><strong>END_OF_DOCUMENT</strong></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

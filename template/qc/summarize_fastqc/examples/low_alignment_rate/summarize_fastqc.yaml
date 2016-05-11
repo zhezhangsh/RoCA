@@ -1,0 +1,50 @@
+####################################################################################################
+# Developer describes hwo to specify each run using the pairing R Markdown template, 
+# especially the content and format of input data
+####################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for using the RoCA::CreateReport() function
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/summarize_fastqc/summarize_fastqc.Rmd  
+#template: summarize_fastqc.Rmd  
+output: examples/low_alignment_rate       # Where to save the output files
+home: index.html                          # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+#################
+##### ABOUT #####
+#################
+# Analyst provides background description about this analysis, such as project title
+description:    
+  Project: Compare the transcriptomes of early embryos of lean and obese mice.
+  Experiment: Prepare RNA-seq libraries using Clontech's Low Input SMARTer® Stranded RNA-Seq Kit and did a paired-end 2x75bp NextSeq run.
+  Analysis: Diagnosis of RNA-seq libaries with low alignment rate. The sequencing reads of this data set have low alignment rate (TopHat~=50% STAR~=65%).
+            One pair of .fastq files, **CtrlM201A2_S16_L001**, with ~12 million reads were selected for diagnosis purpose. 
+            Each of the original .fastq files were split into 2 files with just aligned and unaligned reads according to STAR alignment result. 
+            This analysis compares the FastQC reports of the original, aligned, and unaligned fastq files.
+
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, with contents and format specified by the developer
+input:
+  fastqc:
+    Original_CtrlM201A2_S16_L001:
+    - https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/FastQC/CtrlM201A2_S16_L001_R1_001_fastqc.zip
+    - https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/FastQC/CtrlM201A2_S16_L001_R2_001_fastqc.zip
+    Aligned_CtrlM201A2_S16_L001:
+    - https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/FastQC/Aligned_CtrlM201A2_S16_L001_R1_001_fastqc.zip
+    - https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/FastQC/Aligned_CtrlM201A2_S16_L001_R2_001_fastqc.zip
+    Unaligned_CtrlM201A2_S16_L001:
+    - https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/FastQC/Unaligned_CtrlM201A2_S16_L001_R1_001_fastqc.zip
+    - https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/FastQC/Unaligned_CtrlM201A2_S16_L001_R2_001_fastqc.zip
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:
+  kmer: 20  # Number of top Kmers to summarize, enriched in multiple libraries

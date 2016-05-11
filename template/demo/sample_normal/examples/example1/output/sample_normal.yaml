@@ -1,0 +1,24 @@
+####################
+##### REQUIRED #####
+####################
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/demo/sample_normal/sample_normal.Rmd
+output: examples/example1/output
+home: https://github.com/zhezhangsh/RoCA
+analyst: Zhe Zhang
+zip: no
+
+#################
+##### ABOUT #####
+#################
+description: 
+  Project: Reporting of customized workflow (RoCA)
+  Analysis: This is a demo of the RoCA framework that generates random values with normal distribution. 
+
+######################
+##### PARAMETERS #####
+######################
+parameter:
+  length: 1000
+  mean: 20
+  sd: 2.0
+

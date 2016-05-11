@@ -1,0 +1,8 @@
+Package: RoCA
+Title: Reporting of custom analysis
+Version: 0.0.0.9000
+Authors@R: person("Zhe", "Zhang", email = "zhangz@email.chop.edu", role = c("aut", "cre"))
+Description: This package includes R functions to support our framework of reproducible data analysis, which uses a combination of R markdown for reporting templates and YAML format for specifying individual analysis.
+Depends: R (>= 3.0.0)
+License: GPL (>=2)
+LazyData: true

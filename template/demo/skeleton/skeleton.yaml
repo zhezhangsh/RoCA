@@ -1,0 +1,34 @@
+####################################################################################################
+# Developer describes hwo to specify each run using the pairing R Markdown template, 
+# especially the content and format of input data
+####################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for using the RoCA::CreateReport() function
+template: skeleton.Rmd                    # Location of the .Rmd template (URL or local file)
+output: output                            # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+#################
+##### ABOUT #####
+#################
+# Analyst provides background description about this analysis, such as project title
+description:    
+  Project: Reporting of Custom Analysis
+  Analysis: Just the skeleton of .Rmd and .yaml files
+
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, with contents and format specified by the developer
+input:
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:

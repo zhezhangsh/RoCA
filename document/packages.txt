@@ -1,0 +1,35 @@
+# 3 tab-delimited columns: Source Name  URL
+##########################################################################################################################
+# From Cran
+cran	gplots	https://cran.r-project.org/src/contrib/gplots_3.0.1.tar.gz
+cran	knitr	https://cran.r-project.org/src/contrib/knitr_1.12.3.tar.gz
+cran	yaml	https://cran.r-project.org/src/contrib/yaml_2.1.13.tar.gz
+cran	rmarkdown	https://cran.r-project.org/src/contrib/rmarkdown_0.9.6.tar.gz
+cran	readxl	https://cran.r-project.org/src/contrib/readxl_0.1.1.tar.gz
+cran	XML	https://cran.r-project.org/src/contrib/XML_3.98-1.4.tar.gz
+##########################################################################################################################
+# From Bioconductor
+bioc	BiocGenerics	http://bioconductor.org/packages/release/bioc/src/contrib/BiocGenerics_0.16.1.tar.gz
+bioc	S4Vectors	http://bioconductor.org/packages/release/bioc/src/contrib/S4Vectors_0.8.11.tar.gz
+bioc	XVector	http://bioconductor.org/packages/3.2/bioc/src/contrib/XVector_0.10.0.tar.gz
+bioc	Rsamtools	http://bioconductor.org/packages/3.2/bioc/src/contrib/Rsamtools_1.22.0.tar.gz
+bioc	Biobase	http://bioconductor.org/packages/release/bioc/src/contrib/Biobase_2.30.0.tar.gz
+bioc	IRanges	http://bioconductor.org/packages/release/bioc/src/contrib/IRanges_2.4.8.tar.gz
+bioc	AnnotationDbi	http://bioconductor.org/packages/release/bioc/src/contrib/AnnotationDbi_1.32.3.tar.gz
+bioc	GenomeInfoDb	http://bioconductor.org/packages/3.2/bioc/src/contrib/GenomeInfoDb_1.6.3.tar.gz
+bioc	GenomicRanges	http://bioconductor.org/packages/release/bioc/src/contrib/GenomicRanges_1.22.4.tar.gz
+bioc	Biostrings	http://bioconductor.org/packages/3.2/bioc/src/contrib/Biostrings_2.38.4.tar.gz
+bioc	SummarizedExperiment	http://bioconductor.org/packages/release/bioc/src/contrib/SummarizedExperiment_1.0.2.tar.gz
+bioc	GenomicAlignments	http://bioconductor.org/packages/release/bioc/src/contrib/GenomicAlignments_1.6.3.tar.gz
+bioc	sva	http://bioconductor.org/packages/release/bioc/src/contrib/sva_3.18.0.tar.gz
+bioc	limma	http://bioconductor.org/packages/release/bioc/src/contrib/limma_3.26.9.tar.gz
+bioc	RankProd	http://bioconductor.org/packages/release/bioc/src/contrib/RankProd_2.42.0.tar.gz
+bioc	pathview	http://bioconductor.org/packages/release/bioc/src/contrib/pathview_1.10.1.tar.gz
+##########################################################################################################################
+# From GitHub
+github	awsomics	zhezhangsh/awsomics
+github	DEGandMore	zhezhangsh/DEGandMore
+github	Agri	zhezhangsh/Agri
+github	CHOPseq	zhezhangsh/CHOPseq
+github	Rnaseq	zhezhangsh/Rnaseq
+github	GtUtility	zhezhangsh/GtUtility

@@ -1,0 +1,52 @@
+####################################################################################################
+# To run this analysis, prepare 2 R data objects and save them as .rds files
+#   1. an R matrix with each sample as a column and each gene or other variable as a row
+#   2. an R data.frame with each sample feature as a column and each sample as a row. 
+#       The row names must match the column names in the data matrix.
+#       Each column must be a categoral or numeric variable, with no missing values
+####################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for generating any report using the RoCA::CreateReport() function
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/adjust_batch/adjust_batch.Rmd  # URL or file name of the .Rmd template file provided by the developer
+output: examples/circadian_rhythm/                                                                                # Where to write all the output files
+home: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426                                                  # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                                                                                # Name of the analyst
+zip: no                                                                                                           # Whether to zip all output files
+
+#################
+##### ABOUT #####
+#################
+# Description of this analysis, could be any name/text pairs
+description:    
+  Project: Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein
+          2-dependent diurnal lipid transport and metabolism. (**[GSE67426](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426)**)
+  PubMed: "Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways 
+          in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. 
+          Sci Rep 2016 Apr 21;6:24631. PMID: [27097688](http://www.ncbi.nlm.nih.gov/pubmed/27097688)."
+  Experimental design: Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 
+          2 hours during 3 consecutive days.
+  Analysis: This analysis evaluates the potential batch effect of different days, a sample feature named ***Replicate***, on which the mice were harvested. 
+
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, saved in .rds format using the saveRDS() function
+input:
+  matrix: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr.rds        # Full matrix of processed gene expression matrix, before batch adjustment 
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample.rds      # A data.frame of sample features. Rows match columns of the data matrix
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:
+  interest:         # column name(s) in the sample data.frame corresponding to variable(s) of interest of the project
+  - Genotype
+  - Hour
+  batch: Replicate  # column name in the sample data.frame corresponding to the batches
+  nsv: 5            # number of surogate variables to estimate when running the sva() function
+  iteration: 20     # number of iterations when running the irwsva algorithm implemented in the sva() function
+  anova: 0.01       # 

@@ -1,0 +1,259 @@
+---
+title: "Sample analysis of a RNA-seq data set"
+author: "Jim Zhang"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+    fig_caption: yes
+    toc_float: true
+---
+
+**Introduction** This procedure analyzes RNA-seq samples of quality control purpose. It uses count of reads mapped to genes in different ways: unique/multiple, sense/antisense, and paired/unpaired, as input to draw summary statistics and compare global pattern of samples.
+
+```{r global_setup, include=FALSE}
+knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
+
+require(gplots);
+require(knitr);
+require(rmarkdown); 
+require(yaml);
+require(awsomics);
+require(CHOPseq);
+
+#fn.yml<-"analyze_sample.yml"; 
+#yml <- yaml::yaml.load_file(fn.yml);
+
+path <- yml$output;
+if (identical(".", path) | is.null(path)) path<-getwd(); 
+if (!file.exists(path)) dir.create(path, recursive = TRUE); 
+
+count.all<-readRDS(yml$input$read_count);
+anno<-readRDS(yml$input$annotation);
+id.by.chr<-readRDS(yml$input$id_by_chr); 
+gene.len<-readRDS(yml$input$gene_length);
+smpl<-readRDS(yml$input$sample);
+
+# the type(s) of reads to use
+use<-rep(TRUE, 8);
+if (!yml$parameter$use$antisense) use[5:8] <- FALSE;
+if (!yml$parameter$use$unpaired) use[c(3, 4, 7, 8)] <- FALSE;
+if (!yml$parameter$use$multiple) use[seq(2, 8, 2)] <-FALSE;
+use<-use[1:length(count.all)];
+use[is.na(use)]<-FALSE;
+ct <- Reduce("+", count.all[use]); 
+
+names(id.by.chr)<-tolower(names(id.by.chr));
+smpl<-smpl[rownames(smpl) %in% colnames(ct), , drop=FALSE]; 
+anno<-anno[rownames(anno) %in% rownames(ct), , drop=FALSE];
+
+ct<-ct[rownames(anno), rownames(smpl), drop=FALSE]; 
+count.sum1<-sapply(count.all, function(c) colSums(c[rownames(anno), colnames(ct), drop=FALSE])); 
+count.sum2<-sapply(count.all, function(c) rowSums(c[rownames(anno), colnames(ct), drop=FALSE])); 
+
+if (is.null(yml$home)) home.url<-'' else 
+  home.url<-paste("<div align='right'>**_[Go back to project home](", yml$home, ")_**</div>", sep='');
+
+```
+
+`r home.url`
+
+# Description
+
+```{r description, eval=TRUE, include=FALSE}
+lns<-lapply(names(yml$description), function(nm) {
+  c(paste('##', nm), '\n', yml$description[[nm]], '\n'); 
+});
+lns<-paste(do.call('c', lns), collapse='\n'); 
+```
+
+`r lns`
+
+`r home.url`
+
+# Summary statistics
+
+- Number of samples: _`r nrow(smpl)`_
+- Number of genes: _`r format(nrow(ct), big.mark=',')`_
+- Total number of reads assigned to genes per sample: _`r round(mean(colSums(ct)/10^6), 2)`_ (million)
+- Type of reads to be assigned to genes: _`r paste(names(count.all)[use], collapse=' and ')`_
+
+## Read count distribution, samples
+
+<div align='center'>
+```{r, read_count_dist, include=TRUE, fig.width=6, fig.height=3.6, out.width='600px'}
+ttl<-colSums(ct)/10^6;
+par(mar=c(5,5,3,2));
+hist(ttl, xlab='Number of reads (million)', ylab='Number of samples', main='Total number of reads assigned to genes', cex.lab=1.5, cex.main=1, col='lightgrey');
+
+ttl.norm <- shapiro.test(ttl);
+ttl.summ <- summary(ttl);
+```
+</div>
+
+**Figure 1:** Distribution of total read count per sample. The total read counts were calculated by summing the read count of all genes. Highly inconsistent read counts between samples might suggest data quality issues and affect downstream analysis. For example, extremely low read count could be caused by insufficient RNA material due to degradation or high sequencing error rate. _Shapiro-Wilk_ normality test shows that the total read counts of this data set `r if (ttl.norm$p.value>0.05) 'is' else 'is not'` normally distributed (p = `r ttl.norm$p.value`).
+  
+- The mean and median of total read count are respectively **`r ttl.summ[4]`** and **`r ttl.summ[3]`** millions. 
+- The first and third quantiles are respectively **`r ttl.summ[2]`** and **`r ttl.summ[5]`** millions.. 
+- The minimum and maximum are respectively: **`r ttl.summ[1]`** (sample _`r names(ttl[ttl==min(ttl)])`_) and **`r ttl.summ[6]`** (sample _`r names(ttl[ttl==max(ttl)])`_) millions..
+
+## Read count distribution, genes
+
+<div align='center'>
+```{r, gene_count_pct, include=TRUE}
+ct.mean<-rowMeans(ct);
+gene.ct <- rowSums(ct); 
+gene.ct <- sort(gene.ct, decreasing = TRUE); 
+gene.pct <- 100*gene.ct/sum(gene.ct);
+cum.pct <- cumsum(gene.pct); # Cumulative percent of total reads
+par(mar=c(5, 5, 2, 2)); 
+plot(1:nrow(ct), cum.pct, type='l', log='x', xlab='Number of genes', ylab='Cumulative percent of total reads (%)', cex.lab=1.75, xaxs='i', yaxs='i');
+abline(h=seq(20, 80, 20), lty=2, col='lightgrey');
+polygon(c(1, 1:nrow(ct), nrow(ct)), c(0, cum.pct, 0), border=NA, col='lightgrey');
+lines(1:nrow(ct), cum.pct, lwd=2, col='gold');
+pct<-c(5, 10, 25, 50, 75, 90, 95);
+ind<-as.vector(sapply(pct, function(pct) which(cum.pct>pct)[1]));
+points(ind, cum.pct[ind], pch='x', col='red');
+text(ind, cum.pct[ind], labels = paste('[', pct, '% reads, ', ind, ' genes]', sep=''), col='darkblue', cex=0.8, pos=2);
+box();
+```
+</div>
+
+**Figure 2:** Unbalanced read counts across genes. Due to difference in RNA abundance and gene length, most of the squencing reads were contributed by a small portion of all genes. For example, more than 90% of the reads in this data set were contributed by `r round(100*ind[pct==90]/nrow(ct), 2)`% of the genes. Additionally, 
+
+- `r length(ct.mean[ct.mean==0])` genes have 0 read mapped to them,
+- `r length(ct.mean[ct.mean<1])` genes have less 1 read per sample mapped to them,
+- `r length(ct.mean[ct.mean<5])` genes have less 5 reads per sample mapped to them
+
+## Read count distribution, mapping types
+
+<div align='left'>
+```{r read_type_pie, fig.width=9.6, fig.height=6, out.width='800px'}
+mr<-rev(sort(colMeans(count.sum1)/10^6));
+lbl<-paste(names(mr), ' (', round(mr/sum(mr)*100, 3),  '%)', sep='');
+pie(mr, labels = '', col=rainbow(length(mr)), main="Types of read mapping", cex.main=1.5);
+legend('bottomleft', legend=lbl, fill=rainbow(length(mr)), bty='n');
+```
+</div>
+
+```{r read_type_heatmap_size, include=FALSE}
+w<-min(1+0.25*ncol(count.sum1), 8);
+h<-min(1+0.25*nrow(count.sum1), 8);
+o<-paste(100*w, 'px', sep=''); 
+```
+
+**Figure 3:** The share of mapping types in total read counts, all samples combined.
+
+  - There are `r length(count.all)` types of mapped reads:  _`r paste(names(count.all), collapse=' | ')`_
+  - The most common type of read mapping is _`r names(pct)[pct==max(pct)]`_, corresponding to _`r max(pct)`%_ of total read count.
+  - The least common type of read mapping is _`r names(pct)[pct==min(pct)]`_, corresponding to _`r min(pct)`%_ of total read count.
+  
+<div align='center'>
+```{r read_type_heatmap, fig.width=w, fig.height=h, out.width=o}
+d<-count.sum1;
+d[d<1]<-1;
+d<-d/rowSums(d);
+sigma<-t(sapply(1:nrow(d), function(i) log2(d[i, ]/colMeans(d[-i, ]))));
+dimnames(sigma)<-dimnames(count.sum1)
+PlotColoredBlock(sigma, min=-3, max=3, groups=as.list(colnames(pct)), key='Sigma'); 
+
+ms<-colMeans(count.sum1/10^6); 
+pct<-round(ms/sum(ms)*100, 3); 
+```
+</div>
+
+**Figure 4:** The relative frequency (sigma) of read mapping types of each sample comparing to all the other samples. Sigma lower than -3 or higher than 3 suggests the type of reads has "abnormally" low or high frequency and there is an insistence between samples.
+
+  - The largest number of sigma is _`r round(max(sigma), 2)`_ of type _`r colnames(sigma)[floor(which.max(sigma)/ncol(sigma))]`_ and sample _`r rownames(sigma)[floor(which.max(sigma) %% nrow(sigma))]`_
+ - The smallest number of sigma is _`r round(min(sigma), 2)`_ of type _`r colnames(sigma)[floor(which.min(sigma)/ncol(sigma))]`_ and sample _`r rownames(sigma)[floor(which.min(sigma) %% nrow(sigma))]`_
+ 
+`r home.url`
+
+# Sample analysis
+
+For all analyses in this section, between-sample normalization was first done by converting read counts of genes to FPKM (fragments per kilobase per million reads). 
+
+```{r calculate_fpkm, include=FALSE}
+l <- gene.len[names(gene.len) %in% rownames(ct) & gene.len>0 & !is.na(gene.len)];
+c <- ct[rownames(ct) %in% names(l), ];
+fpkm<-apply(c, 2, function(x) x/(sum(x)/10^6)/(l[rownames(c)]/1000));
+expr<-log2(fpkm+1);
+saveRDS(fpkm, file=paste(path, 'fpkm.rds', sep='/'));
+```
+
+## Gender prediction
+
+```{r gender_prediction, include=TRUE, fig.width=6, fig.height=6}
+by.chr<-lapply(id.by.chr[c('autosome', 'x', 'y')], function(id) id[id %in% rownames(expr)]);
+par(mar=c(5,5,2,2)); 
+if (length(by.chr[[2]])==0 | length(by.chr[[3]])==0) plot(0, type='n', axes=FALSE, xlab='', ylab='') else {
+  mx<-colMeans(expr[by.chr[[2]], , drop=FALSE]);
+  my<-colMeans(expr[by.chr[[3]], , drop=FALSE]);
+  cl<-kmeans(cbind(mx, my), 2)[[1]];
+  mn<-sapply(split(my, cl), mean);
+  if (mn[1] > mn[2]) cl<-3-cl;
+  col<-c("#FF6666", "#6666FF")[cl];
+  plot(mx, my, pch='*', cex=2, col=col, xlab="Average Log2(FPKM+1), X chromosome genes", ylab="Average Log2(FPKM+1), Y chromosome genes", cex.lab=1.25);
+  legend(min(mx)+0.75*(max(mx)-min(mx)), max(my), bty='n', pch='*', cex=1.25, col=c("#FF6666", "#6666FF"), legend = c('Female', 'Male'));
+}
+title(main="Gender prediction based on X/Y genes")
+```
+
+## Hierarchical clustering
+
+```{r clustering, include=TRUE, fig.width=8, fig.height=6, out.width='600px'}
+plot(hclust(as.dist(1-cor(expr[by.chr[[1]], , drop=FALSE]))), xlab='', sub='', ylab='1 - correlation coefficient', main='Hierarchical clustering using all autosomal genes');
+```
+
+## Principal components analysis
+
+```{r pca, include=TRUE, fig.width=6, fig.height=6}
+library(awsomics);
+autosome<-yml$autosome;
+pca<-prcomp(t(expr[by.chr[[1]], , drop=FALSE]));
+PlotPCA(pca, smpl[, 1])->x;
+```
+
+```{r pca_fields, include=FALSE}
+fn.pca<-sapply(colnames(smpl), function(nm) {
+  fn.pca<-paste('PCA_', nm, sep=''); 
+  lvl<-unique(as.vector(smpl[, nm]));
+  col<-rainbow(length(lvl));
+  names(col)<-lvl;
+  col<-col[as.vector(smpl[, nm])]; 
+  PlotPCA(prcomp(t(expr[by.chr[[1]], , drop=FALSE])), colnames(expr), legend=TRUE,
+          legend.single=TRUE, label=1:ncol(expr), col=col,  filename=paste(path, fn.pca, sep='/'));
+  paste(fn.pca, '.pdf', sep=''); 
+})
+ln<-paste('  \n- [', colnames(smpl), '](', fn.pca, ')', sep='');
+```
+
+Same PCA plot color-coded by different sample attributes: `r ln`
+
+```{r summary_table, include=FALSE}
+summ<-cbind(Total_Million_Reads=round(ttl, 3), Mean_chrX=round(mx, 4), Mean_chrY=round(my, 4),
+            No_Read_Genes=apply(ct, 2, function(c) length(c[c==0])), round(pca$x[, 1:3], 3));
+awsomics::CreateDatatable(summ, paste(path, 'sample_summary.html', sep='/'), caption='Sample summary');
+```
+
+`r home.url`
+
+# Tables
+
+## Read count
+
+`r kable(format(count.sum1, big.mark=','), align=rep('c', ncol(count.sum1)))`
+
+## Read percent
+
+```{r read_percent, include=FALSE}
+d<-count.sum1/10^6
+pct<-round(100*d/rowSums(d), 3); 
+```
+
+`r kable(pct, align=rep('c', ncol(pct)))`
+
+`r home.url`
+
+---
+**_END OF DOCUMENT_**

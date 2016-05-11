@@ -1,0 +1,111 @@
+---
+title: "_Developer gives a name to this template_"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+**Introduction** _Developer gives brief description about this template, such as its purpose, input data, and analysis steps._
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+
+## Load required R packages
+require(yaml);
+require(knitr);
+require(rmarkdown); 
+
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
+## But, the developer can also provide the option to load the YAML file on the fly.
+## So, the template can be run using the "Knit HTML" button in RStudio
+if (!exists('yml'))                           # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists('skeleton.yaml'))           # assume the pairing YAML file exists in the current folder with the same name
+      yml<-yaml.load_file('skeleton.yaml');   # rename the YAML file to fit this template
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));
+path <- yml$output;
+path.r <- f['R'];
+path.tbl <- f['table'];
+path.fig <- f['figure'];
+path.input <- f['input'];
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+
+##########################################################################################
+#### Import input data; use the DownloadFile function to download a file first if it's remote
+## Import from different file types
+# data1<-readRDS(DownloadFile(yml$input$data1, path.input));                 # import from .rds file
+# data2<-eval(parse(text=load(DownloadFile(yml$input$data2, path.input))));  # import from .rdata or .rd file
+# data3<-read.csv(DownloadFile(yml$input$data3, path.input));                # import from .csv file
+# data4<-read.table(DownloadFile(yml$input$data4, path.input), sep='\t');    # import from tab-delimited .txt file
+## Or, import from files in supported formats: https://github.com/zhezhangsh/RoCA/blob/master/document/instruction/data_format.md
+# data5<-ImportTable(DownloadFile(yml$input$data5, path.input));             # import table-like data in recognizable file types
+# data6<-ImportList(DownloadFile(yml$input$data6, path.input));              # import list-like data in recognizable file types
+# data7<-ImportVector(DownloadFile(yml$input$data7, path.input));            # import vector-like data in recognizable file types
+## Or, for large remote files (.fastq, .bam, .vcf, etc.), establish a connection
+```
+
+`r home.url`
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+```{r R_code, inc}
+## One or more R code chunks
+```
+
+# Section Title 
+
+Mesh up Markdown text with R code
+
+## Subsection Title
+
+<div align='center'>
+```{r plot, include=TRUE, fig.width=6, fig.height=4, out.width='480px'}
+# Plot example
+par(mar=c(5,2,2,2));
+v<-rnorm(100); 
+plot(density(v), lwd=2, col='blue', main='', xlab=''); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 1.** Figure example: density of `r length(v)` random values drawn from a normal distribution, using the **_rnorm_** function. 
+</div>
+
+## More Subsection Title
+
+```{r table}
+tbl<-t(sapply(1:4, function(i) summary(rnorm(length(v))))); 
+rownames(tbl)<-paste('Draw', 1:nrow(tbl), sep='_'); 
+```
+
+<div style="color:darkblue; padding:0 3cm">
+**Table 1** Example table: summary of `r nrow(tbl)` random value vectors drawn from a normal distribution, using the **_rnorm_** function
+</div>
+
+<div align='center', style="padding:0 3cm">
+`r kable(tbl, row.names=TRUE, align=rep('c', ncol(tbl)))`
+</div>
+
+# More Section Title
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

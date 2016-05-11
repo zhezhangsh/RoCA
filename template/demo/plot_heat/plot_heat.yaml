@@ -1,0 +1,47 @@
+####################################################################################################
+# Developer describes hwo to specify each run using the pairing R Markdown template, 
+# especially the content and format of input data
+####################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for using the RoCA::CreateReport() function
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/demo/plot_heat/plot_heat.Rmd  # Location of the .Rmd template (URL or local file)
+output: examples/circadian_rhythm                                                                  # Where to save the output files
+home: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426                                          # Location to project home (URL or local file)
+analyst: Jim Zhang                                                                                        # Name of the analyst who runs this analysis
+zip: no                                                                                                   # Whether to zip the output folder
+
+#################
+##### ABOUT #####
+#################
+# Analyst provides background description about this analysis, such as project title
+description:    
+  Project: Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein
+          2-dependent diurnal lipid transport and metabolism. (**[GSE67426](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426)**)
+  PubMed: "Jouffe C, Gobet C, Martin E, Métairon S et al. ***Perturbed rhythmic activation of signaling pathways 
+          in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism.*** 
+          Sci Rep 2016 Apr 21;6:24631. PMID: [27097688](http://www.ncbi.nlm.nih.gov/pubmed/27097688)."
+  Experimental design: Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 
+          2 hours during 3 consecutive days.
+  Analysis: Circadian rhythm in mouse liver, wild type mice only, 3 replicates every 2 hours (12 groups).
+          Each gene was adjusted to its 0 hour mean and rescaled to make its standard deviation equal to 0.
+
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, with contents and format specified by the developer
+input:
+  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr_wt_rescaled.txt
+  group: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/group_wt.txt
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:
+  min: 50
+  max: 500
+  pvalue: 0.001
+  rescale: no

@@ -1,0 +1,7 @@
+"","Basic Statistics","Per base sequence quality","Per tile sequence quality","Per sequence quality scores","Per base sequence content","Per sequence GC content","Per base N content","Sequence Length Distribution","Sequence Duplication Levels","Overrepresented sequences","Adapter Content","Kmer Content"
+"Original_CtrlM201A2_S16_L001_R1","PASS","PASS","FAIL","PASS","FAIL","FAIL","PASS","WARN","PASS","FAIL","PASS","FAIL"
+"Original_CtrlM201A2_S16_L001_R2","PASS","PASS","WARN","PASS","FAIL","FAIL","PASS","WARN","WARN","FAIL","PASS","FAIL"
+"Aligned_CtrlM201A2_S16_L001_R1","PASS","PASS","FAIL","PASS","FAIL","PASS","PASS","WARN","PASS","PASS","PASS","FAIL"
+"Aligned_CtrlM201A2_S16_L001_R2","PASS","PASS","WARN","PASS","FAIL","PASS","PASS","WARN","WARN","PASS","PASS","FAIL"
+"Unaligned_CtrlM201A2_S16_L001_R1","PASS","PASS","FAIL","PASS","FAIL","FAIL","WARN","WARN","FAIL","FAIL","PASS","FAIL"
+"Unaligned_CtrlM201A2_S16_L001_R2","PASS","PASS","WARN","PASS","FAIL","FAIL","WARN","WARN","FAIL","FAIL","PASS","FAIL"

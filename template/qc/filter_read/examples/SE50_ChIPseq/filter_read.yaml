@@ -1,0 +1,89 @@
+##################################################################################################################################
+# To run this analysis, prepare the following input data
+# <range>  a text, Excel, or R file in BED format, specify the read subsets mapped to the given regions 
+#  - no column and row names
+#  - the first 3 columns are chromosome name, start position, and end position 
+#  - chromosome names must match chromosome names of the reference the reads were mapped to
+# <sample> named list of source files where the mapped reads were saved 
+#  - If reads have not been imported into R, the files must be indexed BAM files, with a pairing .bai file
+#     - For each sample, specify the path to an indexed BAM file. Could be an URL
+#     - Pair the BAM file with its .bai file. If not given, it's assumed that the file is <filename.bam>.bai
+#  - If reads have been imported, the files must be .rds or .rdata files
+#     - Loaded reads are stored as GAlignments or GAlignmentPairs object, use the readGAlignments or readGAlignmentPairs function
+#     - Two extra SAM fields, flag and mapq, must be loaded with each read, for example:
+#       * readGAlignments(bamfile, baifile, param=ScanBamParam(which=range, what=c('flag', 'mapq')))
+#       * readGAlignmentPairs(bamfile, baifile, param=ScanBamParam(which=range, what=c('flag', 'mapq')))
+##################################################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for generating any report using the RoCA::CreateReport() function
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/filter_read/filter_read.Rmd 
+output: examples/SE50_ChIPseq                         # Where to write all the output files
+home: http://grantome.com/grant/NIH/R01-AR058547-03   # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                    # Name of the analyst
+zip: no                                               # Whether to zip all output files
+
+#################
+##### ABOUT #####
+#################
+# Description of this analysis, could be any name/text pairs
+description:
+  Project: H3K4me3 of SLE in immune cells
+  Experiment: H3K4me3 was measured in  B cell, T cell, and monocyte via ChIP-seq
+  Analysis: Aligned single-ended ChIP-seq reads were loaded into R as GAlignments objects and filtered by their length, map quality, etc. 
+            Only a small portion of the total reads of each library were randomly selected as input for demo purpose
+            Libraries were compared in this report using their summary statistics. 
+
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, saved in .rds format using the saveRDS() function
+input:  # Location of input files
+  range: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/genomic.region/human_38.bed # GRanges object, usually chromosomes of a species, reads out of the range will be removed
+  sample: # Sequence reads saved as Galignments objects, SAM fields, flag, mapq, and cigar, are also saved 
+    B_H3K4me3_ND391: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/B_H3K4me3_ND391.rds
+    B_H3K4me3_ND422: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/B_H3K4me3_ND422.rds
+    B_H3K4me3_ND425: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/B_H3K4me3_ND425.rds
+    B_H3K4me3_SLE1077: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/B_H3K4me3_SLE1077.rds
+    B_H3K4me3_SLE2239: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/B_H3K4me3_SLE2239.rds
+    B_H3K4me3_SLE985: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/B_H3K4me3_SLE985.rds
+    M_H3K4me3_ND391: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/M_H3K4me3_ND391.rds
+    M_H3K4me3_ND422: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/M_H3K4me3_ND422.rds
+    M_H3K4me3_ND425: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/M_H3K4me3_ND425.rds
+    M_H3K4me3_SLE1077: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/M_H3K4me3_SLE1077.rds
+    M_H3K4me3_SLE2239: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/M_H3K4me3_SLE2239.rds
+    M_H3K4me3_SLE985: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/M_H3K4me3_SLE985.rds
+    T_H3K4me3_ND391: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/T_H3K4me3_ND391.rds
+    T_H3K4me3_ND422: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/T_H3K4me3_ND422.rds
+    T_H3K4me3_ND425: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/T_H3K4me3_ND425.rds
+    T_H3K4me3_SLE1077: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/T_H3K4me3_SLE1077.rds
+    T_H3K4me3_SLE2239: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/T_H3K4me3_SLE2239.rds
+    T_H3K4me3_SLE985: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/sequence.read/SE50_ChIPseq/T_H3K4me3_SLE985.rds
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:
+  loaded: yes # Whether the BAM file has been loaded into R as GAlignments or GAlignmentPairs object
+  paired: no  # Whether to load reads from BAM as pair-ended or single-ended. Ignored if the reads were already loaded
+  flag:       # Filtering rule: values of the SAM field FLAG must be one of given values; no filtering if -1
+  - 0 
+  - 16
+  mapq:       # Filtering rule: the minimal value of the SAM field MAPQ; no filtering if less than 1
+    max: 20     # The maximum score of the 2 reads for pair-ended reads. 
+    total: 20   # The total score of the 2 reads for pair-ended reads. 
+                # For single-ended reads, both max and total cutoffs apply to each single read, and should have the same value
+  match:      # Filtering rule: the minimal value of matching length based on the SAM field CIGAR; no filtering if less than 1
+    max: 32     # The maximum matching length of the 2 reads for pair-ended reads. 
+    total: 32   # The total matching length of the 2 reads for pair-ended reads. 
+                # For single-ended reads, both max and total cutoffs apply to each single read, and should have the same value
+  cigar:        # Type of CIGAR operators to summarize
+  - M
+  - S
+  - D
+  - I
+
+
