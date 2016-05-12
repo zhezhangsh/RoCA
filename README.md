@@ -35,7 +35,7 @@ Use the code below to install default R packages. Please note that individual R 
 require(devtools); 
 require(RCurl);
 
-devtools::install_github("zhezhangsh/RoCA/R"); # Install the RoCA package itself from GitHub
+devtools::install_github("zhezhangsh/RoCAR"); # Install the RoCA package itself from GitHub
 
 # Install default packages from Cran, GitHub, or Bioconductor, used by the RoCA package and Rmarkdown templates
 # Note that individual Rmarkdown templates might require more packages
