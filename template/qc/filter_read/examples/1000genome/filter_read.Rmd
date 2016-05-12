@@ -1,0 +1,566 @@
+---
+title: "Summarize & filter sequence reads"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    self_contained: no
+    number_sections: yes
+    toc: yes
+    toc_float: 
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+
+**Introduction** This analysis summarizes and filters sequencing reads that have been aligned to the reference based on SAM fields such as ***FLAG***, ***MAPQ***, and ***CIGAR***. It uses the readGAlignments (single-ended reads) and readGAlignmentPairs (pair-ended reads) to import aligned reads from indexed BAM files. Summary statistics of imported reads are compared between samples for consistence and potential outliers. These statistics are
+
+  - ***strand balance:*** reads mapped to forward vs. reverse strands
+  - ***mapping flag:*** a single bitwise value that summarizes the alignment result of each read
+  - ***mapping quality:*** p value of mapping certainty assigned by the aligment program
+  - ***base count:*** number of bases in each read with insertion, getting trimmed, etc. (CIGAR operations)
+  - ***matching length:*** total number of bases in each read matching to the reference
+  
+Finally, the reads will be filtered based on given criteria covering 4 possible rules:
+
+  - ***mapping region:*** reads must be mapped to given genomic region(s)
+  - ***mapping flag:*** the SAM field _FLAG_ must have one of given values
+  - ***mapping quality:*** the SAM field _MAPQ_ must have value greater than or equal to a given value
+  - ***matching length:*** the total number of bases matching the reference must be greater than or equal to a given value
+
+</div>
+
+&nbsp;
+
+```{r global_setup, include=FALSE}
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+
+require(Rcurl);
+require(gplots);
+require(knitr);
+require(rmarkdown); 
+require(yaml);
+require(GenomicRanges);
+require(GenomicAlignments);
+require(awsomics);
+require(CHOPseq);
+require(RoCA);
+
+if (!exists('yml'))                               # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists('filter_read.yaml'))           # assume the pairing YAML file exists in the current folder with the same name
+      yml<-yaml.load_file('filter_read.yaml');   
+
+# folder and subfolders of output files
+f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table', 'cluster'));
+path <- yml$output;
+path.r <- f['R'];
+path.cl <- f['cluster'];
+path.tbl <- f['table'];
+path.fig <- f['figure'];
+path.input <- f['input'];
+  
+smpl<-DownloadFile(yml$input$sample, path.input);
+rngs<-ImportTable(yml$input$range, FALSE, FALSE);
+rngs<-GRanges(rngs[[1]], IRanges(rngs[[2]], rngs[[3]])); 
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+
+prms<-yml$parameter;
+```
+
+`r home.url`
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+```{r functions, include=FALSE}
+summarizeANDfilter<-function(s, yml, rngs) {
+  fn<-yml$input$sample[[s]]; 
+  paired<-yml$parameter$paired
+  gr<-ImportR(DownloadFile(fn, paste(yml$output, 'input', sep='/')));
+  
+  if (class(gr)!='GAlignments' & class(gr)!='GAlignmentPairs') stop('Error: data class is wrong, expected GAlignments or GAlignmentPairs, but got', class(gr), '\n'); 
+  if (paired & class(gr)=='GAlignments') warning('Warning: loaded reads are not pair-ended, will be treated as single-ended\n');
+  if (!paired & class(gr)=='GAlignmentPairs') warning('Warning: loaded reads are not single-ended, will be treated as pair-ended\n');
+
+  if (paired & class(gr)!='GAlignmentPairs') stop('Error: expected data class: GAlignmentPairs, actual class is', class(gr), '\n'); 
+  if (!paired & class(gr)!='GAlignments') stop('Error: expected data class GAlignments, actual class is', class(gr), '\n'); 
+  if (is.null(names(gr))) names(gr)<-1:length(gr);
+
+  if (paired)  meta<-list(elementMetadata(gr@first), elementMetadata(gr@last)) else meta<-elementMetadata(gr); 
+
+  # count by strand
+  if (paired) strd<-strand(gr@first) else strd<-strand(gr); 
+  v<-levels(strd);
+  strd<-sapply(v, function(s) length(strd[strd==s & !is.na(strd)]));   
+
+  # summarize flag values
+  if (paired) flag<-c(meta[[1]]$flag, meta[[2]]$flag) else flag<-meta$flag;
+  if (is.null(flag)) flag<-c() else {
+    v<-sort(unique(flag)); 
+    flag<-sapply(v, function(v) length(flag[flag==v & !is.na(flag)])); 
+    names(flag)<-v;
+  }
+  
+  # summarize mapping quality
+  if (paired) mapq<-meta[[1]]$mapq+meta[[2]]$mapq else mapq<-meta$mapq;
+  if (is.null(mapq)) mapq<-c() else {
+    v<-sort(unique(mapq));
+    mapq<-sapply(v, function(v) length(mapq[mapq==v])); 
+    names(mapq)<-v;
+  }
+    
+  # dissect cigar strings
+  if (paired) cigar<-list(cigar(gr@first), cigar(gr@last)) else cigar<-list(cigar(gr));
+  cigar<-lapply(cigar, function(cigar) {
+    if (is.null(cigar)) cigar<-matrix(nr=0, nc=length(prms$cigar), dimnames = list(c(), prms$cigar)) else {
+      cigar<-SplitLongCigar(cigar, prms$cigar, 10^6, 8); 
+      rownames(cigar) <- names(gr); 
+    }; 
+    cigar;
+  });
+
+  # number of matching bases
+  if (is.null(cigar)) match<-c() else {
+    if (paired) m<-cigar[[1]][, 'M']+cigar[[2]][, 'M'] else m<-cigar[[1]][, 'M']; 
+    rng<-range(m); 
+    match<-sapply(rng[1]:rng[2], function(i) length(m[!is.na(m) & m==i])); 
+    if (rng[1]>0) match<-c(rep(0, max(0, rng[1])), match); 
+  }
+
+  #################################################################################################################
+  # filter reads
+  cnt<-c(total=length(gr));
+  
+  # Reads within regions
+  if (paired) gr0<-gr[pmax(countOverlaps(gr@first, rngs), countOverlaps(gr@last, rngs))>0] else gr0<-gr[countOverlaps(gr, rngs)>0];
+  cnt<-c(cnt, region=length(gr0));
+  
+  # Reads with acceptable flag value
+  if (length(flag)>0 & !identical(prms$flag, -1)) {
+    flag0<-as.integer(prms$flag);
+    flag0<-flag0[!is.na(flag0)];
+    if (paired) flag0<-unique(c(flag0, flag0+64)); 
+    if (paired) fg<-list(elementMetadata(gr0@first)$flag, elementMetadata(gr0@last)$flag) else fg<-elementMetadata(gr0)$flag
+    if (paired) gr0<-gr0[fg[[1]] %in% flag0 | fg[[2]] %in% flag0] else gr0<-gr0[fg %in% flag0]; 
+  }
+  cnt<-c(cnt, flag=length(gr0));
+  
+  # Reads with acceptable mapping quality score
+  if (paired) {
+    mq<-cbind(elementMetadata(gr0@first)$mapq, elementMetadata(gr0@last)$mapq);
+    mx<-pmax(mq[, 1], mq[, 2], na.rm=TRUE);
+    tl<-rowSums(mq, na.rm=TRUE); 
+  } else mx<-tl<-elementMetadata(gr0)$mapq;
+  if (!is.null(tl)) {
+    gr0<-gr0[tl>= yml$parameter$mapq$total & mx>=yml$parameter$mapq$max & !is.na(tl)];
+  };
+  cnt<-c(cnt, mapq=length(gr0));
+  
+  # Reads with acceptable mapping bases
+  if (paired) {
+    cg<-cbind(cigar[[1]][names(gr0), 'M'], cigar[[2]][names(gr0), 'M']);
+    mx<-pmax(cg[, 1], cg[, 2], na.rm=TRUE);
+    tl<-rowSums(cg, na.rm=TRUE);
+  } else mx<-tl<-cigar[[1]][names(gr0), 'M']; 
+  if (!is.null(tl)) {
+    gr0<-gr0[tl>= yml$parameter$match$total & mx>=yml$parameter$match$max & !is.na(tl)];
+  };
+  cnt<-c(cnt, cigar=length(gr0));
+
+  ############################################################################################
+  
+  # Save filtered reads
+  path.rmn<-paste(yml$output, 'remained', sep='/'); 
+  if (!dir.exists(path.rmn)) dir.create(path.rmn, recursive = TRUE);
+  saveRDS(gr0, paste(path.rmn, TrimPath(fn[1]), sep='/')); 
+  path.rmv<-paste(yml$output, 'removed', sep='/'); 
+  if (!dir.exists(path.rmv)) dir.create(path.rmv, recursive = TRUE);
+  saveRDS(gr[!(names(gr) %in% names(gr0))], paste(path.rmv, TrimPath(fn[1]), sep='/')); 
+  
+  list(count=cnt, flag=flag, strand=strd, mapq=mapq, cigar=colSums(Reduce('+', cigar)), match=match); 
+}
+```
+
+```{r summarize, include=FALSE}
+yml$input$sample<-lapply(yml$input$sample, function(s) {
+  if (yml$parameter$loaded) s[1] else {
+    cat('Importing sequence reads from', s[1], '\n'); 
+    param<-ScanBamParam(which=rngs, what=c('flag', 'mapq')); 
+    if (is.na(s[2])) input<-s[1] else input<-DownloadFile(s[2], paste(yml$output, 'input', sep='/')); 
+    if (yml$parameter$paired) gr<-readGAlignmentPairs(s[1], input, param=param) else 
+      gr<-readGAlignments(s[1], input, param=param);
+    f<-paste(path.input, '/', TrimPath(s[1]), '.rds', sep=''); 
+    saveRDS(gr, f); 
+    f;
+  }
+}); 
+  
+stat<-sapply(names(smpl), function(s) summarizeANDfilter(s, yml, rngs)); 
+saveRDS(stat, paste(path.r, 'stat.rds', sep='/')); 
+
+# Read count before/after filtering
+cnt<-t(do.call('cbind', stat['count', ]));
+
+# Count SAM flag field
+flg<-stat['flag', ];
+v<-unique(base::unlist(lapply(flg, names), use.names=FALSE)); 
+flg<-t(sapply(flg, function(x) x[v]));
+flg[is.na(flg)]<-0; 
+flg<-flg[, order(as.numeric(colnames(flg)))]; 
+colnames(flg)<-v; 
+
+# Count strand
+str<-stat['strand', ];
+v<-unique(base::unlist(lapply(str, names), use.names=FALSE)); 
+str<-t(sapply(str, function(x) x[v]));
+str[is.na(str)]<-0; 
+colnames(str)<-v; 
+
+# Count map scores
+mpq<-stat['mapq', ];
+v<-as.integer(unique(base::unlist(lapply(mpq, names), use.names=FALSE)));
+v<-as.character(0:max(v)); 
+mpq<-t(sapply(mpq, function(x) x[v]));
+mpq[is.na(mpq)]<-0; 
+colnames(mpq)<-v; 
+mpq<-mpq[, colSums(mpq/10^6)>0, drop=FALSE]; 
+
+# Count cigar operations
+cigar<-stat['cigar', , drop=FALSE];
+v<-unique(base::unlist(lapply(cigar, names), use.names=FALSE));
+cigar<-t(sapply(cigar, function(x) x[v]));
+cigar[is.na(cigar)]<-0;
+cigar<-cigar[, rev(order(colSums(cigar/10^6))), drop=FALSE]; 
+colnames(cigar)<-v;
+rownames(cigar)<-colnames(stat);
+cigar<-cigar[, colSums(cigar/10^6)>0, drop=FALSE]; 
+
+# Matching bases
+match<-stat['match', , drop=FALSE];
+v<-max(sapply(match, length));
+match<-t(sapply(match, function(x) x[1:v])); 
+match[is.na(match)]<-0;
+dimnames(match)<-list(colnames(stat), 1:v);
+```
+
+`r home.url`
+
+# Summary statistics
+
+## Mapping ***FLAG***
+
+```{r flag, include=FALSE}
+pct1<-round(100*str[,1]/rowSums(str[, 1:2]), 3); 
+
+n<-flg[, rev(order(colMeans(flg))), drop=FALSE];
+pct2<-t(apply(n, 1, function(n) round(100*n/sum(n), 4)));
+colnames(n)<-paste('Count', colnames(n), sep='_');
+colnames(pct2)<-paste('Percent', colnames(n), sep='_');
+
+tbl<-cbind(str, pct1, n, pct2); 
+colnames(tbl)[1:4]<-c('Strand_Forward', 'Strand_Backward', 'Strand_Ambiguous', 'Percent_Forward'); 
+CreateDatatable(tbl, paste(path.tbl, 'flag_strand.html', sep='/'), caption='FLAGs and strands'); 
+saveRDS(tbl, paste(path.r, 'flag_strand.rds', sep='/')); 
+write.csv(tbl, paste(path.tbl, 'flag_strand.csv', sep='/')); 
+```
+
+Each alignment software could assign a bitwise value as a combination of FLAGs to each read to represent the result of the alignment, as descrbed in [SAM format manual](https://samtools.github.io/hts-specs/SAMv1.pdf), Section 1.4. The bitwise value is 0 if the read is aligned "normally" and uniquely to the forward strand, and is 16 if the read is aligned "normally" and uniquely to the reverse strand. Any other values would suggest that there is something "wrong" with the alignment. The majority of the alignment will assign a strand to the read, but in some rare occasions, the strand is ambiguous and there is no strand information available for the read. Click [here](table/flag_strand.html) to view the summary statistics about the FLAGs and alignment strands. 
+
+<div align='center'>
+```{r strand, fig.width=6, fig.height=6, out.width='600px'}
+c<-str[, 1:2]/10^6;
+par(mar=c(5, 5, 2, 2)); 
+plot(c[, 1], c[, 2], pch=18, xlab='Forward strand (million reads)', ylab='Reverse strand (million reads)', cex=2, col='#88888888', cex.lab=2, xlim=range(c), ylim=range(c)); 
+
+sigma<-sapply(1:nrow(c), function(i) {
+  x<-c[-i, ];
+  mdl<-lm(x[, 2]~x[, 1]); 
+  coe<-as.vector(coefficients(mdl)); 
+  prd<-c[i, 1]*coe[2]+coe[1]; 
+  sig<-summary(mdl)$sigma;
+  (prd-c[i, 2])/sig; 
+}); 
+
+if (max(abs(sigma)) > 1.5) {
+  x<-c[abs(sigma)>=1.5, , drop=FALSE]; 
+  points(x, col='#FFBBBB', pch=18, cex=2); 
+  if (max(abs(sigma)) > 3) {
+    x<-c[abs(sigma)>=1.5, , drop=FALSE]; 
+    points(x, col='#FF0000', pch=18, cex=2); 
+  }
+}
+
+abline(lm(c[, 2]~c[, 1]), lwd=2, lty=2, col='blue');
+abline(0, 1, lwd=2, col='blue');
+
+legend(min(c), max(c), legend=c('Sigma < 1.5', 'Sigma >= 1.5', 'Sigma >=3.0'), cex=1.5, bty='n', pch=18, col=c('#88888888', '#FFBBBB', '#FF0000')); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 1** Numbers of reads aligned to the forward and reverse strands. Outliers were identified via fitting linear models (Sigma > 3.0). The solid blue line corresponds to the same 50%-50% of the reads aligned to the 2 strands, and the dashed lines is the actual fitting lines of a linear model. The percents of reads aligned to the forward strand the are between `r min(pct2)`% and `r max(pct2)`% (mean = `r round(mean(pct2, 2))`%). For paired end reads, only the first read of each pair was used.
+</div>
+
+`r home.url`
+
+## Mapping quality ***MAPQ***
+
+```{r mapq, include=FALSE}
+CreateDatatable(mpq, paste(path.tbl, 'mapq_count.html', sep='/'), caption='Total reads, MAPQ scores');
+saveRDS(mpq, paste(path.r, 'mapq_count.rds', sep='/')); 
+write.csv(mpq, paste(path.tbl, 'mapq_count.csv', sep='/')); 
+
+pct<-t(apply(mpq, 1, function(c) c/sum(c)*100)); 
+CreateDatatable(round(pct, 4), paste(path.tbl, 'mapq_percent.html', sep='/'), caption='Percent of reads, MAPQ scores'); 
+saveRDS(pct, paste(path.r, 'mapq_percent.rds', sep='/')); 
+write.csv(pct, paste(path.tbl, 'mapq_percent.csv', sep='/')); 
+
+plot.size<-c(1+min(0.25*ncol(pct), 6), 1+min(0.25*nrow(pct), 8)); 
+plot.out<-paste(min(800, plot.size[1]*100), 'px', sep='');
+```
+
+Each alignment software could use its own algorithm to assign an alignment score to each align reads. The scores are usually non-negative integers, with 0 corresponding to the lowest mapping quality. 
+
+  - [Number of reads with each MAPQ score](table/mapq_count.html)
+  - [Percent of reads with each MAPQ score](table/mapq_percent.html)
+
+<div align='center'>
+```{r mapq_heatmap, fig.width=plot.size[1], fig.height=plot.size[2], out.width=plot.out}
+mpq[mpq<1]<-1; 
+pct<-t(apply(mpq, 1, function(c) c/sum(c)*100)); 
+d<-t(sapply(1:nrow(pct), function(i) log2(pct[i, ]/colMeans(pct[-i, ]))));
+rownames(d)<-rownames(pct);
+PlotColoredBlock(d, min=-3, max=3, groups=as.list(colnames(pct)), key='Relative frequency'); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 2** Each cell indicates the relative frequency of reads with a given mapping score, comparing to all the other samples. </div>
+
+<div align='center'>
+```{r mapq_hist, fig.width=9, fig.height=4, out.width='720px'}
+ind<-c(1, which(colSums(pct)==max(colSums(pct))),  ncol(pct)); 
+par(mfrow=c(1, 3), mar=c(5,2,3,1), omi=c(0, 0.6, 0, 0)); 
+ttl<-paste(c('Lowest MAPQ =', 'Most common MAPQ =', 'Highest MAPQ ='), colnames(pct)[ind]);
+sapply(1:3, function(i) hist(pct[, ind[i]], col='lightblue', xlab='Percent of reads (%)', ylab='', cex.lab=2, main=ttl[i]))->x; 
+title(ylab='Number of samples', cex.lab=2, outer=TRUE, line=1);
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 3** Each plot shows the distribution of read frequencies with the lowest, highest, and the most common mapping quality scores. 
+</div>
+
+`r home.url`
+
+## ***CIGAR*** operations
+
+```{r cigar, include=FALSE}
+CreateDatatable(cigar, paste(path.tbl, 'cigar_count.html', sep='/'), caption='Total reads with a given CIGAR character');
+saveRDS(cigar, paste(path.r, 'cigar_count.rds', sep='/')); 
+write.csv(cigar, paste(path.tbl, 'cigar_count.csv', sep='/')); 
+
+pct<-t(apply(cigar, 1, function(c) c/sum(c)*100)); 
+CreateDatatable(round(pct, 4), paste(path.tbl, 'cigar_percent.html', sep='/'), caption='Percent of reads with a given CIGAR character'); 
+saveRDS(pct, paste(path.r, 'cigar_percent.rds', sep='/')); 
+write.csv(pct, paste(path.tbl, 'cigar_percent.csv', sep='/')); 
+
+plot.size<-c(1+min(0.25*ncol(pct), 6), 1+min(0.25*nrow(pct), 8)); 
+plot.out<-paste(min(800, plot.size[1]*100), 'px', sep='');
+```
+
+CIGAR string indicates the internal structure of each alignment such as the base where insertion or deletion starts. By breaking CIGAR string of each read, bases belonging to each CIGAR operation was counted:  
+
+  - [Number of bases with each CIGAR operation](table/cigar_count.html)
+  - [Percent of bases with CIGAR operation](table/cigar_percent.html)
+  
+<div align='center'>
+```{r cigar_heatmap, fig.width=plot.size[1], fig.height=plot.size[2], out.width=plot.out}
+cigar[cigar<0]<-1;
+pct<-t(apply(cigar, 1, function(c) c/sum(c)*100)); 
+d<-t(sapply(1:nrow(pct), function(i) log2(pct[i, ]/colMeans(pct[-i, ]))));
+rownames(d)<-rownames(pct);
+PlotColoredBlock(d, min=-3, max=3, groups=as.list(colnames(d)), key='Relative frequency'); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 4cm">
+**Figure 4** Each cell indicates the relative frequency of reads with a given character in their CIGAR strings, comparing to all the other samples. 
+</div>
+
+`r home.url`
+
+## Matching length
+
+The matching length (total number of matched bases) of each read can be retrieved from the ***M*** operation in its CIGAR string. Matching length of all reads in each library was summarized to get the [cummulative percents](table/matching_length_percent.html) of reads with matching length no greater than a given number of bases. 
+
+<div align='center'>
+```{r match_percent, include=TRUE, fig.width=8, fig.height=6, out.width='720px'}
+match.cum<-t(apply(match, 1, cumsum));
+colnames(match.cum)<-paste('<=', 0:(ncol(match.cum)-1), sep='');
+match.cum<-match.cum[, apply(match.cum, 2, max)>0, drop=FALSE]; 
+match.pct<-apply(match.cum, 2, function(a) 100*a/match.cum[, ncol(match.cum)]);
+colnames(match.pct)<-colnames(match.cum);
+match.min<-apply(match.pct, 2, min); 
+match.max<-apply(match.pct, 2, max);
+match.mean<-colMeans(match.pct); 
+
+saveRDS(match.pct, paste(path.r, 'matching_length_percent.rds', sep='/'));
+fn<-CreateDatatable(round(match.pct, 5), paste(path.tbl, 'matching_length_percent.html', sep='/'), caption='Cummulative percent'); 
+
+# Plottting
+par(mar=c(8, 5, 2, 2));
+n<-ncol(match.pct)-1;
+plot(match.mean[1:n], type='n', lwd=2, col='blue', ylim=range(match.pct[, 1:n, drop=FALSE]),
+     xaxs='i', ylab='Percent of total reads (%)', cex.lab=2, xlab='', xaxt='n');
+ylim<-ceiling(par()$usr[4]); 
+abline(h=seq(0, ylim, min(2, ceiling(ylim/10))), lty=2, lwd=0.5, col='#22222222', yaxs='i');
+polygon(c(1:n, n:1), c(match.min[1:n], match.max[n:1]), col='#00880044', border=NA);
+axis(1, at=1:n, labels=colnames(match.pct)[1:n], las=3, cex.axis=min(1.5, 50/n));
+lines(match.min[1:n], lty=2);
+lines(match.max[1:n], lty=2);
+lines(match.mean[1:n], col='blue', lwd=2);
+title(xlab='Total matching length', line=5, cex.lab=2);
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 5** Cummulative percent of sequence reads with matching length no greater than a given number. Blue line is the average of all libraries whereas the dashed lines correspond to the minimum and maximum of all libraries. This plot roughly indicates the proportion of reads that will be filtered out with each cutoff value of matching length.
+</div>
+
+<div align='center'>
+```{r match_length, fig.width=6, fig.height=6, out.width='600px'}
+par(mar=c(5, 5, 2, 2)); 
+c<-cbind(match.cum[, ncol(match.cum)]/10^6, match[, ncol(match)]/10^6);
+plot(c, pch=18, cex=2, col='#88888888', cex.lab=1.5,
+     xlab='Total number of sequence reads (millions))', ylab='Reads with maximum matching length (million)'); 
+
+sigma<-sapply(1:nrow(c), function(i) {
+  x<-c[-i, ];
+  mdl<-lm(x[, 2]~x[, 1]); 
+  coe<-as.vector(coefficients(mdl)); 
+  prd<-c[i, 1]*coe[2]+coe[1]; 
+  sig<-summary(mdl)$sigma;
+  (prd-c[i, 2])/sig; 
+}); 
+
+if (max(abs(sigma)) > 1.5) {
+  x<-c[abs(sigma)>=1.5, , drop=FALSE]; 
+  points(x, col='#FFBBBB', pch=18, cex=2); 
+  if (max(abs(sigma)) > 3) {
+    x<-c[abs(sigma)>=1.5, , drop=FALSE]; 
+    points(x, col='#FF0000', pch=18, cex=2); 
+  }
+}
+
+abline(lm(c[, 2]~c[, 1]), lwd=2, lty=2, col='blue');
+
+legend('topleft', legend=c('Sigma < 1.5', 'Sigma >= 1.5', 'Sigma >=3.0'), cex=1.5, bty='n', pch=18, col=c('#88888888', '#FFBBBB', '#FF0000')); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 4cm">
+**Figure 6** Numbers of total reads vs. the reads with longest matching length in each library. Outliers were identified via fitting linear models (Sigma > 3.0). The blue lines is the fitting to the linear model using all libraries. 
+</div>
+
+`r home.url`
+
+# Read filtering
+
+## Step-by-step filtering
+
+```{r filtering_step, include=FALSE}
+colnames(cnt)<-c('Original', 'Within_Region', 'FLAG_Value', 'MAPQ_Value', 'Matching_Length');
+pct<-apply(cnt, 2, function(c) round(100*(c/cnt[,1]), 3)); 
+df<-BiocGenerics::as.data.frame(rngs)[, -4];
+
+CreateDatatable(df, paste(path.tbl, 'region.html', sep='/'), rownames = FALSE); 
+CreateDatatable(cnt, paste(path.tbl, 'remained_number.html', sep='/'));
+CreateDatatable(pct, paste(path.tbl, 'remained_percent.html', sep='/'));
+```
+
+Sequence reads were filtered by the following steps to keep those
+
+  - mapped to these [genomic regions](/table/region.html)
+  - with the ***FLAG*** field of SAM format having one of these values: _`r paste(prms$flag, collapse='; ')`_.
+  - with the ***MAPQ*** field of SAM format having values greater than or equal to ***`r prms$mapq`***. 
+  - with at least ***`r prms$mapq`*** mapped bases based on the ***CIGAR*** field of SAM format.
+
+The details about SAM format can be found [here](https://samtools.github.io/hts-specs/SAMv1.pdf). 
+
+The number and percent of remaining reads after each filter step are listed [here](table/remained_number.html) and [here](table/remained_percent.html).
+
+<div align='center'>
+```{r read_percent, fig.width=4.8, fig.height=6, out.width='600px'}
+d<-lapply(1:ncol(pct), function(i) pct[, i]); 
+names(d)<-colnames(pct);
+PlotBoxFromList(d, 'Percent of original reads', color='#00FF0088')->s;
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 7.** Each box represents the distribution of remaining read percents of all samples. 
+</div>
+
+`r home.url`
+
+## Final filtering result
+
+The final remaining percents of original reads after all filtering steps were compared between samples. The numbers of reads before and after filtering were fit to a linear regression based on the assumption that all samples had the same remaining percent. Using this model, the sigma value of each sample was calculated as the difference between predicted and actual numbers of remaining reads. Samples with sigmas greater than 3.0 could be considered as outliers with extraordinarily low or high remaining percent. Click [here](table/read_count.html) to see the result table.
+  
+<div align='center'>
+```{r before_vs_after, fig.width=6, fig.height=6, out.width='600px'}
+c<-cnt[, c(1, ncol(cnt))]/10^6;
+par(mar=c(5, 5, 2, 2)); 
+plot(c[, 1], c[, 2], pch=18, xlab='Before filtering (million reads)', ylab='After filtering (million reads)', cex=2, col='#88888888', cex.lab=2); 
+points(c[, 1], c[, 2], cex=1.5, pch=5);
+
+sigma<-sapply(1:nrow(c), function(i) {
+  x<-c[-i, ];
+  mdl<-lm(x[, 2]~x[, 1]); 
+  coe<-as.vector(coefficients(mdl)); 
+  prd<-c[i, 1]*coe[2]+coe[1]; 
+  sig<-summary(mdl)$sigma;
+  (prd-c[i, 2])/sig; 
+}); 
+
+if (max(abs(sigma)) > 1.5) {
+  x<-c[abs(sigma)>=1.5, , drop=FALSE]; 
+  points(x, col='#FFBBBB', pch=18, cex=2); 
+  if (max(abs(sigma)) > 3) {
+    x<-c[abs(sigma)>=1.5, , drop=FALSE]; 
+    points(x, col='#FF0000', pch=18, cex=2); 
+  }
+}
+
+abline(lm(c[, 2]~c[, 1]), lwd=2, lty=2, col='blue');
+
+legend('topleft', legend=c('Sigma < 1.5', 'Sigma >= 1.5', 'Sigma >=3.0'), cex=1.5, bty='n', pch=18, col=c('#88888888', '#FFBBBB', '#FF0000')); 
+
+pct<-round(c[,2]/c[,1]*100, 2);
+out<-rep('No', nrow(c)); 
+out[abs(sigma)>=3.0]<-'Yes';
+
+tbl<-data.frame('N_Before'=cnt[, 1], 'N_After'=cnt[, 2], 'Percent'=pct, 'Sigma'=round(sigma, 2), 'Outlier'=out, stringsAsFactors = FALSE);
+CreateDatatable(tbl, paste(path.tbl, 'read_count.html', sep='/'), caption='Total reads, before vs. after filtering')->x; 
+saveRDS(tbl, paste(path.r, 'read_count.rds', sep='/')); 
+write.csv(tbl, paste(path.tbl, 'read_count.csv', sep='/')); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 8** Numbers of reads before and after filtering. 
+</div>
+
+`r home.url`
+
+```{r clean_up, include=FALSE}
+if (prms$cleanup) file.remove(paste(path.input, dir(path.input), sep='/')); 
+```
+
+***
+**END_OF_DOCUMENT**
