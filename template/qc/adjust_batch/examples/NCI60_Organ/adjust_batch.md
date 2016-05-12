@@ -1,7 +1,7 @@
 ---
 title: "Analysis and adjustment of batch effect"
 author: "Zhe Zhang"
-date: "2016-05-08"
+date: "2016-05-11"
 output:
   html_document:
     self_contained: no
@@ -14,23 +14,24 @@ output:
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
 **Introduction: ** This analysis applies the Bioconductor ***[SVA](https://bioconductor.org/packages/release/bioc/html/sva.html)*** (Surrogate Variable Analysis) package and other methods to evaluate and adjust for known or unknown batch effect. It includes the following steps:
 
-  - Analyst provides the original data matrix and sample description with one or multiple features, and specifies
-    - one or multiple features as variable(s) of interest
-    - zero or one feature known to cause batch or other confounding effect
-  - One to several surrogate variables will be identified from the original matrix, each accounts for a portion of the total data variation
-    - The association between each sample feature and surrogate variable will be evaluated by ANOVA (categoral feature) or Pearson's correlation (numeric feature)
-    - Samples are grouped by variable(s) of interest. P values of 1-way ANOVA across all sample groups is obtained for each gene, using the original data matrix or the data matrix adjusted by surrogate variables. 
-  - Create an adjusted data matrix from the original one by removing known or potential batch effect.
-    - A new data matrix is generated after adjusting the original ones for the sample feature known to cause the confoundering or batch effect. The ***[ComBat](combat batch effect correction)*** and ***[limma](http://bioinf.wehi.edu.au/limma/)*** methods will be used respectively for categoral and numeric variables. Adjust data for surrogate variable(s) instead if no sample feature is known to cause batch effect.
-    - P values of 1-way ANOVA are compared between the original and the adjusted data matrix.
-  - Adjust the data matrix by sample features and surrogate variables one by one and compare the ANOVA p values.
+  - This analysis requires an original data matrix and sample description with one or multiple features, and parameters including
+    * One or multiple features as variable(s) of interest
+    * Zero or one feature known to be the source of batch effect
+    * The number of surrogate variables (default=5) to be identified from the data matrix
+  - The _sva_ function will first identify the given number of surrogate variables, each accounting for a portion of the total data variation. These surrogate variables will be evaluated as below. 
+    * The association between each sample feature and each surrogate variable will be evaluated by ANOVA (categoral feature) or Pearson's correlation (numeric feature)
+    * By grouping samples according variable(s) of interest, 2 sets of 1-way ANOVA p values, using the data matrix and the matrix adjusted for all surrogate variables, will be compared to evaluate whether removing potential batch effect will improve the signal/noise ratio in the data set. 
+  - A new data matrix will be generated after adjusting for batch effect. 
+    * If a sample feature is known to be the source of batch effect, the original matrix will be adjusted for it using  ***[ComBat](combat batch effect correction)*** (categoral variable) or ***[limma](http://bioinf.wehi.edu.au/limma/)*** (continuous variable). It will be adjusted for all surrogate variables instead otherwise.
+    * Same as the last step, the impact of data adjustment will be evaluated with 1-way ANOVA of samples grouped by variable(s) of interest.
+  - An extra step will be carried out to adjust the original data matrix for all sample features and surrogate variables one by one, and evaluate the consequence. 
 </div>
 
 &nbsp;
 
 
 
-<div align='right'>_[Go to project home](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Description
 
@@ -55,11 +56,11 @@ Comparison between cell lines from 9 different cancer tissue of origin types (Br
 ## Analysis
 
 
-Evaluate and adjust effect of p53 status.
+Evaluate and adjust batch effect of p53 status. Only a subset of genes with high between-sample variance was used as a demo.
 
 
 
-<div align='right'>_[Go to project home](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Samples and variable(s) of interest
 
@@ -87,7 +88,7 @@ A total of 60 samples and 3 sample features was provided by the input data. Clic
 
 </div>
 
-<div align='right'>_[Go to project home](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Identification and evaluation of surrogate variables 
 
@@ -121,7 +122,7 @@ The _f.pvalue()_ function was used to run ANOVA tests using the variable(s) of i
 **Figure 1.** Comparison of the ANOVA p values obtained using the original data matrix and the matrix adjusted by surrogate variables not significantly associated with any variable(s) of interest. 
 </div>
 
-<div align='right'>_[Go to project home](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Adjust data for batch effect
 
@@ -139,7 +140,7 @@ Since sample feature, _p53_Status_, was known to cause batch effect in the data,
 **Figure 2.** Same plot as **Figure 1**, except that the y-axis p values were based on the data adjusted by the known batch effect variable using the _ComBat_ (categoral) or _limma_ (numeric) method.
 </div>
 
-<div align='right'>_[Go to project home](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 # Evaluate all variables
 
@@ -155,7 +156,7 @@ Finally, the confounding or batch effect of all sample features and surrogate va
 **Figure 3.** After adjusting the original data for each of the sample features or surrogate variables, ANOVA p values were calculated again for each gene. The numbers of significant genes obtaining from each adjusted data matrix were compared to the numbers of genes obtained from the original matrix. The color in this plot represents relative frequency of genes (red = more). Clcik [here](table/gene_count_adjusted.html) to view table of gene counts.
 </div>
 
-<div align='right'>_[Go to project home](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)_</div>
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
 ***
 **END OF DOCUMENT**
