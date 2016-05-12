@@ -1,0 +1,318 @@
+---
+title: "Analysis and adjustment of batch effect"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    self_contained: no
+    number_sections: yes
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+**Introduction: ** This analysis applies the Bioconductor ***[SVA](https://bioconductor.org/packages/release/bioc/html/sva.html)*** (Surrogate Variable Analysis) package and other methods to evaluate and adjust for known or unknown batch effect. It includes the following steps:
+
+  - This analysis requires an original data matrix and sample description with one or multiple features, and parameters including
+    * One or multiple features as variable(s) of interest
+    * Zero or one feature known to be the source of batch effect
+    * The number of surrogate variables (default=5) to be identified from the data matrix
+  - The _sva_ function will first identify the given number of surrogate variables, each accounting for a portion of the total data variation. These surrogate variables will be evaluated as below. 
+    * The association between each sample feature and each surrogate variable will be evaluated by ANOVA (categoral feature) or Pearson's correlation (numeric feature)
+    * By grouping samples according variable(s) of interest, 2 sets of 1-way ANOVA p values, using the data matrix and the matrix adjusted for all surrogate variables, will be compared to evaluate whether removing potential batch effect will improve the signal/noise ratio in the data set. 
+  - A new data matrix will be generated after adjusting for batch effect. 
+    * If a sample feature is known to be the source of batch effect, the original matrix will be adjusted for it using  ***[ComBat](combat batch effect correction)*** (categoral variable) or ***[limma](http://bioinf.wehi.edu.au/limma/)*** (continuous variable). It will be adjusted for all surrogate variables instead otherwise.
+    * Same as the last step, the impact of data adjustment will be evaluated with 1-way ANOVA of samples grouped by variable(s) of interest.
+  - An extra step will be carried out to adjust the original data matrix for all sample features and surrogate variables one by one, and evaluate the consequence. 
+</div>
+
+&nbsp;
+
+```{r global_setup, include=FALSE}
+
+require(yaml);
+require(knitr);
+require(rmarkdown); 
+require(RCurl);
+require(gplots);
+require(sva);
+require(awsomics); 
+require(limma);
+require(RoCA);
+
+knitr::opts_chunk$set(eval=TRUE, dev=c('png', 'pdf'), dpi=300, echo=FALSE, warning=FALSE, message=FALSE);
+
+if (!exists('yml'))                               # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists('adjust_batch.yaml'))           # assume the pairing YAML file exists in the current folder with the same name
+      yml<-yaml.load_file('adjust_batch.yaml');   
+ 
+# folder and subfolders of output files
+f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));
+path <- yml$output;
+path.r <- f['R'];
+path.tbl <- f['table'];
+path.fig <- f['figure'];
+path.input <- f['input'];
+
+# Load input data
+mtr<-ImportTable(DownloadFile(yml$input$matrix, path = path.input)); # full data matrix; columns are samples/rows are variables
+smp<-ImportTable(DownloadFile(yml$input$sample, path = path.input)); # sample description; rows must match columns of data matrix
+mtr<-as.matrix(mtr); 
+
+CreateDatatable(smp, paste(path.tbl, 'sample.html', sep='/'))
+saveRDS(mtr, paste(path.input, TrimPath(yml$input$matrix), sep='/')); 
+saveRDS(smp, paste(path.input, TrimPath(yml$input$sample), sep='/')); 
+
+# Match sample IDs
+smp<-smp[rownames(smp) %in% colnames(mtr), , drop=FALSE];
+mtr<-mtr[, rownames(smp)];
+if (nrow(smp) < 2) stop('Not enough samples to perform the analysis.\n'); 
+
+# Make all columns factors
+for (i in 1:ncol(smp)) if (!is.numeric(smp[[i]])) smp[[i]]<-as.factor(as.vector(smp[[i]])); 
+
+# Variable names
+v0<-yml$parameter$interest; # variable(s) of interest
+v1<-yml$parameter$batch; # known batch effect variable(s)
+v0<-v0[v0 %in% colnames(smp)];
+v1<-v1[v1 %in% colnames(smp)];
+if (length(v0) < 1) stop('No variable of interest was specified. \n'); 
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url`
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+# Samples and variable(s) of interest
+
+```{r sample, include=FALSE}
+nlvl<-sapply(colnames(smp), function(nm) length(unique(as.vector(smp[, nm]))));
+clss<-sapply(1:ncol(smp), function(i) class(smp[[i]]));
+tbl<-data.frame(Sample_feature=colnames(smp), Type=clss, Num_level=nlvl, Variable_of_interest=colnames(smp) %in% v0, Batch_effect=colnames(smp) %in% v1); 
+```
+
+A total of `r nrow(smp)` samples and `r ncol(smp)` sample features was provided by the input data. Click [here](html/sample.html) to see a full list of samples and samples features. 
+
+  - Sample feature(s) to be studied by this project (variables of interest): ***`r paste(v0, collapse='; ')`***
+  - Sample feature with potential batch effect: ***`r v1`***
+  - All other known sample feature(s): ***`r paste(setdiff(colnames(smp), c(v0, v1)), collapse='; ')`*** 
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 1** All sample features provided by the input data, which could include 1 or many variables of interest and 0 or 1 confounding variable known to be responsible for the batch effect in data. (**Sample_feature:** all sample features given in the input data; **Num_level:** number of unique values of each sample feature; **Variable_of_interest:** whether this sample feature is a variable of interest in this project; and **Batch_effect** whether this sample feature is a known source of batch effect)
+</div>
+
+<div align='center', style="padding:0 2cm">
+`r kable(tbl, row.names=FALSE, align=rep('c', ncol(tbl)))`
+</div>
+
+`r home.url`
+
+# Identification and evaluation of surrogate variables 
+
+```{r surrogate_variable, include=FALSE}
+# building models
+mod.nll <- model.matrix(~1, data=smp); # null model
+mod.int <- model.matrix(formula(paste('~', paste(v0, collapse=' + '))), data=smp); # model of variable of interest
+
+##################################################################################
+sv<-sva(mtr, mod.int, mod.nll, n.sv=yml$parameter$nsv, B=yml$parameter$iteration);
+##################################################################################
+
+sv[[1]]<-matrix(sv[[1]], nr=nrow(smp)); # make sure it's a matrix
+colnames(sv[[1]])<-paste('SV', 1:ncol(sv[[1]]), sep=''); 
+
+# correlation between sample feature and surrogate variable
+nl<-sapply(1:ncol(smp), function(i) length(unique(as.vector(smp[[i]])))); 
+s<-smp[, nl>1 & nl<nrow(smp), drop=FALSE]; 
+p<-sapply(colnames(s), function(nm) apply(sv$sv, 2, function(x) {
+  y<-smp[[nm]];
+  if (class(y)=='factor') summary(aov(x~as.factor(smp[[nm]])))[[1]][1, 5] else cor.test(x, y)$p.value[[1]]
+}));
+p<-matrix(p, nc=ncol(s), nr=ncol(sv$sv)); 
+dimnames(p)<-list(paste('SV', 1:nrow(p), sep=''), colnames(s)); 
+fn1<-paste(path, 'sample-sv.html', sep='/');
+```
+
+The _sva()_ function was used to identify `r yml$parameter$n.sv` surrogate variables from the original data matrix. Each surrogate variable is responsible for part of the overall data variation, and may or may not be related to known sample features, such as any variables of interest or experiment batch. Since each sample was assigned a value of each surrogate variable by the _sva_ function, these values were used to evaluate the association between surrogate variables and sample features using ANOVA for categoral variables or Pearson's correlation for numeric variables.
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 2** ANOVA p value for the association between surrogate variables and sample features. 
+</div>
+
+<div align='center', style="padding:0 1cm">
+`r kable(t(FormatNumeric(p, 3)), align=rep('c', nrow(p)))`
+</div>
+
+The _f.pvalue()_ function was used to run ANOVA tests using the variable(s) of interest and original data matrix, so each gene got an ANOVA p value. The test was then run again after adjusting the data matrix for surrogate variables that were not significantly associated with the surrogate variables (p < `r yml$parameter$anova`). The goal is to evaluate if the global statistical power was improved after the confounding effect of surrogate variables was removed.
+
+<div align='center'>
+```{r p_value_surrogate, fig.width=6, fig.height=6, out.width='640px'}
+sv0<-lapply(v0, function(v) rownames(p)[p[, v]<=yml$parameter$anova])
+sv0<-sort(unique(unlist(sv0, use.names=FALSE)));
+
+# unadjusted and adjusted p values from F test
+p0<-f.pvalue(mtr, mod.int, mod.nll);
+i<-which(rownames(p) %in% sv0);
+if (length(i)==0) p1<-f.pvalue(mtr, cbind(mod.int, sv[[1]]), cbind(mod.nll, sv[[1]])) else 
+  p1<-f.pvalue(mtr, cbind(mod.int, sv[[1]][, -i, drop=FALSE]), cbind(mod.nll, sv[[1]][, -i, drop=FALSE]))
+stat<-cbind(p0, p.adjust(p0, method='BH'), p1, p.adjust(p1, method='BH'));
+colnames(stat)<-c('pF', 'FDR', 'pF_SV', 'FDR_SV'); 
+
+# Make scatter plot
+x<--1*log10(stat[, c(1, 3)]); 
+x[x==Inf]<-1+max(x[x<Inf]); 
+par(mar=c(5,5,2,2));
+plot(x, pch=19, col='#88888888', xlab='-Log10(p), Original', ylab='-Log10(p), Adjusted', cex.lab=2, xlim=range(x), ylim=range(x)); 
+abline(0, 1, col='darkblue', lty=2);
+
+out<-list(model=list(null=mod.nll, full=mod.int), surrogate=sv, anova=p, statistics=stat);
+saveRDS(out, file=paste(path.r, 'surrogate_variable.rds', sep='/')); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 1.** Comparison of the ANOVA p values obtained using the original data matrix and the matrix adjusted by surrogate variables not significantly associated with any variable(s) of interest. 
+</div>
+
+`r home.url`
+
+# Adjust data for batch effect
+
+```{r confounder, include=FALSE}
+# if no known sample feature is related to batch effect, pick one of the surrogate variable
+if (length(v1)==0) {
+  sv0<-rownames(p)[apply(p[, v0, drop=FALSE], 1, function(x) min(x)>yml$parameter$anova)];
+  if (length(sv0)>0) {
+    v<-sv[[1]][, sv0, drop=FALSE];
+    l<-paste('There is no sample feature known to cause batch effect in the data. However, There were ', length(sv0), 
+             ' surrogate variable(s) having no signficant association with any variable of interest. ', 
+             'So the data was adjusted by these variables using the [limma](https://www.ncbi.nlm.nih.gov/pubmed/25605792) method.', 
+             sep=''); 
+  } else {
+    v<-sv[[1]];
+    l<-paste('There was neither sample feature known to cause batch effect in data, nor surrogate variables having no siginficant ',
+             'association with the variable(s) of interest. Therefore, the data was adjusted for all ', `r nrow(p)`, ' surrogate variables ', 
+             'using the [limma](https://www.ncbi.nlm.nih.gov/pubmed/25605792) method.', sep=''); 
+  }
+} else {
+  v<-as.vector(smp[, v1[1]]);
+  l<-paste('Since sample feature, _', v1, '_, was known to cause batch effect in the data, ',
+           'the original data matrix was then adjusted to remove its effect using the ', 
+           '[_ComBat_](http://biostatistics.oxfordjournals.org/content/8/1/118.abstract) method if it is a categoral variable ', 
+           'or the limma method if it is a numerical variable', sep=''); 
+}
+```
+
+`r l`
+
+```{r remove_batch, include=FALSE}
+if (length(v1)>0) {
+  x<-smp[[v1[1]]];
+  if (class(x)=='factor') {
+    adj<-ComBat(mtr, x, mod.nll, TRUE, FALSE);
+  } else {
+    fit<-lmFit(mtr, smp[, v1[1], drop=FALSE]);
+    res<-residuals.MArrayLM(object=fit, y=mtr);
+    adj<-res-(rowMeans(res)-rowMeans(mtr)); 
+  }
+} else {
+  modSv<-sv$sv[, sv0, drop=FALSE]; 
+  fit<-lmFit(mtr, modSv);
+  res<-residuals.MArrayLM(object=fit, y=mtr);
+  adj<-res-(rowMeans(res)-rowMeans(mtr)); 
+}
+p2<-f.pvalue(adj, mod.int, mod.nll);
+saveRDS(adj, file=paste(path.r, 'batch_adjusted.rds', sep='/')); 
+stat<-cbind(stat, p_Adj=p2, FDR_Adj=p.adjust(p2, method='BH')); 
+out$statistics<-stat; 
+out$adjusted<-adj;
+saveRDS(out, file=paste(path.r, 'surrogate_variable.rds', sep='/')); 
+```
+
+<div align='center'> 
+```{r p_value_adj, fig.width=6, fig.height=6, out.width='640px'}
+x<--1*log10(stat[, c(1, 5)]); 
+x[x==Inf]<-1+max(x[x<Inf]); 
+par(mar=c(5,5,2,2));
+plot(x, pch=19, col='#88888888', xlab='-Log10(p), Original', ylab='-Log10(p), Adjusted', cex.lab=2, xlim=range(x), ylim=range(x)); 
+abline(0, 1, col='darkblue', lty=2);
+
+# figure caption
+l<-'the y-axis p values were based on the data adjusted by';
+if (length(v1)>0) l<- paste(l, 'the known batch effect variable using the _ComBat_ (categoral) or _limma_ (numeric) method.') else
+  l<-paste(l, 'surrogate variables not siginicantly associated to variable(s) of interest using the _limma_ method.')
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2.** Same plot as **Figure 1**, except that `r l`
+</div>
+
+`r home.url`
+
+# Evaluate all variables
+
+Finally, the confounding or batch effect of all sample features and surrogate variables was evaluated one by one, after removing it from the original data matrix. 
+
+```{r all_variable, include=FALSE}
+vs<-cbind(smp, sv[[1]]); 
+vs<-vs[, !(colnames(vs) %in% v0), drop=FALSE]; 
+adj<-lapply(1:ncol(vs), function(i) {
+  cat('Adjust for: ', colnames(vs)[i], '\n'); 
+  if (!is.numeric(vs[[i]])) adj<-ComBat(mtr, vs[, i], mod.nll, TRUE, FALSE) else {
+    fit<-lmFit(mtr, vs[, i, drop=FALSE]);
+    res<-residuals.MArrayLM(object=fit, y=mtr);
+    res-(rowMeans(res)-rowMeans(mtr)); 
+  }
+});
+ps<-sapply(adj, function(adj) f.pvalue(adj, mod.int, mod.nll)); 
+names(adj)<-colnames(ps)<-colnames(vs); 
+ps<-cbind(Original=p0, ps); 
+logp<--log10(ps); 
+logp0<-logp[, 1];
+maxp<-floor(max(logp0[logp0<Inf], na.rm=TRUE)); 
+cnt<-apply(logp, 2, function(x) sapply(0:maxp, function(y) length(x[x>=y & !is.na(x)]))); 
+cnt[is.na(cnt)]<-0;
+colnames(cnt)<-c('Original', colnames(vs));
+rownames(cnt)<-0:maxp;
+cnt0<-t(cnt[, -1]/cnt[, 1]); 
+cnt0<-sapply(1:nrow(cnt), function(i) {
+  exp<-10^(-i+1)*nrow(mtr);
+  cnt[i, ]/exp;
+})
+colnames(cnt0)<-paste('-Log10(p)>=', 0:maxp, sep=''); 
+
+cnt<-cbind(Expected=round(nrow(mtr)/10^(1:nrow(cnt)-1), 3), cnt); 
+df<-data.frame(paste('>=', 0:maxp, sep=''), cnt, stringsAsFactors = FALSE); 
+names(df)[1]<-'-Log10(p)';
+CreateDatatable(df, paste(path.tbl, 'gene_count_adjusted.html', sep='/'), rownames=FALSE); 
+saveRDS(adj, paste(path.r, 'adjusted_all_variables.rds', sep='/')); 
+saveRDS(ps, paste(path.r, 'adjusted_all_variables_pvalue.rds', sep='/')); 
+```
+
+<div align='center'>
+```{r all_variable_top_ratio, fig.width=1+0.25*ncol(cnt0), fig.height=1.5+0.25*nrow(cnt0), out.width='480px'}
+cnt0[cnt0==0]<-NA;
+c<-log10(cnt0);
+PlotColoredBlock(c, min=floor(min(c, na.rm=TRUE)-1), max=ceiling(max(c, na.rm=TRUE)+1), num.breaks = 127); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 3.** After adjusting the original data for each of the sample features or surrogate variables, ANOVA p values were calculated again for each gene. The numbers of significant genes obtaining from each adjusted data matrix were compared to the numbers of genes obtained from the original matrix. The color in this plot represents relative frequency of genes (red = more). Clcik [here](table/gene_count_adjusted.html) to view table of gene counts.
+</div>
+
+`r home.url`
+
+***
+**END OF DOCUMENT**
+

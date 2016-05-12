@@ -1,0 +1,57 @@
+####################################################################################################
+# Prepare the following two table-like data objects in text, Excel or R files to run this analysis
+# <matrix> a numeric matrix saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds 
+#   - first column is unique variable names such as gene or protein ID
+#   - first row is unique sample names
+#   - impact of missing values has not been untested, try not to include any
+# <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - first column is unique sample names matching column names of <matrix>
+#   - first row is unique sample features such as genotype, treatment, and cell type
+#   - impact of missing values has not been untested, try not to include any
+#   - the values of parameters <interest> and <batch> must match column names in this table
+####################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for generating any report using the RoCA::CreateReport() function
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/adjust_batch/adjust_batch.Rmd      
+output: examples/circadian_rhythm/                                                                                # Where to write all the output files
+home: http://zhezhangsh.github.io/RoCA                                                                            # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                                                                                # Name of the analyst
+zip: no                                                                                                           # Whether to zip all output files
+
+#################
+##### ABOUT #####
+#################
+# Description of this analysis, could be any name/text pairs
+description:    
+  Project: Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein
+          2-dependent diurnal lipid transport and metabolism. (**[GSE67426](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426)**)
+  PubMed: "Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways 
+          in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. 
+          Sci Rep 2016 Apr 21;6:24631. PMID: [27097688](http://www.ncbi.nlm.nih.gov/pubmed/27097688)."
+  Experimental design: Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 
+          2 hours during 3 consecutive days.
+  Analysis: This analysis evaluates the potential batch effect of different days, a sample feature named ***Replicate***, on which the mice were harvested. 
+          Only the wildtype mice and a subset of genes with high between sample variance were used for demonstration. 
+
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, saved in .rds format using the saveRDS() function
+input:
+  matrix: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr_wt_ss.rds     # The data matrix to be adjusted for batch effect 
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample_wt.rds      # A data.frame of sample features. Rows match columns of the data matrix
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:
+  interest:         # One or more sample features in the <sample> table that were variable(s) of interest in this study
+  - Hour
+  batch: Replicate  # One sample feature in the <sample> table that is the known source of batch effect; empty if not known
+  nsv: 5            # Number of surogate variables to estimate when running the sva() function
+  iteration: 20     # Number of iterations when running the irwsva algorithm implemented in the sva() function
+  anova: 0.01       # Cutoff of ANOVA p value indicating the significance of correlation between sample features and surrogate variables
