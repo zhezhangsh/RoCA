@@ -131,7 +131,7 @@ mn<-apply(expr0, 1, min);
 mx<-apply(expr0, 1, max); 
 
 f<-as.factor(phen); 
-fdat<-data.frame(t(expr0));
+dat<-data.frame(t(expr0));
 dat$Group<-f;
 formula = as.formula(paste0("cbind(", paste(names(dat)[-length(dat)],collapse=","), ")~Group") ) 
 aov<-aov(formula, data=dat);

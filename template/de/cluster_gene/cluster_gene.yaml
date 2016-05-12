@@ -70,7 +70,7 @@ input: # Location of input files
 ######################
 # Parameters to run this analysis
 parameter: # All parameters
-  term: Hour              ## Corresponding to a column name in sample; based on which samples will be grouped
+  term: Group             ## Corresponding to a column name in sample; based on which samples will be grouped
   normalization:          ## Optional re-normalization of data to let genes havign comparable means and SDs
     method: 2         ### Method of normalization. 0: no normalization; 1: mean=0 & SD=1 for all row;  2: normalize to a control group
     control: WT_00Hr  ### Name of the control group. When the normalization method is 2, the mean of this sample group will be 0 for all genes

@@ -63,19 +63,12 @@ Circadian rhythm in mouse liver, wild type mice only, 3 replicates every 2 hours
 
   - There are 12065 total genes
   - There are 36 total [samples](table/sample.html)
-  - There are 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22 sample groups
+  - There are WT_00Hr, WT_02Hr, WT_04Hr, WT_06Hr, WT_08Hr, WT_10Hr, WT_12Hr, WT_14Hr, WT_16Hr, WT_18Hr, WT_20Hr, WT_22Hr sample groups
 
 The input data matrix was normalized using sample group _WT_00Hr_ as control, so, the data of each gene was substracted by control group mean and had SD equal to 1.0
 
 <div align='center'>
-
-```
-## Error in names(col) <- names(cex) <- names(pch) <- names(X): 'names' attribute [36] must be the same length as the vector [33]
-```
-
-```
-## Error in strwidth(legend, units = "user", cex = cex, font = text.font): plot.new has not been called yet
-```
+<img src="figure/pca-1.png" title="plot of chunk pca" alt="plot of chunk pca" width="640px" />
 </div>
 
 <div style="color:darkblue; padding:0 3cm">
