@@ -1,7 +1,7 @@
 ---
 title: "Analysis and adjustment of batch effect"
 author: "Zhe Zhang"
-date: "2016-05-11"
+date: "2016-05-12"
 output:
   html_document:
     self_contained: no
@@ -66,11 +66,11 @@ This analysis evaluates the potential batch effect of different days, a sample f
 
 
 
-A total of 36 samples and 2 sample features was provided by the input data. Click [here](html/sample.html) to see a full list of samples and samples features. 
+A total of 36 samples and 3 sample features was provided by the input data. Click [here](html/sample.html) to see a full list of samples and samples features. 
 
-  - Sample feature(s) to be studied by this project (variables of interest): ***Hour***
+  - Sample feature(s) to be studied by this project (variables of interest): ***Group***
   - Sample feature with potential batch effect: ***Replicate***
-  - All other known sample feature(s): ****** 
+  - All other known sample feature(s): ***Hour*** 
 
 <div style="color:darkblue; padding:0 2cm">
 **Table 1** All sample features provided by the input data, which could include 1 or many variables of interest and 0 or 1 confounding variable known to be responsible for the batch effect in data. (**Sample_feature:** all sample features given in the input data; **Num_level:** number of unique values of each sample feature; **Variable_of_interest:** whether this sample feature is a variable of interest in this project; and **Batch_effect** whether this sample feature is a known source of batch effect)
@@ -81,8 +81,9 @@ A total of 36 samples and 2 sample features was provided by the input data. Clic
 
 | Sample_feature |  Type   | Num_level | Variable_of_interest | Batch_effect |
 |:--------------:|:-------:|:---------:|:--------------------:|:------------:|
+|     Group      | factor  |    12     |         TRUE         |    FALSE     |
 |   Replicate    | factor  |     3     |        FALSE         |     TRUE     |
-|      Hour      | integer |    12     |         TRUE         |    FALSE     |
+|      Hour      | integer |    12     |        FALSE         |    FALSE     |
 
 
 </div>
@@ -102,10 +103,11 @@ The _sva()_ function was used to identify  surrogate variables from the original
 <div align='center', style="padding:0 1cm">
 
 
-|          |  SV1  |   SV2   | SV3  | SV4  | SV5  |
-|:---------|:-----:|:-------:|:----:|:----:|:----:|
-|Replicate | 0.790 | 0.69000 | 0.10 | 0.00 | 0.47 |
-|Hour      | 0.037 | 0.00069 | 0.78 | 0.89 | 0.25 |
+|          | SV1  | SV2  |  SV3  |   SV4   | SV5  |
+|:---------|:----:|:----:|:-----:|:-------:|:----:|
+|Group     | 0.55 | 0.50 | 0.800 | 7.0e-01 | 0.94 |
+|Replicate | 0.11 | 0.05 | 0.032 | 8.5e-05 | 0.96 |
+|Hour      | 0.89 | 0.77 | 0.100 | 3.4e-01 | 0.96 |
 
 
 </div>

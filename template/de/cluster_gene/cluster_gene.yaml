@@ -23,7 +23,7 @@
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/cluster_gene/cluster_gene.Rmd  # URL or file name of the .Rmd template file provided by the developer
-output: examples/circadian_rhythm                                                   # Where to write all the output files
+output: examples/NCI60_Organ                                                        # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                  # Name of the analyst
 zip: no                                                                             # Whether to zip all output files
@@ -33,15 +33,13 @@ zip: no                                                                         
 #################
 # Description of this analysis, could be any name/text pairs
 description: 
-  Project: Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein
-          2-dependent diurnal lipid transport and metabolism. (**[GSE67426](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426)**)
-  PubMed: "Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways 
-          in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. 
-          Sci Rep 2016 Apr 21;6:24631. PMID: [27097688](http://www.ncbi.nlm.nih.gov/pubmed/27097688)."
-  Experimental design: Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 
-          2 hours during 3 consecutive days.
-  Analysis: Circadian rhythm in mouse liver, wild type mice only, 3 replicates every 2 hours (12 groups).
-          Each gene was adjusted to its 0 hour mean and rescaled to make its standard deviation equal to 0.
+  Project: Comparison between cell lines from 9 different cancer tissues (NCI-60); **[GSE5949](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)**
+  PubMed: "Reinhold WC, Reimers MA, Lorenzi P, Ho J et al. **Multifactorial regulation of E-cadherin expression: an integrative study.**
+          Mol Cancer Ther 2010 Jan;9(1):1-16. PMID: [20053763](http://www.ncbi.nlm.nih.gov/pubmed/20053763)."
+  Experimental design: Comparison between cell lines from 9 different cancer tissue of origin types 
+          (Breast, Central Nervous System, Colon, Leukemia, Melanoma, Non-Small Cell Lung, Ovarian, Prostate, Renal) from NCI-60 panel
+  Analysis: Cluster genes co-expressed acroo 9 tissues/organs
+          As a demonstration, only a subset of genes in the original data with high between sample variance were used.
 
 
 ######################
@@ -49,18 +47,18 @@ description:
 ######################
 # Prepared input data, saved in .rds format using the saveRDS() function
 input: # Location of input files
-  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr_wt.rds        ## a matrix of data, row=gene, column=sample 
+  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/expr.txt   ## a matrix of data, row=gene, column=sample 
     # The order of the samples in the matrix matters, order them based on the order of the groups
     # It's optional to rescale the data matrix to make the mean and SD of rows comparable to each other, or normalize the data on the fly
     # No missing values allowed, remove rows with missing values or run imputation if estimate missing values
-  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/anno.rds     ## a data frame of gene annotation 
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/anno.rds  ## a data frame of gene annotation 
     # Row names match the row names of the data matrix
     # First column should be official gene symbol
-  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample_wt.rds    ## a data frame of sample manifest
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/sample.rds    ## a data frame of sample manifest
     # Row names match the column names of the data matrix
     # One column (specify it in parameter:term) should be the variable of interest that will classify samples into multiple groups
     # Order the samples the way you want to show them in the output
-  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/mouse.rds                   ## collection of gene sets, availble online
+  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/human.rds     ## collection of gene sets, availble online
     # the first is metadata of gene sets, 
     # the second is a list of gene set-gene mapping
     # refer to the rchive (github.com/zhezhangsh/rchive) repo for how to create a gene set collection
@@ -92,7 +90,3 @@ parameter: # All parameters
     r: 0.60         ### Minimum correlation coefficient between a gene and centroid to inlude a gene in the cluster
     diff: 0.10      ### Minimum correlation coefficient difference between and best and the second best
     times: 20.0     ### How many times to run reclustering cycles
-  plot:                   ## How to plot results
-    rescale: yes     ### whether to rescale data matrix
-    zero: yes        ### whether to use the first group as background and set its mean to 0 for all genes
-    ylab: Normalized group average  ### y-axis label of cluster average

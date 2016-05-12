@@ -11,7 +11,7 @@
 
 <meta name="author" content="Zhe Zhang" />
 
-<meta name="date" content="2016-05-11" />
+<meta name="date" content="2016-05-12" />
 
 <title>Analysis and adjustment of batch effect</title>
 
@@ -223,7 +223,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis and adjustment of batch effect</h1>
 <h4 class="author"><em>Zhe Zhang</em></h4>
-<h4 class="date"><em>2016-05-11</em></h4>
+<h4 class="date"><em>2016-05-12</em></h4>
 
 </div>
 
@@ -278,11 +278,11 @@ div.tocify {
 </div>
 <div id="samples-and-variables-of-interest" class="section level1">
 <h1><span class="header-section-number">2</span> Samples and variable(s) of interest</h1>
-<p>A total of 36 samples and 2 sample features was provided by the input data. Click <a href="html/sample.html">here</a> to see a full list of samples and samples features.</p>
+<p>A total of 36 samples and 3 sample features was provided by the input data. Click <a href="html/sample.html">here</a> to see a full list of samples and samples features.</p>
 <ul>
-<li>Sample feature(s) to be studied by this project (variables of interest): <strong><em>Hour</em></strong></li>
+<li>Sample feature(s) to be studied by this project (variables of interest): <strong><em>Group</em></strong></li>
 <li>Sample feature with potential batch effect: <strong><em>Replicate</em></strong></li>
-<li>All other known sample feature(s): ******</li>
+<li>All other known sample feature(s): <strong><em>Hour</em></strong></li>
 </ul>
 <div style="color:darkblue; padding:0 2cm">
 <strong>Table 1</strong> All sample features provided by the input data, which could include 1 or many variables of interest and 0 or 1 confounding variable known to be responsible for the batch effect in data. (<strong>Sample_feature:</strong> all sample features given in the input data; <strong>Num_level:</strong> number of unique values of each sample feature; <strong>Variable_of_interest:</strong> whether this sample feature is a variable of interest in this project; and <strong>Batch_effect</strong> whether this sample feature is a known source of batch effect)
@@ -300,17 +300,24 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
+<td align="center">Group</td>
+<td align="center">factor</td>
+<td align="center">12</td>
+<td align="center">TRUE</td>
+<td align="center">FALSE</td>
+</tr>
+<tr class="even">
 <td align="center">Replicate</td>
 <td align="center">factor</td>
 <td align="center">3</td>
 <td align="center">FALSE</td>
 <td align="center">TRUE</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="center">Hour</td>
 <td align="center">integer</td>
 <td align="center">12</td>
-<td align="center">TRUE</td>
+<td align="center">FALSE</td>
 <td align="center">FALSE</td>
 </tr>
 </tbody>
@@ -340,20 +347,28 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Replicate</td>
-<td align="center">0.790</td>
-<td align="center">0.69000</td>
-<td align="center">0.10</td>
-<td align="center">0.00</td>
-<td align="center">0.47</td>
+<td align="left">Group</td>
+<td align="center">0.55</td>
+<td align="center">0.50</td>
+<td align="center">0.800</td>
+<td align="center">7.0e-01</td>
+<td align="center">0.94</td>
 </tr>
 <tr class="even">
+<td align="left">Replicate</td>
+<td align="center">0.11</td>
+<td align="center">0.05</td>
+<td align="center">0.032</td>
+<td align="center">8.5e-05</td>
+<td align="center">0.96</td>
+</tr>
+<tr class="odd">
 <td align="left">Hour</td>
-<td align="center">0.037</td>
-<td align="center">0.00069</td>
-<td align="center">0.78</td>
 <td align="center">0.89</td>
-<td align="center">0.25</td>
+<td align="center">0.77</td>
+<td align="center">0.100</td>
+<td align="center">3.4e-01</td>
+<td align="center">0.96</td>
 </tr>
 </tbody>
 </table>

@@ -50,7 +50,7 @@ input:
 # Parameters to run this analysis
 parameter:
   interest:         # One or more sample features in the <sample> table that were variable(s) of interest in this study
-  - Hour
+  - Group
   batch: Replicate  # One sample feature in the <sample> table that is the known source of batch effect; empty if not known
   nsv: 5            # Number of surogate variables to estimate when running the sva() function
   iteration: 20     # Number of iterations when running the irwsva algorithm implemented in the sva() function
