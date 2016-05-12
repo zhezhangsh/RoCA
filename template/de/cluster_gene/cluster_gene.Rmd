@@ -66,12 +66,13 @@ anno<-anno[rownames(anno) %in% rownames(expr), , drop=FALSE];
 smpl<-smpl[rownames(smpl) %in% colnames(expr), , drop=FALSE];
 if (nrow(anno) <= 1) stop("Not enough genes to perform clustering.\n");
 if (nrow(smpl) <= 1) stop("Not enough samples to perform clustering.\n");
-expr0<-expr[rownames(anno), rownames(smpl)]; 
+expr0<-expr[rownames(anno), rownames(smpl)];  # Original matrix
 
 phen<-smpl[, prms$term[1]]; 
 
 if (prms$normalization$method == 2) {
   ind<-which(smpl[, prms$term[1]]==prms$normalization$control);
+  if (length(ind)==0) stop('Error: no samples belong to control group "', prms$normalization$control,  '".\n')
   expr<-t(apply(expr0, 1, function(x) (x-mean(x[ind]))/sd(x))); 
 } else if (prms$normalization$method == 1) expr<-t(scale(t(expr))) else expr<-expr0; 
 
@@ -79,12 +80,6 @@ CreateDatatable(smpl, paste(path.tbl, 'sample.html', sep='/'));
 
 # URL to project home
 home.url <- Link2Home(yml$home);
-
-# Description of this analysis
-lns<-lapply(names(yml$description), function(nm) {
-  c(paste('##', nm), '\n', yml$description[[nm]], '\n'); 
-});
-lns<-paste(do.call('c', lns), collapse='\n'); 
 ```
 
 `r home.url`
@@ -132,11 +127,11 @@ legend(x='topright', legend=names(col), text.col=col, bty='n', cex=.5);
 # Summary statistics and ANOVA
 grp<-split(rownames(smpl), phen)[unique(phen)];
 m<-sapply(grp, function(s) rowMeans(expr0[, s, drop=FALSE])); 
-mn<-apply(expr, 1, min);
-mx<-apply(expr, 1, max); 
+mn<-apply(expr0, 1, min);
+mx<-apply(expr0, 1, max); 
 
 f<-as.factor(phen); 
-dat<-data.frame(t(expr));
+fdat<-data.frame(t(expr0));
 dat$Group<-f;
 formula = as.formula(paste0("cbind(", paste(names(dat)[-length(dat)],collapse=","), ")~Group") ) 
 aov<-aov(formula, data=dat);
@@ -407,10 +402,6 @@ More info:
 ```{r cluster_stats, include=FALSE}
 ms<-sapply(names(cl), function(nm) { 
   mtrx<-expr[cl[[nm]], , drop=FALSE]; 
-  if (prms$plot$rescale) mtrx<-t(scale(t(mtrx)));
-  if (prms$plot$zero) mtrx<-apply(mtrx, 2, function(x) x-rowMeans(mtrx[, grp[[1]], drop=FALSE]));
-  x<-sortColumn(x, grp);
-
   mtrx<-sortColumn(mtrx, grp);
   
   ms<-colMeans(mtrx); 
@@ -489,11 +480,9 @@ tbl[is.na(tbl)]<-'0';
 <div align='center'>
 ```{r plot_series, include=TRUE,  fig.width=8, fig.height=6, out.width='750px'}
 ms<-sapply(cl, function(cl) colMeans(expr[cl,  , drop=FALSE]));
-if (prms$plot$rescale) ms<-t(scale(t(ms))); 
 m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
 se<-sapply(grp, function(g) apply(ms[g, , drop=FALSE],  2, function(x) sd(x)/sqrt(length(x)))); 
-if (prms$plot$zero) m<-m-m[, 1];
-PlotSeries(m, se, c('', prms$plot$ylab)); 
+PlotSeries(m, se, c('', 'Normalized group average')); 
 ```
 </div>
 
@@ -523,8 +512,6 @@ PlotColoredBlock(m, min=-1*max(abs(m), na.rm=TRUE), max=max(abs(m), na.rm=TRUE),
 <div align='center'>
 ```{r plot_group_means, include=TRUE, fig.width=8, fig.height=6, out.width='480px'}
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
-if (prms$plot$rescale) d<-t(scale(t(d))); 
-if (prms$plot$zero) d<-apply(d, 2, function(x) x-rowMeans(d[, grp[[1]], drop=FALSE]));
 d<-sapply(grp, function(g) rowMeans(d[, g, drop=FALSE])); 
 colnames(d)<-names(grp); 
 PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Group average'); 
@@ -542,9 +529,6 @@ abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1));
 ```{r plot_heatmap, include=TRUE, fig.width=8, fig.height=6, out.width='600px'}
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sortColumn(d, grp); 
-#rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
-if (prms$plot$rescale) d<-t(scale(t(d))); 
-if (prms$plot$zero) d<-apply(d, 2, function(x) x-rowMeans(d[, grp[[1]], drop=FALSE]));
 PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), num.breaks = 127, groups=grp, key='Expression level'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
