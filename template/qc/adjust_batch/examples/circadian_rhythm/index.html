@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Zhe Zhang" />
+
+<meta name="date" content="2016-05-11" />
+
+<title>Analysis and adjustment of batch effect</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="index_files/highlight/default.css"
+      type="text/css" />
+<script src="index_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="index_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Analysis and adjustment of batch effect</h1>
+<h4 class="author"><em>Zhe Zhang</em></h4>
+<h4 class="date"><em>2016-05-11</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction: </strong> This analysis applies the Bioconductor <strong><em><a href="https://bioconductor.org/packages/release/bioc/html/sva.html">SVA</a></em></strong> (Surrogate Variable Analysis) package and other methods to evaluate and adjust for known or unknown batch effect. It includes the following steps:</p>
+<ul>
+<li>Analyst provides the original data matrix and sample description with one or multiple features, and specifies
+<ul>
+<li>one or multiple features as variable(s) of interest</li>
+<li>zero or one feature known to cause batch or other confounding effect</li>
+</ul></li>
+<li>One to several surrogate variables will be identified from the original matrix, each accounts for a portion of the total data variation
+<ul>
+<li>The association between each sample feature and surrogate variable will be evaluated by ANOVA (categoral feature) or Pearson’s correlation (numeric feature)</li>
+<li>Samples are grouped by variable(s) of interest. P values of 1-way ANOVA across all sample groups is obtained for each gene, using the original data matrix or the data matrix adjusted by surrogate variables.</li>
+</ul></li>
+<li>Create an adjusted data matrix from the original one by removing known or potential batch effect.
+<ul>
+<li>A new data matrix is generated after adjusting the original ones for the sample feature known to cause the confoundering or batch effect. The <strong><em><a href="combat%20batch%20effect%20correction">ComBat</a></em></strong> and <strong><em><a href="http://bioinf.wehi.edu.au/limma/">limma</a></em></strong> methods will be used respectively for categoral and numeric variables. Adjust data for surrogate variable(s) instead if no sample feature is known to cause batch effect.</li>
+<li>P values of 1-way ANOVA are compared between the original and the adjusted data matrix.</li>
+</ul></li>
+<li>Adjust the data matrix by sample features and surrogate variables one by one and compare the ANOVA p values.</li>
+</ul>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. (<strong><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">GSE67426</a></strong>)</p>
+</div>
+<div id="pubmed" class="section level2">
+<h2><span class="header-section-number">1.2</span> PubMed</h2>
+<p>Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. Sci Rep 2016 Apr 21;6:24631. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/27097688">27097688</a>.</p>
+</div>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">1.3</span> Experimental design</h2>
+<p>Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 2 hours during 3 consecutive days.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.4</span> Analysis</h2>
+<p>This analysis evaluates the potential batch effect of different days, a sample feature named <strong><em>Replicate</em></strong>, on which the mice were harvested.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="samples-and-variables-of-interest" class="section level1">
+<h1><span class="header-section-number">2</span> Samples and variable(s) of interest</h1>
+<p>A total of 36 samples and 2 sample features was provided by the input data. Click <a href="html/sample.html">here</a> to see a full list of samples and samples features.</p>
+<ul>
+<li>Sample feature(s) to be studied by this project (variables of interest): <strong><em>Hour</em></strong></li>
+<li>Sample feature with potential batch effect: <strong><em>Replicate</em></strong></li>
+<li>All other known sample feature(s): ******</li>
+</ul>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Table 1</strong> All sample features provided by the input data, which could include 1 or many variables of interest and 0 or 1 confounding variable known to be responsible for the batch effect in data. (<strong>Sample_feature:</strong> all sample features given in the input data; <strong>Num_level:</strong> number of unique values of each sample feature; <strong>Variable_of_interest:</strong> whether this sample feature is a variable of interest in this project; and <strong>Batch_effect</strong> whether this sample feature is a known source of batch effect)
+</div>
+<div align="center" ,="" style="padding:0 2cm">
+<table>
+<thead>
+<tr class="header">
+<th align="center">Sample_feature</th>
+<th align="center">Type</th>
+<th align="center">Num_level</th>
+<th align="center">Variable_of_interest</th>
+<th align="center">Batch_effect</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Replicate</td>
+<td align="center">factor</td>
+<td align="center">3</td>
+<td align="center">FALSE</td>
+<td align="center">TRUE</td>
+</tr>
+<tr class="even">
+<td align="center">Hour</td>
+<td align="center">integer</td>
+<td align="center">12</td>
+<td align="center">TRUE</td>
+<td align="center">FALSE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="identification-and-evaluation-of-surrogate-variables" class="section level1">
+<h1><span class="header-section-number">3</span> Identification and evaluation of surrogate variables</h1>
+<p>The <em>sva()</em> function was used to identify surrogate variables from the original data matrix. Each surrogate variable is responsible for part of the overall data variation, and may or may not be related to known sample features, such as any variables of interest or experiment batch. Since each sample was assigned a value of each surrogate variable by the <em>sva</em> function, these values were used to evaluate the association between surrogate variables and sample features using ANOVA for categoral variables or Pearson’s correlation for numeric variables.</p>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Table 2</strong> ANOVA p value for the association between surrogate variables and sample features.
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="center">SV1</th>
+<th align="center">SV2</th>
+<th align="center">SV3</th>
+<th align="center">SV4</th>
+<th align="center">SV5</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Replicate</td>
+<td align="center">0.820</td>
+<td align="center">0.75000</td>
+<td align="center">0.083</td>
+<td align="center">0.00</td>
+<td align="center">0.84</td>
+</tr>
+<tr class="even">
+<td align="left">Hour</td>
+<td align="center">0.051</td>
+<td align="center">0.00045</td>
+<td align="center">0.750</td>
+<td align="center">0.97</td>
+<td align="center">0.29</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <em>f.pvalue()</em> function was used to run ANOVA tests using the variable(s) of interest and original data matrix, so each gene got an ANOVA p value. The test was then run again after adjusting the data matrix for surrogate variables that were not significantly associated with the surrogate variables (p &lt; 0.01). The goal is to evaluate if the global statistical power was improved after the confounding effect of surrogate variables was removed.</p>
+<div align="center">
+<img src="figure/p_value_surrogate-1.png" title="plot of chunk p_value_surrogate" alt="plot of chunk p_value_surrogate" width="640px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 1.</strong> Comparison of the ANOVA p values obtained using the original data matrix and the matrix adjusted by surrogate variables not significantly associated with any variable(s) of interest.
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="adjust-data-for-batch-effect" class="section level1">
+<h1><span class="header-section-number">4</span> Adjust data for batch effect</h1>
+<p>Since sample feature, <em>Replicate</em>, was known to cause batch effect in the data, the original data matrix was then adjusted to remove its effect using the <a href="http://biostatistics.oxfordjournals.org/content/8/1/118.abstract"><em>ComBat</em></a> method if it is a categoral variable or the limma method if it is a numerical variable</p>
+<div align="center">
+<img src="figure/p_value_adj-1.png" title="plot of chunk p_value_adj" alt="plot of chunk p_value_adj" width="640px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 2.</strong> Same plot as <strong>Figure 1</strong>, except that the y-axis p values were based on the data adjusted by the known batch effect variable using the <em>ComBat</em> (categoral) or <em>limma</em> (numeric) method.
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="evaluate-all-variables" class="section level1">
+<h1><span class="header-section-number">5</span> Evaluate all variables</h1>
+<p>Finally, the confounding or batch effect of all sample features and surrogate variables was evaluated one by one, after removing it from the original data matrix.</p>
+<div align="center">
+<img src="figure/all_variable_top_ratio-1.png" title="plot of chunk all_variable_top_ratio" alt="plot of chunk all_variable_top_ratio" width="480px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 3.</strong> After adjusting the original data for each of the sample features or surrogate variables, ANOVA p values were calculated again for each gene. The numbers of significant genes obtaining from each adjusted data matrix were compared to the numbers of genes obtained from the original matrix. The color in this plot represents relative frequency of genes (red = more). Clcik <a href="table/gene_count_adjusted.html">here</a> to view table of gene counts.
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><strong>END OF DOCUMENT</strong></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

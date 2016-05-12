@@ -14,16 +14,17 @@ output:
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
 **Introduction: ** This analysis applies the Bioconductor ***[SVA](https://bioconductor.org/packages/release/bioc/html/sva.html)*** (Surrogate Variable Analysis) package and other methods to evaluate and adjust for known or unknown batch effect. It includes the following steps:
 
-  - Analyst provides the original data matrix and sample description with one or multiple features, and specifies
-    - one or multiple features as variable(s) of interest
-    - zero or one feature known to cause batch or other confounding effect
-  - One to several surrogate variables will be identified from the original matrix, each accounts for a portion of the total data variation
-    - The association between each sample feature and surrogate variable will be evaluated by ANOVA (categoral feature) or Pearson's correlation (numeric feature)
-    - Samples are grouped by variable(s) of interest. P values of 1-way ANOVA across all sample groups is obtained for each gene, using the original data matrix or the data matrix adjusted by surrogate variables. 
-  - Create an adjusted data matrix from the original one by removing known or potential batch effect.
-    - A new data matrix is generated after adjusting the original ones for the sample feature known to cause the confoundering or batch effect. The ***[ComBat](combat batch effect correction)*** and ***[limma](http://bioinf.wehi.edu.au/limma/)*** methods will be used respectively for categoral and numeric variables. Adjust data for surrogate variable(s) instead if no sample feature is known to cause batch effect.
-    - P values of 1-way ANOVA are compared between the original and the adjusted data matrix.
-  - Adjust the data matrix by sample features and surrogate variables one by one and compare the ANOVA p values.
+  - This analysis requires an original data matrix and sample description with one or multiple features, and parameters including
+    * One or multiple features as variable(s) of interest
+    * Zero or one feature known to be the source of batch effect
+    * The number of surrogate variables (default=5) to be identified from the data matrix
+  - The _sva_ function will first identify the given number of surrogate variables, each accounting for a portion of the total data variation. These surrogate variables will be evaluated as below. 
+    * The association between each sample feature and each surrogate variable will be evaluated by ANOVA (categoral feature) or Pearson's correlation (numeric feature)
+    * By grouping samples according variable(s) of interest, 2 sets of 1-way ANOVA p values, using the data matrix and the matrix adjusted for all surrogate variables, will be compared to evaluate whether removing potential batch effect will improve the signal/noise ratio in the data set. 
+  - A new data matrix will be generated after adjusting for batch effect. 
+    * If a sample feature is known to be the source of batch effect, the original matrix will be adjusted for it using  ***[ComBat](combat batch effect correction)*** (categoral variable) or ***[limma](http://bioinf.wehi.edu.au/limma/)*** (continuous variable). It will be adjusted for all surrogate variables instead otherwise.
+    * Same as the last step, the impact of data adjustment will be evaluated with 1-way ANOVA of samples grouped by variable(s) of interest.
+  - An extra step will be carried out to adjust the original data matrix for all sample features and surrogate variables one by one, and evaluate the consequence. 
 </div>
 
 &nbsp;

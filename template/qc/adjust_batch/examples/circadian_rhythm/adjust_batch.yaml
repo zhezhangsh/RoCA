@@ -45,7 +45,6 @@ input:
 # Parameters to run this analysis
 parameter:
   interest:         # column name(s) in the sample data.frame corresponding to variable(s) of interest of the project
-  - Genotype
   - Hour
   batch: Replicate  # column name in the sample data.frame corresponding to the batches
   nsv: 5            # number of surogate variables to estimate when running the sva() function
