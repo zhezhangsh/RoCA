@@ -57,6 +57,11 @@ anno<-ImportTable(DownloadFile(yml$input$annotation, path.input));
 smpl<-ImportTable(DownloadFile(yml$input$sample, path.input)); 
 gset<-ImportR(DownloadFile(yml$input$geneset, path.input)); 
 
+saveRDS(expr, file=paste(path.input, TrimPath(yml$input$data), sep='/')); 
+saveRDS(anno, file=paste(path.input, TrimPath(yml$input$annotation), sep='/')); 
+saveRDS(smpl, file=paste(path.input, TrimPath(yml$input$sample), sep='/')); 
+saveRDS(gset, file=paste(path.input, TrimPath(yml$input$geneset), sep='/')); 
+
 anno<-anno[rownames(anno) %in% rownames(expr), , drop=FALSE]; 
 smpl<-smpl[rownames(smpl) %in% colnames(expr), , drop=FALSE];
 if (nrow(anno) <= 1) stop("Not enough genes to perform clustering.\n");
@@ -80,11 +85,6 @@ lns<-lapply(names(yml$description), function(nm) {
   c(paste('##', nm), '\n', yml$description[[nm]], '\n'); 
 });
 lns<-paste(do.call('c', lns), collapse='\n'); 
-
-saveRDS(expr, file=paste(path.input, 'expr.rds', sep='/')); 
-saveRDS(anno, file=paste(path.input, 'anno.rds', sep='/')); 
-saveRDS(smpl, file=paste(path.input, 'sample.rds', sep='/')); 
-saveRDS(gset, file=paste(path.input, 'geneset.rds', sep='/')); 
 ```
 
 `r home.url`

@@ -70,14 +70,14 @@ input: # Location of input files
 ######################
 # Parameters to run this analysis
 parameter: # All parameters
-  term: Group             ## Corresponding to a column name in sample; based on which samples will be grouped
+  term: Hour              ## Corresponding to a column name in sample; based on which samples will be grouped
   normalization:          ## Optional re-normalization of data to let genes havign comparable means and SDs
     method: 2         ### Method of normalization. 0: no normalization; 1: mean=0 & SD=1 for all row;  2: normalize to a control group
     control: WT_00Hr  ### Name of the control group. When the normalization method is 2, the mean of this sample group will be 0 for all genes
   selection:              ## How significant genes will be selected as seeds for initiating clusters
     min: 200          ### Minimal number of genes for further selection (no further selection if number is lower than it)
-    max: 2000         ### Maximum number of genes to be selected
-    fdr: 0.20         ### First selection criteria, maximum FDR value (ANOVA p value adjusted by BH method)
+    max: 1000         ### Maximum number of genes to be selected
+    fdr: 0.10         ### First selection criteria, maximum FDR value (ANOVA p value adjusted by BH method)
     p: 0.01           ### Second selection criteria, maximum ANOVA p value
     range: 1.0        ### Third selection criteria, the difference of max and min values
   cluster:                ## How initial clusters will be generated
@@ -88,7 +88,7 @@ parameter: # All parameters
       corr: 0.65  #### The minimum correlation coefficient between 2 centroids to merge two clusters
       p: 0.01     #### The maximum p value between 2 centroids to merge two clusters
   recluster:              ## How to refine clusters via reclustering cycles
-    p: 0.02         ### Maximum ANOVA p value to include a gene
+    p: 0.01         ### Maximum ANOVA p value to include a gene
     r: 0.60         ### Minimum correlation coefficient between a gene and centroid to inlude a gene in the cluster
     diff: 0.10      ### Minimum correlation coefficient difference between and best and the second best
     times: 20.0     ### How many times to run reclustering cycles
