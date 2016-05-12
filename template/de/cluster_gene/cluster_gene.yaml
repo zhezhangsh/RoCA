@@ -1,16 +1,21 @@
 #############################################################################################################################
-# To run this analysis, prepare the following R data objects and save them as .Rds files
-# Use the readRDS() function to load examples
-#   1. An R matrix with each sample as a column and each gene as a row. The row names must be NCBI gene IDs.
-#       Preferably, the data has be normalized between samples and log-transformed for gene-gene correlation.
-#   2. An R data.frame with row names matching the data matrix each sample feature as a column and each sample as a row. 
-#       The row names must match the column names in the data matrix and each column provides extra annotation
-#       information, such as official gene symbol and type of gene. URL links can be added to the values with the <a> tag.
-#   3. An R data.frame of samples with row names matching column names of the data matrix. One column name
-#       of this data.frame, specified in the parameter:term field,  will be used to group samples
-#   4. An archive of predefined gene sets, such as KEGG pathways and Gene ontology terms, collected from different
-#       resources, such as NCBI BioSystems and KEGG. Prepared collections for several species can be downloaded from:
-#       https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set. Load an example to see how to prepare your own.
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <data> a numeric matrix saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column is unique Entrez gene ID
+#   - the first row is unique sample names
+#   - for transcriptome data, it's preferred to have data normalized between samples and log2-transformed
+# <annotation> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column is unique Entrez gene ID matching the row names of <data>
+#   - the second column is official gene symbols matching the gene IDs
+# <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - first column is unique sample names matching column names of <matrix>
+#   - first row is unique sample features such as genotype, treatment, and cell type
+#   - the values of parameters <term> must match one of the column names in this table
+# <geneset> a list of 2 elements saved in a .rdata, .rda, or .rds file
+#   - see https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set for examples
+#   - the first element of the list is a table of gene set annotation
+#   - the second element of this list is itself of a list of gene-gene set mapping
+#   - the element names of the seconde element must match the row names of the first element
 #############################################################################################################################
 
 ####################
@@ -18,10 +23,10 @@
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/cluster_gene/cluster_gene.Rmd  # URL or file name of the .Rmd template file provided by the developer
-output: examples/circadian_rhythm                                                                             # Where to write all the output files
-home: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
-analyst: Zhe Zhang                                                                                            # Name of the analyst
-zip: no                                                                                                       # Whether to zip all output files
+output: examples/circadian_rhythm                                                   # Where to write all the output files
+home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                                                  # Name of the analyst
+zip: no                                                                             # Whether to zip all output files
 
 #################
 ##### ABOUT #####
@@ -90,4 +95,4 @@ parameter: # All parameters
   plot:                   ## How to plot results
     rescale: yes     ### whether to rescale data matrix
     zero: yes        ### whether to use the first group as background and set its mean to 0 for all genes
-    ylab: Normalized group average
+    ylab: Normalized group average  ### y-axis label of cluster average

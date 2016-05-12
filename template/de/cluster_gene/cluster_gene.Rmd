@@ -12,21 +12,14 @@ output:
 ---
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-**Introduction: ** This procedure performs a gene-gene clustering analysis that will identify clusters co-expressed genes across multiple sample groups. It first runs an ANOVA to find genes significantly changed across sample groups and uses these genes to initiate a few gene clusters. The clusters will be refined based on several user-specific paramters. Gene set enrichment analysis will be used to assign biological functionality to the finalized gene clusters. 
+**Introduction: ** This analysis performs a gene-gene clustering procedure that will identify clusters of co-expressed genes across multiple sample groups. It first runs an ANOVA to find genes significantly changed across sample groups and uses these genes as seeds to initiate a number of gene clusters. These clusters will be further refined based on several user-specific paramters. Gene set enrichment analysis is then used to find pre-defined gene sets that are over-represented in each cluster. 
 
   - **Selection of differentially expressed gene:** ANOVA is used to get each gene a p value 
-    for its differential expression across sample groups and corresponding false discovery rate 
-    was calculated using the p values. Seed genes for clustering are sequentially selected by FDR, 
-    p value, and range until the number of selected genes is smaller than a given minimal number.
-  - **Gene clustering analysis:** The _hclust{stat}_ function is used to generate hierchical 
-    clustering tree from the seed genes; the tree is cut at a given height to get initial clusters;
-    the cutting height is lowered to get more clusters if the number of clusters is less than the 
-    number of sample groups; the initial clusters are filtered to remove small and outlier genes; 
-    initial clusters close to each other are merged; and finally, the clusters are refined through 
-    multiple rounds of re-clustering while including genes with less significant ANOVA p values. 
-  - **Gene set enrichment analysis:** Hypergeometric test is used to find predefined gene sets over-
-    represented in each gene cluster. A collection of gene sets of different species from different 
-    sources can be found at https://github.com/zhezhangsh/RoCA/tree/master/data.
+    for its differential expression across sample groups and false discovery rates are calculated      using the p values. Afterwards, genes are filtered sequentially by their FDR, p value, and         range until the number of remaining genes is smaller than a given minimal number.
+  - **Gene clustering analysis:** Remaining genes from the last step are used as seeds for the         _hclust{stat}_ function to generate a hierchical clustering tree; the tree is cut at a given       height to get initial clusters; the cutting height will be lowered if the number of clusters is     less than the number of sample groups; the initial clusters are filtered to remove small           clusters, and refined to remove outlier genes; initial clusters close to each other are merged;     and finally, the clusters are refined through multiple rounds of re-clustering while including     genes with less significant ANOVA p values. 
+  - **Gene set enrichment analysis:** Hypergeometric test is used to find predefined gene sets         over-represented in each gene cluster. A collection of gene sets obtained from                     different sources are available for a few model species and can be found at             
+    https://github.com/zhezhangsh/RoCA/tree/master/data.
+    
 </div>
 
 &nbsp;
@@ -62,7 +55,7 @@ path.input <- f['input'];
 expr<-ImportTable(DownloadFile(yml$input$data, path.input)); 
 anno<-ImportTable(DownloadFile(yml$input$annotation, path.input)); 
 smpl<-ImportTable(DownloadFile(yml$input$sample, path.input)); 
-gset<-ImportList(DownloadFile(yml$input$geneset, path.input)); 
+gset<-ImportR(DownloadFile(yml$input$geneset, path.input)); 
 
 anno<-anno[rownames(anno) %in% rownames(expr), , drop=FALSE]; 
 smpl<-smpl[rownames(smpl) %in% colnames(expr), , drop=FALSE];
