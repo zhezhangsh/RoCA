@@ -8,6 +8,11 @@ The goal of RoCA is to set up a paradigm of reproducible data analysis. It provi
 
 ---
 
+### Quick links
+
+|:-------------------------------|:---------------------------------------------------|:-------------------------------|
+| Analysis templates & examples  |: [About R Markdown](http://rmarkdown.rstudio.com)  |: [About YAML](http://yaml.org)
+
 <a name="toc"/>
 ##### Table of contents
   - [How to use](#howto)
