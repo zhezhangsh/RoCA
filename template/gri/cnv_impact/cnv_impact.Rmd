@@ -656,7 +656,7 @@ dimnames(t) <- list(paste(colnames(tbl)[1:4], '>'), paste('>', colnames(tbl)[1:4
 
 # Appendix 
 
-Check out the [RoCA project](http://zhezhangsh.github.io/RoCA) to read more.  
+Check out the ***[RoCA project](http://zhezhangsh.github.io/RoCA)*** for more information.  
 
 ## Reproduce this report
 
@@ -675,7 +675,7 @@ To reproduce this report:
 
   3. Run the code below, preferablly after starting a new R session:
 
-```{r reproduce_report, eval=FALSE}
+```{r reproduce_report, eval=FALSE, echo=TRUE}
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
