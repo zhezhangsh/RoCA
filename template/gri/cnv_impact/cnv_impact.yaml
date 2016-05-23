@@ -28,10 +28,10 @@
 ####################
 # Required fields for using the RoCA::CreateReport() function
 template: cnv_impact.Rmd  
-output: MBres_CNV_RNAseq  # Where to save the output files
-home: index.html          # Location to project home (URL or local file)
-analyst: Jim Zhang        # Name of the analyst who runs this analysis
-zip: yes                  # Whether to zip the output folder
+output: mouse_brain_tumor       # Where to save the output files
+home: index.html                # Location to project home (URL or local file)
+analyst: Jim Zhang              # Name of the analyst who runs this analysis
+zip: yes                        # Whether to zip the output folder
 
 #################
 ##### ABOUT #####
@@ -39,9 +39,8 @@ zip: yes                  # Whether to zip the output folder
 # Analyst provides background description about this analysis, such as project title
 description:    
   Project: "Genomics of mouse brain tumors"
-  Experiment: "Mouse brain tumor models of AT/RT and medulloblastoma are studied with whole genome sequencing and RNA-seq."
-  Analysis: "Seven samples of medullowblastoma tumors resistant to drug treatment have both RNA-seq data and CNV calls from whole genome sequencing.
-            The RNA-seq data was processed to get gene-level read counts, so the relationship between CNVs and gene-level can be evaluated."
+  Experiment: "RNA-seq data and CNV calls from whole genome sequencing were generated from the same mouse tumors."
+  Analysis: "The RNA-seq data was processed to get gene-level read counts. The relationship between CNVs and gene-level is evaluated."
 
 ######################
 ##### INPUT DATA #####
@@ -51,7 +50,7 @@ input:
   cnv: cnv.txt                      # CNV information including location, sample, and copy number
   region: exon.txt                  # Location of genomic regions of interest, with optionaly 1 or 2 levels of parent regions
   count: count.txt                  # Digital count of each region (row) and each sample (column), such as RNA-seq gene-level read count
-  annotation: anno_htcount_url.rds  # (Optionally) Extra annotation of the genomic regions. Row names must match row names of <count>
+  annotation: anno.rds              # (Optionally) Extra annotation of the genomic regions. Row names must match row names of <count>
 
 ######################
 ##### PARAMETERS #####
@@ -60,9 +59,7 @@ input:
 parameter:
   feature: gene             # the quantitative feature to be analyzed, corresponding to the row names of both <cnv> and <data> matrix
   measurement: expression   # what's measured for each feature, such as the expression of genes
-  rescale: yes              # whether to rescale the data using the TMM method for the statistical analysis of CNV-feature association
-                            # highly recommended for un-normalized RNA-seq data
-
+  rescale: yes              # whether to rescale the data using TMM method for the statistical analysis, highly recommended for un-normalized data
   remove:                   # filtering rules for the analysis of CNV-feature association
     allzero: yes              # remove features whose count are zero in all analyzed samples
     missing: yes              # remove features with any missiong values in any analyzed samples
