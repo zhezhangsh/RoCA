@@ -22,9 +22,14 @@ output:
 knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
 
 ## Load required R packages
-require(yaml);
+require(gplots);
 require(knitr);
 require(rmarkdown); 
+require(yaml);
+require(RCurl);
+require(awsomics);
+require(rchive);
+require(RoCA);
 
 ## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
 ## But, the developer can also provide the option to load the YAML file on the fly.
@@ -65,7 +70,7 @@ home.url <- Link2Home(yml$home);
 
 `r WriteDescription(yml$description)`
 
-```{r R_code, inc}
+```{r R_code, include=FALSE}
 ## One or more R code chunks
 ```
 

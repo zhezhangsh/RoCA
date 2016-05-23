@@ -1,0 +1,698 @@
+---
+title: "Copy number variation vs. quantatative genomic feature"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+
+**Introduction** This analysis looks into the association between DNA copy number variation (CNV) and a quantitative genomic feature, most commonly the expression level of genes. It requires two types of input data: **1)** the location and copy of CNVs identified from a number of whole genome/exome sequencing samples, and **2)** a matrix of measurements made from the same samples. The rows of this matrix corresponds to a quantitative genomic feature, such as exon, gene, and DHS. The measurements in this matrix should be the number of reads from RNA-seq or similar data mapped to each region. These input data will be used for the following three steps:
+
+  - ***Mapping.*** The location of CNV is mapped to the quantitative feature to identify overlapping pairs. The mapping can be done at multiple levels, such as exons to transcripts to genes. The result of the mapping is two matching matrix with the same number of rows (feature) and columns (samples). In the case of RNA-seq gene expression data, each cell of the first matrix is the average copy number of each gene in each sample, and the corresponding cell of the second matrix is the number of sequence reads mapped to the same gene in the same sample. The mapping results is further summarized by CNV (**Figure 1**) and then by the genomic feature (**Figure 2**).
+  - ***Association.*** The impact of CNVs on the quantitative feature is evaluated with two strategies. First, the correlation between copy number and read count is calculated. In the case of RNA-seq gene expression data, genes with expression level correlated to their copy number variation will be identified (**Figure 3**). Second, using CNVs with heterozygous deletion/duplication, the average change of the read count caused by one copy loss/gain is then calculated globally for all sample, individually for each  sample (**Figure 4**) and individually for each CNV (**Figure 5**). The results will be used for adjusting data in the next step.
+  - ***Adjustment.*** The read count matrix is adjusted for copy number with the goal of reducing between-sample variance. The adjustment is done using 3 different strategy: glabally, for each sample, and for each CNV, based on the results from the last step. In the case of RNA-seq gene expression data, the adjustment will reduce the side effect of copy number on gene expression level, assuming that the following analysis of differential expression is not interested CNV-caused difference. The effect of the adjustment is evaluated based on correlation between sample pairs and between sample variance (**Figure 6**). 
+
+_While this analysis is designed for RNA-seq gene expression data, it can be used for data with similar quantitative characteristics, such as the ChIP-seq reads of H3K4me3 mapped to transcription start sites._
+
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+
+## Load required R packages
+loaded <- LoadPackage(c('RCurl', 'yaml', 'rmarkdown', 'knitr', 'gplots', 'vioplot', 'DT', 'htmlwidgets', 'Matrix', 
+                        'Biobase', 'BiocGenerics', 'S4Vectors', 'GenomeInfoDb', 'GenomicRanges', 'NOISeq', 'edgeR', 
+                        'rchive', 'Agri', 'RoCA', 'CHOPseq', 'awsomics'));
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', ')); 
+
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
+## But, the developer can also provide the option to load the YAML file on the fly.
+## So, the template can be run using the "Knit HTML" button in RStudio
+if (!exists('yml'))                           # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists('cnv_impact.yaml'))           # assume the pairing YAML file exists in the current folder with the same name
+      yml<-yaml.load_file('cnv_impact.yaml');   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+  
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));
+path <- yml$output;
+path.r <- f['R'];
+path.tbl <- f['table'];
+path.fig <- f['figure'];
+path.input <- f['input'];
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+```{r load_data, include=FALSE}
+##########################################################################################
+#### Import input data; use the DownloadFile function to download a file first if it's remote
+## Import from different file types
+cns <- ImportTable(DownloadFile(yml$input$cnv, path.input)); 
+reg <- ImportTable(DownloadFile(yml$input$region, path.input)); 
+cnt <- as.matrix(ImportTable(DownloadFile(yml$input$count, path.input)));
+if (is.null(yml$input$annotation)) ann<-NA else ann <- ImportTable(DownloadFile(yml$input$annotation, path.input)); 
+
+saveRDS(cns, paste(path.r, TrimPath(yml$input$cnv), sep='/')); 
+saveRDS(reg, paste(path.r, TrimPath(yml$input$region), sep='/')); 
+saveRDS(cnt, paste(path.r, TrimPath(yml$input$count), sep='/')); 
+if (!identical(NA, ann)) saveRDS(ann, paste(path.r, TrimPath(yml$input$annotation), sep='/')); 
+```
+
+```{r prepare_data, include=FALSE}
+nm <- intersect(unique(cns[, 4]), colnames(cnt)); 
+if (length(nm) < 3) stop('Error: only ', length(smp), ' samples with both CNVs and read count data; require at least 3.\n');
+cns <- cns[cns[, 4] %in% nm, , drop=FALSE]; 
+
+cnt <- cnt[, colnames(cnt) %in% nm, drop=FALSE]; 
+cnt.ttl <- cnt; 
+if (prms$rescale) cnt.ttl0 <- t(t(cnt.ttl) / calcNormFactors(cnt.ttl)); 
+
+reg <- reg[, 1:min(ncol(reg), 5)]; 
+gr <- GRanges(reg[[1]], IRanges(reg[[2]], reg[[3]])); 
+names(gr) <- rownames(reg); 
+if (ncol(reg) > 3) elementMetadata(gr) <- reg[, 4:ncol(reg), drop=FALSE];
+
+cn <- GRanges(cns[[1]], IRanges(cns[[2]], cns[[3]])); 
+names(cn) <- rownames(cns); 
+cn$copy <- cns [, 5]; 
+cn <- split(cn, cns[, 4]); 
+
+mp <- lapply(cn, function(cn) MapCNV2Feature(cn, gr, 'copy', names(elementMetadata(gr))[1], names(elementMetadata(gr))[2])); 
+cp <- lapply(mp, function(mp) if (ncol(reg) > 3) mp[[length(mp)]]$copy else mp$feature$copy); 
+id <- unique(unlist(lapply(cp, names), use.names=FALSE)); 
+cnv <- sapply(cp, function(cp) cp[id]); 
+rownames(cnv) <- id; 
+
+fea2cnv <- lapply(mp, function(m) if (ncol(reg)>3) m[[length(m)]]$map2cnv else m$map2cnv);
+cnv2fea <- lapply(fea2cnv, function(m) lapply(split(rep(names(m), sapply(m, length)), unlist(m, use.names=FALSE)), unique));
+
+saveRDS(mp, paste(path.r, 'mapped.rds', sep='/')); 
+saveRDS(cnv, paste(path.r, paste(prms$feature, '_copy_all.rds', sep=''), sep='/')); 
+```
+
+`r home.url`
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+# CNV-`r prms$feature` mapping
+
+CNVs are mapped to `r prms$feature`s in all `r length(cn)` samples with both CNV and `r paste(prms$feature, prms$measurement)` data. This section summarizes the mapping results. 
+
+## Mapping results by CNV
+
+```{r summary_cnv, include=FALSE}
+# summarize CNVs
+path.cnv <- paste(path.tbl, 'cnv', sep='/'); 
+if (!dir.exists(path.cnv)) dir.create(path.cnv);
+tbls <- lapply(names(cn), function(nm) {
+  c <- cn[[nm]]; 
+  t <- BiocGenerics::as.data.frame(c);  
+  t <- cbind(t[, 1:3], size=width(c), copy=t[, 6]); 
+  t <- cbind(t, sapply(cnv2fea[[nm]][rownames(t)], length)); 
+  colnames(t) <- c('Chromosome', 'Start', 'End', 'Size', 'Copy', paste('Num', prms$feature, sep='_'));
+  fn <- CreateDatatable(t, paste(path.cnv, nm, sep='/'), caption=paste('CNVs of', nm)); 
+  fn <- as.vector(TruncatePathPrefix(fn, path.tbl))[1]; 
+  s <- sapply(c(0, 1, 3, 4), function(i) length(which(t[,5]==i))); 
+  s <- c(nrow(t), sum(t[, 4])/10^6, 100*length(which(t[,6]>0))/nrow(t), mean(t[, 6]), s, length(which(t[,5]>4)));
+  s <- c(s, c(median(t[, 4]), mean(t[, 4]), min(t[, 4]), max(t[,4])));
+  list(file=fn, stat=s);
+});
+
+fn <- sapply(tbls, function(x) x[[1]]);
+stat.cnv <- t(sapply(tbls, function(x) x[[2]]));
+rownames(stat.cnv) <- names(cn);
+colnames(stat.cnv) <- c('Num_CNV', 'Size_Total(Mb)', 
+                        paste('Mapped_to_', prms$feature, '(%)', sep=''), paste('Num_', prms$feature, '_per_CNV', sep=''),
+                        'Copy_0', 'Copy_1', 'Copy_3', 'Copy_4', 'Copy_5+', 'Size_Median', 'Size_Mean', 'Size_Min', 'Size_Max');
+t <- data.frame(AddHref(rownames(stat.cnv), fn), stat.cnv, stringsAsFactors = FALSE);
+colnames(t) <- c('Sample_ID', colnames(stat.cnv)); 
+
+saveRDS(stat.cnv, paste(path.r, 'summary_cnv.rds', sep='/')); 
+CreateDatatable(t, paste(path.tbl, 'summary_cnv.html', sep='/'), rownames = FALSE, caption = 'Summary of CNV mapping'); 
+```
+
+Summary of CNV-to-`r prms$feature` mapping by CNV. 
+
+  - Therea are a total of **`r format(sum(sapply(cn, length)), big.mark=',')`** CNVs in all samples, or **`r round(mean(stat.cnv[, 'Num_CNV']), 2)`** CNVs per sample.
+  - The average size of CNVs is **`r format(weighted.mean(stat.cnv[, 'Size_Mean'], w=stat.cnv[, 'Num_CNV']), big.mark=',')`**.
+  - **`r round(weighted.mean(stat.cnv[, 3], w=stat.cnv[, 'Num_CNV']), 3)`**% of the CNVs are overlapped to any `r prms$feature`.
+  - [Summary table](table/summary_cnv.html)
+
+<div align='center'>
+```{r pie_cnv, fig.width=6, fig.height=6, out.width='600px'}
+ct <- colSums(stat.cnv[, paste('Copy', c(0, 1, 3, 4, '5+'), sep='_')]);  
+names(ct) <- c('0 copy', '1 copy', '3 copies', '4 copies', '5+ copies'); 
+pie(ct, col=rainbow(length(ct)), cex=1.5);
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 1.** The split of all `r sum(sapply(cn, length))` CNVs with abnormal copy numbers (***0 copy*** = homozygous deletion, ...). CNVs with 5 or more copies are combined. 
+</div>
+
+`r home.url`
+
+`r home.url`
+
+## Mapping results by `r prms$feature`
+
+```{r summary_feature, include=FALSE}
+n2 <- apply(cnv, 1, function(x) length(x[x!=2])); 
+s <- t(apply(cnv, 2, function(c) {
+  n <- length(c[c!=2]); 
+  pct <- round(100*n/length(c), 3); 
+  ns <- sapply(c(0, 1, 3, 4), function(i) length(c[c==i])); 
+  ns <- c(ns, length(c[c>4 & c==round(c)]));
+  ns <- c(ns, length(c[c!=round(c)])); 
+  c(n, pct, ns); 
+})); 
+colnames(s) <- c('Num_Overlap_CNV', 'Pct_Overlap_CNV(%)', 'Copy_0', 'Copy_1', 'Copy_3', 'Copy_4', 'Copy_5+', 'Copy_Partial'); 
+
+saveRDS(s, paste(path.r, paste('summary_', prms$feature, '.rds', sep=''), sep='/')); 
+t <- data.frame(Sample_ID=rownames(s), s, stringsAsFactors = FALSE); 
+colnames(t) <- c('Sample_ID', colnames(s)); 
+fn1 <- CreateDatatable(t, paste(path.tbl, paste('summary_', prms$feature, '.html', sep=''), sep='/'), rownames = FALSE, caption = paste('Summary of', prms$feature, 'copy number')); 
+if (identical(NA, ann)) t <- cnv else t <- cbind(ann[rownames(cnv), ], cnv);
+rownames(t) <- rownames(cnv); 
+fn2 <- CreateDatatable(t, paste(path.tbl, paste('full_', prms$feature, '.html', sep=''), sep='/'), rownames = TRUE, caption = paste('Full table of', prms$feature, 'copy number')); 
+```
+
+Summary of CNV-to-`r prms$feature` mapping by `r prms$feature`. 
+
+  - There are a total of `r nrow(cnv)` `r prms$feature`s to be mapped to CNVs.
+    * `r round(100*length(n2[n2==0])/nrow(cnv), 3)`% are not mapped to any CNVs of any samples.
+    * `r round(100*length(n2[n2==1])/nrow(cnv), 3)`% are mapped to CNVs of one and only one sample.
+    * `r round(100*length(n2[n2>1])/nrow(cnv), 3)`% are mapped to CNVs of multiple samples.
+    * `r round(100*length(n2[n2==length(cn)])/nrow(cnv), 3)`% are mapped to CNVs of all `r ncol(cnv)` samples.
+  - On average, each sample has `r round(mean(s[,2]), 3)`% of all `r prms$feature`s mapped to its CNVs.
+    * `r round(100*mean(s[, 'Copy_1'])/nrow(cnv), 3)`% have heterozygous deletion. 
+    * `r round(100*mean(s[, 'Copy_3'])/nrow(cnv), 3)`% have heterozygous duplication.
+    * `r round(100*mean(s[, 'Copy_Partial'])/nrow(cnv), 3)`% have changed copy numbers with in them.
+  - [Summary of samples](`r as.vector(TruncatePathPrefix(fn1, path))`)
+  - [Full table](`r as.vector(TruncatePathPrefix(fn2, path))`)
+
+<div align='center'>
+```{r pie_feature, fig.width=6, fig.height=6, out.width='600px'}
+ct <- colSums(s[, 3:ncol(s)]);  
+names(ct) <- c('0 copy', '1 copy', '3 copies', '4 copies', '5+ copies', 'Partial'); 
+pie(ct, col=rainbow(length(ct)), cex=1);
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2.** The split of all `r length(n2[n2>0])` `r prms$feature`s with abnormal copy numbers (***0 copy*** = homozygous deletion, ...). The `r prms$feature`s with 5 or more copies are combined, as well as those with changed copy numbers within them. 
+</div>
+
+`r home.url`
+
+# CNV-`r prms$feature` `r prms$measurement`association
+
+This section uses a few statistical methods to evaluate the impact of copy number variations on `r prms$feature` `r prms$measurement`. Since heterozygous deletion/duplication are the most common CNVs, they are main categories to be used for the evaluation. 
+
+```{r filtering, include=FALSE}
+n0 <- nrow(cnv); 
+lns <- paste('  - There are totally ', n0, ' ', prms$feature, 's mapped to CNVs.', sep='')
+
+# common id
+cnv.ttl <- cnv; 
+mtr <- cnt[rownames(cnt) %in% rownames(cnv), , drop=FALSE];
+cnv <- cnv[rownames(mtr), , drop=FALSE]; 
+
+n1 <- nrow(cnv); 
+lns <- c(lns, paste('  -', n1, 'of them have measured', prms$feature, prms$measurement, 'data.')); 
+
+############################# 
+## Filtering
+# remove those with missing values
+if (prms$remove$missing) { # Remove features with missing value
+  n <- apply(cbind(mtr, cnv), 1, function(x) length(x[is.na(x)])); 
+  if (min(n) != 0) stop('Error: all ', prms$feature, 's contain at least 1 missing value in either data matrix; none left\n');
+  mtr <- mtr[n==0, , drop=FALSE];
+  cnv <- cnv[n==0, , drop=FALSE]; 
+  n2 <- nrow(cnv); 
+  lns <- c(lns, paste('  -', n2 , 'of the rest have no missing values.')); 
+} else lns <- c(lns, ' - No filltering of missing values.'); 
+
+# remove those with all 0s in all samples
+if (prms$remove$allzero) { # Remove features with all 0s (such as 0 read count in RNA-seq data)
+  rng <- apply(mtr, 1, function(x) range(x, na.rm = TRUE)); 
+  mtr <- mtr[rng[1, ]!=0 | rng[2, ]!=0, , drop=FALSE];
+  if (nrow(mtr) == 0) stop('Error: ', prms$measurement, ' value of all ', prms$feature, 's contain just 0s; none left\n'); 
+  cnv <- cnv[rownames(mtr), , drop=FALSE]; 
+  n3 <- nrow(cnv); 
+  lns <- c(lns, paste('  -', n3 , 'of the rest have at least 1 non-zero value in all samples.')); 
+} else lns <- c(lns, ' - No filltering of all zeros.'); 
+
+# remove those with low read count
+if (prms$remove$low) { # Remove features with all 0s (such as 0 read count in RNA-seq data)
+  mtr <- filtered.data(mtr, factor = as.factor(colnames(mtr)), norm = FALSE); 
+  if (nrow(mtr) == 0) stop('Error: no ', prms$feature, ' left after removing those with low count\n'); 
+  cnv <- cnv[rownames(mtr), , drop=FALSE]; 
+  n4 <- nrow(cnv); 
+  lns <- c(lns, paste('  -', n4 , 'of the rest have enough counts for further analysis.')); 
+} else lns <- c(lns, ' - No filltering by low counts.'); 
+
+if (nrow(cnv) == 0) stop('Error: no ', prms$feature, ' left after filtering.\n');
+sd <- apply(cnv, 1, sd); 
+if (max(sd) == 0) stop('Error: no ', prms$feature, ' has copy number variation between samples; no analysis can be done\n');
+```
+
+For the analysis in this section, it's strongly recommended to filter the `r prms$feature`s first to remove those with missing values and/or low read counts. The following rules are applied for this data set:
+
+`r paste(lns, collapse='\n')`
+
+The filtering generates two matching matrix of copy numbers and `r prms$feature` `r prms$measurement` measurements. Both with `r nrow(cnv)` rows and `r ncol(cnv)` columns and identical row (`r prms$feature`) and column (sample) names. Both matrix will be used for the remaining analysis of this section.
+
+`r home.url`
+
+## Copy number to `r prms$feature` `r prms$measurement` correlation
+
+```{r correlation, include=FALSE}
+if (prms$rescale) mtr0 <- cnt.ttl0[rownames(mtr), , drop=FALSE] else mtr0 <- cnt.ttl[rownames(mtr), , drop=FALSE]; 
+mtr1 <- log2(mtr0+1); 
+
+s <- t(sapply(1:nrow(mtr), function(i) {
+  corr <- cor.test(mtr1[i, ], cnv[i, ]); 
+  c(corr$estimate, corr$p.value, min(cnv[i, ]), max(cnv[i, ]), mean(cnv[i, ]));
+}));
+s <- cbind(s[, 1:2], p.adjust(s[, 2], method='fdr'), s[, 3:ncol(s)]); 
+dimnames(s)<-list(rownames(cnv), c('Corr', 'pCorr', 'FDR', 'CNV_Min', 'CNV_Max', 'CNV_Mean')); 
+s <- s[order(s[, 2]), ];
+
+saveRDS(s, file=paste(path.r, 'corr2cnv.rds', sep='/'));
+
+if (identical(NA, ann)) t <- s else t <- cbind(ann[rownames(s), ], s); 
+
+saveRDS(s, paste(path.r, paste('summary_', prms$feature, '.rds', sep=''), sep='/')); 
+if (identical(NA, ann)) t <- s else t <- cbind(ann[rownames(s), ], s); 
+fn <- CreateDatatable(t, paste(path.tbl, 'corr2cnv.html', sep='/'), rownames = TRUE, caption = paste('Correlation between', prms$feature, 'and copy number')); 
+```
+
+This analysis asks which `r prms$feature` has its copy numbers correlated to its `r prms$measurement` across all samples. A correlation coefficient and corresponding p value are calculated for each `r prms$feature`. It is expected that the majority of correlation coefficients are positive. 
+
+  - [Full result table of CNV-`r prms$feature` correlation](table/corr2cnv.html)
+  
+<div align='center'>
+```{r corr2cnv, fig.width=12, fig.height=9.6, out.width='800px'}
+par(mfrow=c(2, 2), mar=c(5,5,2,2));
+s0 <- s[!is.na(s[,1]), ]; 
+hist(s0[, 1], col='lightgrey', main='Correlation to copy number', xlab='Correlation coefficient', 
+     ylab=paste('Number of ', prms$feature, 's', sep=''), cex.lab=2, xlim=c(-1, 1),);
+hist(s0[, 2], br=100, col='lightgrey', main='Correlation to copy number', xlab='P value', 
+     ylab=paste('Number of ', prms$feature, 's', sep=''), cex.lab=2, xlim=c(0, 1));
+id1 <- rownames(s0)[s0[,1]==max(s0[, 1])];
+id2 <- rownames(s0)[s0[,1]==min(s0[, 1])]; 
+plot(cnv[id1, ], mtr0[id1, ], pch=8, cex=1.5, col='#0000FF88', main=paste(prms$feature, id1), cex.main=1.5, cex.lab=2, 
+     ylim=c(0, max(mtr0[id1, ])), xlim=c(0, max(3, max(cnv[id1, ]))),
+     xlab='Copy number', ylab=paste(prms$feature, prms$measurement));
+abline(lm(mtr0[id1, ]~cnv[id1, ]), lty=2);
+plot(cnv[id2, ], mtr0[id2, ], pch=8, cex=1.5, col='#0000FF88', main=paste(prms$feature, id2), cex.main=1.5, cex.lab=2, 
+     ylim=c(0, max(mtr0[id2, ])), xlim=c(0, max(3, max(cnv[id2, ]))),
+     xlab='Copy number', ylab=paste(prms$feature, prms$measurement));
+abline(lm(mtr0[id2, ]~cnv[id2, ]), lty=2);
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 3.** The correlation between copy numbers and `r prms$feature` `r prms$measurement` measurements of all samples is calculated for each `r prms$feature`. The top 2 panels are the distributions of correlation coefficients (left) and the corresponding p values (right) of all `r prms$feature`s. Only those with different copy numbers between samples are used. The bottom 2 panels are two selected examples with the highest (left) and lowest (right) correlation coefficients.
+</div>
+
+`r home.url`
+
+## Impact of CNVs on the measurements
+
+This analysis is used to calculate the expected change of `r prms$feature` `r prms$measurement` due to copy number variations. Each measurement of `r prms$feature` with CNV is compared to the measurements of the same `r prms$feature` of samples without CNV and the average difference of all pairs is calculated for each CNV and sample. The results will be used as rescaling factors of data adjustment in the next section.
+
+### Average of all CNVs
+
+```{r cnv_effect, include=FALSE}
+q1 <- apply(mtr, 2, function(x) summary(x)[2]); 
+
+# 1/2/3 copies vs. 2 copies
+ratios <- lapply(1:3, function(c) {
+  print(c);
+  lapply(1:ncol(mtr0), function(i) {
+    lapply((1:ncol(mtr0))[-i], function(j) {
+      x <- mtr0[cnv[,i]==c & cnv[,j]==2, c(i, j), drop=FALSE];
+      x <- x[x[,1]>= c/2*q1[i] & x[,2]>=q1[j], , drop=FALSE];
+      x[,1]/x[,2];
+    })
+  })
+}); 
+ms <- sapply(ratios, function(c) {
+  sapply(c, function(c) mean(log(unlist(c, use.names=FALSE)), trim=0.1, na.rm=TRUE));
+});
+dimnames(ms) <- list(colnames(mtr0), c('1 copy', '2 copies', '3 copies'));
+saveRDS(100*(exp(ms)-1), paste(path.r, 'average_percent.rds', sep='/')); 
+tbl <- round(100*(exp(ms)-1), 2);
+CreateDatatable(tbl, paste(path.tbl, 'average_change_by_sample.html', sep='/'), 
+                caption = 'Average change of each sample comparing to diploid samples (%)'); 
+
+x <- mtr0; 
+x[cnv!=2] <- NA; 
+m <- rowMeans(x, na.rm=TRUE); 
+sd <- apply(x, 1, function(x) sd(x, na.rm=TRUE)); 
+x[!is.na(x)]<-1; 
+n <- rowSums(x, na.rm=TRUE); 
+stat2 <- cbind(N=n, Mean=m, SD=sd); 
+
+# Compare each sample to all other 2-copy samples 
+stats <- lapply(1:ncol(cnv), function(i) {
+  x <- mtr0[, -i, drop=FALSE];
+  adj <- apply(x, 2, function(x) x*mean(mtr0[, i])/mean(x)); 
+  x[cnv[, -i]!=2] <- NA; 
+  adj[cnv[, -i]!=2] <- NA; 
+  m <- rowMeans(x, na.rm=TRUE); 
+  m.adj <- rowMeans(adj, na.rm=TRUE); 
+  sd <- apply(adj, 1, function(x) sd(x, na.rm=TRUE)); 
+  x[!is.na(x)]<-1; 
+  n <- rowSums(x, na.rm=TRUE); 
+  chg <- (mtr0[, i] - m.adj) / m.adj * 100
+  s <- cbind(Num_Diploid=n, Mean_Diploid=m.adj, SD=sd); 
+  cbind(Copy=cnv[, i], Count=mtr0[, i], Change=chg, s); 
+}); 
+names(stats) <- colnames(cnv); 
+
+s <- lapply(stats, function(s) {
+  s <- s[s[,1]!=2, , drop=FALSE]; 
+  data.frame(ID=rownames(s), s); 
+}); 
+tbl <- data.frame(Sample_ID=rep(colnames(cnv), sapply(s, nrow)), do.call('rbind', s), stringsAsFactors = FALSE); 
+tbl <- tbl[tbl$Num_Diploid!=0 & !is.na(tbl$Mean_Diploid), , drop=FALSE]; 
+if (!identical(NA, ann)) tbl <- cbind(tbl, ann[tbl$ID, ]); 
+CreateDatatable(tbl, paste(path.tbl, 'CNV_vs_Diploid.html', sep='/'), rownames = FALSE); 
+```
+
+Using heterozygous deletion/duplication, the average percent change of `r prms$feature` `r prms$measurement` in response to the loss/gain of one copy is calculated for all samples globally and each sample individually. 
+
+  - [CNV vs. diploid](table/CNV_vs_Diploid.html)
+  - [Average change by sample](table/average_change_by_sample.html) (see **Figure 4 for visualization)
+
+<div align='center'>
+```{r violin_global, fig.width=8, fig.height=6, out.width='600px'}
+x <- lapply(1:3, function(i) ms[, i]);
+x <- lapply(x, function(x) x[!is.na(x)]); 
+a <- unlist(x, use.names=FALSE);
+b <- rep(1:3, sapply(x, length));
+par(mar=c(5,5,2,2)); 
+plot(0, type='n', xlim=c(0, 4), ylim=range(unlist(x), na.rm=TRUE), 
+     ylab='Average change (%)', cex.lab=2, xlab='', xaxt='n', yaxt='n');
+abline(v=1:3);
+vioplot(x[[1]], x[[2]], x[[3]], names=colnames(ms), col='gold', rectCol = 'darkgrey', at=1:3, add=TRUE); 
+axis(1, at=1:3, colnames(ms), cex.axis=1.5);
+axis(2, at=log(1+seq(-.8, .8, .2)), labels=seq(-80, 80, 20))
+abline(lm(a~b), lty=2, col='blue');
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 4.** The average change of `r prms$feature` `r prms$measurement` due to heterozygous deletion/duplication. Each violin plot shows the distribution of all samples.  
+</div>
+
+### Individual CNVs
+
+```{r cnv_effect_individual, include=FALSE}
+s<-lapply(names(cnv2fea), function(nm) { print(nm); 
+  c2f <- cnv2fea[[nm]]; 
+  s <- stats[[nm]]; 
+  q1.0 <- summary(s[, 5])[2];
+  q1.1 <- summary(s[, 2])[2];
+  x <- s[s[, 2]>=q1.1 & s[, 5]>=q1.0 & !is.na(s[, 4]) & s[,1]==2, c(2, 5), drop=FALSE]; 
+  x <- x[!is.na(x[, 1]) & !is.na(x[, 2]), , drop=FALSE]; 
+  lr <- log(x[,1]/x[,2]); 
+  sapply(names(c2f), function(id) {
+    cp <- cn[[nm]][id]$copy;
+    c <- c2f[[id]]; 
+    c <- c[c %in% rownames(cnv)]; 
+    x <- stats[[nm]][c, c(2, 5), drop=FALSE];
+    x <- x[x[, 1]>=(cp/2)*q1.1 & x[, 2]>=q1.0 & cnv[c, nm]==cp & !is.na(x[, 2]), , drop=FALSE]; 
+    if (nrow(x) > 1) {
+      y <- log(x[,1]/x[,2]); 
+      p <- t.test(y, lr)$p.value[1];
+      d <- exp(mean(y)-mean(lr)); 
+      c(cp, length(c2f[[id]]), length(c), p, d); 
+    } else if (nrow(x) == 1) {
+      d <- exp(log(x[,1]/x[,2]) - mean(lr))
+      c(cp, length(c2f[[id]]), length(c), 1, d); 
+    } else c(cp, length(c2f[[id]]), 0, 1, NA); 
+  })
+})
+s <- lapply(s, t); 
+stat3 <- data.frame(rep(names(fea2cnv), sapply(s, nrow)), do.call('rbind', s), stringsAsFactors = FALSE); 
+stat3[, ncol(stat3)] <- 100*(stat3[, ncol(stat3)]-1); 
+names(stat3) <- c('sample', 'copy_number', paste('total', prms$feature, sep='_'), 
+                  paste('tested', prms$feature, sep='_'), 'p_value', 'mean_change(%)'); 
+stat3 <- stat3[order(stat3[, 5]), ];
+t <- cbind(cns[rownames(stat3), 1:3], stat3);
+
+saveRDS(stat3, paste(path.r, 'stat_individual_cnv.rds', sep='/')); 
+CreateDatatable(t, paste(path.tbl, 'average_change_by_sample.html', sep='/'), caption='Average effect of individual CNVs'); 
+```
+
+Using CNVs with 0 to 5 copies, the average change caused by copy loss/gain is calculated for individual CNVs. A p value is also calculated for each CNV, to indicate whether the overall change due to this CNV is significant. 
+
+  - [Average change of CNVs](table/average_change_by_sample.html)
+
+<div align='center'>
+```{r violin_cnv, fig.width=12, fig.height=4.8, out.width='800px'}
+v <- list(split(stat3[, 6], stat3[, 2]), split(stat3[stat3[, 5]<=0.05, ncol(stat3)], stat3[stat3[, 5]<=0.05, 2]));
+v <- lapply(v, function(v) lapply(v, function(v) v[!is.na(v)])); 
+v <- lapply(v, function(v) v[as.character(0:5)]); 
+v <- lapply(v, function(v) lapply(v, function(v) if (length(v)==0) -200 else v));
+v1 <- v[[1]];
+v2 <- v[[2]];
+
+nm <- c('0 copy', '1 copy', '2 copies', '3 copies', '4 copies', '5 copies'); 
+par(mar=c(5,5,2,2), mfrow=c(1, 2));
+plot(0, type='n', xlim=c(-.5, 5.5), ylim=range(unlist(v1)), main='All CNVs', 
+     ylab='Average change (%)', cex.lab=2, xlab='', xaxt='n');
+abline(v=0:5, col='lightgrey');
+vioplot(v1[[1]], v1[[2]], v1[[3]], v1[[4]], v1[[5]], v1[[6]], col='#0000FF88', rectCol = 'darkgrey', at=0:5, add=TRUE); 
+axis(1, at=0:5, nm, cex.axis=1, las=3);
+
+plot(0, type='n', xlim=c(-.5, 5.5), ylim=range(unlist(v1)), main='Significant CNVs only', 
+     ylab='Average change (%)', cex.lab=2, xlab='', xaxt='n');
+abline(v=0:5, col='lightgrey');
+vioplot(v2[[1]], v2[[2]], v2[[3]], v2[[4]], v2[[5]], v2[[6]], col='#FF000088', rectCol = 'darkgrey', at=0:5, add=TRUE); 
+axis(1, at=0:5, nm, cex.axis=1, las=3);
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 5. ** Each violin shows the distribution of average change of all CNVs (left) and significant CNVs (right). 
+</div>
+
+`r home.url`
+
+# Adjust data for CNVs
+
+```{r adjustment, include=FALSE}
+cnt <- cnt.ttl[rownames(cnt.ttl) %in% rownames(cnv.ttl), , drop=FALSE]; 
+r0 <- as.vector(as.dist(cor(log(cnt+1), use='pair'))); 
+
+# Adjust globally
+c1 <- 1-exp(mean(ms[, 1], na.rm=TRUE)-mean(ms[, 2], na.rm=TRUE));
+c3 <- exp(mean(ms[, 3], na.rm=TRUE)-mean(ms[, 2], na.rm=TRUE))-1;
+adj1 <- sapply(1:ncol(cnt), function(i) {
+  x <- cnt[, i]; 
+  y <- cnv.ttl[rownames(cnt), i];
+  x[y<2] <- x[y<2] / (1-c1*(2-y[y<2]));
+  x[y>2] <- x[y>2] / (1+c3*(y[y>2]-2)); 
+  x;
+});
+r1 <- as.vector(as.dist(cor(log(adj1+1), use='pair'))); 
+
+# Adjust by individual samples
+adj2 <- sapply(1:ncol(cnt), function(i) {
+  x <- cnt[, i]; 
+  y <- cnv.ttl[rownames(cnt), i];
+  c1 <- 1-exp(ms[i, 1]-ms[i, 2]); 
+  c3 <- exp(ms[i, 3]-ms[i, 2])-1; 
+  x[y<2] <- x[y<2] / (1-c1*(2-y[y<2]));
+  x[y>2] <- x[y>2] / (1+c3*(y[y>2]-2)); 
+  x;
+});
+r2 <- as.vector(as.dist(cor(log(adj2+1), use='pair'))); 
+
+# Adjust by individual CNVs
+adj3 <- sapply(1:ncol(cnt), function(i) { 
+  x <- cnt[, i]; 
+  y <- cnv.ttl[rownames(cnt), i];
+  c1 <- 1-exp(ms[i, 1]-ms[i, 2]); 
+  c3 <- exp(ms[i, 3]-ms[i, 2])-1; 
+  x[y<2] <- x[y<2] / (1-c1*(2-y[y<2]));
+  x[y>2] <- x[y>2] / (1+c3*(y[y>2]-2)); 
+  
+  s <- stat3[stat3[, 5]<=0.05 & stat3[, 1]==colnames(cnt)[i], , drop=FALSE];
+  if (nrow(s) > 0) {
+    ids <- rownames(s); 
+    for (j in 1:length(ids)) {
+      rnm <- cnv2fea[[i]][[ids[j]]]; 
+      a <- cnt[rownames(cnt) %in% rnm, i]; 
+      c <- s[ids[j], 2]; 
+      a <- a[cnv.ttl[names(a), i] == c]; 
+      a <- a / (1+s[ids[j], 6]/100); 
+      x[names(a)] <- a;
+    }
+  }
+  x;
+});
+r3 <- as.vector(as.dist(cor(log(adj3+1), use='pair'))); 
+
+# between sample variance
+cnt.all <- list(cnt.ttl); 
+cnt.all[2:4] <- lapply(list(adj1, adj2, adj3), function(a) {
+  cnt.ttl[rownames(a), ] <- a;
+  cnt.ttl;
+}); 
+stat4 <- lapply(cnt.all, function(c) {
+  #if (prms$rescale) c <- apply(c, 2, function(x) x / (mean(x)/mean(c))); 
+  #c <- log(c+1); 
+  sd <- apply(c, 1, sd);
+  m <- rowMeans(c); 
+  cv <- sd/m;
+  cbind(m, sd, cv); 
+}); 
+mns <- sapply(stat4, function(x) x[, 1]);
+sds <- sapply(stat4, function(x) x[, 2]);
+cvs <- sapply(stat4, function(x) x[, 3]);
+crs <- cbind(r0, r1, r2, r3); 
+
+cvs.pct <- round(100*(1-colMeans(cvs, na.rm=TRUE)/mean(cvs[, 1], na.rm=TRUE)), 3)[-1];
+
+if (identical(ann, NA)) tbl <- cvs else tbl <- data.frame(cvs, ann[rownames(cvs), ]); 
+colnames(tbl)[1:4] <- c('Original', 'Adjusted_Global', 'Adjusted_Sample', 'Adjusted_CNV'); 
+CreateDatatable(tbl, paste(path.tbl, 'CV_adjustment.html', sep='/'), caption='Coefficient of variation')
+```
+
+In tumors or similar samples, many somatic CNVs are downstream events of tumor progression and might cause extra, unwanted variance in data. To use the data for statistical analysis, such as differential gene expression based on RNA-seq data, there is potential benefit to adjust the data to reduce the variance caused by CNVs. There are three different ways to do the adjustment, using the results from the last section. 
+
+  1. Adjust all samples using the glabol average of CNV-caused changes, assumming CNVs have the same average effect on all samples.
+  2. Adjust individual samples separately by their own average of CNV-caused changes, assuming CNVs have different effect on different samples, but the same average effect on the same sample. 
+  3. Adjust individual CNVs separately that have changed `r prms$feature`s mapped to it with significance (p < 0.05), assuming different CNVs have different effect, but each CNV has the same effect on all `r prms$feature`s within it. For those CNVs do not cause change with significance, the adjustment is done at the sample level.
+  
+  These methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by `r min(cvs.pct)` to `r max(cvs.pct)` percent on average.
+  
+  - [`r prms$feature`-level coefficient of variation (CV) before and after adjustment](table/CV_adjustment.html)
+
+<div align='center'>
+```{r adjustment_plot, fig.width=9, fig.height=6.4, out.width='900px'}
+par(mfrow=c(2, 3), omi=c(0,0,.4, 0), mar=c(5,5,1,1)); 
+
+# density plot
+dff <- apply(crs[, -1], 2, function(x) x-crs[, 1]);
+dens <- apply(dff, 2, density); 
+rng1 <- range(sapply(dens, function(d) d$x));
+rng2 <- range(sapply(dens, function(d) d$y));
+for (i in 1:3) { 
+  dens <- density(dff[, i]);
+  plot(dens, xlim=c(min(0, rng1[1]), max(0, rng1[2])), ylim=c(0, 1.05*rng2[2]), 
+       col='white', main='', cex.lab=1.5, xlab='Change of correlation coefficient', yaxs ='i'); 
+  polygon(dens$x, dens$y, col = 'lightgrey', border=NA);
+  grid(ny=0);
+  #abline(v=0, col='blue', lwd=.5);
+}
+
+# scatter plot
+mx1 <- max(cvs, na.rm=TRUE);
+nm <- c('Adjust globally', 'Adjust by sample', 'Adjust by CNV'); 
+for (i in 1:3) {
+  plot(cvs[, 1], cvs[, i+1], xlim=c(0, mx1), ylim=c(0, mx1), pch=19, cex=0.5, col='#88888888',
+       cex.lab=1.5, xlab='Coefficient of variation, original', ylab='Coefficient of variation, adjusted'); 
+  axis(3, at=mx1/2, labels=nm[i], outer=TRUE, tick = FALSE, line=-1, cex.axis=2);
+  abline(0, 1, col='blue', lwd=.5);
+}
+
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 6** These plots summarize the consequences of data adjustment by three different methods. The correlation of `r prms$feature` `r prms$measurement` between each pair of samples is calculated before and after adjustment. The top panels plot the change of correlation coefficients of all sample pairs. Most pairs should have increased correlation coefficient if the adjustment decreases overall variance. The bottom panels compare the coefficient of variation of all `r prms$feature`s before and after adjustment. 
+</div>
+
+```{r count_change, include=FALSE}
+t <- matrix('---', nr=4, nc=4); 
+
+inds <- cbind(c(1, 1, 1, 2, 2, 3), c(2, 3, 4, 3, 4, 4)); 
+
+for (i in 1:nrow(inds)) {
+  x <- cvs[, inds[i, ]]; 
+  x <- x[!is.na(x[, 1]) & !is.na(x[, 2]), , drop=FALSE]
+  t[inds[i, 1], inds[i, 2]] <- round(100*nrow(x[x[, 1]>1.05*x[, 2], , drop=FALSE])/nrow(x), 3);
+  t[inds[i, 2], inds[i, 1]] <- round(100*nrow(x[x[, 1]<0.95*x[, 2], , drop=FALSE])/nrow(x), 3);
+}
+dimnames(t) <- list(paste(colnames(tbl)[1:4], '>'), paste('>', colnames(tbl)[1:4])); 
+```
+
+<div style="color:darkblue; padding:0 1cm">
+**Table 1** The percentage of `r prms$feature`s whose coefficient of variation is relatively decreased (up-right corner) or increased (bottom-left corner) by 5% or more after the adjustment.
+</div>
+
+<div align='center', style="padding:0 2cm">
+`r kable(t, row.names=TRUE, align=rep('c', ncol(t)))`
+</div>
+
+`r home.url`
+
+***
+
+# Appendix 
+
+Check out the [RoCA project](http://zhezhangsh.github.io/RoCA) to read more.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Copy this ***[YAML](https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.yaml)*** file to your working directory
+
+  2. To use your own data and parameters, edit the ***YAML*** file:
+
+    - _output_: where you want to put the output files
+    - _home_: the URL if you have a home page for your project
+    - _analyst_: your name
+    - _description_: background information about your project, analysis, etc.
+    - _input_: where are your input data, read instruction for preparing them
+    - _parameter_: parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below, preferablly after starting a new R session:
+
+```{r reproduce_report, eval=FALSE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport("cnv_impact.yaml");
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+
+_END OF DOCUMENT_

@@ -1,0 +1,69 @@
+############################################################################################################
+# Prepare the following table-like data objects in text, Excel or R files to run this analysis
+# <cnv> a data.frame saved as a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - each row is a CNV found in one sample, row names are CNV IDs
+#   - the first 3 columns are the chromosome name, start position, and end position of each CNV
+#   - the fourth column is the sample ID where is CNV was found
+#   - the fifth column is the copy number of the CNV
+#   - column names required but not used, so can be anything
+# <region> a data.frame saved as a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - each row is 1 genomic region of interest, such as exon and enhancer, row names are unique ID
+#   - the first 3 columns are the chromosome name, start position, and end position of each CNV
+#   - the optional fourth and fifth columns are parent regions, such as exon->transcript->gene
+#   - column names required but not used, so can be anything
+# <count> a data matrix saved as a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - each cell is a digital measurement, such as number of sequence reads of a sample mapped to a gene
+#   - each column is a sample, with column names matching sample ID in the <cnv> table
+#   - each row is a genomic region of interest, such as an exon or a gene
+#   - row names match row names of <region> if it has only 3 columns (such as exon)
+#   - if <region> has more than 3 columns, row names match the IDs in its last column (such as gene)
+# <annotation> an optional data.frame saved as a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - provide detailed annotation of the genomic regions of interest
+#   - the row names match the row names of <count>
+#   - can have any number of columns and the columns can be in the form of URLs
+############################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for using the RoCA::CreateReport() function
+template: cnv_impact.Rmd  
+output: MBres_CNV_RNAseq  # Where to save the output files
+home: index.html          # Location to project home (URL or local file)
+analyst: Jim Zhang        # Name of the analyst who runs this analysis
+zip: yes                  # Whether to zip the output folder
+
+#################
+##### ABOUT #####
+#################
+# Analyst provides background description about this analysis, such as project title
+description:    
+  Project: "Genomics of mouse brain tumors"
+  Experiment: "Mouse brain tumor models of AT/RT and medulloblastoma are studied with whole genome sequencing and RNA-seq."
+  Analysis: "Seven samples of medullowblastoma tumors resistant to drug treatment have both RNA-seq data and CNV calls from whole genome sequencing.
+            The RNA-seq data was processed to get gene-level read counts, so the relationship between CNVs and gene-level can be evaluated."
+
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, with contents and format specified by the developer
+input:
+  cnv: cnv.txt                      # CNV information including location, sample, and copy number
+  region: exon.txt                  # Location of genomic regions of interest, with optionaly 1 or 2 levels of parent regions
+  count: count.txt                  # Digital count of each region (row) and each sample (column), such as RNA-seq gene-level read count
+  annotation: anno_htcount_url.rds  # (Optionally) Extra annotation of the genomic regions. Row names must match row names of <count>
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:
+  feature: gene             # the quantitative feature to be analyzed, corresponding to the row names of both <cnv> and <data> matrix
+  measurement: expression   # what's measured for each feature, such as the expression of genes
+  rescale: yes              # whether to rescale the data using the TMM method for the statistical analysis of CNV-feature association
+                            # highly recommended for un-normalized RNA-seq data
+
+  remove:                   # filtering rules for the analysis of CNV-feature association
+    allzero: yes              # remove features whose count are zero in all analyzed samples
+    missing: yes              # remove features with any missiong values in any analyzed samples
+    low: yes                  # remove features with low counts across samples
