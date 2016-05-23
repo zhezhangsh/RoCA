@@ -1,4 +1,4 @@
-chromosome	start	end	transcript	gene
+id	chromosome	start	end	transcript	gene
 exon_1161	chr1	9437054	9437187	rna110	102632723
 exon_1162	chr1	9437430	9437538	rna110	102632723
 exon_1163	chr1	9437644	9437723	rna110	102632723
