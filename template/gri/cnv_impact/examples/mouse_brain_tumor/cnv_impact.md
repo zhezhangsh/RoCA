@@ -1,7 +1,7 @@
 ---
 title: "Copy number variation vs. quantatative genomic feature"
 author: "Jim Zhang"
-date: "2016-05-23"
+date: "2016-05-24"
 output:
   html_document:
     number_sections: yes
@@ -281,15 +281,16 @@ If there is no complaint, go to the _output_ folder and open the ***index.html**
 ##  [8] datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      rchive_0.0.0.9000   
-##  [4] edgeR_3.10.2         limma_3.26.9         NOISeq_2.16.0       
-##  [7] GenomicRanges_1.22.4 GenomeInfoDb_1.6.3   IRanges_2.4.8       
-## [10] S4Vectors_0.8.11     Biobase_2.28.0       BiocGenerics_0.16.1 
-## [13] Matrix_1.2-2         htmlwidgets_0.5      DT_0.1              
-## [16] vioplot_0.2          sm_2.2-5.4           gplots_3.0.1        
-## [19] awsomics_0.0.0.9000  yaml_2.1.13          rmarkdown_0.9.6     
-## [22] knitr_1.12.3         RoCA_0.0.0.9000      RCurl_1.95-4.8      
-## [25] bitops_1.0-6         devtools_1.11.1     
+##  [1] DEGandMore_0.0.0.9000 snow_0.4-1            shiny_0.12.2         
+##  [4] CHOPseq_0.0.0.9000    Agri_0.0.0.9000       rchive_0.0.0.9000    
+##  [7] edgeR_3.10.2          limma_3.26.9          NOISeq_2.16.0        
+## [10] GenomicRanges_1.22.4  GenomeInfoDb_1.6.3    IRanges_2.4.8        
+## [13] S4Vectors_0.8.11      Biobase_2.28.0        BiocGenerics_0.16.1  
+## [16] Matrix_1.2-2          htmlwidgets_0.5       DT_0.1               
+## [19] vioplot_0.2           sm_2.2-5.4            gplots_3.0.1         
+## [22] awsomics_0.0.0.9000   yaml_2.1.13           rmarkdown_0.9.6      
+## [25] knitr_1.12.3          RoCA_0.0.0.9000       RCurl_1.95-4.8       
+## [28] bitops_1.0-6          devtools_1.11.1      
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.12.4        highr_0.5.1        formatR_1.3       
@@ -297,8 +298,10 @@ If there is no complaint, go to the _output_ folder and open the ***index.html**
 ##  [7] digest_0.6.9       jsonlite_0.9.20    evaluate_0.9      
 ## [10] memoise_1.0.0      lattice_0.20-33    withr_1.0.1       
 ## [13] stringr_1.0.0      gtools_3.5.0       caTools_1.17.1    
-## [16] grid_3.2.2         gdata_2.17.0       magrittr_1.5      
-## [19] htmltools_0.3.5    KernSmooth_2.23-15 stringi_1.0-1
+## [16] grid_3.2.2         R6_2.1.2           gdata_2.17.0      
+## [19] magrittr_1.5       htmltools_0.3.5    xtable_1.8-2      
+## [22] mime_0.4           httpuv_1.3.3       KernSmooth_2.23-15
+## [25] stringi_1.0-1
 ```
 
 <div align='right'>_[Go to project home](index.html)_</div>

@@ -66,10 +66,10 @@ reg <- ImportTable(DownloadFile(yml$input$region, path.input));
 cnt <- as.matrix(ImportTable(DownloadFile(yml$input$count, path.input)));
 if (is.null(yml$input$annotation)) ann<-NA else ann <- ImportTable(DownloadFile(yml$input$annotation, path.input)); 
 
-saveRDS(cns, paste(path.r, TrimPath(yml$input$cnv), sep='/')); 
-saveRDS(reg, paste(path.r, TrimPath(yml$input$region), sep='/')); 
-saveRDS(cnt, paste(path.r, TrimPath(yml$input$count), sep='/')); 
-if (!identical(NA, ann)) saveRDS(ann, paste(path.r, TrimPath(yml$input$annotation), sep='/')); 
+saveRDS(cns, paste(path.r, 'copy_number.rds', sep='/')); 
+saveRDS(reg, paste(path.r, 'region.rds', sep='/')); 
+saveRDS(cnt, paste(path.r, 'count.rds', sep='/')); 
+if (!identical(NA, ann)) saveRDS(ann, paste(path.r, 'annotation.rds', sep='/')); 
 ```
 
 ```{r prepare_data, include=FALSE}
@@ -418,10 +418,15 @@ par(mar=c(5,5,2,2));
 plot(0, type='n', xlim=c(0, 4), ylim=range(unlist(x), na.rm=TRUE), 
      ylab='Average change (%)', cex.lab=2, xlab='', xaxt='n', yaxt='n');
 abline(v=1:3);
-vioplot(x[[1]], x[[2]], x[[3]], names=colnames(ms), col='gold', rectCol = 'darkgrey', at=1:3, add=TRUE); 
+if (length(x[[1]])==0) vioplot(x[[2]], x[[3]], names=colnames(ms), col='gold', rectCol = 'darkgrey', at=2:3, add=TRUE) else
+  if (length(x[[2]]==0)) vioplot(x[[1]], x[[3]], names=colnames(ms), col='gold', rectCol = 'darkgrey', at=c(1, 3), add=TRUE) else
+    if (length(x[[3]])==0) vioplot(x[[1]], x[[2]], names=colnames(ms), col='gold', rectCol = 'darkgrey', at=1:2, add=TRUE) else
+      vioplot(x[[1]], x[[2]], x[[3]], names=colnames(ms), col='gold', rectCol = 'darkgrey', at=1:3, add=TRUE); 
 axis(1, at=1:3, colnames(ms), cex.axis=1.5);
 axis(2, at=log(1+seq(-.8, .8, .2)), labels=seq(-80, 80, 20))
 abline(lm(a~b), lty=2, col='blue');
+
+
 ```
 </div>
 
@@ -567,6 +572,8 @@ cnt.all[2:4] <- lapply(list(adj1, adj2, adj3), function(a) {
   if (nrow(a) > 0) cnt.ttl[rownames(a), ] <- a;
   cnt.ttl;
 }); 
+names(cnt.all) <- c('original', 'adjusted_global', 'adjusted_by_sample', 'adjusted_by_cnv'); 
+
 stat4 <- lapply(cnt.all, function(c) {
   #if (prms$rescale) c <- apply(c, 2, function(x) x / (mean(x)/mean(c))); 
   #c <- log(c+1); 
@@ -585,6 +592,10 @@ cvs.pct <- round(100*(1-colMeans(cvs, na.rm=TRUE)/mean(cvs[, 1], na.rm=TRUE)), 3
 if (identical(ann, NA)) tbl <- cvs else tbl <- data.frame(cvs, ann[rownames(cvs), ]); 
 colnames(tbl)[1:4] <- c('Original', 'Adjusted_Global', 'Adjusted_Sample', 'Adjusted_CNV'); 
 CreateDatatable(tbl, paste(path.tbl, 'CV_adjustment.html', sep='/'), caption='Coefficient of variation')
+
+stats.all <- list(corr=crs, mean=mns, sd=sds, cv=cvs); 
+saveRDS(stats.all, paste(path.r, 'adjusted_stat.rds', sep='/')); 
+saveRDS(cnt.all, paste(path.r, 'adjusted_data.rds', sep='/')); 
 ```
 
 In tumors or similar samples, many somatic CNVs are downstream events of tumor progression and might cause extra, unwanted variance in data. To use the data for statistical analysis, such as differential gene expression based on RNA-seq data, there is potential benefit to adjust the data to reduce the variance caused by CNVs. There are three different ways to do the adjustment, using the results from the last section. 
