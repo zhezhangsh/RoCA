@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-05-24" />
+
+<title>Copy number variation vs. quantatative genomic feature</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="index_files/highlight/default.css"
+      type="text/css" />
+<script src="index_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="index_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Copy number variation vs. quantatative genomic feature</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-05-24</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong> This analysis looks into the association between DNA copy number variation (CNV) and a quantitative genomic feature, most commonly the expression level of genes. It requires two types of input data: <strong>1)</strong> the location and copy of CNVs identified from a number of whole genome/exome sequencing samples, and <strong>2)</strong> a matrix of measurements made from the same samples. The rows of this matrix corresponds to a quantitative genomic feature, such as exon, gene, and DHS. The measurements in this matrix should be the number of reads from RNA-seq or similar data mapped to each region. These input data will be used for the following three steps:</p>
+<ul>
+<li><strong><em>Mapping.</em></strong> The location of CNV is mapped to the quantitative feature to identify overlapping pairs. The mapping can be done at multiple levels, such as exons to transcripts to genes. The result of the mapping is two matching matrix with the same number of rows (feature) and columns (samples). In the case of RNA-seq gene expression data, each cell of the first matrix is the average copy number of each gene in each sample, and the corresponding cell of the second matrix is the number of sequence reads mapped to the same gene in the same sample. The mapping results is further summarized by CNV (<strong>Figure 1</strong>) and then by the genomic feature (<strong>Figure 2</strong>).</li>
+<li><strong><em>Association.</em></strong> The impact of CNVs on the quantitative feature is evaluated with two strategies. First, the correlation between copy number and read count is calculated. In the case of RNA-seq gene expression data, genes with expression level correlated to their copy number variation will be identified (<strong>Figure 3</strong>). Second, using CNVs with heterozygous deletion/duplication, the average change of the read count caused by one copy loss/gain is then calculated globally for all sample, individually for each sample (<strong>Figure 4</strong>) and individually for each CNV (<strong>Figure 5</strong>). The results will be used for adjusting data in the next step.</li>
+<li><strong><em>Adjustment.</em></strong> The read count matrix is adjusted for copy number with the goal of reducing between-sample variance. The adjustment is done using 3 different strategy: glabally, for each sample, and for each CNV, based on the results from the last step. In the case of RNA-seq gene expression data, the adjustment will reduce the side effect of copy number on gene expression level, assuming that the following analysis of differential expression is not interested CNV-caused difference. The effect of the adjustment is evaluated based on correlation between sample pairs and between sample variance (<strong>Figure 6</strong>).</li>
+</ul>
+<p><em>While this analysis is designed for RNA-seq gene expression data, it can be used for data with similar quantitative characteristics, such as the ChIP-seq reads of H3K4me3 mapped to transcription start sites.</em></p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Genomics of mouse brain tumors</p>
+</div>
+<div id="experiment" class="section level2">
+<h2><span class="header-section-number">1.2</span> Experiment</h2>
+<p>RNA-seq data and CNV calls from whole genome sequencing were generated from the same mouse tumors.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>The RNA-seq data was processed to get gene-level read counts. The relationship between CNVs and gene-level is evaluated.</p>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="cnv-gene-mapping" class="section level1">
+<h1><span class="header-section-number">2</span> CNV-gene mapping</h1>
+<p>CNVs are mapped to genes in all 7 samples with both CNV and gene expression data. This section summarizes the mapping results.</p>
+<div id="mapping-results-by-cnv" class="section level2">
+<h2><span class="header-section-number">2.1</span> Mapping results by CNV</h2>
+<p>Summary of CNV-to-gene mapping by CNV.</p>
+<ul>
+<li>Therea are a total of <strong>1,306</strong> CNVs in all samples, or <strong>186.57</strong> CNVs per sample.</li>
+<li>The average size of CNVs is <strong>3,144,094</strong>.</li>
+<li><strong>48.851</strong>% of the CNVs are mapped to at least one gene.</li>
+<li><a href="table/summary_cnv.html">Summary table</a></li>
+</ul>
+<div align="center">
+<img src="figure/pie_cnv-1.png" title="plot of chunk pie_cnv" alt="plot of chunk pie_cnv" width="600px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 1.</strong> The split of all 1306 CNVs with abnormal copy numbers (<strong><em>0 copy</em></strong> = homozygous deletion, …). CNVs with 5 or more copies are combined.
+</div>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+</div>
+<div id="mapping-results-by-gene" class="section level2">
+<h2><span class="header-section-number">2.2</span> Mapping results by gene</h2>
+<p>Summary of CNV-to-gene mapping by gene.</p>
+<ul>
+<li>There are a total of 2500 genes to be mapped to CNVs.
+<ul>
+<li>45.6% are not mapped to any CNVs of any samples.</li>
+<li>13.4% are mapped to CNVs of one and only one sample.</li>
+<li>41% are mapped to CNVs of multiple samples.</li>
+<li>0.4% are mapped to CNVs of all 7 samples.</li>
+</ul></li>
+<li>On average, each sample has 21.503% of all genes mapped to its CNVs.
+<ul>
+<li>11.114% have heterozygous deletion.</li>
+<li>9.246% have heterozygous duplication.</li>
+<li>0.52% have changed copy numbers with in them.</li>
+</ul></li>
+<li><a href="table/summary_gene.html">Summary of samples</a></li>
+<li><a href="table/full_gene.html">Full sample-gene matrix of copy numbers</a></li>
+</ul>
+<div align="center">
+<img src="figure/pie_feature-1.png" title="plot of chunk pie_feature" alt="plot of chunk pie_feature" width="600px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 2.</strong> The split of all 1360 genes with abnormal copy numbers (<strong><em>0 copy</em></strong> = homozygous deletion, …). The genes with 5 or more copies are combined, as well as those with changed copy numbers within them.
+</div>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="cnv-gene-expressionassociation" class="section level1">
+<h1><span class="header-section-number">3</span> CNV-gene expressionassociation</h1>
+<p>This section uses a few statistical methods to evaluate the impact of copy number variations on gene expression. Since heterozygous deletion/duplication are the most common CNVs, they are main categories to be used for the evaluation.</p>
+<p>For the analysis in this section, it’s strongly recommended to filter the genes first to remove those with missing values and/or low read counts. The following rules are applied for this data set:</p>
+<ul>
+<li>There are totally 2500 genes mapped to CNVs.</li>
+<li>1535 of them have measured gene expression data.</li>
+<li>1535 of the rest have no missing values.</li>
+<li>1326 of the rest have at least 1 non-zero value in all samples.</li>
+<li>1204 of the rest have enough counts for further analysis.</li>
+</ul>
+<p>The filtering generates two matching matrix of copy numbers and gene expression measurements. Both with 1204 rows and 7 columns and identical row (gene) and column (sample) names. Both matrix will be used for the remaining analysis of this section.</p>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+<div id="copy-number-to-gene-expression-correlation" class="section level2">
+<h2><span class="header-section-number">3.1</span> Copy number to gene expression correlation</h2>
+<p>This analysis asks which gene has its copy numbers correlated to its expression across all samples. A correlation coefficient and corresponding p value are calculated for each gene. It is expected that the majority of correlation coefficients are positive.</p>
+<ul>
+<li><a href="table/corr2cnv.html">Full result table of CNV-gene correlation</a></li>
+</ul>
+<div align="center">
+<img src="figure/corr2cnv-1.png" title="plot of chunk corr2cnv" alt="plot of chunk corr2cnv" width="800px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 3.</strong> The correlation between copy numbers and gene expression measurements of all samples is calculated for each gene. The top 2 panels are the distributions of correlation coefficients (left) and the corresponding p values (right) of all genes. Only those with different copy numbers between samples are used. The bottom 2 panels are two selected examples with the highest (left) and lowest (right) correlation coefficients.
+</div>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+</div>
+<div id="impact-of-cnvs-on-the-measurements" class="section level2">
+<h2><span class="header-section-number">3.2</span> Impact of CNVs on the measurements</h2>
+<p>This analysis is used to calculate the expected change of gene expression due to copy number variations. Each measurement of gene with CNV is compared to the measurements of the same gene of samples without CNV and the average difference of all pairs is calculated for each CNV and sample. The results will be used as rescaling factors of data adjustment in the next section.</p>
+<div id="average-of-all-cnvs" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Average of all CNVs</h3>
+<p>Using heterozygous deletion/duplication, the average percent change of gene expression in response to the loss/gain of one copy is calculated for all samples globally and each sample individually. On average, heterozygous deletion reduces gene expression by -5.204% and heterozygous duplication increases it by 36.71%.</p>
+<ul>
+<li><a href="table/CNV_vs_Diploid.html">CNV vs. diploid average</a></li>
+<li><a href="table/average_change_by_sample.html">Average change by sample</a> (see <strong>Figure 4</strong> for visualization)</li>
+</ul>
+<div align="center">
+<img src="figure/violin_global-1.png" title="plot of chunk violin_global" alt="plot of chunk violin_global" width="600px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 4.</strong> The average change of gene expression due to heterozygous deletion/duplication. Each violin plot shows the distribution of all samples.<br />
+</div>
+</div>
+<div id="individual-cnvs" class="section level3">
+<h3><span class="header-section-number">3.2.2</span> Individual CNVs</h3>
+<p>Using CNVs with 0 to 5 copies, the average change caused by copy loss/gain is calculated for individual CNVs. A p value is also calculated for each CNV, to indicate whether the overall change due to this CNV is significant.</p>
+<ul>
+<li><a href="table/average_change_by_sample.html">Average change of CNVs</a></li>
+</ul>
+<div align="center">
+<img src="figure/violin_cnv-1.png" title="plot of chunk violin_cnv" alt="plot of chunk violin_cnv" width="800px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 5. </strong> Each violin shows the distribution of average change of all CNVs (left) and significant CNVs (right).
+</div>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+</div>
+</div>
+</div>
+<div id="adjust-data-for-cnvs" class="section level1">
+<h1><span class="header-section-number">4</span> Adjust data for CNVs</h1>
+<p>In tumors or similar samples, many somatic CNVs are downstream events of tumor progression and might cause extra, unwanted variance in data. To use the data for statistical analysis, such as differential gene expression based on RNA-seq data, there is potential benefit to adjust the data to reduce the variance caused by CNVs. There are three different ways to do the adjustment, using the results from the last section.</p>
+<ol style="list-style-type: decimal">
+<li>Adjust all samples using the glabol average of CNV-caused changes, assumming CNVs have the same average effect on all samples.</li>
+<li>Adjust individual samples separately by their own average of CNV-caused changes, assuming CNVs have different effect on different samples, but the same average effect on the same sample.</li>
+<li>Adjust individual CNVs separately that have changed genes mapped to it with significance (p &lt; 0.05), assuming different CNVs have different effect, but each CNV has the same effect on all genes within it. For those CNVs do not cause change with significance, the adjustment is done at the sample level.</li>
+</ol>
+<div align="center">
+<img src="figure/adjustment_plot-1.png" title="plot of chunk adjustment_plot" alt="plot of chunk adjustment_plot" width="900px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 6</strong> These plots summarize the consequences of data adjustment by three different methods. The correlation of gene expression between each pair of samples is calculated before and after adjustment. The top panels plot the change of correlation coefficients of all sample pairs. Most pairs should have increased correlation coefficient if the adjustment decreases overall variance. The bottom panels compare the coefficient of variation of all genes before and after adjustment.
+</div>
+<p>In most cases, these adjustment methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by 0.729 to 0.881 percent on average.</p>
+<ul>
+<li>The <a href="table/CV_adjustment.html">gene-level coefficient of variation (CV) before and after adjustment</a></li>
+<li><a href="R/adjusted_data.rds" target="_blank">Download all adjusted data matrix]</a>
+<ul>
+<li><a href="table/adjusted_globolly.csv">Adjusted globally</a></li>
+<li><a href="table/adjusted_by_sample.csv">Adjusted by sample</a></li>
+<li><a href="table/adjusted_by_cnv.csv">Adjusted by CNV</a></li>
+</ul></li>
+</ul>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Table 1</strong> The percentage of genes whose coefficient of variation is relatively decreased (up-right corner) or increased (bottom-left corner) by 10% or more after the adjustment.
+</div>
+<div align="center" ,="" style="padding:0 2cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="center">&gt; Original</th>
+<th align="center">&gt; Adjusted_Global</th>
+<th align="center">&gt; Adjusted_Sample</th>
+<th align="center">&gt; Adjusted_CNV</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Original &gt;</td>
+<td align="center">—</td>
+<td align="center">7.948</td>
+<td align="center">8.574</td>
+<td align="center">9.249</td>
+</tr>
+<tr class="even">
+<td align="left">Adjusted_Global &gt;</td>
+<td align="center">1.59</td>
+<td align="center">—</td>
+<td align="center">2.457</td>
+<td align="center">3.565</td>
+</tr>
+<tr class="odd">
+<td align="left">Adjusted_Sample &gt;</td>
+<td align="center">3.95</td>
+<td align="center">3.565</td>
+<td align="center">—</td>
+<td align="center">1.975</td>
+</tr>
+<tr class="even">
+<td align="left">Adjusted_CNV &gt;</td>
+<td align="center">4.624</td>
+<td align="center">3.95</td>
+<td align="center">1.493</td>
+<td align="center">—</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+<hr />
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">5</span> Appendix</h1>
+<p>Check out the <strong><em><a href="http://zhezhangsh.github.io/RoCA">RoCA project</a></em></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">5.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Copy this <strong><em><a href="https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.yaml">YAML</a></em></strong> file to your working directory</p></li>
+<li><p>To use your own data and parameters, edit the <strong><em>YAML</em></strong> file:</p>
+<ul>
+<li><em>output</em>: where you want to put the output files</li>
+<li><em>home</em>: the URL if you have a home page for your project</li>
+<li><em>analyst</em>: your name</li>
+<li><em>description</em>: background information about your project, analysis, etc.</li>
+<li><em>input</em>: where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em>: parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(&quot;cnv_impact.yaml&quot;);</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">5.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+##  [1] splines   stats4    parallel  stats     graphics  grDevices utils    
+##  [8] datasets  methods   base     
+## 
+## other attached packages:
+##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      rchive_0.0.0.9000   
+##  [4] edgeR_3.10.2         limma_3.26.9         NOISeq_2.16.0       
+##  [7] GenomicRanges_1.22.4 GenomeInfoDb_1.6.3   IRanges_2.4.8       
+## [10] S4Vectors_0.8.11     Biobase_2.28.0       BiocGenerics_0.16.1 
+## [13] Matrix_1.2-2         htmlwidgets_0.5      DT_0.1              
+## [16] vioplot_0.2          sm_2.2-5.4           gplots_3.0.1        
+## [19] awsomics_0.0.0.9000  yaml_2.1.13          rmarkdown_0.9.6     
+## [22] knitr_1.12.3         RoCA_0.0.0.9000      RCurl_1.95-4.8      
+## [25] bitops_1.0-6         devtools_1.11.1     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.4        highr_0.5.1        formatR_1.3       
+##  [4] XVector_0.10.0     tools_3.2.2        zlibbioc_1.14.0   
+##  [7] digest_0.6.9       jsonlite_0.9.20    evaluate_0.9      
+## [10] memoise_1.0.0      lattice_0.20-33    withr_1.0.1       
+## [13] stringr_1.0.0      gtools_3.5.0       caTools_1.17.1    
+## [16] grid_3.2.2         gdata_2.17.0       magrittr_1.5      
+## [19] htmltools_0.3.5    KernSmooth_2.23-15 stringi_1.0-1</code></pre>
+<div align="right">
+<em><a href="index.html">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
