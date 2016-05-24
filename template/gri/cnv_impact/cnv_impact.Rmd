@@ -30,7 +30,7 @@ _While this analysis is designed for RNA-seq gene expression data, it can be use
 knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
 
 ## Load required R packages
-loaded <- LoadPackage(c('RCurl', 'yaml', 'rmarkdown', 'knitr', 'gplots', 'vioplot', 'DT', 'htmlwidgets', 'Matrix', 
+loaded <- RoCA::LoadPackage(c('RCurl', 'yaml', 'rmarkdown', 'knitr', 'gplots', 'vioplot', 'DT', 'htmlwidgets', 'Matrix', 
                         'Biobase', 'BiocGenerics', 'S4Vectors', 'GenomeInfoDb', 'GenomicRanges', 'NOISeq', 'edgeR', 
                         'rchive', 'Agri', 'RoCA', 'CHOPseq', 'awsomics'));
 if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', ')); 
@@ -102,6 +102,7 @@ cnv2fea <- lapply(fea2cnv, function(m) lapply(split(rep(names(m), sapply(m, leng
 
 saveRDS(mp, paste(path.r, 'mapped.rds', sep='/')); 
 saveRDS(cnv, paste(path.r, paste(prms$feature, '_copy_all.rds', sep=''), sep='/')); 
+write.table(cnv, paste(path.tbl, '/', prms$feature, '_', 'cnv.txt', sep=''), quote=FALSE, col=TRUE, row=TRUE, sep='\t'); 
 ```
 
 `r home.url`
@@ -207,7 +208,7 @@ Summary of CNV-to-`r prms$feature` mapping by `r prms$feature`.
     * `r round(100*mean(s[, 'Copy_3'])/nrow(cnv), 3)`% have heterozygous duplication.
     * `r round(100*mean(s[, 'Copy_Partial'])/nrow(cnv), 3)`% have changed copy numbers with in them.
   - [Summary of samples](`r as.vector(TruncatePathPrefix(fn1, path))`)
-  - [Full table](`r as.vector(TruncatePathPrefix(fn2, path))`)
+  - [Full sample-`r prms$feature` matrix of copy numbers](`r as.vector(TruncatePathPrefix(fn2, path))`) 
 
 <div align='center'>
 ```{r pie_feature, fig.width=6, fig.height=6, out.width='600px'}
@@ -303,6 +304,7 @@ if (identical(NA, ann)) t <- s else t <- cbind(ann[rownames(s), ], s);
 
 saveRDS(s, paste(path.r, paste('summary_', prms$feature, '.rds', sep=''), sep='/')); 
 if (identical(NA, ann)) t <- s else t <- cbind(ann[rownames(s), ], s); 
+
 fn <- CreateDatatable(t, paste(path.tbl, 'corr2cnv.html', sep='/'), rownames = TRUE, caption = paste('Correlation between', prms$feature, 'and copy number')); 
 ```
 
@@ -596,6 +598,10 @@ CreateDatatable(tbl, paste(path.tbl, 'CV_adjustment.html', sep='/'), caption='Co
 stats.all <- list(corr=crs, mean=mns, sd=sds, cv=cvs); 
 saveRDS(stats.all, paste(path.r, 'adjusted_stat.rds', sep='/')); 
 saveRDS(cnt.all, paste(path.r, 'adjusted_data.rds', sep='/')); 
+
+write.table(cnt.all[[2]], paste(path.tbl, 'adjusted_globolly.csv', sep='/'), sep='\t', quote=FALSE, col=TRUE, row=TRUE); 
+write.table(cnt.all[[3]], paste(path.tbl, 'adjusted_by_sample.csv', sep='/'), sep='\t', quote=FALSE, col=TRUE, row=TRUE); 
+write.table(cnt.all[[4]], paste(path.tbl, 'adjusted_by_cnv.csv', sep='/'), sep='\t', quote=FALSE, col=TRUE, row=TRUE); 
 ```
 
 In tumors or similar samples, many somatic CNVs are downstream events of tumor progression and might cause extra, unwanted variance in data. To use the data for statistical analysis, such as differential gene expression based on RNA-seq data, there is potential benefit to adjust the data to reduce the variance caused by CNVs. There are three different ways to do the adjustment, using the results from the last section. 
@@ -641,8 +647,11 @@ for (i in 1:3) {
   
 In most cases, these adjustment methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by `r min(cvs.pct)` to `r max(cvs.pct)` percent on average.
   
-  - [`r prms$feature`-level coefficient of variation (CV) before and after adjustment](table/CV_adjustment.html)
-
+  - The [`r prms$feature`-level coefficient of variation (CV) before and after adjustment](table/CV_adjustment.html)
+  - <a href="R/adjusted_data.rds" target="_blank">Download all adjusted data matrix]</a>
+    - [Adjusted globally](table/adjusted_globolly.csv)
+    - [Adjusted by sample](table/adjusted_by_sample.csv)
+    - [Adjusted by CNV](table/adjusted_by_cnv.csv)
 
 ```{r count_change, include=FALSE}
 t <- matrix('---', nr=4, nc=4); 
@@ -689,7 +698,7 @@ To reproduce this report:
     - _input_: where are your input data, read instruction for preparing them
     - _parameter_: parameters for this analysis; read instruction about how to prepare input data
 
-  3. Run the code below, preferablly after starting a new R session:
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
 ```{r reproduce_report, eval=FALSE, echo=TRUE}
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
