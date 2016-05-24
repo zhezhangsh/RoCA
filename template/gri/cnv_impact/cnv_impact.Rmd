@@ -66,10 +66,10 @@ reg <- ImportTable(DownloadFile(yml$input$region, path.input));
 cnt <- as.matrix(ImportTable(DownloadFile(yml$input$count, path.input)));
 if (is.null(yml$input$annotation)) ann<-NA else ann <- ImportTable(DownloadFile(yml$input$annotation, path.input)); 
 
-saveRDS(cns, paste(path.r, TrimPath(yml$input$cnv), sep='/')); 
-saveRDS(reg, paste(path.r, TrimPath(yml$input$region), sep='/')); 
-saveRDS(cnt, paste(path.r, TrimPath(yml$input$count), sep='/')); 
-if (!identical(NA, ann)) saveRDS(ann, paste(path.r, TrimPath(yml$input$annotation), sep='/')); 
+saveRDS(cns, paste(path.r, 'copy_number.rds', sep='/')); 
+saveRDS(reg, paste(path.r, 'region.rds', sep='/')); 
+saveRDS(cnt, paste(path.r, 'count.rds', sep='/')); 
+if (!identical(NA, ann)) saveRDS(ann, paste(path.r, 'annotation.rds', sep='/')); 
 ```
 
 ```{r prepare_data, include=FALSE}
