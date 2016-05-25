@@ -27,7 +27,8 @@ bioc	RankProd	http://bioconductor.org/packages/release/bioc/src/contrib/RankProd
 bioc	pathview	http://bioconductor.org/packages/release/bioc/src/contrib/pathview_1.10.1.tar.gz
 ##########################################################################################################################
 # From GitHub
-github	awsomics	zhezhangsh/awsomics
+github	RoCA	zhezhangsh/RoCAR
+github	awsomics	zhezhangsh/awsomicsR
 github	DEGandMore	zhezhangsh/DEGandMore
 github	Agri	zhezhangsh/Agri
 github	CHOPseq	zhezhangsh/CHOPseq
