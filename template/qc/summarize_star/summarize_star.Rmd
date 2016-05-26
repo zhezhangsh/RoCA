@@ -1,0 +1,349 @@
+
+
+```{r global_setup, include=FALSE}
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(c('yaml', 'rmarkdown', 'knitr', 'DT', 'htmlwidgets', 'awsomics'));
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
+## But, the developer can also provide the option to load the YAML file on the fly.
+## So, the template can be run using the "Knit HTML" button in RStudio
+if (!exists('yml'))                           			# if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists('summarize_star.yaml'))           	# assume the pairing YAML file exists in the current folder with the same name
+		yml<-yaml.load_file('summarize_star.yaml');   # rename the YAML file to fit this template
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));
+path <- yml$output;
+path.r <- f['R'];
+path.tbl <- f['table'];
+path.fig <- f['figure'];
+path.input <- f['input'];
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url`
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+# STAR options
+
+```{r star_options, include=FALSE}
+prms <- yml$parameter;
+lns <- sapply(names(prms), function(nm) {
+  x <- prms[[nm]];
+  if (class(x) != 'list') paste('  - **', nm, '**: ', as.vector(x), sep='') else {
+    l0 <- paste('  - **', nm, '**:', sep='');
+    y <- prms[[nm]];
+    l <- sapply(names(y), function(nm) paste('    - **', nm, '**: ', as.vector(y[[nm]]), sep=''));
+    l <- paste(l, collapse='\n');
+    paste(l0, l, sep='\n');
+  }
+})
+lns <- paste(lns, collapse='\n'); 
+```
+
+STAR was run using the following options:
+
+`r lns`
+
+`r home.url`
+
+# Summary statistics
+
+```{r parse_log, include=FALSE}
+parseLog<-function(fn) {
+  lns<-scan(fn, what='', sep='\n', flush=TRUE); 
+  lns<-c('GLOBAL', lns);
+  prs<-strsplit(lns, '\\|');
+  prs<-lapply(prs, function(x) sub('^[ :\t]+', '', x));
+  prs<-lapply(prs, function(x) sub('[ :\t]+$', '', x));
+  prs<-lapply(prs, function(x) x[x!='']);
+  prs<-prs[sapply(prs, length)>0];
+  n<-sapply(prs, length);
+  ind<-which(n==1);
+  ind<-c(ind, length(prs)+1);
+  grp<-lapply(1:(length(ind)-1), function(i) prs[(ind[i]+1):(ind[i+1]-1)]); 
+  grp<-lapply(grp, function(x) {
+    y<-sapply(x, function(x) x[2]);
+    names(y)<-sapply(x, function(x) x[1]);
+    y;
+  }); 
+  names(grp)<-unlist(prs[ind[1:(length(ind)-1)]]);
+  grp; 
+}
+
+parseLogs<-function(fns) {
+  logs<-lapply(fns, parseLog);
+  # run summary
+  t1<-t(sapply(logs, function(log) log[[1]][c(2, 3, 4, 6, 5)]));
+  t1<-data.frame(t1, stringsAsFactors = FALSE);
+  for (i in 3:5) t1[[i]]<-format(as.numeric(t1[[i]]), big.mark=',');
+  names(t1)<-c('Mapping_star', 'Mapping_end', 'Speed', 'Read_length', 'Number_reads');
+  # read count
+  t2<-lapply(logs, function(log) c('Input' = log[['GLOBAL']]['Number of input reads'][[1]],
+                                   'Unique' = log[['UNIQUE READS']]['Uniquely mapped reads number'][[1]],
+                                   'Splice' = log[['UNIQUE READS']]['Number of splices: Total'][[1]],
+                                   'Multiple' = log[['MULTI-MAPPING READS']]['Number of reads mapped to multiple loci'][[1]],
+                                   'Chimeric' = log[['CHIMERIC READS']]['Number of chimeric reads'][[1]]));
+  cnm <- unique(unlist(lapply(t2, names), use.names=FALSE));
+  t2 <- t(sapply(t2, function(x) as.numeric(x[cnm])));
+  colnames(t2) <- cnm;
+  t3 <- t2;
+  t2 <- apply(t2, 2, function(x) format(x, big.mark=','));
+  colnames(t2) <- cnm;
+  # percentage
+  t3<-apply(t3, 2, function(x) round(100*x/t3[, 1], 2));
+  colnames(t3)<-colnames(t2);
+  # splice site
+  t4<-t(sapply(logs, function(log) as.numeric(log[[2]][c(4, 5, 6, 7, 8, 9)])));
+  t4<-apply(t4, 2, function(x) format(x, big.mark=','));
+  colnames(t4)<-c('Total', 'Annotated', 'GT/AG', 'GC/AG', 'AT/AC', 'Non-canonical');
+  # mismatch and indels
+  t5<-t(sapply(logs, function(log) log[[2]][c(10, 11, 13, 12, 14)]));
+  colnames(t5)<-c('Mismatch_rate', 'Deletion_rate', 'Insertion_rate', 'Avg_deletion_length', 'Avg_insertion_length');
+  # unmapped and outliers
+  t6<-t(sapply(logs, function(log) c(log[[3]][4], log[[4]])));
+  colnames(t6)<-c('Too_many_loci', 'Too_many_mismatch', 'Too_short', 'Other');
+  
+  list(t1, t2, t3, t4, t5, t6);
+}
+
+tbls<-parseLogs(unlist(yml$input));
+tbls<-lapply(tbls, as.matrix);
+
+alerts<-c();
+```
+
+```{r summary_statistics, include=TRUE}
+stat<-cbind(
+  "Total input, million reads" = round(as.numeric(gsub(',', '', tbls[[1]][, 5]))/10^6, 2),
+  "Alignment rate (%), unique mapping" = tbls[[3]][, 2],
+  "Alignment rate (%), unique + multiple" = tbls[[3]][, 2] + tbls[[3]][, 4],
+  "Mismatch rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 1])),
+  "Deletion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 2])),
+  "Insertion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 3])),
+  "Too many loci (%)" = as.numeric(sub('%', '', tbls[[6]][, 1])),
+  "Too many mismatch (%)" = as.numeric(sub('%', '', tbls[[6]][, 2])),
+  "Too short (%)" = as.numeric(sub('%', '', tbls[[6]][, 3]))
+)
+smm<-apply(stat, 2, summary); 
+nms<-rownames(stat); 
+```
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click here to see the summary statistics of individual libraries.
+</div>
+
+<div align='center', style="padding:0 2cm">
+`r kable(t(smm))`
+</div>
+
+## Alignment rate
+
+In most RNA-seq data sets, the percentage of total input reads that can be aligned to reference genome/transcriptome could range between 50% and 90%. Alignment rate is an important quality index of RNA-seq library and high throughput sequencing. However, it also highly depends on the experimental material and protocol, so it is hard to have a predefined cutoff of “high” alignment rate for all data sets. On the other hand, the consistence of alignment rates between samples of the same data set is at least equally important. Inconsistency of alignment rates is usually the consequence of systematic bias during the whole experimental procedure. It adds unwanted between-sample variance into data and might have profound impact on statistic analysis, such as differential gene expression. Therefore, the focus of this analysis is whether there are libraries having much lower alignment rates than the others.
+
+The rate of unique vs. multiple alignment is a similar index of data quality. High percent of multiple alignment might indicate low complexity of sequence reads, higher sequencing error rate, and other issues. This analysis also evaluates the consistency of unique vs. multiple alignment between samples.
+
+<div align='center'>
+```{r alignment_rate, include=TRUE, fig.width=12, fig.height=6, out.width='800px'}
+par(mfrow=c(1, 2));
+# Total input vs. uniquely aligned
+x1 <- as.numeric(gsub(',', '', tbls[[2]][,1]))/10^6;
+y1 <- as.numeric(gsub(',', '', tbls[[2]][,2]))/10^6;
+sigma1 <- CalcLmSigma(x1, y1, plot=TRUE, xlab='Total input (million)', ylab='Uniquely mapped (million)');
+
+# Unique vs. multiple mapping, percentage
+x2<-tbls[[3]][, 2];
+y2<-tbls[[3]][, 4];
+sigma2 <- CalcLmSigma(x2, y2, plot=TRUE, xlab='Unique mapping (%)', ylab='Multiple mapping (%)');
+
+# Outliers
+o <- nms[sigma1 < -3];
+if (length(o) == 0) alerts <- c(alerts, 'Low alignment rate: none') else
+alerts <- c(alerts, paste('Low alignment rate:', paste(o, collapse='; ')));
+o <- nms[sigma2 > 3];
+if (length(o) == 0) alerts <- c(alerts, 'High multiple alignment rate: none') else
+alerts <- c(alerts, paste('High multiple alignment rate:', paste(o, collapse='; ')));
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 1.** The global alignment rate (left) and the rate of unique vs. multiple alignment (right). Each spot represents a RNA-seq library and is colored based on number of sigma. For each library, a linear model is built with all the other libraries and the value of sigma (variance of random error) is obtained from the model. The number of sigma is then calculated by dividing the observed-predicted difference of that library with the sigma value.
+</div>
+
+## Non-canonical splice sites
+An important aspect of processing RNA-seq data is to alignment sequence reads to splicing sites, called gap alignment. Most commonly, STAR performs gap alignment first by using the known splicing sites based on the reference transcriptome and then by detecting novel splicing sites based on the reference genome. Most splicing sites have canonical donor/acceptor bases, such as GT/AG. While non-canonical splicing sites have been observed, they are relatively rare and often suggestive of false positives.
+
+<div align='center'>
+```{r splice_site, include=TRUE, fig.width=6, fig.height=6, out.width='400px'}
+ct0<-tbls[[2]][, 'Unique'];
+ct0<-as.numeric(gsub(',', '', ct0));
+ct1<-tbls[[2]][, 'Splice'];
+ct1<-as.numeric(gsub(',', '', ct1));
+ct2<-tbls[[4]][, 'Non-canonical'];
+ct2<-as.numeric(gsub(',', '', ct2));
+sigma3 <- CalcLmSigma(ct1/10^6, ct2/10^6, plot=TRUE, xlab='All splicing sites (million reads)',
+ylab='Non-canonical sites (million reads)');
+
+# outlier
+o <- nms[sigma3 > 3];
+if (length(o) == 0) alerts <- c(alerts, 'High rate of noncanonical splice: none') else
+alerts <- c(alerts, paste('High rate of noncanonical splice:', paste(o, collapse='; ')));
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2.** The total number of reads gap-aligned reads and the number of gap-aligned with non-canonical splicing sites are fitted to linear models as in **Figure 1**. On average of all samples in this data set, 1.128% of all gap-aligned reads have non-canonical splicing sites.
+</div>
+
+## Mismatches and INDELs
+
+STAR alignment reports the frequency of mismatch, deletion, and insertion bases. The consistency of these statistics should also be evaluated.
+
+<div align='center'>
+```{r mismatch_indel, include=TRUE, fig.width=8, fig.height=6, out.width='600px'}
+x<-apply(tbls[[5]][, 3:1], 2, function(x) as.numeric(gsub('%', '', x)));
+
+par(mar=c(5,5,2,2));
+dens <- apply(x, 2, density);
+min.x <- min(sapply(dens, function(d) min(d$x)));
+max.x <- max(sapply(dens, function(d) max(d$x)));
+min.y <- min(sapply(dens, function(d) min(d$y)));
+max.y <- max(sapply(dens, function(d) max(d$y)));
+plot(0, type='n', xlim=c(min.x, max.x), ylim=c(min.y, 1.1*max.y), xlab='Per base frequency(%)',
+ylab='Number of samples', cex.lab=1.5, yaxs='i');
+for (i in 1:3) lines(dens[[i]], lwd=2, col=i+1);
+legend('topright', col=2:4, legend=c('Insertion', 'Deletion', 'Mismatch'), lwd=1, bty='n', cex=1.5);
+
+# outlier
+o <- lapply(1:3, function(i) nms[x[, i] > boxplot.stats(x[, i])[[1]][5]]);
+names(o) <- c('High insertion rate:', 'High deletion rate:', 'High mismatch rate:');
+alerts <- c(alerts, sapply(names(o), function(nm) {
+o <- o[[nm]];
+if (length(o) == 0) paste(nm, 'none') else paste(nm, paste(o, collapse='; '))
+}));
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 3.** Distribution of insertion/deletion/mismatch frequency in all samples.
+</div>
+
+## Unmapped reads
+
+STAR alignment also reports the percent of unmapped reads due to different reasons, including too many mismatches, too short, and other. Additionally, it reports to percent of reads that were mapped, but to too many loci. Again, the focus here is the consistency of these percents between samples.
+
+<div align='center'>
+```{r unmapped, include=TRUE, fig.width=12, fig.height=12, out.width='800px'}
+x<-apply(tbls[[6]], 2, function(x) as.numeric(gsub('%', '', x)));
+nm<-c('Too many loci', 'Too many mismatch', 'Too short', 'Other');
+nm1<-c('Percent of mapped reads (%)', rep('Percent of unmapped reads (%)', 3));
+par(mar=c(5,5,3,2), mfrow=c(2,2));
+for (i in 1:4) plot(density(x[, i]), lwd=2, col='darkblue', main=nm[i], cex.main=1.5,
+xlab=nm1[i], ylab='Number of samples', cex.lab=1.5);
+
+# outlier
+o <- lapply(1:4, function(i) nms[x[, i] > boxplot.stats(x[, i])[[1]][5]]);
+names(o) <- paste('High rate of _', tolower(nm), '_:', sep='');
+alerts <- c(alerts, sapply(names(o), function(nm) {
+o <- o[[nm]];
+if (length(o) == 0) paste(nm, 'none') else paste(nm, paste(o, collapse='; '))
+}));
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 4.** Distribution of the frequency of poorly aligned reads due to different reasons. The frequency is relative to all mapped reads in the first plot, and relative to all unmapped reads in the others.
+</div>
+
+## Alerts
+
+```{r alerts, include=FALSE}
+lns <- paste(paste('  -', alerts), collapse='\n')
+```
+
+Listed below are samples with potentially quality problem, based on consistency of summary statistics between samples:
+
+`r lns`
+
+## More details
+
+```{r write_table, include=FALSE}
+CreateDatatable(tbls[[1]], paste(path.tbl, 'run_info.html', sep='/'));
+CreateDatatable(tbls[[2]], paste(path.tbl, 'count_mapped.html', sep='/'));
+CreateDatatable(tbls[[3]], paste(path.tbl, 'percent_mapped.html', sep='/'));
+CreateDatatable(tbls[[4]], paste(path.tbl, 'count_splice.html', sep='/'));
+CreateDatatable(tbls[[5]], paste(path.tbl, 'mismatch_indel.html', sep='/'));
+CreateDatatable(tbls[[6]], paste(path.tbl, 'percent_unmapped.html', sep='/'));
+```
+
+Click links to view full tables of summary statistics of all samples:
+
+  - [STAR run information](table/run_info.html)
+    * Speed: mapping speed, million of reads per hour
+  - Mapped reads: [count](table/count_mapped.html), [percent](table/percent_mapped.html)
+    * Unique: reads mapped to one and only one genomic loci
+    * Splice: reads mapped to splice junctions
+    * Multiple: reads mapped to multiple genomic loci
+  - [Splice sites](table/count_splice.html)
+  - [Mismatch and INDEL](table/mismatch_indel.html)
+  - [Unmapped](table/percent_unmapped.html)
+  
+# Appendix 
+
+Check out the ***[RoCA project](http://zhezhangsh.github.io/RoCA)*** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Copy this ***[YAML](https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.yaml)*** file to your working directory
+
+  2. To use your own data and parameters, edit the ***YAML*** file:
+
+    - _output_: where you want to put the output files
+    - _home_: the URL if you have a home page for your project
+    - _analyst_: your name
+    - _description_: background information about your project, analysis, etc.
+    - _input_: where are your input data, read instruction for preparing them
+    - _parameter_: parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport("cnv_impact.yaml");
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+
+_END OF DOCUMENT_
+
