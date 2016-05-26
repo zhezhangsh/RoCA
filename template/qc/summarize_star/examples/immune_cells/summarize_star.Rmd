@@ -312,7 +312,7 @@ Check out the ***[RoCA project](http://zhezhangsh.github.io/RoCA)*** for more in
 
 To reproduce this report: 
 
-  1. Copy this ***[YAML](https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/summarize_star/summarize_star.yaml)*** file to your working directory
+  1. Copy this ***[YAML](https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.yaml)*** file to your working directory
 
   2. To use your own data and parameters, edit the ***YAML*** file:
 
