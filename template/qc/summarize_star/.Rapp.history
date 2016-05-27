@@ -1,0 +1,360 @@
+dir()
+library(yaml)
+dir()
+getwd()
+setwd('../../qc/summarize_star/')
+yml <- yaml.load_file('summarize_star.yaml')
+yml
+yml <- yaml.load_file('temp.yaml')
+f <- dir('~/Documents/RoCA/data/log/STAR/')
+f
+yml <- yaml.load_file('temp.yaml')
+yml <- yaml.load_file('summarize_star.yaml')
+f0 <- unlist(yml$input)
+f0
+yml <- yaml.load_file('summarize_star.yaml')
+f0 <- unlist(yml$input)
+f0
+f1 <- paste('~/Documents/RoCA/data/log/STAR', f, sep='/')
+f1
+file.rename(f1, f0)
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);#
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }#
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }#
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }#
+#
+## Load required R packages#
+loaded <- LoadPackage(c('yaml', 'rmarkdown', 'knitr', 'DT', 'htmlwidgets'));#
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));#
+#
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.#
+## But, the developer can also provide the option to load the YAML file on the fly.#
+## So, the template can be run using the "Knit HTML" button in RStudio#
+if (!exists('yml'))                           			# if the 'yml' variable doesn't exist yet, create it by loading the YAML file#
+	if (file.exists('summarize_star.yaml'))           	# assume the pairing YAML file exists in the current folder with the same name#
+		yml<-yaml.load_file('summarize_star.yaml');   # rename the YAML file to fit this template#
+prms <- yml$parameter;#
+#
+## Generate directory and sub-directories where the output files will be#
+f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));#
+path <- yml$output;#
+path.r <- f['R'];#
+path.tbl <- f['table'];#
+path.fig <- f['figure'];#
+path.input <- f['input'];#
+#
+## URL to project home#
+## Use this line to add a link to project home in the report: `r home.url`#
+home.url <- Link2Home(yml$home);
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);#
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }#
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }#
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }#
+#
+## Load required R packages#
+loaded <- LoadPackage(c('yaml', 'rmarkdown', 'knitr', 'DT', 'htmlwidgets'));#
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));#
+#
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.#
+## But, the developer can also provide the option to load the YAML file on the fly.#
+## So, the template can be run using the "Knit HTML" button in RStudio#
+if (!exists('yml'))                           			# if the 'yml' variable doesn't exist yet, create it by loading the YAML file#
+	if (file.exists('summarize_star.yaml'))           	# assume the pairing YAML file exists in the current folder with the same name#
+		yml<-yaml.load_file('summarize_star.yaml');   # rename the YAML file to fit this template#
+prms <- yml$parameter;#
+#
+## Generate directory and sub-directories where the output files will be#
+f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));#
+path <- yml$output;#
+path.r <- f['R'];#
+path.tbl <- f['table'];#
+path.fig <- f['figure'];#
+path.input <- f['input'];#
+#
+## URL to project home#
+## Use this line to add a link to project home in the report: `r home.url`#
+home.url <- Link2Home(yml$home);
+parseLog<-function(fn) {#
+  lns<-scan(fn, what='', sep='\n', flush=TRUE); #
+  lns<-c('GLOBAL', lns);#
+  prs<-strsplit(lns, '\\|');#
+  prs<-lapply(prs, function(x) sub('^[ :\t]+', '', x));#
+  prs<-lapply(prs, function(x) sub('[ :\t]+$', '', x));#
+  prs<-lapply(prs, function(x) x[x!='']);#
+  prs<-prs[sapply(prs, length)>0];#
+  n<-sapply(prs, length);#
+  ind<-which(n==1);#
+  ind<-c(ind, length(prs)+1);#
+  grp<-lapply(1:(length(ind)-1), function(i) prs[(ind[i]+1):(ind[i+1]-1)]); #
+  grp<-lapply(grp, function(x) {#
+    y<-sapply(x, function(x) x[2]);#
+    names(y)<-sapply(x, function(x) x[1]);#
+    y;#
+  }); #
+  names(grp)<-unlist(prs[ind[1:(length(ind)-1)]]);#
+  grp; #
+}#
+#
+parseLogs<-function(fns) {#
+  logs<-lapply(fns, parseLog);#
+  # run summary#
+  t1<-t(sapply(logs, function(log) log[[1]][c(2, 3, 4, 6, 5)]));#
+  t1<-data.frame(t1, stringsAsFactors = FALSE);#
+  for (i in 3:5) t1[[i]]<-format(as.numeric(t1[[i]]), big.mark=',');#
+  names(t1)<-c('Mapping_star', 'Mapping_end', 'Speed', 'Read_length', 'Number_reads');#
+  # read count#
+  t2<-lapply(logs, function(log) c('Input' = log[['GLOBAL']]['Number of input reads'][[1]],#
+                                   'Unique' = log[['UNIQUE READS']]['Uniquely mapped reads number'][[1]],#
+                                   'Splice' = log[['UNIQUE READS']]['Number of splices: Total'][[1]],#
+                                   'Multiple' = log[['MULTI-MAPPING READS']]['Number of reads mapped to multiple loci'][[1]],#
+                                   'Chimeric' = log[['CHIMERIC READS']]['Number of chimeric reads'][[1]]));#
+  cnm <- unique(unlist(lapply(t2, names), use.names=FALSE));#
+  t2 <- t(sapply(t2, function(x) as.numeric(x[cnm])));#
+  colnames(t2) <- cnm;#
+  t3 <- t2;#
+  t2 <- apply(t2, 2, function(x) format(x, big.mark=','));#
+  colnames(t2) <- cnm;#
+  # percentage#
+  t3<-apply(t3, 2, function(x) round(100*x/t3[, 1], 2));#
+  colnames(t3)<-colnames(t2);#
+  # splice site#
+  t4<-t(sapply(logs, function(log) as.numeric(log[[2]][c(4, 5, 6, 7, 8, 9)])));#
+  t4<-apply(t4, 2, function(x) format(x, big.mark=','));#
+  colnames(t4)<-c('Total', 'Annotated', 'GT/AG', 'GC/AG', 'AT/AC', 'Non-canonical');#
+  # mismatch and indels#
+  t5<-t(sapply(logs, function(log) log[[2]][c(10, 11, 13, 12, 14)]));#
+  colnames(t5)<-c('Mismatch_rate', 'Deletion_rate', 'Insertion_rate', 'Avg_deletion_length', 'Avg_insertion_length');#
+  # unmapped and outliers#
+  t6<-t(sapply(logs, function(log) c(log[[3]][4], log[[4]])));#
+  colnames(t6)<-c('Too_many_loci', 'Too_many_mismatch', 'Too_short', 'Other');#
+  list(t1, t2, t3, t4, t5, t6);#
+}#
+tbls<-parseLogs(fn.log);#
+tbls<-lapply(tbls, as.matrix); #
+alerts<-c();
+parseLog<-function(fn) {#
+  lns<-scan(fn, what='', sep='\n', flush=TRUE); #
+  lns<-c('GLOBAL', lns);#
+  prs<-strsplit(lns, '\\|');#
+  prs<-lapply(prs, function(x) sub('^[ :\t]+', '', x));#
+  prs<-lapply(prs, function(x) sub('[ :\t]+$', '', x));#
+  prs<-lapply(prs, function(x) x[x!='']);#
+  prs<-prs[sapply(prs, length)>0];#
+  n<-sapply(prs, length);#
+  ind<-which(n==1);#
+  ind<-c(ind, length(prs)+1);#
+  grp<-lapply(1:(length(ind)-1), function(i) prs[(ind[i]+1):(ind[i+1]-1)]); #
+  grp<-lapply(grp, function(x) {#
+    y<-sapply(x, function(x) x[2]);#
+    names(y)<-sapply(x, function(x) x[1]);#
+    y;#
+  }); #
+  names(grp)<-unlist(prs[ind[1:(length(ind)-1)]]);#
+  grp; #
+}#
+#
+parseLogs<-function(fns) {#
+  logs<-lapply(fns, parseLog);#
+  # run summary#
+  t1<-t(sapply(logs, function(log) log[[1]][c(2, 3, 4, 6, 5)]));#
+  t1<-data.frame(t1, stringsAsFactors = FALSE);#
+  for (i in 3:5) t1[[i]]<-format(as.numeric(t1[[i]]), big.mark=',');#
+  names(t1)<-c('Mapping_star', 'Mapping_end', 'Speed', 'Read_length', 'Number_reads');#
+  # read count#
+  t2<-lapply(logs, function(log) c('Input' = log[['GLOBAL']]['Number of input reads'][[1]],#
+                                   'Unique' = log[['UNIQUE READS']]['Uniquely mapped reads number'][[1]],#
+                                   'Splice' = log[['UNIQUE READS']]['Number of splices: Total'][[1]],#
+                                   'Multiple' = log[['MULTI-MAPPING READS']]['Number of reads mapped to multiple loci'][[1]],#
+                                   'Chimeric' = log[['CHIMERIC READS']]['Number of chimeric reads'][[1]]));#
+  cnm <- unique(unlist(lapply(t2, names), use.names=FALSE));#
+  t2 <- t(sapply(t2, function(x) as.numeric(x[cnm])));#
+  colnames(t2) <- cnm;#
+  t3 <- t2;#
+  t2 <- apply(t2, 2, function(x) format(x, big.mark=','));#
+  colnames(t2) <- cnm;#
+  # percentage#
+  t3<-apply(t3, 2, function(x) round(100*x/t3[, 1], 2));#
+  colnames(t3)<-colnames(t2);#
+  # splice site#
+  t4<-t(sapply(logs, function(log) as.numeric(log[[2]][c(4, 5, 6, 7, 8, 9)])));#
+  t4<-apply(t4, 2, function(x) format(x, big.mark=','));#
+  colnames(t4)<-c('Total', 'Annotated', 'GT/AG', 'GC/AG', 'AT/AC', 'Non-canonical');#
+  # mismatch and indels#
+  t5<-t(sapply(logs, function(log) log[[2]][c(10, 11, 13, 12, 14)]));#
+  colnames(t5)<-c('Mismatch_rate', 'Deletion_rate', 'Insertion_rate', 'Avg_deletion_length', 'Avg_insertion_length');#
+  # unmapped and outliers#
+  t6<-t(sapply(logs, function(log) c(log[[3]][4], log[[4]])));#
+  colnames(t6)<-c('Too_many_loci', 'Too_many_mismatch', 'Too_short', 'Other');#
+  list(t1, t2, t3, t4, t5, t6);#
+}#
+#
+tbls<-parseLogs(unlist(yml$input));#
+tbls<-lapply(tbls, as.matrix);#
+#
+alerts<-c();
+dim(tbls[[1]])
+par(mfrow=c(1, 2));#
+# Total input vs. uniquely aligned#
+x1 <- as.numeric(gsub(',', '', tbls[[2]][,1]))/10^6;#
+y1 <- as.numeric(gsub(',', '', tbls[[2]][,2]))/10^6;#
+sigma1 <- CalcLmSigma(x1, y1, plot=TRUE, xlab='Total input (million)', ylab='Uniquely mapped (million)');#
+#
+# Unique vs. multiple mapping, percentage#
+x2<-tbls[[3]][, 2];#
+y2<-tbls[[3]][, 4];#
+sigma2 <- CalcLmSigma(x2, y2, plot=TRUE, xlab='Unique mapping (%)', ylab='Multiple mapping (%)');
+loaded <- LoadPackage(c('yaml', 'rmarkdown', 'knitr', 'DT', 'htmlwidgets', 'awsomics'));
+par(mfrow=c(1, 2));#
+# Total input vs. uniquely aligned#
+x1 <- as.numeric(gsub(',', '', tbls[[2]][,1]))/10^6;#
+y1 <- as.numeric(gsub(',', '', tbls[[2]][,2]))/10^6;#
+sigma1 <- CalcLmSigma(x1, y1, plot=TRUE, xlab='Total input (million)', ylab='Uniquely mapped (million)');#
+#
+# Unique vs. multiple mapping, percentage#
+x2<-tbls[[3]][, 2];#
+y2<-tbls[[3]][, 4];#
+sigma2 <- CalcLmSigma(x2, y2, plot=TRUE, xlab='Unique mapping (%)', ylab='Multiple mapping (%)');
+nms<-rownames(smm);
+smm
+stat<-cbind(#
+  "Total input, million reads" = round(as.numeric(gsub(',', '', tbls[[1]][, 5]))/10^6, 2),#
+  "Alignment rate (%), unique mapping" = tbls[[3]][, 2],#
+  "Alignment rate (%), unique + multiple" = tbls[[3]][, 2] + tbls[[3]][, 4],#
+  "Mismatch rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 1])),#
+  "Deletion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 2])),#
+  "Insertion rate (%)" = as.numeric(sub('%', '', tbls[[5]][, 3])),#
+  "Too many loci (%)" = as.numeric(sub('%', '', tbls[[6]][, 1])),#
+  "Too many mismatch (%)" = as.numeric(sub('%', '', tbls[[6]][, 2])),#
+  "Too short (%)" = as.numeric(sub('%', '', tbls[[6]][, 3]))#
+)#
+smm<-apply(stat, 2, summary); #
+nms<-rownames(smm);
+nms
+smm
+names(stat)
+length(stat)
+dim(stat)
+head(stat)
+nms<-rownames(stat);
+nms
+o <- nms[sigma1 < -3];#
+if (length(o) == 0) alerts <- c(alerts, 'Low alignment rate: none') else#
+alerts <- c(alerts, paste('Low alignment rate:', paste(o, collapse='; ')));#
+o <- nms[sigma2 > 3];#
+if (length(o) == 0) alerts <- c(alerts, 'High multiple alignment rate: none') else#
+alerts <- c(alerts, paste('High multiple alignment rate:', paste(o, collapse='; ')));
+alerts
+ct0<-tbls[[2]][, 'Unique'];#
+ct0<-as.numeric(gsub(',', '', ct0));#
+ct1<-tbls[[2]][, 'Splice'];#
+ct1<-as.numeric(gsub(',', '', ct1));#
+ct2<-tbls[[4]][, 'Non-canonical'];#
+ct2<-as.numeric(gsub(',', '', ct2));#
+sigma3 <- CalcLmSigma(ct1/10^6, ct2/10^6, plot=TRUE, xlab='All splicing sites (million reads)',#
+ylab='Non-canonical sites (million reads)');
+sigma3
+sort(sigma3)
+CalcLmSigma
+devtools::install_github('zhezhangsh/awsomicsR')
+ct0<-tbls[[2]][, 'Unique'];#
+ct0<-as.numeric(gsub(',', '', ct0));#
+ct1<-tbls[[2]][, 'Splice'];#
+ct1<-as.numeric(gsub(',', '', ct1));#
+ct2<-tbls[[4]][, 'Non-canonical'];#
+ct2<-as.numeric(gsub(',', '', ct2));#
+sigma3 <- CalcLmSigma(ct1/10^6, ct2/10^6, plot=TRUE, xlab='All splicing sites (million reads)',#
+ylab='Non-canonical sites (million reads)');#
+#
+# outlier#
+o <- nms[sigma3 > 3];#
+if (length(o) == 0) alerts <- c(alerts, 'High rate of noncanonical splice: none') else#
+alerts <- c(alerts, paste('High rate of noncanonical splice:', paste(o, collapse='; ')));
+alerts
+par(mar=c(5,5,2,2));#
+dens <- apply(x, 2, density);#
+min.x <- min(sapply(dens, function(d) min(d$x)));#
+max.x <- max(sapply(dens, function(d) max(d$x)));#
+min.y <- min(sapply(dens, function(d) min(d$y)));#
+max.y <- max(sapply(dens, function(d) max(d$y)));#
+plot(0, type='n', xlim=c(min.x, max.x), ylim=c(min.y, 1.1*max.y), xlab='Per base frequency(%)',#
+ylab='Number of samples', cex.lab=1.5, yaxs='i');#
+for (i in 1:3) lines(dens[[i]], lwd=2, col=i+1);#
+legend('topright', col=2:4, legend=c('Insertion', 'Deletion', 'Mismatch'), lwd=1, bty='n', cex=1.5);
+x<-apply(tbls[[5]][, 3:1], 2, function(x) as.numeric(gsub('%', '', x)));#
+#
+par(mar=c(5,5,2,2));#
+dens <- apply(x, 2, density);#
+min.x <- min(sapply(dens, function(d) min(d$x)));#
+max.x <- max(sapply(dens, function(d) max(d$x)));#
+min.y <- min(sapply(dens, function(d) min(d$y)));#
+max.y <- max(sapply(dens, function(d) max(d$y)));#
+plot(0, type='n', xlim=c(min.x, max.x), ylim=c(min.y, 1.1*max.y), xlab='Per base frequency(%)',#
+ylab='Number of samples', cex.lab=1.5, yaxs='i');#
+for (i in 1:3) lines(dens[[i]], lwd=2, col=i+1);#
+legend('topright', col=2:4, legend=c('Insertion', 'Deletion', 'Mismatch'), lwd=1, bty='n', cex=1.5);
+o <- apply(x, 2, function(x) nms[x > boxplot.stats(x)[5]]);#
+names(o) <- c('High insertion rate:', 'High deletion rate:', 'High mismatch rate:');#
+alerts <- c(alerts, sapply(names(o), function(nm) {#
+o <- o[[nm]];#
+if (length(o) == 0) c(alerts, paste(nm, 'none')) else paste(nm, paste(o, collapse='; '))#
+}));
+x
+x
+o <- lapply(1:3, function(i) nms[x[, i] > boxplot.stats(x[, i])[[1]][5]]);#
+names(o) <- c('High insertion rate:', 'High deletion rate:', 'High mismatch rate:');#
+alerts <- c(alerts, sapply(names(o), function(nm) {#
+o <- o[[nm]];#
+if (length(o) == 0) c(alerts, paste(nm, 'none')) else paste(nm, paste(o, collapse='; '))#
+}));
+alerts
+alerts<-c()
+o <- lapply(1:3, function(i) nms[x[, i] > boxplot.stats(x[, i])[[1]][5]]);#
+names(o) <- c('High insertion rate:', 'High deletion rate:', 'High mismatch rate:');#
+alerts <- c(alerts, sapply(names(o), function(nm) {#
+o <- o[[nm]];#
+if (length(o) == 0) paste(nm, 'none') else paste(nm, paste(o, collapse='; '))#
+}));
+alerts
+x<-apply(tbls[[6]], 2, function(x) as.numeric(gsub('%', '', x)));
+x
+dim(x)
+x<-apply(tbls[[6]], 2, function(x) as.numeric(gsub('%', '', x)));#
+nm<-c('Too many loci', 'Too many mismatch', 'Too short', 'Other');#
+nm1<-c('Percent of mapped reads (%)', rep('Percent of unmapped reads (%)', 3));#
+par(mar=c(5,5,3,2), mfrow=c(2,2));#
+for (i in 1:4) plot(density(x[, i]), lwd=2, col='darkblue', main=nm[i], cex.main=1.5,#
+xlab=nm1[i], ylab='Number of samples', cex.lab=1.5);#
+#
+# outlier#
+o <- lapply(1:4, function(i) nms[x[, i] > boxplot.stats(x[, i])[[1]][5]]);#
+names(o) <- paste('High rate of _', tolower(nm), '_:', sep='');#
+alerts <- c(alerts, sapply(names(o), function(nm) {#
+o <- o[[nm]];#
+if (length(o) == 0) paste(nm, 'none') else paste(nm, paste(o, collapse='; '))#
+}));
+prms <- yml$parameter;#
+lns <- sapply(names(prms), function(nm) {#
+  x <- prms[[nm]];#
+  if (class(x) != 'list') paste('  - **', nm, '**: ', as.vector(x), sep='') else {#
+    l0 <- paste('  - **', nm, '**:', sep='');#
+    y <- prms[[nm]];#
+    l <- sapply(names(y), function(nm) paste('    - **', nm, '**: ', as.vector(y[[nm]]), sep=''));#
+    l <- paste(l, collapse='\n');#
+    paste(l0, l, sep='\n');#
+  }#
+})
+lns
+prms
+yml <- yaml.load_file('summarize_star.yaml')
+prms <- yml$parameter;#
+lns <- sapply(names(prms), function(nm) {#
+  x <- prms[[nm]];#
+  if (class(x) != 'list') paste('  - **', nm, '**: ', as.vector(x), sep='') else {#
+    l0 <- paste('  - **', nm, '**:', sep='');#
+    y <- prms[[nm]];#
+    l <- sapply(names(y), function(nm) paste('    - **', nm, '**: ', as.vector(y[[nm]]), sep=''));#
+    l <- paste(l, collapse='\n');#
+    paste(l0, l, sep='\n');#
+  }#
+})
+lns

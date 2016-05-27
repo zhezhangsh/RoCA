@@ -10,8 +10,7 @@
 ##### REQUIRED #####
 ####################
 # Required fields for using the RoCA::CreateReport() function
-#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/summarize_star/summarize_star.Rmd
-template: summarize_star.Rmd
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/summarize_star/summarize_star.Rmd
 output: examples/immune_cells       	  # Where to save the output files
 home: http://zhezhangsh.github.io/RoCA	# Location to project home (URL or local file)
 analyst: Jim Zhang              		    # Name of the analyst who runs this analysis

@@ -28,6 +28,7 @@
 ####################
 # Required fields for using the RoCA::CreateReport() function
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.Rmd 
+#template: cnv_impact.Rmd 
 output: examples/mouse_brain_tumor       # Where to save the output files
 home: index.html                # Location to project home (URL or local file)
 analyst: Jim Zhang              # Name of the analyst who runs this analysis
