@@ -350,7 +350,7 @@ if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
-CreateReport("cnv_impact.yaml");
+CreateReport("summarize_star.yaml");
 ```
 
 If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
