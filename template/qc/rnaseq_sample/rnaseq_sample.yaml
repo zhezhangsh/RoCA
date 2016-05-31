@@ -1,7 +1,7 @@
 ####################
 ##### REQUIRED #####
 ####################
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/rnaseq/analyze_sample/analyze_sample.Rmd
+template: rnaseq_sample.Rmd
 home: http://mybic.chop.edu/labs/Krantz_lab/Fly_NIPPEDB/
 output: ~/R/source/RoCA/template/rnaseq/analyze_sample/examples/example1/output
 zip: yes
