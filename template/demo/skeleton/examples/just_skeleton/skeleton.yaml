@@ -33,7 +33,7 @@
 # but the values should be specified for each analysis.
 # ============================================================= -->
 
-template: skeleton.Rmd                    # Location of the R markdown template (URL or local file)
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/demo/skeleton/skeleton.Rmd
 output: examples/just_skeleton            # Where to save the output files
 home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
