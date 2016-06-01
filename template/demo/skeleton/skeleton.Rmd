@@ -43,7 +43,7 @@ name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'GenomicRa
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
 # <!-- 
-# For all RoCA templates, keep the remaining code of this chunk unchanged.
+# Keep the remaining part of this code chunk unchanged for all RoCA templates, k.
 # -->
 
 ## Default knitr parameters
@@ -80,7 +80,7 @@ home.url <- Link2Home(yml$home);
 <!--
 This whole section is dedicated to the <description> block in the YAML file.
 Each key-value pair in that block will be written out as a subsection. 
-Keep it unchanged for all RoCA reports.
+Keep it unchanged for all RoCA templates
 -->
 
 # Description
@@ -124,31 +124,54 @@ saveRDS(a.vector, paste(path.input, 'a_vector.rds', sep='/'));
 
 # Process data to prepare for analysis
 grp <- unique(a.vector); 
-chr <- as.data.frame(a.robject); 
+chr <- BiocGenerics::as.data.frame(a.robject); 
 tbl <- a.table[, a.vector==grp[1], drop=FALSE]; 
 
 # Save processed data that might be re-used in the future 
 saveRDS(grp, paste(path.r, 'group_name.rds', sep='/')); 
 write.csv(tbl, paste(path.tbl, 'subset.csv', sep='/')); 
-fn.html <- CreateDatatable(chr, paste(path.tbl, 'chromosome.html', sep='/')); 
+fn.html <- TrimPath(CreateDatatable(chr, paste(path.tbl, 'chromosome.html', sep='/')));  # <!-- TrimPath function removes the path -->
 ```
 
 # The first result section <!-- Change section title -->
 
+<!-- replace this paragraph in your template -->
+[R Markdown](http://rMarkdown.rstudio.com) generates dynamic documents using R code for data analysis and [Markdown](https://daringfireball.net/projects/markdown) markup language for text. For each analysis step in an R Markdown file, the deveoper should describe the analysis in terms of its goal, rational, method, etc.
+
 <!-- this is a silent code chunk that does some analysis but will not be written into the report -->
 ```{r analysis_step_1, include=FALSE} 
-# <!--
-# Write some code to do some analysis
-# -->
+# <!-- Write some code to do some analysis -->
 ```
-
-[R Markdown](http://rMarkdown.rstudio.com) generates dynamic documents using R code for data analysis and [Markdown](https://daringfireball.net/projects/markdown) markup language for text. For each analysis step in an R Markdown file, the deveoper should describe the analysis in terms of its goal, rational, method, etc.
 
 ## The first subsection <!-- Change subsection title -->
 
+<!-- replace this paragraph in your template -->
+There are two ways to show a table: by using the kable function to include a small table in the final report, or by adding a [link](table/`r fn.html`) that points to an HTML table in Jave DataTables format. By default, all HTML tables will be saved in the _table/_ subfolder.
+
+<!-- this is a code chunk that prepares for a summary table to be included in the report -->
+```{r table_1, include=FALSE}
+# <!-- create a random, meaningless small table -->
+tbl<-t(sapply(1:4, function(i) summary(rnorm(100)))); 
+rownames(tbl)<-paste('Draw', 1:nrow(tbl), sep='_'); 
+```
+
+<div style="color:darkblue; padding:0 3cm">
+**Table 1** Write the table title and caption here.
+</div>
+
+<div align='center', style="padding:0 3cm"> <!-- Horizontally align the table at the center of the page -->
+<!-- Use the kable function to directly put a small table in the report -->
+`r kable(tbl, row.names=TRUE, align=rep('c', ncol(tbl)))`
+</div>
+
+## The second subsection <!-- Change subsection title -->
+
+<!-- replace this paragraph in your template -->
+By default, all figures will be saved in the _figure/_ subfolder as both .pdf and .png files.
+
 <!-- this is a code chunk that will generate a plot to be written into the report -->
 <div align='center'> <!-- Horizontally align the figure at the center of the page -->
-```{r plot, include=TRUE, fig.width=6, fig.height=4, out.width='480px'}
+```{r figure_1, include=TRUE, fig.width=6, fig.height=4, out.width='600px'}
 # <!-- a random, meaningless plot -->
 plot(density(rnorm(100)), lwd=2, col='gold', main='', xlab='', ylab=''); 
 ```
@@ -158,22 +181,59 @@ plot(density(rnorm(100)), lwd=2, col='gold', main='', xlab='', ylab='');
 **Figure 1.** Write the figure caption here. 
 </div>
 
-## More Subsection Title
+`r home.url`
 
-```{r table}
-tbl<-t(sapply(1:4, function(i) summary(rnorm(length(v))))); 
-rownames(tbl)<-paste('Draw', 1:nrow(tbl), sep='_'); 
+# The second result section <!-- Change section title -->
+
+<!-- replace this paragraph in your template -->
+The develop will decide how to split a full data analysis procedure into multiple steps and present the results in different sections and subsection. Be careful with the dependency between steps. 
+
+<!-- this is a silent code chunk that does some analysis but will not be written into the report -->
+```{r analysis_step_2, include=FALSE} 
+# <!-- Write more code to do more analysis -->
 ```
 
-<div style="color:darkblue; padding:0 3cm">
-**Table 1** Example table: summary of `r nrow(tbl)` random value vectors drawn from a normal distribution, using the **_rnorm_** function
-</div>
+# More sections ...
 
-<div align='center', style="padding:0 3cm">
-`r kable(tbl, row.names=TRUE, align=rep('c', ncol(tbl)))`
-</div>
+`r home.url`
 
-# More Section Title
+<!-- Keep this section unchanged for all RoCA templates -->
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
 
 `r home.url`
 
