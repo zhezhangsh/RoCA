@@ -70,8 +70,9 @@ description:
 
 input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
   rds: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/genomic.region/human_38.rds
+  rdata: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/genomic.region/human_38.rdata
   vector: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/organ.txt     # This is an example of a vector saved as a tab-delimited text file.
-  table: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/expr_ss.rds    # This is an example of a data matrix saved as an R object.
+  table: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/expr_demo.txt  # This is an example of a data matrix saved as an R object.
   list: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/mouse.rds        # This is an example of a list saved as an R object.
   log: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/STAR/B_1_Log.final.out # This is an example of file format unknown to RoCA, so developer will be responsible for importing it for analysis.
 
