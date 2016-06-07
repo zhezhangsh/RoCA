@@ -258,7 +258,7 @@ abline(0, 1, lwd=1, col='red');
 dev.off();
 }
 r <- corr[-1, 1];
-nm <- names(r)[r==max(r)];
+nm <- rownames(corr)[-1][r==max(r)];
 PlotLogScatter(count.sum2[, 1], count.sum2[, nm], xlab=colnames(count.sum2)[1], ylab=nm, main = paste('R =', round(corr[1, nm], 4))); 
 abline(0, 1, lwd=1, col='red'); 
 } else {

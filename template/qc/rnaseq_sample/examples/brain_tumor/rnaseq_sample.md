@@ -139,9 +139,6 @@ When the gene-level read counts of two mapping types are strongly correlated to 
 
 <div align='left'>
 
-```
-## Error in if (xlab[1] == "" & ylab[1] == "") mar1 <- 3 else mar1 <- 5: argument is of length zero
-```
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -223,7 +220,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 |Original          | 0.94|          1.00|            0|            0|                  NaN|
 |Total_Count       | 0.92|          1.00|        12282|         5818|               2.1110|
 |Median            | 0.93|          1.00|        10506|         8206|               1.2803|
-|Quantile_Quantile | 0.89|          0.91|        13250|         5943|               2.2295|
+|Quantile_Quantile | 0.89|          0.90|        13276|         5933|               2.2377|
 |Upper_Quantile    | 0.91|          1.00|        13546|         4575|               2.9609|
 |Trimmed_Mean      | 0.94|          1.00|         7394|         9627|               0.7680|
 |DESeq             | 0.92|          1.00|        12571|         5552|               2.2642|
