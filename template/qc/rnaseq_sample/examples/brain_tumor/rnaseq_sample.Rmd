@@ -452,6 +452,8 @@ chrx <- prms$chromosome$f;
 chry <- prms$chromosome$m;
 id.x <- rownames(anno)[anno[, prms$annotation$chromosome]==chrx];
 id.y <- rownames(anno)[anno[, prms$annotation$chromosome]==chry];
+id.x <- id.x[!is.na(id.x)]; 
+id.y <- id.y[!is.na(id.y)]; 
 ct.x <- ct1[id.x, , drop=FALSE]; 
 ct.y <- ct1[id.y, , drop=FALSE]; 
 ct.x <- ct.x[rowSums(ct.x) > 0, , drop=FALSE]; 

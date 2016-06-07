@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-06-07" />
+
+<title>Analysis of RNA-seq samples using read counts</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="index_files/highlight/default.css"
+      type="text/css" />
+<script src="index_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="index_files/navigation-1.0/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Analysis of RNA-seq samples using read counts</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-06-07</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong> This procedure analyzes the RNA-seq data of multiple samples for quality control purpose, using the gene-level read counts. The read counts can be provided as one or multiple integer data matrixes, corresponding to different mapping types, such as unique vs. multiple mapping and sense vs. antisense strands. The following steps will be applied to the read count data:</p>
+<ul>
+<li><strong>Summary statistics</strong>: the read count data is summarized by sample, gene and mapping type.</li>
+<li><strong>Dispersion and normalization</strong>: different normalization methods are compared based on between-sample variance of all genes before and after normalization.</li>
+<li><strong>Sample analysis</strong>: X/Y genes are used to predict sample gender; and autosomal genes are used for unsupervised sample clustering.</li>
+</ul>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1 tabset">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Transcriptome of mouse brain tumors</p>
+</div>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">1.2</span> Data</h2>
+<p>RNA-seq data was generated from of 2 types of mouse brain tumors. Some tumors are tested for drug response. Raw data was processed to get gene-level read counts.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>This is a demo.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="summary-statistics" class="section level1">
+<h1><span class="header-section-number">2</span> Summary statistics</h1>
+<ul>
+<li>Number of samples: <em>19</em></li>
+<li>Number of genes: <em>24,060</em></li>
+<li>Average number of reads per gene: <em>4.e+04</em></li>
+<li>Total number of reads per sample: <em>49,279,527</em></li>
+</ul>
+<div id="read-count-by-sample" class="section level2">
+<h2><span class="header-section-number">2.1</span> Read count by sample</h2>
+<p>The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. <em>Shapiro-Wilk</em> normality test shows that the total read counts of this data set is normally distributed (p = 0.89). Samples with extreme total read counts comparing to the others:</p>
+<ul>
+<li>Samples with extremly low read count: <strong><em>none</em></strong></li>
+<li>Samples with extremly high read count: <strong><em>none</em></strong></li>
+</ul>
+<div align="center">
+<img src="figure/read_count_sample_hist-1.png" title="plot of chunk read_count_sample_hist" alt="plot of chunk read_count_sample_hist" width="600px" />
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<p><strong>Figure 1.</strong> Distribution of total read counts of all samples. Total read count per sample (millions):</p>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   34.72   44.61   50.54   49.28   54.35   64.37</code></pre>
+</div>
+</div>
+<div id="read-count-by-gene" class="section level2">
+<h2><span class="header-section-number">2.2</span> Read count by gene</h2>
+<p>Due to the variability of gene length and expression level, it is expected that a large portion of the sequence reads are mapped to a small number of genes. At the same time, a large portion of the genes will have no or few reads mapped to them, making them unsuitable for statistical analysis. The distribution of read counts across genes and the consistency of such distribution between samples also provide information about RNA-seq data quality. In this data set,</p>
+<ul>
+<li>16.8% genes have no reads mapped to them in any sample.</li>
+<li>26.66% genes have less 1 read mapped to them per sample.</li>
+<li>32.32% genes have less 5 reads mapped to them per sample .</li>
+</ul>
+<div align="center">
+<img src="figure/read_count_gene_sorted-1.png" title="plot of chunk read_count_gene_sorted" alt="plot of chunk read_count_gene_sorted" width="720px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 2.</strong> The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking.
+</div>
+<p> </p>
+<div align="center">
+<img src="figure/read_count_gene_top-1.png" title="plot of chunk read_count_gene_top" alt="plot of chunk read_count_gene_top" width="800px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Figure 3.</strong> The cumulative read counts of top 10 genes and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples:</p>
+<ul>
+<li>Samples with extremely low percent of reads from top 10 genes: <strong><em>none</em></strong></li>
+<li>Samples with extremely high percent of reads from top 10 genes: <strong><em>T1_5</em></strong></li>
+</ul>
+</div>
+</div>
+<div id="read-count-by-mapping-type" class="section level2">
+<h2><span class="header-section-number">2.3</span> Read count by mapping type</h2>
+<p>The read-to-gene mapping could be complicated by at least 3 conditions corresponding to 8 mapping types:</p>
+<ul>
+<li>Whether the read is mapped to one and only one gene or multiple genes: <strong><em>unique vs. multiple</em></strong></li>
+<li>Whether both ends of paired end reads are mapped to the same gene or only one end is mapped: <strong><em>paired vs. unpaired</em></strong></li>
+<li>Whether the read is mapped to the sense strand or antisense strand of a gene: <strong><em>sense vs. antisense</em></strong></li>
+</ul>
+<p>This analysis accepts multiple matching matrixes of read counts corresponding to different mapping types. By default, the first matrix corresponds to the most common mapping type and will be used for all the other analyses in this report. In this section, however, read counts of different mapping types are summarized and compared to each other when multiple matrixes are provided.</p>
+<div align="left">
+<img src="figure/read_count_type_pie-1.png" title="plot of chunk read_count_type_pie" alt="plot of chunk read_count_type_pie" width="800px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Figure 4.</strong> Total mapped reads of all samples are split by mapping types, such as unique vs. multiple, paired vs. unpaired, and sense vs. antisense. Among the 2 mapping type(s),</p>
+<ul>
+<li>The most common mapping type is <em>Sense</em> (<em>97.5497%</em> of total mapped reads)</li>
+<li>The least common mapping type is <em>Antisense</em>, (<em>2.4503%</em> of total mapped reads)</li>
+</ul>
+</div>
+<p> </p>
+<p>When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information.</p>
+<div align="left">
+<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 5.</strong> The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman’s correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click <a href="table/corr_mapping_type.html">here</a> to view correlation coefficients between all pairs of mapping types.
+</div>
+<p> </p>
+<p>By comparing read counts of different mapping types to each other, the ratios can be compared between samples for consistency. A sample might have quality issue if it has reads of a mapping type much less or more than the other samples.</p>
+<div align="center">
+<img src="figure/read_count_type_heatmap-1.png" title="plot of chunk read_count_type_heatmap" alt="plot of chunk read_count_type_heatmap" width="720px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 6.</strong> The relative frequecy of mapping types are calculated for each sample, using the first read count matrix as reference. The frequency of each mapping type are normalized across all samples (Mean = 0 and SD = 1.0). This figure shows the normalized frequency of each mapping type in each sample (red = high). - Mapping type <em>Antisense</em> has the most “abnormally” high relative frequency (# of standard deviations = <em>1.59</em>) in sample <em>T2_4, T2_6</em>. - Mapping type <em>Antisense</em> has the most “abnormally” low relative frequency (# of standard deviations = <em>-1.57</em>) in sample <em>T2_4</em>.
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="dispersion-and-normalization" class="section level1">
+<h1><span class="header-section-number">3</span> Dispersion and normalization</h1>
+<p>Gene-specific dispersion of RNA-seq read counts is commonly used to evaluate between-sample variance of a data set. Here, the dispersion is estimated by the overall pattern of coefficient of variation (standard deviation devided by average read count) of all genes.</p>
+<div align="center">
+<img src="figure/dispersion-1.png" title="plot of chunk dispersion" alt="plot of chunk dispersion" width="800px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 7.</strong> Left: the distribution of average gene expression level (read count divided by gene length). Right: the dispersion of gene expression level between samples, measured as the coefficient of variation. Usually, genes with lower expression will have larger dispersion on average.
+</div>
+<p>There are many ways to normalize RNA-seq data to remove systematic bias between samples, usually based on the assumption that all the samples have the same global distribution. The following analysis performs several different normalization methods and evaluate their impact on data dispersion:</p>
+<ul>
+<li><strong>Original</strong>: The un-normalized gene-level read counts.</li>
+<li><strong>Total_Count</strong>: Rescale data so all the samples have the same total read count.</li>
+<li><strong>Median</strong>: Rescale data so all the samples have the same median read count.</li>
+<li><strong>Quantile_Quantile</strong>: Make all the samples have exactly the same distribution.</li>
+<li><strong>Upper_Quantile</strong>: Rescale data so all the samples have the same upper quantile read count.</li>
+<li><strong>Trimmed_Mean</strong>: The TMM method implemented by the <a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html">edgeR</a> package.</li>
+<li><strong>DESeq</strong>: The normalization method of the <a href="https://bioconductor.org/packages/release/bioc/html/DESeq.html">DESeq</a> package.</li>
+<li><strong>FPKM</strong>: Fragments Per Kilobase of transcript per Million mapped reads.</li>
+<li><strong>TPM</strong>: Transcript per Million mapped reads.</li>
+<li><strong>Loess</strong>: Make all the samples have the similar distribution by fitting them to same Loess distribution.</li>
+</ul>
+<p>Check <a href="http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long">this</a> paper for detailed comparison of normalization methods, and <a href="https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R">this</a> function for R code of these normalization methods.</p>
+<div align="center">
+<img src="figure/normalization_boxplot-1.png" title="plot of chunk normalization_boxplot" alt="plot of chunk normalization_boxplot" width="900px" />
+</div>
+<div style="color:darkblue; padding:0 0.5cm">
+<strong>Figure 8.</strong> Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their <strong>Group</strong>.
+</div>
+<div align="center">
+<img src="figure/average_cv-1.png" title="plot of chunk average_cv" alt="plot of chunk average_cv" width="600px" />
+</div>
+<div style="color:darkblue; padding:0 0.5cm">
+<strong>Figure 9.</strong> Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click <a href="table/Coeff_of_Var.html">here</a> to view the table of coefficients of variation of all genes.
+</div>
+<p> </p>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Table 1</strong> Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes.
+</div>
+<div align="center" ,="" style="padding:0 2cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Method</th>
+<th align="right">Mean</th>
+<th align="right">Corr2Original</th>
+<th align="right">Num_Decrease</th>
+<th align="right">Num_Increase</th>
+<th align="right">Decrease_vs_Increase</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Original</td>
+<td align="right">0.94</td>
+<td align="right">1.00</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">NaN</td>
+</tr>
+<tr class="even">
+<td align="left">Total_Count</td>
+<td align="right">0.92</td>
+<td align="right">1.00</td>
+<td align="right">12282</td>
+<td align="right">5818</td>
+<td align="right">2.1110</td>
+</tr>
+<tr class="odd">
+<td align="left">Median</td>
+<td align="right">0.93</td>
+<td align="right">1.00</td>
+<td align="right">10506</td>
+<td align="right">8206</td>
+<td align="right">1.2803</td>
+</tr>
+<tr class="even">
+<td align="left">Quantile_Quantile</td>
+<td align="right">0.90</td>
+<td align="right">0.92</td>
+<td align="right">13245</td>
+<td align="right">5950</td>
+<td align="right">2.2261</td>
+</tr>
+<tr class="odd">
+<td align="left">Upper_Quantile</td>
+<td align="right">0.91</td>
+<td align="right">1.00</td>
+<td align="right">13546</td>
+<td align="right">4575</td>
+<td align="right">2.9609</td>
+</tr>
+<tr class="even">
+<td align="left">Trimmed_Mean</td>
+<td align="right">0.94</td>
+<td align="right">1.00</td>
+<td align="right">7394</td>
+<td align="right">9627</td>
+<td align="right">0.7680</td>
+</tr>
+<tr class="odd">
+<td align="left">DESeq</td>
+<td align="right">0.92</td>
+<td align="right">1.00</td>
+<td align="right">12571</td>
+<td align="right">5552</td>
+<td align="right">2.2642</td>
+</tr>
+<tr class="even">
+<td align="left">FPKM</td>
+<td align="right">0.92</td>
+<td align="right">1.00</td>
+<td align="right">12884</td>
+<td align="right">6568</td>
+<td align="right">1.9616</td>
+</tr>
+<tr class="odd">
+<td align="left">TPM</td>
+<td align="right">0.94</td>
+<td align="right">1.00</td>
+<td align="right">10637</td>
+<td align="right">8799</td>
+<td align="right">1.2089</td>
+</tr>
+<tr class="even">
+<td align="left">Loess</td>
+<td align="right">0.90</td>
+<td align="right">0.99</td>
+<td align="right">12667</td>
+<td align="right">5193</td>
+<td align="right">2.4392</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="sample-analysis" class="section level1">
+<h1><span class="header-section-number">4</span> Sample analysis</h1>
+<p>This section uses read count data to perform several sample-level analyses. The results can be used to identify potential mislabeling, outlier, confounding variable, etc. Read counts normalized by the <em>Loess</em> method are used for all analyses in this section.</p>
+<div id="gender-prediction" class="section level2">
+<h2><span class="header-section-number">4.1</span> Gender prediction</h2>
+<p>When enough genes on X and Y chromosomes have detectable expression, these genes can be used to predict the gender of samples. In case the gender information is already available, the predicted gender can be used to identify potential mislabeling.</p>
+<div style="color:darkblue; padding:0 2cm">
+<img src="figure/gender_pred_plot-1.png" title="plot of chunk gender_pred_plot" alt="plot of chunk gender_pred_plot" width="640px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 10.</strong> The average of Log2(Read Count+1) is calculated for X and Y chromosomes when there are at least 5 genes having detectable expression. The averages of each sample are plotted in this figure as X and Y axes. The averages of each chromosome are used separately to cluster samples using the pamk {fpc} function. If the optimal number of clusters is 2 for both chromosomes, gender prediction will be made, and the samples having predicted gender agreed byt the two chromosomes will be labeled with red (female) or blue (male). Click <a href="table/gender_prediction.html">here</a> to veiw the full table of gender prediction.
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="hierarchical-clustering" class="section level2">
+<h2><span class="header-section-number">4.2</span> Hierarchical clustering</h2>
+<p>Hierarchical clustering groups samples based on their glabal correlation of all genes. It is a iterative procedure that merges two most similar samples/groups at each step.</p>
+<div style="color:darkblue; padding:0 2cm">
+<img src="figure/hierarchical_clustering-1.png" title="plot of chunk hierarchical_clustering" alt="plot of chunk hierarchical_clustering" width="640px" />
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Figure 11.</strong> Hierarchical clustering of samples using all autosomal genes. Normalized read counts are log2-transformed before clustering. The vertical position of the common node of two samples indicates their similarity (lower = more similar).
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="principal-components-analysis" class="section level2 tabset">
+<h2><span class="header-section-number">4.3</span> Principal components analysis</h2>
+<p>Principal components analysis</p>
+<div id="group" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> Group</h3>
+<div class="figure">
+<img src="figure/pca_Group.png" />
+</div>
+</div>
+<div id="type" class="section level3">
+<h3><span class="header-section-number">4.3.2</span> Type</h3>
+<div class="figure">
+<img src="figure/pca_Type.png" />
+</div>
+</div>
+<div id="drug" class="section level3">
+<h3><span class="header-section-number">4.3.3</span> Drug</h3>
+<div class="figure">
+<img src="figure/pca_Drug.png" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 12.</strong> PCA is performed using all autosomal genes after read counts are log2-transformed. The same plot is made in multiple tabs while samples are color-coded based on known sample features.
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+</div>
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">5</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">5.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">5.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] gplots_3.0.1          DESeq_1.20.0          lattice_0.20-33      
+##  [4] locfit_1.5-9.1        Biobase_2.28.0        edgeR_3.10.2         
+##  [7] limma_3.26.9          DEGandMore_0.0.0.9000 snow_0.4-1           
+## [10] awsomics_0.0.0.9000   Rnaseq_0.0.0.9000     GenomicRanges_1.22.4 
+## [13] GenomeInfoDb_1.6.3    IRanges_2.4.8         S4Vectors_0.8.11     
+## [16] BiocGenerics_0.16.1   fpc_2.1-10            vioplot_0.2          
+## [19] sm_2.2-5.4            htmlwidgets_0.5       DT_0.1               
+## [22] yaml_2.1.13           knitr_1.12.3          rmarkdown_0.9.6      
+## [25] RoCA_0.0.0.9000       RCurl_1.95-4.8        bitops_1.0-6         
+## [28] devtools_1.11.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] mclust_5.0.2         Rcpp_0.12.4          mvtnorm_1.0-3       
+##  [4] class_7.3-13         gtools_3.5.0         digest_0.6.9        
+##  [7] R6_2.1.2             RSQLite_1.0.0        evaluate_0.9        
+## [10] highr_0.5.1          httr_1.1.0           zlibbioc_1.14.0     
+## [13] diptest_0.75-7       curl_0.9.7           annotate_1.46.1     
+## [16] gdata_2.17.0         kernlab_0.9-22       splines_3.2.2       
+## [19] geneplotter_1.46.0   stringr_1.0.0        htmltools_0.3.5     
+## [22] nnet_7.3-10          XML_3.98-1.3         withr_1.0.1         
+## [25] MASS_7.3-43          grid_3.2.2           jsonlite_0.9.20     
+## [28] xtable_1.7-4         DBI_0.3.1            git2r_0.15.0        
+## [31] magrittr_1.5         formatR_1.3          KernSmooth_2.23-15  
+## [34] stringi_1.0-1        XVector_0.10.0       genefilter_1.50.0   
+## [37] flexmix_2.3-13       robustbase_0.92-5    RColorBrewer_1.1-2  
+## [40] tools_3.2.2          trimcluster_0.1-2    DEoptimR_1.0-3      
+## [43] survival_2.38-3      AnnotationDbi_1.30.1 cluster_2.0.3       
+## [46] caTools_1.17.1       prabclus_2.2-6       memoise_1.0.0       
+## [49] modeltools_0.2-21</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -138,7 +138,7 @@ This analysis accepts multiple matching matrixes of read counts corresponding to
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
 <div align='left'>
-
+<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -220,7 +220,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 |Original          | 0.94|          1.00|            0|            0|                  NaN|
 |Total_Count       | 0.92|          1.00|        12282|         5818|               2.1110|
 |Median            | 0.93|          1.00|        10506|         8206|               1.2803|
-|Quantile_Quantile | 0.89|          0.90|        13276|         5933|               2.2377|
+|Quantile_Quantile | 0.90|          0.92|        13245|         5950|               2.2261|
 |Upper_Quantile    | 0.91|          1.00|        13546|         4575|               2.9609|
 |Trimmed_Mean      | 0.94|          1.00|         7394|         9627|               0.7680|
 |DESeq             | 0.92|          1.00|        12571|         5552|               2.2642|
@@ -240,36 +240,141 @@ This section uses read count data to perform several sample-level analyses. The 
 ## Gender prediction
 
 
-```
-## Error in ct1[id.x, , drop = FALSE]: subscript out of bounds
-```
-
-```
-## Error in ct1[id.y, , drop = FALSE]: subscript out of bounds
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'ct.x' not found
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'ct.y' not found
-```
-
-```
-## Error in nrow(ct.x): object 'ct.x' not found
-```
 
 When enough genes on X and Y chromosomes have detectable expression, these genes can be used to predict the gender of samples. In case the gender information is already available, the predicted gender can be used to identify potential mislabeling.  
 
 <div style="color:darkblue; padding:0 2cm">
+<img src="figure/gender_pred_plot-1.png" title="plot of chunk gender_pred_plot" alt="plot of chunk gender_pred_plot" width="640px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 10.** The average of Log2(Read Count+1) is calculated for X and Y chromosomes when there are at least 5 genes having detectable expression. The averages of each sample are plotted in this figure as X and Y axes. The averages of each chromosome are used separately to cluster samples using the pamk {fpc} function. If the optimal number of clusters is 2 for both chromosomes, gender prediction will be made, and the samples having predicted gender agreed byt the two chromosomes will be labeled with red (female) or blue (male). Click [here](table/gender_prediction.html) to veiw the full table of gender prediction. 
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+## Hierarchical clustering
+
+Hierarchical clustering groups samples based on their glabal correlation of all genes. It is a iterative procedure that merges two most similar samples/groups at each step. 
+
+<div style="color:darkblue; padding:0 2cm">
+<img src="figure/hierarchical_clustering-1.png" title="plot of chunk hierarchical_clustering" alt="plot of chunk hierarchical_clustering" width="640px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 11.** Hierarchical clustering of samples using all autosomal genes. Normalized read counts are log2-transformed before clustering. The vertical position of the common node of two samples indicates their similarity (lower = more similar).
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+## Principal components analysis {.tabset}
+
+Principal components analysis 
 
 
 
+### Group 
+
+ ![](figure/pca_Group.png) 
+
+### Type 
+
+ ![](figure/pca_Type.png) 
+
+### Drug 
+
+ ![](figure/pca_Drug.png) 
 
 
 
+<div style="color:darkblue; padding:0 1cm">
+**Figure 12.** PCA is performed using all autosomal genes after read counts are log2-transformed. The same plot is made in multiple tabs while samples are color-coded based on known sample features. 
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+- _output_        : where you want to put the output files
+- _home_          : the URL if you have a home page for your project
+- _analyst_       : your name
+- _description_   : background information about your project, analysis, etc.
+- _input_         : where are your input data, read instruction for preparing them
+- _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
 
+```r
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
 
 
+```
+## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] gplots_3.0.1          DESeq_1.20.0          lattice_0.20-33      
+##  [4] locfit_1.5-9.1        Biobase_2.28.0        edgeR_3.10.2         
+##  [7] limma_3.26.9          DEGandMore_0.0.0.9000 snow_0.4-1           
+## [10] awsomics_0.0.0.9000   Rnaseq_0.0.0.9000     GenomicRanges_1.22.4 
+## [13] GenomeInfoDb_1.6.3    IRanges_2.4.8         S4Vectors_0.8.11     
+## [16] BiocGenerics_0.16.1   fpc_2.1-10            vioplot_0.2          
+## [19] sm_2.2-5.4            htmlwidgets_0.5       DT_0.1               
+## [22] yaml_2.1.13           knitr_1.12.3          rmarkdown_0.9.6      
+## [25] RoCA_0.0.0.9000       RCurl_1.95-4.8        bitops_1.0-6         
+## [28] devtools_1.11.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] mclust_5.0.2         Rcpp_0.12.4          mvtnorm_1.0-3       
+##  [4] class_7.3-13         gtools_3.5.0         digest_0.6.9        
+##  [7] R6_2.1.2             RSQLite_1.0.0        evaluate_0.9        
+## [10] highr_0.5.1          httr_1.1.0           zlibbioc_1.14.0     
+## [13] diptest_0.75-7       curl_0.9.7           annotate_1.46.1     
+## [16] gdata_2.17.0         kernlab_0.9-22       splines_3.2.2       
+## [19] geneplotter_1.46.0   stringr_1.0.0        htmltools_0.3.5     
+## [22] nnet_7.3-10          XML_3.98-1.3         withr_1.0.1         
+## [25] MASS_7.3-43          grid_3.2.2           jsonlite_0.9.20     
+## [28] xtable_1.7-4         DBI_0.3.1            git2r_0.15.0        
+## [31] magrittr_1.5         formatR_1.3          KernSmooth_2.23-15  
+## [34] stringi_1.0-1        XVector_0.10.0       genefilter_1.50.0   
+## [37] flexmix_2.3-13       robustbase_0.92-5    RColorBrewer_1.1-2  
+## [40] tools_3.2.2          trimcluster_0.1-2    DEoptimR_1.0-3      
+## [43] survival_2.38-3      AnnotationDbi_1.30.1 cluster_2.0.3       
+## [46] caTools_1.17.1       prabclus_2.2-6       memoise_1.0.0       
+## [49] modeltools_0.2-21
+```
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+***
+_END OF DOCUMENT_
