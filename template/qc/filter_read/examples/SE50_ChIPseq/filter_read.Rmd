@@ -67,9 +67,9 @@ home.url <- Link2Home(yml$home);
 ```
 
 ```{r load_data, include=FALSE}
-smpl<-DownloadFile(yml$input$sample, path.input);
-rngs<-ImportTable(yml$input$range, FALSE, FALSE);
-rngs<-GRanges(rngs[[1]], IRanges(rngs[[2]], rngs[[3]])); 
+smpl <- yml$input$sample;
+rngs <- ImportTable(yml$input$range, FALSE, FALSE);
+rngs <- GRanges(rngs[[1]], IRanges(rngs[[2]], rngs[[3]])); 
 ```
 
 `r home.url`
