@@ -8,7 +8,7 @@
 #   - the first column is unique Entrez gene ID matching the row names of <data>
 #   - the second column is official gene symbols matching the gene IDs
 # <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
-#   - first column is unique sample names matching column names of <matrix>
+#   - first column is unique sample names matching column names of <data>
 #   - first row is unique sample features such as genotype, treatment, and cell type
 #   - the values of parameters <term> must match one of the column names in this table
 # <geneset> a list of 2 elements saved in a .rdata, .rda, or .rds file

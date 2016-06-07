@@ -197,6 +197,8 @@ The develop will decide how to split a full data analysis procedure into multipl
 
 `r home.url`
 
+***
+
 <!-- Keep this section unchanged for all RoCA templates -->
 # Appendix 
 
