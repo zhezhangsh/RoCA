@@ -33,17 +33,6 @@ Finally, the reads will be filtered based on given criteria covering 4 possible 
 &nbsp;
 
 ```{r global_setup, include=FALSE}
-require(Rcurl);
-require(gplots);
-require(knitr);
-require(rmarkdown); 
-require(yaml);
-require(GenomicRanges);
-require(GenomicAlignments);
-require(awsomics);
-require(CHOPseq);
-require(RoCA);
-
 name.yaml <- 'filter_read.yaml'; 
 name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'GenomicAlignments', 'GenomicRanges', 'RoCA', 'awsomics', 'CHOPseq'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
