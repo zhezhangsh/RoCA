@@ -138,7 +138,7 @@ This analysis accepts multiple matching matrixes of read counts corresponding to
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
 <div align='left'>
-<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
+
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -220,7 +220,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 |Original          | 0.94|          1.00|            0|            0|                  NaN|
 |Total_Count       | 0.92|          1.00|        12282|         5818|               2.1110|
 |Median            | 0.93|          1.00|        10506|         8206|               1.2803|
-|Quantile_Quantile | 0.90|          0.92|        13245|         5950|               2.2261|
+|Quantile_Quantile | 0.89|          0.91|        13230|         5949|               2.2239|
 |Upper_Quantile    | 0.91|          1.00|        13546|         4575|               2.9609|
 |Trimmed_Mean      | 0.94|          1.00|         7394|         9627|               0.7680|
 |DESeq             | 0.92|          1.00|        12571|         5552|               2.2642|

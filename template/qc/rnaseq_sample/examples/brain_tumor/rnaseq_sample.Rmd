@@ -245,28 +245,30 @@ When the gene-level read counts of two mapping types are strongly correlated to 
 <div align='left'>
 ```{r read_count_type_corr, fig.width=6, fig.height=1+5*as.integer(length(mr)>1), out.width='600px'}
 if (length(count.all) > 1) {
-corr <- cor(count.sum2, use='pair', method='spearman'); 
-saveRDS(corr, paste(path.r, 'corr_mapping_type.rds', sep='/')); 
-fn <- CreateDatatable(round(corr, 4), paste(path.tbl, 'corr_mapping_type.html', sep='/'), caption='Correlation of read counts between mapping types'); 
-for (i in 2:ncol(count.sum2)) {
-nm <- colnames(count.sum2)[c(1, i)]; 
-fn <- paste('corr2', nm[2], '.pdf', sep='');
-pdf(paste(path.fig, fn, sep='/'), w=8, h=8); 
-PlotLogScatter(count.sum2[, 1], count.sum2[, i], xlab=nm[1], ylab=nm[2], 
-main = paste('R =', round(corr[1, i], 4))); 
-abline(0, 1, lwd=1, col='red'); 
-dev.off();
-}
-r <- corr[-1, 1];
-nm <- rownames(corr)[-1][r==max(r)];
-PlotLogScatter(count.sum2[, 1], count.sum2[, nm], xlab=colnames(count.sum2)[1], ylab=nm, main = paste('R =', round(corr[1, nm], 4))); 
-abline(0, 1, lwd=1, col='red'); 
+  corr <- cor(count.sum2, use='pair', method='spearman'); 
+  saveRDS(corr, paste(path.r, 'corr_mapping_type.rds', sep='/')); 
+  fn <- CreateDatatable(round(corr, 4), paste(path.tbl, 'corr_mapping_type.html', sep='/'), 
+                        caption='Correlation of read counts between mapping types'); 
+  for (i in 2:ncol(count.sum2)) {
+    nm <- colnames(count.sum2)[c(1, i)]; 
+    fn <- paste('corr2', nm[2], '.pdf', sep='');
+    pdf(paste(path.fig, fn, sep='/'), w=8, h=8); 
+    PlotLogScatter(count.sum2[, 1], count.sum2[, i], xlab=nm[1], ylab=nm[2], 
+    main = paste('R =', round(corr[1, i], 4))); 
+    abline(0, 1, lwd=1, col='red'); 
+    dev.off();
+  }
+  r <- corr[-1, 1];
+  nm <- rownames(corr)[-1][r==max(r)];
+  PlotLogScatter(count.sum2[, 1], count.sum2[, nm], xlab=colnames(count.sum2)[1], ylab=nm, 
+                 main = paste('R =', round(corr[1, nm], 4))); 
+  abline(0, 1, lwd=1, col='red'); 
 } else {
-corr <- matrix(nr=1, nc=1, dimnames = list(NA, 'No correlation results: only one mapping type')); 
-fn <- CreateDatatable(corr, paste(path.tbl, 'corr_mapping_type.html', sep='/'), rownames = FALSE); 
-par(mar=c(0,0,0,0)); 
-plot(0, type='n', axes=FALSE, xlab='', ylab='');
-text(1, 0, pos=1, label='There is no result for this analysis:\n input only includes one mapping type/read count matrix.', cex=1.5); 
+  corr <- matrix(nr=1, nc=1, dimnames = list(NA, 'No correlation results: only one mapping type')); 
+  fn <- CreateDatatable(corr, paste(path.tbl, 'corr_mapping_type.html', sep='/'), rownames = FALSE); 
+  par(mar=c(0,0,0,0)); 
+  plot(0, type='n', axes=FALSE, xlab='', ylab='');
+  text(1, 0, pos=1, label='There is no result for this analysis:\n input only includes one mapping type/read count matrix.', cex=1.5); 
 }
 ```
 </div>
@@ -418,8 +420,8 @@ saveRDS(cv, paste(path.r, 'Coeff_of_Var.rds', sep='/'));
 fn <- CreateDatatable(cbind(anno[rownames(cv), ], cv), paste(path.tbl, 'Coeff_of_Var.html', sep='/')); 
 
 c <- t(apply(dff, 2, function(x) c(length(x[x<0]), length(x[x>0]))));
-tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), Corr2Original=cor(cv, cv)[, 1], Num_Decrease=c[, 1],
-                  Num_Increase=c[, 2], "Decrease_vs_Increase" = c[, 1]/c[, 2]);  
+tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), Corr2Original=cor(cv, cv)[, 1],
+                  Num_Decrease=c[, 1], Num_Increase=c[, 2], "Decrease_vs_Increase" = c[, 1]/c[, 2]);  
 ```
 </div>
 
@@ -461,15 +463,19 @@ ct.y <- ct.y[rowSums(ct.y) > 0, , drop=FALSE];
 
 msg <- ''; 
 if (nrow(ct.x)>=5 & nrow(ct.y)>=5) {
-  km.x <- pamk(colMeans(log2(ct.x+1)), krange=1:min(5, ncol(ct.x))); 
-  km.y <- pamk(colMeans(log2(ct.y+1)), krange=1:min(5, ncol(ct.y))); 
-  nc.x <- km.x$nc;
-  nc.y <- km.y$nc;
-  if (nc.x==2 & nc.y==2) msg <- 'Samples can be classified into 2 groups by both X and Y genes.' else if (nc.x==2) 
-    msg <- 'Samples can be classified into 2 groups only by X genes.' else if (nc.y==2)
-      msg <- 'Samples can be classified into 2 groups only by Y genes.' else
-        msg <- 'Samples cannot be classified into 2 groups by neither X nor Y genes.'
-      fig.h <- 8;
+#   km.x <- pamk(colMeans(log2(ct.x+1)), krange=1:min(5, ncol(ct.x))); 
+#   km.y <- pamk(colMeans(log2(ct.y+1)), krange=1:min(5, ncol(ct.y))); 
+#   nc.x <- km.x$nc;
+#   nc.y <- km.y$nc;
+#   if (nc.x==2 & nc.y==2) msg <- 'Samples can be classified into 2 groups by both X and Y genes.' else if (nc.x==2) 
+#     msg <- 'Samples can be classified into 2 groups only by X genes.' else if (nc.y==2)
+#       msg <- 'Samples can be classified into 2 groups only by Y genes.' else
+#         msg <- 'Samples cannot be classified into 2 groups by neither X nor Y genes.'
+  km.xy <- pamk(cbind(colMeans(log2(ct.x+1)), colMeans(log2(ct.y+1))), krange=1:min(5, ncol(ct.x)));
+  nc.xy <- km.xy$nc;
+  if (nc.xy == 2) msg <- 'Samples can be classified into 2 groups by X/Y genes.' else 
+    msg <- 'Samples cannot be classified into 2 groups by X/Y genes.'
+  fig.h <- 8;
 } else {
   msg <- 'There are not enough X/Y genes with detectable expression to make valid gender prediction.';
   fig.h <- 1; 
@@ -483,25 +489,39 @@ When enough genes on X and Y chromosomes have detectable expression, these genes
 ```{r gender_pred_plot, fig.width=8, fig.height=fig.h, out.width='640px'}
 if (fig.h==8) {
   x <- cbind(colMeans(log2(ct.x+1)), colMeans(log2(ct.y+1)));
-  
-  if (nc.x==2) {
-    prd <- split(rownames(x), km.x$pamobject$clustering); 
-    ms <- sapply(prd, function(prd) mean(x[prd, 1])); 
-    prd.x <- rep('F', nrow(x)); 
-    names(prd.x) <- rownames(x); 
-    if (ms[1] > ms[2]) prd.x[prd[[2]]] <- 'M' else prd.x[prd[[1]]] <- 'M';
-  } else prd.x <- rep('NA', nrow(x)); 
-  if (nc.y==2) {
-    prd <- split(rownames(x), km.y$pamobject$clustering); 
-    ms <- sapply(prd, function(prd) mean(x[prd, 2])); 
-    prd.y <- rep('F', nrow(x)); 
-    names(prd.y) <- rownames(x); 
-    if (ms[1] > ms[2]) prd.y[prd[[1]]] <- 'M' else prd.y[prd[[2]]] <- 'M';
-  } else prd.y <- rep('NA', nrow(x)); 
-  
+  if (nc.xy == 2) {
+    prd <- split(rownames(x), km.xy$pamobject$clustering); 
+    ms <- sapply(prd, function(prd) colMeans(x[prd, ])); 
+    prd.xy <- rep('NA', nrow(x)); 
+    names(prd.xy) <- rownames(x); 
+    if (ms[1,1]>ms[1,2] & ms[2,1]<ms[2,2]) {
+      prd.xy[prd[[1]]] <- 'F'; 
+      prd.xy[prd[[2]]] <- 'M';
+    }
+    if (ms[1,1]<ms[1,2] & ms[2,1]>ms[2,2]) {
+      prd.xy[prd[[1]]] <- 'M'; 
+      prd.xy[prd[[2]]] <- 'F';
+    }    
+  } else prd.xy <- rep('NA', nrow(x)); 
+
+#   if (nc.x==2) {
+#     prd <- split(rownames(x), km.x$pamobject$clustering); 
+#     ms <- sapply(prd, function(prd) mean(x[prd, 1])); 
+#     prd.x <- rep('F', nrow(x)); 
+#     names(prd.x) <- rownames(x); 
+#     if (ms[1] > ms[2]) prd.x[prd[[2]]] <- 'M' else prd.x[prd[[1]]] <- 'M';
+#   } else prd.x <- rep('NA', nrow(x)); 
+#   if (nc.y==2) {
+#     prd <- split(rownames(x), km.y$pamobject$clustering); 
+#     ms <- sapply(prd, function(prd) mean(x[prd, 2])); 
+#     prd.y <- rep('F', nrow(x)); 
+#     names(prd.y) <- rownames(x); 
+#     if (ms[1] > ms[2]) prd.y[prd[[1]]] <- 'M' else prd.y[prd[[2]]] <- 'M';
+#   } else prd.y <- rep('NA', nrow(x)); 
+#   
   col <- rep('darkgrey', nrow(x)); 
-  col[prd.x=='M' & prd.y=='M'] <- 'blue';
-  col[prd.x=='F' & prd.y=='F'] <- 'red';
+  col[prd.xy=='M' & prd.xy=='M'] <- 'blue';
+  col[prd.xy=='F' & prd.xy=='F'] <- 'red';
   
   par(mar=c(5,5,2,2)); 
   plot(x[, 1], x[, 2], pch='*', col=col, cex=min(4, max(0.5, 64/nrow(x))), xlab="Log2(Read_Count+1), average of X genes", 
@@ -510,8 +530,7 @@ if (fig.h==8) {
          legend=c('Predicted to be female', 'Predicted to be male', 'Undetermined')); 
   title(main="Gender prediction", cex.main=1.5);
   
-  tbl <- data.frame(Mean_X_Genes = x[, 1], Pred_X_Genes = prd.x, 
-                    Mean_Y_Genes = x[, 2], Pred_Y_Genes = prd.y, smpl[rownames(x), ]); 
+  tbl <- data.frame(Mean_X_Genes = x[, 1], Mean_Y_Genes = x[, 2], Gender_Prediction = prd.xy, smpl[rownames(x), ]); 
 } else {
   par(mar=c(0,0,0,0)); 
   plot(0, type='n', axes=FALSE, xlab='', ylab='');
