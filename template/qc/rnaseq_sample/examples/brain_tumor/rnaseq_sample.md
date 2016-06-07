@@ -1,0 +1,278 @@
+---
+title: "Analysis of RNA-seq samples using read counts"
+author: "Jim Zhang"
+date: "2016-06-07"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+
+**Introduction** This procedure analyzes the RNA-seq data of multiple samples for quality control purpose, using the gene-level read counts. The read counts can be provided as one or multiple integer data matrixes, corresponding to different mapping types, such as unique vs. multiple mapping and sense vs. antisense strands. The following steps will be applied to the read count data:
+
+  - **Summary statistics**: the read count data is summarized by sample, gene and mapping type.
+  - **Dispersion and normalization**: different normalization methods are compared based on between-sample variance of all genes before and after normalization. 
+  - **Sample analysis**: X/Y genes are used to predict sample gender; and autosomal genes are used for unsupervised sample clustering.
+
+</div>
+
+&nbsp;
+
+
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
+
+# Description {.tabset}
+
+## Project
+
+
+Transcriptome of mouse brain tumors
+
+
+## Data
+
+
+RNA-seq data was generated from of 2 types of mouse brain tumors. Some tumors are tested for drug response. Raw data was processed to get gene-level read counts.
+
+
+## Analysis
+
+
+This is a demo.
+
+
+
+
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+# Summary statistics
+
+- Number of samples: _19_
+- Number of genes: _24,060_
+- Average number of reads per gene: _4.e+04_
+- Total number of reads per sample: _49,279,527_
+
+## Read count by sample
+
+
+
+The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. _Shapiro-Wilk_ normality test shows that the total read counts of this data set is normally distributed (p = 0.89). Samples with extreme total read counts comparing to the others:
+
+- Samples with extremly low read count: ***none***
+- Samples with extremly high read count: ***none***
+
+<div align='center'>
+<img src="figure/read_count_sample_hist-1.png" title="plot of chunk read_count_sample_hist" alt="plot of chunk read_count_sample_hist" width="600px" />
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 1.** Distribution of total read counts of all samples. Total read count per sample (millions):  
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   34.72   44.61   50.54   49.28   54.35   64.37
+```
+</div>
+
+## Read count by gene
+
+
+
+Due to the variability of gene length and expression level, it is expected that a large portion of the sequence reads are mapped to a small number of genes. At the same time, a large portion of the genes will have no or few reads mapped to them, making them unsuitable for statistical analysis. The distribution of read counts across genes and the consistency of such distribution between samples also provide information about RNA-seq data quality. In this data set,
+
+- 16.8% genes have no reads mapped to them in any sample.
+- 26.66% genes have less 1 read mapped to them per sample.
+- 32.32% genes have less 5 reads mapped to them per sample .
+
+<div align='center'>
+<img src="figure/read_count_gene_sorted-1.png" title="plot of chunk read_count_gene_sorted" alt="plot of chunk read_count_gene_sorted" width="720px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2.** The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking. 
+</div>
+
+&nbsp;
+
+<div align='center'>
+<img src="figure/read_count_gene_top-1.png" title="plot of chunk read_count_gene_top" alt="plot of chunk read_count_gene_top" width="800px" />
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 3.** The cumulative read counts of top 10 genes and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+
+- Samples with extremely low percent of reads from top 10 genes: ***none***
+- Samples with extremely high percent of reads from top 10 genes: ***T1_5***
+</div>
+
+## Read count by mapping type
+
+The read-to-gene mapping could be complicated by at least 3 conditions corresponding to 8 mapping types: 
+
+- Whether the read is mapped to one and only one gene or multiple genes: ***unique vs. multiple***
+- Whether both ends of paired end reads are mapped to the same gene or only one end is mapped: ***paired vs. unpaired***
+- Whether the read is mapped to the sense strand or antisense strand of a gene: ***sense vs. antisense***
+
+This analysis accepts multiple matching matrixes of read counts corresponding to different mapping types. By default, the first matrix corresponds to the most common mapping type and will be used for all the other analyses in this report. In this section, however, read counts of different mapping types are summarized and compared to each other when multiple matrixes are provided. 
+
+<div align='left'>
+<img src="figure/read_count_type_pie-1.png" title="plot of chunk read_count_type_pie" alt="plot of chunk read_count_type_pie" width="800px" />
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 4.** Total mapped reads of all samples are split by mapping types, such as unique vs. multiple, paired vs. unpaired, and sense vs. antisense. Among the 2 mapping type(s), 
+
+- The most common mapping type is _Sense_ (_97.5497%_ of total mapped reads)
+- The least common mapping type is _Antisense_, (_2.4503%_ of total mapped reads)
+</div>
+
+&nbsp;
+
+When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
+
+<div align='left'>
+
+```
+## Error in if (xlab[1] == "" & ylab[1] == "") mar1 <- 3 else mar1 <- 5: argument is of length zero
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 5.** The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman's correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click [here](table/corr_mapping_type.html) to view correlation coefficients between all pairs of mapping types.
+</div>
+
+&nbsp;
+
+By comparing read counts of different mapping types to each other, the ratios can be compared between samples for consistency. A sample might have quality issue if it has reads of a mapping type much less or more than the other samples.
+
+<div align='center'>
+<img src="figure/read_count_type_heatmap-1.png" title="plot of chunk read_count_type_heatmap" alt="plot of chunk read_count_type_heatmap" width="720px" />
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 6.** The relative frequecy of mapping types are calculated for each sample, using the first read count matrix as reference. The frequency of each mapping type are normalized across all samples (Mean = 0 and SD = 1.0). This figure shows the normalized frequency of each mapping type in each sample (red = high). 
+- Mapping type _Antisense_ has the most "abnormally" high relative frequency (# of standard deviations = _1.59_) in sample _T2_4, T2_6_. 
+- Mapping type _Antisense_ has the most "abnormally" low relative frequency (# of standard deviations = _-1.57_) in sample _T2_4_. 
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+# Dispersion and normalization
+
+
+
+Gene-specific dispersion of RNA-seq read counts is commonly used to evaluate between-sample variance of a data set. Here, the dispersion is estimated by the overall pattern of coefficient of variation (standard deviation devided by average read count) of all genes. 
+
+<div align='center'>
+<img src="figure/dispersion-1.png" title="plot of chunk dispersion" alt="plot of chunk dispersion" width="800px" />
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 7.** Left: the distribution of average gene expression level (read count divided by gene length). Right: the dispersion of gene expression level between samples, measured as the coefficient of variation. Usually, genes with lower expression will have larger dispersion on average. 
+</div>
+
+There are many ways to normalize RNA-seq data to remove systematic bias between samples, usually based on the assumption that all the samples have the same global distribution. The following analysis performs several different normalization methods and evaluate their impact on data dispersion:
+
+- **Original**: The un-normalized gene-level read counts.
+- **Total_Count**: Rescale data so all the samples have the same total read count.
+- **Median**: Rescale data so all the samples have the same median read count.
+- **Quantile_Quantile**: Make all the samples have exactly the same distribution.
+- **Upper_Quantile**: Rescale data so all the samples have the same upper quantile read count.
+- **Trimmed_Mean**: The TMM method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **DESeq**: The normalization method of the [DESeq](https://bioconductor.org/packages/release/bioc/html/DESeq.html) package.
+- **FPKM**: Fragments Per Kilobase of transcript per Million mapped reads.
+- **TPM**: Transcript per Million mapped reads.
+- **Loess**: Make all the samples have the similar distribution by fitting them to same Loess distribution.
+
+Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
+
+<div align='center'>
+<img src="figure/normalization_boxplot-1.png" title="plot of chunk normalization_boxplot" alt="plot of chunk normalization_boxplot" width="900px" />
+</div>
+
+<div style="color:darkblue; padding:0 0.5cm">
+**Figure 8.** Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their **Group**.
+</div>
+
+<div align='center'>
+<img src="figure/average_cv-1.png" title="plot of chunk average_cv" alt="plot of chunk average_cv" width="600px" />
+</div>
+
+<div style="color:darkblue; padding:0 0.5cm">
+**Figure 9.** Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click [here](table/Coeff_of_Var.html) to view the table of coefficients of variation of all genes. 
+</div>
+
+&nbsp;
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 1** Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes. 
+</div>
+
+<div align='center', style="padding:0 2cm">
+
+
+|Method            | Mean| Corr2Original| Num_Decrease| Num_Increase| Decrease_vs_Increase|
+|:-----------------|----:|-------------:|------------:|------------:|--------------------:|
+|Original          | 0.94|          1.00|            0|            0|                  NaN|
+|Total_Count       | 0.92|          1.00|        12282|         5818|               2.1110|
+|Median            | 0.93|          1.00|        10506|         8206|               1.2803|
+|Quantile_Quantile | 0.89|          0.91|        13250|         5943|               2.2295|
+|Upper_Quantile    | 0.91|          1.00|        13546|         4575|               2.9609|
+|Trimmed_Mean      | 0.94|          1.00|         7394|         9627|               0.7680|
+|DESeq             | 0.92|          1.00|        12571|         5552|               2.2642|
+|FPKM              | 0.92|          1.00|        12884|         6568|               1.9616|
+|TPM               | 0.94|          1.00|        10637|         8799|               1.2089|
+|Loess             | 0.90|          0.99|        12667|         5193|               2.4392|
+
+
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+# Sample analysis
+
+This section uses read count data to perform several sample-level analyses. The results can be used to identify potential mislabeling, outlier, confounding variable, etc. Read counts normalized by the _Loess_ method are used for all analyses in this section. 
+
+## Gender prediction
+
+
+```
+## Error in ct1[id.x, , drop = FALSE]: subscript out of bounds
+```
+
+```
+## Error in ct1[id.y, , drop = FALSE]: subscript out of bounds
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'ct.x' not found
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'ct.y' not found
+```
+
+```
+## Error in nrow(ct.x): object 'ct.x' not found
+```
+
+When enough genes on X and Y chromosomes have detectable expression, these genes can be used to predict the gender of samples. In case the gender information is already available, the predicted gender can be used to identify potential mislabeling.  
+
+<div style="color:darkblue; padding:0 2cm">
+
+
+
+
+
+
+
+
+
+

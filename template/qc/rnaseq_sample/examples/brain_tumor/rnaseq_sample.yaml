@@ -1,0 +1,77 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <count> one or more data matrixes in .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds files
+#   - each cell is the number of sequence reads of each sample mapped to each gene
+#   - the first matrix will be used for the most of the analyses
+#     - each of the other matrixes corresponds to reads with a different mapping type, such as reads mapped to multiple genes
+#   - the column names of all matrixes are the matching unique gene IDs or symbols
+#   - the row names of all matrixes are the matching unique sample IDs or symbols
+# <annotation> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the column names are unique gene IDs or symbols matching the row names of <count>
+#   - must include a column for the chromosome each gene is located in
+#   - muse include a column for the average length (of multiple alternative transcripts) of each gene
+# <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - the column names are unique sample IDs or names matching column names of <count>
+#   - each column corresponds to a sample feature that will be used to group samples in the analysis
+#############################################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required by the RoCA framework to generate a reproducible report
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_sample/rnaseq_sample.Rmd
+output: examples/brain_tumor       	    # Where to save the output files
+home: http://zhezhangsh.github.io/RoCA	# Location to project home (URL or local file)
+analyst: Jim Zhang              		    # Name of the analyst who runs this analysis
+zip: no                         		    # Whether to zip the output folder
+
+#################
+##### ABOUT #####
+#################
+# Analyst describes the analysis to run, such as project title
+description:    
+  Project: "Transcriptome of mouse brain tumors"
+  Data: "RNA-seq data was generated from of 2 types of mouse brain tumors. Some tumors are tested for drug response.
+        Raw data was processed to get gene-level read counts."
+  Analysis: "This is a demo."
+
+##################
+##### INPUTS #####
+##################
+input:
+  count:                    # One or multiple matching matrixes of gene-level read counts
+    Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/count_sense.txt
+    Antisense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/count_antisense.txt
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/anno.txt      # Gene annotation matching the rows of read count matrixes, with columns corresponding to gene length and chromosome
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/sample.txt        # Sample description matching the columns of read count matrixes, with columns corresponding to sample features 
+
+######################
+##### PARAMETERS #####
+######################
+parameter:
+  annotation:       # Column name and index in the annotation table
+    chromosome: 2   # The column provides information about which chromosome each gene is located in
+    length: 3       # The column gives the average length (of multiple alternative transcripts) of each gene 
+  chromosome:       # Chromosome names  
+    f: 'X'          # The 'female' chromosome, such as chrX
+    m: 'Y'          # The 'male' chromosome, such as chrY
+    autosome:       # List of all autosome names, that will be used for sample analysis
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+    - '6'
+    - '7'
+    - '8'
+    - '9'
+    - '10'
+    - '11'
+    - '12'
+    - '13'
+    - '14'
+    - '15'
+    - '16'
+    - '17'
+    - '18'
+    - '19'
