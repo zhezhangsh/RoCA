@@ -220,7 +220,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 |Original          | 1.1953|          1.00|            0|            0|                  NaN|
 |Total_Count       | 1.2474|          1.00|         3389|        14577|               0.2325|
 |Median            | 1.1795|          0.99|        11758|         8296|               1.4173|
-|Quantile_Quantile | 1.1354|          0.81|        13013|         7654|               1.7002|
+|Quantile_Quantile | 1.1412|          0.81|        13004|         7683|               1.6926|
 |Upper_Quantile    | 1.1564|          1.00|        12031|         6330|               1.9006|
 |Trimmed_Mean      | 1.1801|          0.99|        10116|         9188|               1.1010|
 |DESeq             | 1.1666|          0.99|        12290|         6686|               1.8382|
@@ -343,70 +343,37 @@ If there is no complaint, go to the _output_ folder and open the ***index.html**
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-##  [1] grid      stats4    parallel  stats     graphics  grDevices utils    
-##  [8] datasets  methods   base     
+## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] cluster_2.0.3           pvclust_1.3-2          
-##  [3] fpc_2.1-10              mclust_5.0.2           
-##  [5] prada_1.44.0            rrcov_1.3-8            
-##  [7] robustbase_0.92-5       RColorBrewer_1.1-2     
-##  [9] e1071_1.6-7             DEGandMore_0.0.0.9000  
-## [11] Rnaseq_0.0.0.9000       mixtools_1.0.3         
-## [13] segmented_0.5-1.1       MASS_7.3-43            
-## [15] boot_1.3-17             snow_0.4-1             
-## [17] affy_1.46.1             DESeq_1.20.0           
-## [19] lattice_0.20-33         locfit_1.5-9.1         
-## [21] Biobase_2.28.0          RcppArmadillo_0.5.300.4
-## [23] Rcpp_0.12.4             edgeR_3.10.2           
-## [25] limma_3.26.9            gplots_3.0.1           
-## [27] vioplot_0.2             sm_2.2-5.4             
-## [29] shiny_0.12.2            outliers_0.14          
-## [31] GenomicRanges_1.22.4    GenomeInfoDb_1.6.3     
-## [33] IRanges_2.4.8           S4Vectors_0.8.11       
-## [35] BiocGenerics_0.16.1     htmlwidgets_0.5        
-## [37] DT_0.1                  awsomics_0.0.0.9000    
-## [39] yaml_2.1.13             rmarkdown_0.9.6        
-## [41] knitr_1.12.3            RoCA_0.0.0.9000        
-## [43] RCurl_1.95-4.8          bitops_1.0-6           
-## [45] devtools_1.11.1        
+##  [1] DESeq_1.20.0          lattice_0.20-33       locfit_1.5-9.1       
+##  [4] Biobase_2.28.0        edgeR_3.10.2          limma_3.26.9         
+##  [7] gplots_3.0.1          DEGandMore_0.0.0.9000 snow_0.4-1           
+## [10] Rnaseq_0.0.0.9000     GenomicRanges_1.22.4  GenomeInfoDb_1.6.3   
+## [13] IRanges_2.4.8         S4Vectors_0.8.11      BiocGenerics_0.16.1  
+## [16] fpc_2.1-10            vioplot_0.2           sm_2.2-5.4           
+## [19] htmlwidgets_0.5       DT_0.1                awsomics_0.0.0.9000  
+## [22] yaml_2.1.13           rmarkdown_0.9.6       knitr_1.12.3         
+## [25] RoCA_0.0.0.9000       RCurl_1.95-4.8        bitops_1.0-6         
+## [28] devtools_1.11.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] colorspace_1.2-6           modeltools_0.2-21         
-##  [3] class_7.3-13               futile.logger_1.4.1       
-##  [5] XVector_0.10.0             affyio_1.36.0             
-##  [7] flexmix_2.3-13             mvtnorm_1.0-3             
-##  [9] AnnotationDbi_1.30.1       splines_3.2.2             
-## [11] geneplotter_1.46.0         Formula_1.2-1             
-## [13] jsonlite_0.9.20            annotate_1.46.1           
-## [15] kernlab_0.9-22             httr_1.1.0                
-## [17] formatR_1.3                acepack_1.3-3.3           
-## [19] htmltools_0.3.5            tools_3.2.2               
-## [21] gtable_0.1.2               reshape2_1.4.1            
-## [23] trimcluster_0.1-2          gdata_2.17.0              
-## [25] preprocessCore_1.30.0      stringr_1.0.0             
-## [27] proto_0.3-10               mime_0.4                  
-## [29] gtools_3.5.0               XML_3.98-1.3              
-## [31] DEoptimR_1.0-3             zlibbioc_1.14.0           
-## [33] scales_0.2.5               BiocInstaller_1.18.5      
-## [35] SummarizedExperiment_1.0.2 lambda.r_1.1.7            
-## [37] curl_0.9.7                 memoise_1.0.0             
-## [39] gridExtra_2.0.0            ggplot2_1.0.1             
-## [41] rpart_4.1-10               latticeExtra_0.6-26       
-## [43] stringi_1.0-1              RSQLite_1.0.0             
-## [45] highr_0.5.1                genefilter_1.50.0         
-## [47] pcaPP_1.9-60               caTools_1.17.1            
-## [49] BiocParallel_1.2.20        prabclus_2.2-6            
-## [51] evaluate_0.9               plyr_1.8.3                
-## [53] magrittr_1.5               R6_2.1.2                  
-## [55] Hmisc_3.16-0               DBI_0.3.1                 
-## [57] foreign_0.8-66             withr_1.0.1               
-## [59] survival_2.38-3            nnet_7.3-10               
-## [61] rchive_0.0.0.9000          futile.options_1.0.0      
-## [63] KernSmooth_2.23-15         git2r_0.15.0              
-## [65] diptest_0.75-7             digest_0.6.9              
-## [67] xtable_1.8-2               httpuv_1.3.3              
-## [69] munsell_0.4.2
+##  [1] genefilter_1.50.0    gtools_3.5.0         modeltools_0.2-21   
+##  [4] kernlab_0.9-22       splines_3.2.2        htmltools_0.3.5     
+##  [7] survival_2.38-3      XML_3.98-1.3         DBI_0.3.1           
+## [10] withr_1.0.1          prabclus_2.2-6       RColorBrewer_1.1-2  
+## [13] robustbase_0.92-5    stringr_1.0.0        zlibbioc_1.14.0     
+## [16] caTools_1.17.1       mvtnorm_1.0-3        memoise_1.0.0       
+## [19] evaluate_0.9         geneplotter_1.46.0   flexmix_2.3-13      
+## [22] class_7.3-13         AnnotationDbi_1.30.1 highr_0.5.1         
+## [25] DEoptimR_1.0-3       trimcluster_0.1-2    Rcpp_0.12.4         
+## [28] KernSmooth_2.23-15   xtable_1.7-4         diptest_0.75-7      
+## [31] formatR_1.3          gdata_2.17.0         jsonlite_0.9.20     
+## [34] annotate_1.46.1      XVector_0.10.0       digest_0.6.9        
+## [37] stringi_1.0-1        grid_3.2.2           tools_3.2.2         
+## [40] magrittr_1.5         RSQLite_1.0.0        cluster_2.0.3       
+## [43] MASS_7.3-43          mclust_5.0.2         nnet_7.3-10
 ```
 
 <div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>

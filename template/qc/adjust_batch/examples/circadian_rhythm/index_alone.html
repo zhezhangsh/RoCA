@@ -11,7 +11,7 @@
 
 <meta name="author" content="Zhe Zhang" />
 
-<meta name="date" content="2016-05-12" />
+<meta name="date" content="2016-06-07" />
 
 <title>Analysis and adjustment of batch effect</title>
 
@@ -221,7 +221,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Analysis and adjustment of batch effect</h1>
 <h4 class="author"><em>Zhe Zhang</em></h4>
-<h4 class="date"><em>2016-05-12</em></h4>
+<h4 class="date"><em>2016-06-07</em></h4>
 
 </div>
 
@@ -408,7 +408,85 @@ div.tocify {
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
 <hr />
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">6</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">6.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">6.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] sva_3.18.0            genefilter_1.50.0     mgcv_1.8-7           
+##  [4] nlme_3.1-121          gplots_3.0.1          DESeq_1.20.0         
+##  [7] lattice_0.20-33       locfit_1.5-9.1        Biobase_2.28.0       
+## [10] edgeR_3.10.2          limma_3.26.9          DEGandMore_0.0.0.9000
+## [13] snow_0.4-1            awsomics_0.0.0.9000   Rnaseq_0.0.0.9000    
+## [16] GenomicRanges_1.22.4  GenomeInfoDb_1.6.3    IRanges_2.4.8        
+## [19] S4Vectors_0.8.11      BiocGenerics_0.16.1   fpc_2.1-10           
+## [22] vioplot_0.2           sm_2.2-5.4            htmlwidgets_0.5      
+## [25] DT_0.1                yaml_2.1.13           knitr_1.12.3         
+## [28] rmarkdown_0.9.6       RoCA_0.0.0.9000       RCurl_1.95-4.8       
+## [31] bitops_1.0-6          devtools_1.11.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] mclust_5.0.2         Rcpp_0.12.4          mvtnorm_1.0-3       
+##  [4] class_7.3-13         gtools_3.5.0         digest_0.6.9        
+##  [7] R6_2.1.2             RSQLite_1.0.0        evaluate_0.9        
+## [10] highr_0.5.1          httr_1.1.0           zlibbioc_1.14.0     
+## [13] diptest_0.75-7       curl_0.9.7           annotate_1.46.1     
+## [16] gdata_2.17.0         kernlab_0.9-22       Matrix_1.2-2        
+## [19] splines_3.2.2        geneplotter_1.46.0   stringr_1.0.0       
+## [22] htmltools_0.3.5      nnet_7.3-10          XML_3.98-1.3        
+## [25] withr_1.0.1          MASS_7.3-43          grid_3.2.2          
+## [28] jsonlite_0.9.20      xtable_1.7-4         DBI_0.3.1           
+## [31] git2r_0.15.0         magrittr_1.5         formatR_1.3         
+## [34] KernSmooth_2.23-15   stringi_1.0-1        XVector_0.10.0      
+## [37] flexmix_2.3-13       robustbase_0.92-5    RColorBrewer_1.1-2  
+## [40] tools_3.2.2          trimcluster_0.1-2    DEoptimR_1.0-3      
+## [43] survival_2.38-3      AnnotationDbi_1.30.1 cluster_2.0.3       
+## [46] caTools_1.17.1       prabclus_2.2-6       memoise_1.0.0       
+## [49] modeltools_0.2-21</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
 <p><strong>END OF DOCUMENT</strong></p>
+</div>
 </div>
 
 

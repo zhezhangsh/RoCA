@@ -20,7 +20,7 @@
 ####################
 # Required by the RoCA framework to generate a reproducible report
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_sample/rnaseq_sample.Rmd
-output: examples/brain_tumor       	    # Where to save the output files
+output: examples/immune_cells       	  # Where to save the output files
 home: http://zhezhangsh.github.io/RoCA	# Location to project home (URL or local file)
 analyst: Jim Zhang              		    # Name of the analyst who runs this analysis
 zip: no                         		    # Whether to zip the output folder
@@ -30,8 +30,8 @@ zip: no                         		    # Whether to zip the output folder
 #################
 # Analyst describes the analysis to run, such as project title
 description:    
-  Project: "Transcriptome of mouse brain tumors"
-  Data: "RNA-seq data was generated from of 2 types of mouse brain tumors. Some tumors are tested for drug response.
+  Project: "Transcriptome in immune cells of control-patient samples"
+  Data: "Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. 
         Raw data was processed to get gene-level read counts."
   Analysis: "This is a demo."
 
@@ -40,38 +40,47 @@ description:
 ##################
 input:
   count:                    # One or multiple matching matrixes of gene-level read counts
-    Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/count_sense.txt
-    Antisense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/count_antisense.txt
-  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/anno.txt      # Gene annotation matching the rows of read count matrixes, with columns corresponding to gene length and chromosome
-  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/brain_tumor_rnaseq/sample.txt        # Sample description matching the columns of read count matrixes, with columns corresponding to sample features 
+    Unique_Paired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unique.rds
+    Multiple_Paired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_multiple.rds
+    Unique_Unpaired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_unique.rds
+    Multiple_Unpaired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_multiple.rds
+    Unique_Paired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unique_antisense.rds
+    Multiple_Paired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_multiple_antisense.rds
+    Unique_Unpaired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_unique_antisense.rds
+    Multiple_Unpaired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_multiple_antisense.rds
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/anno.rds      # Gene annotation matching the rows of read count matrixes, with columns corresponding to gene length and chromosome
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/sample.rds        # Sample description matching the columns of read count matrixes, with columns corresponding to sample features 
 
 ######################
 ##### PARAMETERS #####
 ######################
 parameter:
   annotation:       # Column name and index in the annotation table
-    chromosome: 2   # The column provides information about which chromosome each gene is located in
-    length: 3       # The column gives the average length (of multiple alternative transcripts) of each gene 
+    chromosome: 1   # The column provides information about which chromosome each gene is located in
+    length: 2       # The column gives the average length (of multiple alternative transcripts) of each gene 
   chromosome:       # Chromosome names  
-    f: 'X'          # The 'female' chromosome, such as chrX
-    m: 'Y'          # The 'male' chromosome, such as chrY
+    f: 'chrX'       # The 'female' chromosome, such as chrX
+    m: 'chrY'       # The 'male' chromosome, such as chrY
     autosome:       # List of all autosome names, that will be used for sample analysis
-    - '1'
-    - '2'
-    - '3'
-    - '4'
-    - '5'
-    - '6'
-    - '7'
-    - '8'
-    - '9'
-    - '10'
-    - '11'
-    - '12'
-    - '13'
-    - '14'
-    - '15'
-    - '16'
-    - '17'
-    - '18'
-    - '19'
+    - 'chr1'
+    - 'chr2'
+    - 'chr3'
+    - 'chr4'
+    - 'chr5'
+    - 'chr6'
+    - 'chr7'
+    - 'chr8'
+    - 'chr9'
+    - 'chr10'
+    - 'chr11'
+    - 'chr12'
+    - 'chr13'
+    - 'chr14'
+    - 'chr15'
+    - 'chr16'
+    - 'chr17'
+    - 'chr18'
+    - 'chr19'
+    - 'chr20'
+    - 'chr21'
+    - 'chr22'
