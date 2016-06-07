@@ -1,0 +1,2 @@
+load("/Users/zhangz/Documents/RoCA/template/qc/rnaseq_sample/anno_full.rdata")
+load("/Users/zhangz/Documents/RoCA/template/qc/rnaseq_sample/count.rdata")

@@ -19,8 +19,8 @@
 ##### REQUIRED #####
 ####################
 # Required by the RoCA framework to generate a reproducible report
-template: rnaseq_sample.Rmd
-output: examples/immune_cells       	  # Where to save the output files
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_sample/rnaseq_sample.Rmd
+output: examples/brain_tumor       	    # Where to save the output files
 home: http://zhezhangsh.github.io/RoCA	# Location to project home (URL or local file)
 analyst: Jim Zhang              		    # Name of the analyst who runs this analysis
 zip: no                         		    # Whether to zip the output folder
@@ -40,16 +40,16 @@ description:
 ##################
 input:
   count:                    # One or multiple matching matrixes of gene-level read counts
-    Unique_Paired_Sense: count_unique.rds
-    Multiple_Paired_Sense: count_multiple.rds
-    Unique_Unpaired_Sense: count_unpaired_unique.rds
-    Multiple_Unpaired_Sense: count_unpaired_multiple.rds
-    Unique_Paired_As: count_unique_antisense.rds
-    Multiple_Paired_As: count_multiple_antisense.rds
-    Unique_Unpaired_As: count_unpaired_unique_antisense.rds
-    Multiple_Unpaired_As: count_unpaired_multiple_antisense.rds
-  annotation: anno.rds      # Gene annotation matching the rows of read count matrixes, with columns corresponding to gene length and chromosome
-  sample: sample.rds        # Sample description matching the columns of read count matrixes, with columns corresponding to sample features 
+    Unique_Paired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unique.rds
+    Multiple_Paired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_multiple.rds
+    Unique_Unpaired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_unique.rds
+    Multiple_Unpaired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_multiple.rds
+    Unique_Paired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unique_antisense.rds
+    Multiple_Paired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_multiple_antisense.rds
+    Unique_Unpaired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_unique_antisense.rds
+    Multiple_Unpaired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_multiple_antisense.rds
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/anno.rds      # Gene annotation matching the rows of read count matrixes, with columns corresponding to gene length and chromosome
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/sample.rds        # Sample description matching the columns of read count matrixes, with columns corresponding to sample features 
 
 ######################
 ##### PARAMETERS #####

@@ -1,0 +1,86 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <count> one or more data matrixes in .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds files
+#   - each cell is the number of sequence reads of each sample mapped to each gene
+#   - the first matrix will be used for the most of the analyses
+#     - each of the other matrixes corresponds to reads with a different mapping type, such as reads mapped to multiple genes
+#   - the column names of all matrixes are the matching unique gene IDs or symbols
+#   - the row names of all matrixes are the matching unique sample IDs or symbols
+# <annotation> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the column names are unique gene IDs or symbols matching the row names of <count>
+#   - must include a column for the chromosome each gene is located in
+#   - muse include a column for the average length (of multiple alternative transcripts) of each gene
+# <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - the column names are unique sample IDs or names matching column names of <count>
+#   - each column corresponds to a sample feature that will be used to group samples in the analysis
+#############################################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required by the RoCA framework to generate a reproducible report
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_sample/rnaseq_sample.Rmd
+output: examples/immune_cells       	  # Where to save the output files
+home: http://zhezhangsh.github.io/RoCA	# Location to project home (URL or local file)
+analyst: Jim Zhang              		    # Name of the analyst who runs this analysis
+zip: no                         		    # Whether to zip the output folder
+
+#################
+##### ABOUT #####
+#################
+# Analyst describes the analysis to run, such as project title
+description:    
+  Project: "Transcriptome in immune cells of control-patient samples"
+  Data: "Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. 
+        Raw data was processed to get gene-level read counts."
+  Analysis: "This is a demo."
+
+##################
+##### INPUTS #####
+##################
+input:
+  count:                    # One or multiple matching matrixes of gene-level read counts
+    Unique_Paired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unique.rds
+    Multiple_Paired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_multiple.rds
+    Unique_Unpaired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_unique.rds
+    Multiple_Unpaired_Sense: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_multiple.rds
+    Unique_Paired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unique_antisense.rds
+    Multiple_Paired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_multiple_antisense.rds
+    Unique_Unpaired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_unique_antisense.rds
+    Multiple_Unpaired_As: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/count_unpaired_multiple_antisense.rds
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/anno.rds      # Gene annotation matching the rows of read count matrixes, with columns corresponding to gene length and chromosome
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/sample.rds        # Sample description matching the columns of read count matrixes, with columns corresponding to sample features 
+
+######################
+##### PARAMETERS #####
+######################
+parameter:
+  annotation:       # Column name and index in the annotation table
+    chromosome: 1   # The column provides information about which chromosome each gene is located in
+    length: 2       # The column gives the average length (of multiple alternative transcripts) of each gene 
+  chromosome:       # Chromosome names  
+    f: 'chrX'       # The 'female' chromosome, such as chrX
+    m: 'chrY'       # The 'male' chromosome, such as chrY
+    autosome:       # List of all autosome names, that will be used for sample analysis
+    - 'chr1'
+    - 'chr2'
+    - 'chr3'
+    - 'chr4'
+    - 'chr5'
+    - 'chr6'
+    - 'chr7'
+    - 'chr8'
+    - 'chr9'
+    - 'chr10'
+    - 'chr11'
+    - 'chr12'
+    - 'chr13'
+    - 'chr14'
+    - 'chr15'
+    - 'chr16'
+    - 'chr17'
+    - 'chr18'
+    - 'chr19'
+    - 'chr20'
+    - 'chr21'
+    - 'chr22'
