@@ -565,4 +565,46 @@ if (prms$cleanup) file.remove(paste(path.input, dir(path.input), sep='/'));
 ```
 
 ***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+- _output_        : where you want to put the output files
+- _home_          : the URL if you have a home page for your project
+- _analyst_       : your name
+- _description_   : background information about your project, analysis, etc.
+- _input_         : where are your input data, read instruction for preparing them
+- _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+
 **END_OF_DOCUMENT**

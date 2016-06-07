@@ -27,34 +27,40 @@ output:
 &nbsp;
 
 ```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'summarize_fastqc.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'GtUtility', 'RoCA', 'awsomics'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
+
 ## Default knitr parameters
 knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
 ## Load required R packages
-require(yaml);
-require(knitr);
-require(rmarkdown); 
-require(RCurl);
-require(gplots);
-require(GtUtility);
-require(awsomics);
-require(RoCA);
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
 
 ## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
 ## But, the developer can also provide the option to load the YAML file on the fly.
 ## So, the template can be run using the "Knit HTML" button in RStudio
-if (!exists('yml'))                                  # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
-  if (file.exists('summarize_fastqc.yaml'))           # assume the pairing YAML file exists in the current folder with the same name
-      yml<-yaml.load_file('summarize_fastqc.yaml');   # rename the YAML file to fit this template
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
 
-## Create directory and sub-directories where the output files will be
-f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
-path.r <- f['R'];
-path.tbl <- f['table'];
-path.fig <- f['figure'];
-path.input <- f['input'];
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+```{r load_data, include=FALSE}
 ## Load input data
 fns.zip<-lapply(yml$input$fastqc, function(f) sapply(f, function(f) DownloadFile(f, path.input))); 
 # fns.zip<-lapply(yml$input$fastqc, function(f) sapply(f, function(f) {
@@ -75,21 +81,9 @@ saveRDS(stat.all, paste(path.r, 'stat_all_libraries.rds', sep='/'));
 
 snm<-names(stat.all);
 if (paired) snm<-paste(rep(snm, each=2), rep(c('R1', 'R2'), length(snm)), sep='_'); 
-
-## URL to project home
-## Use this line to add a link to project home in the report: `r home.url`
-home.url <- Link2Home(yml$home);
-
-## Use the information provided by the YAML file to create a <Description> section in the report
-lns<-lapply(names(yml$description), function(nm) {
-  c(paste('##', nm), '\n', yml$description[[nm]], '\n'); 
-});
-lns<-paste(do.call('c', lns), collapse='\n'); 
 ```
 
 `r home.url`
-
-# Description
 
 # Description
 

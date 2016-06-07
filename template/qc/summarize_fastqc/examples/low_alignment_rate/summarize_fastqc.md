@@ -1,7 +1,7 @@
 ---
 title: "Summary of FastQC reports"
 author: "Jim Zhang"
-date: "2016-05-12"
+date: "2016-06-07"
 output:
   html_document:
     number_sections: yes
@@ -324,6 +324,74 @@ Among commonly known adaptor sequences, ***Illumina Universal Adapter***, had th
 
 
 </div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+
+```r
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+
+```
+## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
+##  [4] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
+##  [7] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
+## [10] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.4          AnnotationDbi_1.32.3 magrittr_1.5        
+##  [4] IRanges_2.4.8        BiocGenerics_0.16.1  highr_0.5.1         
+##  [7] stringr_1.0.0        GenomeInfoDb_1.6.3   caTools_1.17.1      
+## [10] tools_3.2.2          parallel_3.2.2       Biobase_2.28.0      
+## [13] KernSmooth_2.23-15   DBI_0.3.1            withr_1.0.1         
+## [16] htmltools_0.3.5      gtools_3.5.0         digest_0.6.9        
+## [19] formatR_1.3          S4Vectors_0.8.11     RSQLite_1.0.0       
+## [22] memoise_1.0.0        evaluate_0.9         gdata_2.17.0        
+## [25] stringi_1.0-1        stats4_3.2.2         jsonlite_0.9.20
+```
 
 <div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
