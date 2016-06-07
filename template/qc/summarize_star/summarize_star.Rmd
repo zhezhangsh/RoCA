@@ -20,6 +20,10 @@ output:
 &nbsp;
 
 ```{r global_setup, include=FALSE}
+name.yaml <- 'summarize_star.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
+
 ## Default knitr parameters
 knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
@@ -27,24 +31,22 @@ if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
 ## Load required R packages
-loaded <- LoadPackage(c('yaml', 'rmarkdown', 'knitr', 'DT', 'htmlwidgets', 'awsomics'));
+loaded <- LoadPackage(name.packages);
 if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
 
 ## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
 ## But, the developer can also provide the option to load the YAML file on the fly.
 ## So, the template can be run using the "Knit HTML" button in RStudio
-if (!exists('yml'))                           			# if the 'yml' variable doesn't exist yet, create it by loading the YAML file
-	if (file.exists('summarize_star.yaml'))           	# assume the pairing YAML file exists in the current folder with the same name
-		yml<-yaml.load_file('summarize_star.yaml');   # rename the YAML file to fit this template
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
 prms <- yml$parameter;
 
 ## Generate directory and sub-directories where the output files will be
-f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));
+f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
-path.r <- f['R'];
-path.tbl <- f['table'];
-path.fig <- f['figure'];
-path.input <- f['input'];
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
