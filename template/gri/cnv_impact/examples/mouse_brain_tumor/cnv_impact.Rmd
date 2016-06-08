@@ -346,30 +346,6 @@ This analysis is used to calculate the expected change of `r prms$feature` `r pr
 ### Average of all CNVs
 
 ```{r cnv_effect, include=FALSE}
-q1 <- apply(mtr, 2, function(x) summary(x)[2]); 
-
-# 1/2/3 copies vs. 2 copies
-ratios <- lapply(1:3, function(c) {
-  print(c);
-  lapply(1:ncol(mtr0), function(i) {
-    lapply((1:ncol(mtr0))[-i], function(j) {
-      x <- mtr0[cnv[,i]==c & cnv[,j]==2, c(i, j), drop=FALSE];
-      x <- x[x[,1]>= c/2*q1[i] & x[,2]>=q1[j], , drop=FALSE];
-      x[,1]/x[,2];
-    })
-  })
-}); 
-ms <- sapply(ratios, function(c) {
-  sapply(c, function(c) mean(log(unlist(c, use.names=FALSE)), trim=0.1, na.rm=TRUE));
-});
-dimnames(ms) <- list(colnames(mtr0), c('1 copy', '2 copies', '3 copies'));
-m1 <- round(100*exp(mean(ms[, 1]-ms[, 2])) - 100, 3);
-m3 <- round(100*exp(mean(ms[, 3]-ms[, 2])) - 100, 3);
-saveRDS(100*(exp(ms)-1), paste(path.r, 'average_percent.rds', sep='/')); 
-tbl <- round(100*(exp(ms)-1), 2);
-CreateDatatable(tbl, paste(path.tbl, 'average_change_by_sample.html', sep='/'), 
-                caption = 'Average change of each sample comparing to diploid samples (%)'); 
-
 x <- mtr0; 
 x[cnv!=2] <- NA; 
 m <- rowMeans(x, na.rm=TRUE); 
@@ -394,6 +370,42 @@ stats <- lapply(1:ncol(cnv), function(i) {
   cbind(Copy=cnv[, i], Count=mtr0[, i], Change=chg, s); 
 }); 
 names(stats) <- colnames(cnv); 
+
+######################################################################
+# evaluate impact with linear model
+ms <- sapply(stats, function(s) {
+  x <- s[s[,1]>0.5 & s[,1]<=3.5 & !is.na(s[, 5]) & !is.na(s[, 4]), , drop=FALSE]; 
+  q1 <- max(1, summary(x[, 5])[2]);
+  x <- x[x[, 5] >= q1 & x[, 2] >= q1*x[,1]/x[,4], , drop=FALSE];
+  y <- x[x[, 1]<2, , drop=FALSE];
+  z <- x[x[, 1]>2, , drop=FALSE];
+  m1 <- mean(log((y[, 2]/y[, 1])/y[, 5])); 
+  m2 <- mean(log(x[x[,1]==2, 2]/x[x[,1]==2, 5])); 
+  m3 <- mean(log((z[, 2]/(z[, 1]/3))/z[, 5])); 
+  c(m1, m2, m3); 
+}); 
+ms <- t(ms); 
+# ratios <- lapply(1:3, function(c) {
+#   print(c);
+#   lapply(1:ncol(mtr0), function(i) {
+#     lapply((1:ncol(mtr0))[-i], function(j) {
+#       x <- mtr0[cnv[,i]==c & cnv[,j]==2, c(i, j), drop=FALSE];
+#       x <- x[x[,1]>= c/2*q1[i] & x[,2]>=q1[j], , drop=FALSE];
+#       x[,1]/x[,2];
+#     })
+#   })
+# }); 
+# ms <- sapply(ratios, function(c) {
+#   sapply(c, function(c) mean(log(unlist(c, use.names=FALSE)), trim=0.1, na.rm=TRUE));
+# });
+dimnames(ms) <- list(colnames(mtr0), c('1 copy', '2 copies', '3 copies'));
+m1 <- round(100*exp(mean(ms[, 1]-ms[, 2])) - 100, 3);
+m3 <- round(100*exp(mean(ms[, 3]-ms[, 2])) - 100, 3);
+saveRDS(100*(exp(ms)-1), paste(path.r, 'average_percent.rds', sep='/')); 
+tbl <- round(100*(exp(ms)-1), 2);
+CreateDatatable(tbl, paste(path.tbl, 'average_change_by_sample.html', sep='/'), 
+                caption = 'Average change of each sample comparing to diploid samples (%)'); 
+######################################################################
 
 s <- lapply(stats, function(s) {
   s <- s[s[,1]!=2, , drop=FALSE]; 
@@ -439,7 +451,7 @@ abline(lm(a~b), lty=2, col='blue');
 ### Individual CNVs
 
 ```{r cnv_effect_individual, include=FALSE}
-s<-lapply(names(cnv2fea), function(nm) { print(nm); 
+s<-lapply(names(cnv2fea), function(nm) {
   c2f <- cnv2fea[[nm]]; 
   s <- stats[[nm]]; 
   q1.0 <- summary(s[, 5])[2];
@@ -647,7 +659,7 @@ for (i in 1:3) {
   
 In most cases, these adjustment methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by `r min(cvs.pct)` to `r max(cvs.pct)` percent on average.
   
-  - The [`r prms$feature`-level coefficient of variation (CV) before and after adjustment](table/CV_adjustment.html)
+  - [The `r prms$feature`-level coefficient of variation (CV) before and after adjustment](table/CV_adjustment.html)
   - <a href="R/adjusted_data.rds" target="_blank">Download all adjusted data matrix]</a>
     - [Adjusted globally](table/adjusted_globolly.csv)
     - [Adjusted by sample](table/adjusted_by_sample.csv)
@@ -681,22 +693,22 @@ dimnames(t) <- list(paste(colnames(tbl)[1:4], '>'), paste('>', colnames(tbl)[1:4
 
 # Appendix 
 
-Check out the ***[RoCA project](http://zhezhangsh.github.io/RoCA)*** for more information.  
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
 
 ## Reproduce this report
 
 To reproduce this report: 
 
-  1. Copy this ***[YAML](https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.yaml)*** file to your working directory
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
 
-  2. To use your own data and parameters, edit the ***YAML*** file:
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
 
-    - _output_: where you want to put the output files
-    - _home_: the URL if you have a home page for your project
-    - _analyst_: your name
-    - _description_: background information about your project, analysis, etc.
-    - _input_: where are your input data, read instruction for preparing them
-    - _parameter_: parameters for this analysis; read instruction about how to prepare input data
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
 
   3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
@@ -705,7 +717,7 @@ if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
-CreateReport("cnv_impact.yaml");
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
 ```
 
 If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
@@ -719,5 +731,5 @@ sessionInfo();
 `r home.url`
 
 ***
-
 _END OF DOCUMENT_
+

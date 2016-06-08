@@ -34,6 +34,7 @@ require(yaml);
 require(RCurl);
 require(awsomics);
 require(rchive);
+require(RoCA);
 
 if (!exists('yml'))                               # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
   if (file.exists('cluster_gene.yaml'))           # assume the pairing YAML file exists in the current folder with the same name

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2016-05-27" />
+<meta name="date" content="2016-06-07" />
 
 <title>Summary of STAR alignment</title>
 
@@ -221,7 +221,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Summary of STAR alignment</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2016-05-27</em></h4>
+<h4 class="date"><em>2016-06-07</em></h4>
 
 </div>
 
@@ -424,9 +424,9 @@ div.tocify {
 <h2><span class="header-section-number">3.5</span> Alerts</h2>
 <p>Listed below are samples with potentially quality problem, based on consistency of summary statistics between samples:</p>
 <ul>
-<li>Low alignment rate: none</li>
+<li>Low alignment rate: M_2</li>
 <li>High multiple alignment rate: none</li>
-<li>High rate of noncanonical splice: none</li>
+<li>High rate of noncanonical splice: T_4</li>
 <li>High insertion rate: none</li>
 <li>High deletion rate: none</li>
 <li>High mismatch rate: none</li>
@@ -454,24 +454,25 @@ div.tocify {
 <li><a href="table/mismatch_indel.html">Mismatch and INDEL</a></li>
 <li><a href="table/percent_unmapped.html">Unmapped</a></li>
 </ul>
+<hr />
 </div>
 </div>
 <div id="appendix" class="section level1">
 <h1><span class="header-section-number">4</span> Appendix</h1>
-<p>Check out the <strong><em><a href="http://zhezhangsh.github.io/RoCA">RoCA project</a></em></strong> for more information.</p>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
 <div id="reproduce-this-report" class="section level2">
 <h2><span class="header-section-number">4.1</span> Reproduce this report</h2>
 <p>To reproduce this report:</p>
 <ol style="list-style-type: decimal">
-<li><p>Copy this <strong><em><a href="https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/summarize_star/summarize_star.yaml">YAML</a></em></strong> file to your working directory</p></li>
-<li><p>To use your own data and parameters, edit the <strong><em>YAML</em></strong> file:</p>
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
 <ul>
-<li><em>output</em>: where you want to put the output files</li>
-<li><em>home</em>: the URL if you have a home page for your project</li>
-<li><em>analyst</em>: your name</li>
-<li><em>description</em>: background information about your project, analysis, etc.</li>
-<li><em>input</em>: where are your input data, read instruction for preparing them</li>
-<li><em>parameter</em>: parameters for this analysis; read instruction about how to prepare input data</li>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
 </ul></li>
 <li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
 </ol>
@@ -479,7 +480,7 @@ div.tocify {
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
-CreateReport(&quot;cnv_impact.yaml&quot;);</code></pre>
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
 <p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
 </div>
 <div id="session-information" class="section level2">
@@ -492,30 +493,24 @@ CreateReport(&quot;cnv_impact.yaml&quot;);</code></pre>
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-##  [1] splines   stats4    parallel  stats     graphics  grDevices utils    
-##  [8] datasets  methods   base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] RoCA_0.0.0.9000      CHOPseq_0.0.0.9000   Agri_0.0.0.9000     
-##  [4] rchive_0.0.0.9000    edgeR_3.10.2         limma_3.26.9        
-##  [7] NOISeq_2.16.0        GenomicRanges_1.22.4 GenomeInfoDb_1.6.3  
-## [10] IRanges_2.4.8        S4Vectors_0.8.11     Biobase_2.28.0      
-## [13] BiocGenerics_0.16.1  Matrix_1.2-2         vioplot_0.2         
-## [16] sm_2.2-5.4           gplots_3.0.1         awsomics_0.0.0.9000 
-## [19] htmlwidgets_0.5      DT_0.1               knitr_1.12.3        
-## [22] rmarkdown_0.9.6      RCurl_1.95-4.8       bitops_1.0-6        
-## [25] devtools_1.11.1      yaml_2.1.13         
+##  [1] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
+##  [4] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
+##  [7] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
+## [10] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.4        XVector_0.10.0     formatR_1.3       
-##  [4] git2r_0.15.0       highr_0.5.1        zlibbioc_1.14.0   
-##  [7] tools_3.2.2        digest_0.6.9       jsonlite_0.9.20   
-## [10] evaluate_0.9       memoise_1.0.0      lattice_0.20-33   
-## [13] curl_0.9.7         withr_1.0.1        httr_1.1.0        
-## [16] stringr_1.0.0      gtools_3.5.0       caTools_1.17.1    
-## [19] grid_3.2.2         R6_2.1.2           gdata_2.17.0      
-## [22] magrittr_1.5       htmltools_0.3.5    KernSmooth_2.23-15
-## [25] stringi_1.0-1</code></pre>
+##  [1] Rcpp_0.12.4          AnnotationDbi_1.32.3 magrittr_1.5        
+##  [4] IRanges_2.4.8        BiocGenerics_0.16.1  highr_0.5.1         
+##  [7] stringr_1.0.0        GenomeInfoDb_1.6.3   caTools_1.17.1      
+## [10] tools_3.2.2          parallel_3.2.2       Biobase_2.28.0      
+## [13] KernSmooth_2.23-15   DBI_0.3.1            withr_1.0.1         
+## [16] htmltools_0.3.5      gtools_3.5.0         digest_0.6.9        
+## [19] formatR_1.3          S4Vectors_0.8.11     RSQLite_1.0.0       
+## [22] memoise_1.0.0        evaluate_0.9         gdata_2.17.0        
+## [25] stringi_1.0-1        stats4_3.2.2         jsonlite_0.9.20</code></pre>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>

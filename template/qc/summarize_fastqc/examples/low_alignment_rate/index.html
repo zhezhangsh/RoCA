@@ -245,19 +245,16 @@ div.tocify {
 </div>
 <div id="description" class="section level1">
 <h1><span class="header-section-number">1</span> Description</h1>
-</div>
-<div id="description-1" class="section level1">
-<h1><span class="header-section-number">2</span> Description</h1>
 <div id="project" class="section level2">
-<h2><span class="header-section-number">2.1</span> Project</h2>
+<h2><span class="header-section-number">1.1</span> Project</h2>
 <p>Compare the transcriptomes of early embryos of lean and obese mice.</p>
 </div>
 <div id="experiment" class="section level2">
-<h2><span class="header-section-number">2.2</span> Experiment</h2>
+<h2><span class="header-section-number">1.2</span> Experiment</h2>
 <p>Prepare RNA-seq libraries using Clontech’s Low Input SMARTer® Stranded RNA-Seq Kit and did a paired-end 2x75bp NextSeq run.</p>
 </div>
 <div id="analysis" class="section level2">
-<h2><span class="header-section-number">2.3</span> Analysis</h2>
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
 <p>Diagnosis of RNA-seq libaries with low alignment rate. The sequencing reads of this data set have low alignment rate (TopHat~=50% STAR~=65%). One pair of .fastq files, <strong>CtrlM201A2_S16_L001</strong>, with ~12 million reads were selected for diagnosis purpose. Each of the original .fastq files were split into 2 files with just aligned and unaligned reads according to STAR alignment result. This analysis compares the FastQC reports of the original, aligned, and unaligned fastq files.</p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
@@ -265,13 +262,13 @@ div.tocify {
 </div>
 </div>
 <div id="summary-statistics" class="section level1">
-<h1><span class="header-section-number">3</span> Summary statistics</h1>
+<h1><span class="header-section-number">2</span> Summary statistics</h1>
 <p>Summary statistics were compared across libraries. Inconsistence of a statistics might indicate quality issues of some libraries.</p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
 <div id="quick-evaluation" class="section level2">
-<h2><span class="header-section-number">3.1</span> Quick evaluation</h2>
+<h2><span class="header-section-number">2.1</span> Quick evaluation</h2>
 <p><strong>FastQC</strong> makes a quick evaluation on each summary statistic whether it is entirely normal (<strong>green</strong>), slightly abnormal (<strong>orange</strong>) or abnormal (<strong>red</strong>). The figure below compiles the evaluation results of all summary statistics from all libraries.</p>
 <ul>
 <li><strong><a href="table/quick_evaluation.html">Quick evaluation results of all libraries</a></strong></li>
@@ -287,7 +284,7 @@ div.tocify {
 </div>
 </div>
 <div id="total-reads" class="section level2">
-<h2><span class="header-section-number">3.2</span> Total reads</h2>
+<h2><span class="header-section-number">2.2</span> Total reads</h2>
 <div align="center">
 <img src="figure/total_reads-1.png" title="plot of chunk total_reads" alt="plot of chunk total_reads" width="600px" />
 </div>
@@ -299,7 +296,7 @@ div.tocify {
 </div>
 </div>
 <div id="paired-read-correlation" class="section level2">
-<h2><span class="header-section-number">3.3</span> Paired read correlation</h2>
+<h2><span class="header-section-number">2.3</span> Paired read correlation</h2>
 <p>Compare the consistency of several key summary statistics between paired sequence reads. Strong agreement between pairs is expected.</p>
 <ul>
 <li><strong><a href="table/summary_stats.html">Summary statistics to be compared between paired reads</a></strong></li>
@@ -315,9 +312,9 @@ div.tocify {
 </div>
 </div>
 <div id="per-read-statistics" class="section level2">
-<h2><span class="header-section-number">3.4</span> Per read statistics</h2>
+<h2><span class="header-section-number">2.4</span> Per read statistics</h2>
 <div id="sequencing-quality" class="section level3">
-<h3><span class="header-section-number">3.4.1</span> Sequencing quality</h3>
+<h3><span class="header-section-number">2.4.1</span> Sequencing quality</h3>
 <div align="center">
 <img src="figure/average_quality-1.png" title="plot of chunk average_quality" alt="plot of chunk average_quality" width="600px" />
 </div>
@@ -326,7 +323,7 @@ div.tocify {
 </div>
 </div>
 <div id="gc-percent" class="section level3">
-<h3><span class="header-section-number">3.4.2</span> GC percent</h3>
+<h3><span class="header-section-number">2.4.2</span> GC percent</h3>
 <div align="center">
 <img src="figure/gc_percent-1.png" title="plot of chunk gc_percent" alt="plot of chunk gc_percent" width="600px" />
 </div>
@@ -335,7 +332,7 @@ div.tocify {
 </div>
 </div>
 <div id="n-percent" class="section level3">
-<h3><span class="header-section-number">3.4.3</span> N percent</h3>
+<h3><span class="header-section-number">2.4.3</span> N percent</h3>
 <div align="center">
 <img src="figure/n_percent-1.png" title="plot of chunk n_percent" alt="plot of chunk n_percent" width="600px" />
 </div>
@@ -344,7 +341,7 @@ div.tocify {
 </div>
 </div>
 <div id="duplication-level" class="section level3">
-<h3><span class="header-section-number">3.4.4</span> Duplication level</h3>
+<h3><span class="header-section-number">2.4.4</span> Duplication level</h3>
 <p>Duplicated reads have the exact same sequences. Duplicated reads are often treated as one read in variant calling, so higher percentage of duplicated reads reduces the total number of usable reads. However, the duplication of paired end reads is evaluated separately by FastQC, so the actual level of duplication might be lower than the number in FastQC report.</p>
 <div align="center">
 <img src="figure/dup_percent-1.png" title="plot of chunk dup_percent" alt="plot of chunk dup_percent" width="600px" />
@@ -358,9 +355,9 @@ div.tocify {
 </div>
 </div>
 <div id="per-base-statistics" class="section level2">
-<h2><span class="header-section-number">3.5</span> Per base statistics</h2>
+<h2><span class="header-section-number">2.5</span> Per base statistics</h2>
 <div id="sequence-quality" class="section level3">
-<h3><span class="header-section-number">3.5.1</span> Sequence quality</h3>
+<h3><span class="header-section-number">2.5.1</span> Sequence quality</h3>
 <p>Sequence quality of single bases is often position-dependent, with later positions usually having lower quality scores.</p>
 <ul>
 <li><strong><a href="table/perbase_quality.html">Position-specific quality scores of all libraries</a></strong></li>
@@ -373,7 +370,7 @@ div.tocify {
 </div>
 </div>
 <div id="gc-content" class="section level3">
-<h3><span class="header-section-number">3.5.2</span> GC content</h3>
+<h3><span class="header-section-number">2.5.2</span> GC content</h3>
 <p>Sequence GC content of single bases is often position-dependent too.</p>
 <ul>
 <li><strong><a href="table/perbase_content.html">Position-specific GC content of all libraries</a></strong></li>
@@ -386,7 +383,7 @@ div.tocify {
 </div>
 </div>
 <div id="n-content" class="section level3">
-<h3><span class="header-section-number">3.5.3</span> N content</h3>
+<h3><span class="header-section-number">2.5.3</span> N content</h3>
 <p>The occurance of Ns is also position-specific.</p>
 <ul>
 <li><strong><a href="table/perbase_N_content.html">Position-specific occurance of Ns in all libraries</a></strong></li>
@@ -399,7 +396,7 @@ div.tocify {
 </div>
 </div>
 <div id="adaptor-content" class="section level3">
-<h3><span class="header-section-number">3.5.4</span> Adaptor content</h3>
+<h3><span class="header-section-number">2.5.4</span> Adaptor content</h3>
 <p>Among commonly known adaptor sequences, <strong><em>Illumina Universal Adapter</em></strong>, had the highest occurances in the sequencing reads. So, only the occurance of this adaptor was summarized.</p>
 <ul>
 <li><strong><a href="table/adaptor_content.html">Occurance of adaptor sequence at different positions in reads</a></strong></li>
@@ -416,7 +413,7 @@ div.tocify {
 </div>
 </div>
 <div id="k-mer-enrichment" class="section level2">
-<h2><span class="header-section-number">3.6</span> K-mer enrichment</h2>
+<h2><span class="header-section-number">2.6</span> K-mer enrichment</h2>
 <p><strong>FastQC</strong> identifies top Kmers that were enriched in each library with their total occurance (count), significance (p value), enrichment (observed/expected), and the base position with maximum enrichment. Kmers of all libraries were summarized below. Use <strong>Table 2</strong> for details about Kmers in individual libraries.</p>
 <ul>
 <li><a href="table/kmer_count.html">Kmer count</a></li>
@@ -638,9 +635,9 @@ div.tocify {
 </div>
 </div>
 <div id="fastqc-reports" class="section level1">
-<h1><span class="header-section-number">4</span> FastQC reports</h1>
+<h1><span class="header-section-number">3</span> FastQC reports</h1>
 <div id="per-read" class="section level2">
-<h2><span class="header-section-number">4.1</span> Per read</h2>
+<h2><span class="header-section-number">3.1</span> Per read</h2>
 <div style="color:darkblue; padding:0 1cm">
 <strong>Table 2</strong> Click links to view full reports and individual plots of per read statistics.
 </div>
@@ -720,7 +717,7 @@ div.tocify {
 </div>
 </div>
 <div id="per-base" class="section level2">
-<h2><span class="header-section-number">4.2</span> Per base</h2>
+<h2><span class="header-section-number">3.2</span> Per base</h2>
 <div style="color:darkblue; padding:0 1cm">
 <strong>Table 3</strong> Click links to view full reports and individual plots of per base statistics.
 </div>
@@ -802,10 +799,10 @@ div.tocify {
 </div>
 </div>
 <div id="appendix" class="section level1">
-<h1><span class="header-section-number">5</span> Appendix</h1>
+<h1><span class="header-section-number">4</span> Appendix</h1>
 <p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
 <div id="reproduce-this-report" class="section level2">
-<h2><span class="header-section-number">5.1</span> Reproduce this report</h2>
+<h2><span class="header-section-number">4.1</span> Reproduce this report</h2>
 <p>To reproduce this report:</p>
 <ol style="list-style-type: decimal">
 <li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
@@ -828,7 +825,7 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 <p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
 </div>
 <div id="session-information" class="section level2">
-<h2><span class="header-section-number">5.2</span> Session information</h2>
+<h2><span class="header-section-number">4.2</span> Session information</h2>
 <pre><code>## R version 3.2.2 (2015-08-14)
 ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
 ## Running under: OS X 10.10.5 (Yosemite)

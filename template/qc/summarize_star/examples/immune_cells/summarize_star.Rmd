@@ -20,6 +20,10 @@ output:
 &nbsp;
 
 ```{r global_setup, include=FALSE}
+name.yaml <- 'summarize_star.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
+
 ## Default knitr parameters
 knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
@@ -27,24 +31,22 @@ if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
 ## Load required R packages
-loaded <- LoadPackage(c('yaml', 'rmarkdown', 'knitr', 'DT', 'htmlwidgets', 'awsomics'));
+loaded <- LoadPackage(name.packages);
 if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
 
 ## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
 ## But, the developer can also provide the option to load the YAML file on the fly.
 ## So, the template can be run using the "Knit HTML" button in RStudio
-if (!exists('yml'))                           			# if the 'yml' variable doesn't exist yet, create it by loading the YAML file
-	if (file.exists('summarize_star.yaml'))           	# assume the pairing YAML file exists in the current folder with the same name
-		yml<-yaml.load_file('summarize_star.yaml');   # rename the YAML file to fit this template
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
 prms <- yml$parameter;
 
 ## Generate directory and sub-directories where the output files will be
-f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table'));
+f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
-path.r <- f['R'];
-path.tbl <- f['table'];
-path.fig <- f['figure'];
-path.input <- f['input'];
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
@@ -323,25 +325,27 @@ Click links to view full tables of summary statistics of all samples:
   - [Splice sites](table/count_splice.html)
   - [Mismatch and INDEL](table/mismatch_indel.html)
   - [Unmapped](table/percent_unmapped.html)
-  
+
+***
+
 # Appendix 
 
-Check out the ***[RoCA project](http://zhezhangsh.github.io/RoCA)*** for more information.  
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
 
 ## Reproduce this report
 
 To reproduce this report: 
 
-  1. Copy this ***[YAML](https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/summarize_star/summarize_star.yaml)*** file to your working directory
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
 
-  2. To use your own data and parameters, edit the ***YAML*** file:
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
 
-    - _output_: where you want to put the output files
-    - _home_: the URL if you have a home page for your project
-    - _analyst_: your name
-    - _description_: background information about your project, analysis, etc.
-    - _input_: where are your input data, read instruction for preparing them
-    - _parameter_: parameters for this analysis; read instruction about how to prepare input data
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
 
   3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
@@ -350,7 +354,7 @@ if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
-CreateReport("cnv_impact.yaml");
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
 ```
 
 If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
@@ -364,6 +368,5 @@ sessionInfo();
 `r home.url`
 
 ***
-
 _END OF DOCUMENT_
 

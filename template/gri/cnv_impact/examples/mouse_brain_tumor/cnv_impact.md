@@ -1,7 +1,7 @@
 ---
 title: "Copy number variation vs. quantatative genomic feature"
 author: "Jim Zhang"
-date: "2016-05-27"
+date: "2016-06-07"
 output:
   html_document:
     number_sections: yes
@@ -155,7 +155,7 @@ This analysis is used to calculate the expected change of gene expression due to
 
 
 
-Using heterozygous deletion/duplication, the average percent change of gene expression in response to the loss/gain of one copy is calculated for all samples globally and each sample individually. On average, heterozygous deletion reduces gene expression by -5.204% and heterozygous duplication increases it by 36.71%. 
+Using heterozygous deletion/duplication, the average percent change of gene expression in response to the loss/gain of one copy is calculated for all samples globally and each sample individually. On average, heterozygous deletion reduces gene expression by -8.473% and heterozygous duplication increases it by 35.257%. 
 
   - [CNV vs. diploid average](table/CNV_vs_Diploid.html)
   - [Average change by sample](table/average_change_by_sample.html) (see **Figure 4** for visualization)
@@ -205,9 +205,9 @@ In tumors or similar samples, many somatic CNVs are downstream events of tumor p
 </div>
 
   
-In most cases, these adjustment methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by 0.729 to 0.881 percent on average.
+In most cases, these adjustment methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by 0.792 to 0.9 percent on average.
   
-  - The [gene-level coefficient of variation (CV) before and after adjustment](table/CV_adjustment.html)
+  - [The gene-level coefficient of variation (CV) before and after adjustment](table/CV_adjustment.html)
   - <a href="R/adjusted_data.rds" target="_blank">Download all adjusted data matrix]</a>
     - [Adjusted globally](table/adjusted_globolly.csv)
     - [Adjusted by sample](table/adjusted_by_sample.csv)
@@ -224,10 +224,10 @@ In most cases, these adjustment methods, by their order, have increased specific
 
 |                  | > Original | > Adjusted_Global | > Adjusted_Sample | > Adjusted_CNV |
 |:-----------------|:----------:|:-----------------:|:-----------------:|:--------------:|
-|Original >        |    ---     |       7.948       |       8.574       |     9.249      |
-|Adjusted_Global > |    1.59    |        ---        |       2.457       |     3.565      |
-|Adjusted_Sample > |    3.95    |       3.565       |        ---        |     1.975      |
-|Adjusted_CNV >    |   4.624    |       3.95        |       1.493       |      ---       |
+|Original >        |    ---     |       8.767       |       8.815       |     9.249      |
+|Adjusted_Global > |   1.686    |        ---        |       2.457       |     3.613      |
+|Adjusted_Sample > |    3.95    |       3.613       |        ---        |     1.782      |
+|Adjusted_CNV >    |   4.769    |       4.383       |       1.734       |      ---       |
 
 
 </div>
@@ -238,22 +238,22 @@ In most cases, these adjustment methods, by their order, have increased specific
 
 # Appendix 
 
-Check out the ***[RoCA project](http://zhezhangsh.github.io/RoCA)*** for more information.  
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
 
 ## Reproduce this report
 
 To reproduce this report: 
 
-  1. Copy this ***[YAML](https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.yaml)*** file to your working directory
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
 
-  2. To use your own data and parameters, edit the ***YAML*** file:
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
 
-    - _output_: where you want to put the output files
-    - _home_: the URL if you have a home page for your project
-    - _analyst_: your name
-    - _description_: background information about your project, analysis, etc.
-    - _input_: where are your input data, read instruction for preparing them
-    - _parameter_: parameters for this analysis; read instruction about how to prepare input data
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
 
   3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
@@ -263,7 +263,7 @@ if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
-CreateReport("cnv_impact.yaml");
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
 ```
 
 If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
@@ -284,30 +284,29 @@ If there is no complaint, go to the _output_ folder and open the ***index.html**
 ##  [8] datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      rchive_0.0.0.9000   
-##  [4] edgeR_3.10.2         limma_3.26.9         NOISeq_2.16.0       
-##  [7] GenomicRanges_1.22.4 GenomeInfoDb_1.6.3   IRanges_2.4.8       
-## [10] S4Vectors_0.8.11     Biobase_2.28.0       BiocGenerics_0.16.1 
-## [13] Matrix_1.2-2         vioplot_0.2          sm_2.2-5.4          
-## [16] gplots_3.0.1         awsomics_0.0.0.9000  htmlwidgets_0.5     
-## [19] DT_0.1               knitr_1.12.3         rmarkdown_0.9.6     
-## [22] RoCA_0.0.0.9000      RCurl_1.95-4.8       bitops_1.0-6        
-## [25] devtools_1.11.1      yaml_2.1.13         
+##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      edgeR_3.10.2        
+##  [4] limma_3.26.9         NOISeq_2.16.0        GenomicRanges_1.22.4
+##  [7] GenomeInfoDb_1.6.3   IRanges_2.4.8        S4Vectors_0.8.11    
+## [10] Biobase_2.28.0       BiocGenerics_0.16.1  Matrix_1.2-2        
+## [13] vioplot_0.2          sm_2.2-5.4           rchive_0.0.0.9000   
+## [16] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
+## [19] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
+## [22] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
+## [25] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.4        XVector_0.10.0     formatR_1.3       
-##  [4] git2r_0.15.0       highr_0.5.1        zlibbioc_1.14.0   
-##  [7] tools_3.2.2        digest_0.6.9       jsonlite_0.9.20   
-## [10] evaluate_0.9       memoise_1.0.0      lattice_0.20-33   
-## [13] curl_0.9.7         withr_1.0.1        httr_1.1.0        
-## [16] stringr_1.0.0      gtools_3.5.0       caTools_1.17.1    
-## [19] grid_3.2.2         R6_2.1.2           gdata_2.17.0      
-## [22] magrittr_1.5       htmltools_0.3.5    KernSmooth_2.23-15
-## [25] stringi_1.0-1
+##  [1] Rcpp_0.12.4          XVector_0.10.0       formatR_1.3         
+##  [4] highr_0.5.1          zlibbioc_1.14.0      tools_3.2.2         
+##  [7] digest_0.6.9         lattice_0.20-33      jsonlite_0.9.20     
+## [10] evaluate_0.9         memoise_1.0.0        RSQLite_1.0.0       
+## [13] DBI_0.3.1            withr_1.0.1          stringr_1.0.0       
+## [16] gtools_3.5.0         caTools_1.17.1       grid_3.2.2          
+## [19] AnnotationDbi_1.32.3 gdata_2.17.0         magrittr_1.5        
+## [22] htmltools_0.3.5      KernSmooth_2.23-15   stringi_1.0-1
 ```
 
 <div align='right'>_[Go to project home](index.html)_</div>
 
 ***
-
 _END OF DOCUMENT_
+

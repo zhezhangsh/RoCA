@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2016-05-27" />
+<meta name="date" content="2016-06-07" />
 
 <title>Copy number variation vs. quantatative genomic feature</title>
 
@@ -223,7 +223,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Copy number variation vs. quantatative genomic feature</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2016-05-27</em></h4>
+<h4 class="date"><em>2016-06-07</em></h4>
 
 </div>
 
@@ -351,7 +351,7 @@ div.tocify {
 <p>This analysis is used to calculate the expected change of gene expression due to copy number variations. Each measurement of gene with CNV is compared to the measurements of the same gene of samples without CNV and the average difference of all pairs is calculated for each CNV and sample. The results will be used as rescaling factors of data adjustment in the next section.</p>
 <div id="average-of-all-cnvs" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Average of all CNVs</h3>
-<p>Using heterozygous deletion/duplication, the average percent change of gene expression in response to the loss/gain of one copy is calculated for all samples globally and each sample individually. On average, heterozygous deletion reduces gene expression by -5.204% and heterozygous duplication increases it by 36.71%.</p>
+<p>Using heterozygous deletion/duplication, the average percent change of gene expression in response to the loss/gain of one copy is calculated for all samples globally and each sample individually. On average, heterozygous deletion reduces gene expression by -8.473% and heterozygous duplication increases it by 35.257%.</p>
 <ul>
 <li><a href="table/CNV_vs_Diploid.html">CNV vs. diploid average</a></li>
 <li><a href="table/average_change_by_sample.html">Average change by sample</a> (see <strong>Figure 4</strong> for visualization)</li>
@@ -395,9 +395,9 @@ div.tocify {
 <div style="color:darkblue; padding:0 1cm">
 <strong>Figure 6</strong> These plots summarize the consequences of data adjustment by three different methods. The correlation of gene expression between each pair of samples is calculated before and after adjustment. The top panels plot the change of correlation coefficients of all sample pairs. Most pairs should have increased correlation coefficient if the adjustment decreases overall variance. The bottom panels compare the coefficient of variation of all genes before and after adjustment.
 </div>
-<p>In most cases, these adjustment methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by 0.729 to 0.881 percent on average.</p>
+<p>In most cases, these adjustment methods, by their order, have increased specificity and are expected to reduce overall variance more and more, but also have increasing risk of overfitting. Whether to use adjusted data for statistical analysis or which adjustment method to choose should be determined by the nature of the study, the goal of the analysis, and the effect of the adjustment. In this data set, these methods reduce the overall variance by 0.792 to 0.9 percent on average.</p>
 <ul>
-<li>The <a href="table/CV_adjustment.html">gene-level coefficient of variation (CV) before and after adjustment</a></li>
+<li><a href="table/CV_adjustment.html">The gene-level coefficient of variation (CV) before and after adjustment</a></li>
 <li><a href="R/adjusted_data.rds" target="_blank">Download all adjusted data matrix]</a>
 <ul>
 <li><a href="table/adjusted_globolly.csv">Adjusted globally</a></li>
@@ -423,29 +423,29 @@ div.tocify {
 <tr class="odd">
 <td align="left">Original &gt;</td>
 <td align="center">—</td>
-<td align="center">7.948</td>
-<td align="center">8.574</td>
+<td align="center">8.767</td>
+<td align="center">8.815</td>
 <td align="center">9.249</td>
 </tr>
 <tr class="even">
 <td align="left">Adjusted_Global &gt;</td>
-<td align="center">1.59</td>
+<td align="center">1.686</td>
 <td align="center">—</td>
 <td align="center">2.457</td>
-<td align="center">3.565</td>
+<td align="center">3.613</td>
 </tr>
 <tr class="odd">
 <td align="left">Adjusted_Sample &gt;</td>
 <td align="center">3.95</td>
-<td align="center">3.565</td>
+<td align="center">3.613</td>
 <td align="center">—</td>
-<td align="center">1.975</td>
+<td align="center">1.782</td>
 </tr>
 <tr class="even">
 <td align="left">Adjusted_CNV &gt;</td>
-<td align="center">4.624</td>
-<td align="center">3.95</td>
-<td align="center">1.493</td>
+<td align="center">4.769</td>
+<td align="center">4.383</td>
+<td align="center">1.734</td>
 <td align="center">—</td>
 </tr>
 </tbody>
@@ -458,20 +458,20 @@ div.tocify {
 </div>
 <div id="appendix" class="section level1">
 <h1><span class="header-section-number">5</span> Appendix</h1>
-<p>Check out the <strong><em><a href="http://zhezhangsh.github.io/RoCA">RoCA project</a></em></strong> for more information.</p>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
 <div id="reproduce-this-report" class="section level2">
 <h2><span class="header-section-number">5.1</span> Reproduce this report</h2>
 <p>To reproduce this report:</p>
 <ol style="list-style-type: decimal">
-<li><p>Copy this <strong><em><a href="https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/gri/cnv_impact/cnv_impact.yaml">YAML</a></em></strong> file to your working directory</p></li>
-<li><p>To use your own data and parameters, edit the <strong><em>YAML</em></strong> file:</p>
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
 <ul>
-<li><em>output</em>: where you want to put the output files</li>
-<li><em>home</em>: the URL if you have a home page for your project</li>
-<li><em>analyst</em>: your name</li>
-<li><em>description</em>: background information about your project, analysis, etc.</li>
-<li><em>input</em>: where are your input data, read instruction for preparing them</li>
-<li><em>parameter</em>: parameters for this analysis; read instruction about how to prepare input data</li>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
 </ul></li>
 <li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
 </ol>
@@ -479,7 +479,7 @@ div.tocify {
 if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
 if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
 
-CreateReport(&quot;cnv_impact.yaml&quot;);</code></pre>
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
 <p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
 </div>
 <div id="session-information" class="section level2">
@@ -496,26 +496,25 @@ CreateReport(&quot;cnv_impact.yaml&quot;);</code></pre>
 ##  [8] datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      rchive_0.0.0.9000   
-##  [4] edgeR_3.10.2         limma_3.26.9         NOISeq_2.16.0       
-##  [7] GenomicRanges_1.22.4 GenomeInfoDb_1.6.3   IRanges_2.4.8       
-## [10] S4Vectors_0.8.11     Biobase_2.28.0       BiocGenerics_0.16.1 
-## [13] Matrix_1.2-2         vioplot_0.2          sm_2.2-5.4          
-## [16] gplots_3.0.1         awsomics_0.0.0.9000  htmlwidgets_0.5     
-## [19] DT_0.1               knitr_1.12.3         rmarkdown_0.9.6     
-## [22] RoCA_0.0.0.9000      RCurl_1.95-4.8       bitops_1.0-6        
-## [25] devtools_1.11.1      yaml_2.1.13         
+##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      edgeR_3.10.2        
+##  [4] limma_3.26.9         NOISeq_2.16.0        GenomicRanges_1.22.4
+##  [7] GenomeInfoDb_1.6.3   IRanges_2.4.8        S4Vectors_0.8.11    
+## [10] Biobase_2.28.0       BiocGenerics_0.16.1  Matrix_1.2-2        
+## [13] vioplot_0.2          sm_2.2-5.4           rchive_0.0.0.9000   
+## [16] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
+## [19] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
+## [22] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
+## [25] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.4        XVector_0.10.0     formatR_1.3       
-##  [4] git2r_0.15.0       highr_0.5.1        zlibbioc_1.14.0   
-##  [7] tools_3.2.2        digest_0.6.9       jsonlite_0.9.20   
-## [10] evaluate_0.9       memoise_1.0.0      lattice_0.20-33   
-## [13] curl_0.9.7         withr_1.0.1        httr_1.1.0        
-## [16] stringr_1.0.0      gtools_3.5.0       caTools_1.17.1    
-## [19] grid_3.2.2         R6_2.1.2           gdata_2.17.0      
-## [22] magrittr_1.5       htmltools_0.3.5    KernSmooth_2.23-15
-## [25] stringi_1.0-1</code></pre>
+##  [1] Rcpp_0.12.4          XVector_0.10.0       formatR_1.3         
+##  [4] highr_0.5.1          zlibbioc_1.14.0      tools_3.2.2         
+##  [7] digest_0.6.9         lattice_0.20-33      jsonlite_0.9.20     
+## [10] evaluate_0.9         memoise_1.0.0        RSQLite_1.0.0       
+## [13] DBI_0.3.1            withr_1.0.1          stringr_1.0.0       
+## [16] gtools_3.5.0         caTools_1.17.1       grid_3.2.2          
+## [19] AnnotationDbi_1.32.3 gdata_2.17.0         magrittr_1.5        
+## [22] htmltools_0.3.5      KernSmooth_2.23-15   stringi_1.0-1</code></pre>
 <div align="right">
 <em><a href="index.html">Go to project home</a></em>
 </div>

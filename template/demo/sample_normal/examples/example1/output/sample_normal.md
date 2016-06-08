@@ -1,7 +1,7 @@
 ---
 title: "Random sampling of a normal distribution"
 author: "Zhe Zhang"
-date: "2016-05-05"
+date: "2016-06-07"
 output:
   html_document:
     self_contained: no
@@ -43,19 +43,19 @@ This is a demo of the RoCA framework that generates random values with normal di
 |              | Length   | Mean    | Standard deviation |
 |:-------------|---------:|--------:|-------------------:|                  
 | **Expected** | 1000 | 20 | 2            |
-| **Actual**   | 1000 | 19.9647081 | 2.0212984            |
+| **Actual**   | 1000 | 19.9340151 | 2.0346091            |
 
 
 
 ```
 Summary statistics:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  13.10   18.63   19.99   19.96   21.37   25.63 
+  13.66   18.58   20.00   19.93   21.31   27.27 
 
 	Shapiro-Wilk normality test
 
 data:  v
-W = 0.99659, p-value = 0.02896
+W = 0.99822, p-value = 0.386
 ```
 
 ## Plot distribution
