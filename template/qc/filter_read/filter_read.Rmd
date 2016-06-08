@@ -189,7 +189,7 @@ summarizeANDfilter<-function(s, yml, rngs) {
 
 ```{r summarize, include=FALSE}
 yml$input$sample<-lapply(yml$input$sample, function(s) {
-  if (yml$parameter$loaded) s[1] else {
+  if (yml$parameter$loaded) DownloadFile(s[1], path.input) else {
     cat('Importing sequence reads from', s[1], '\n'); 
     param<-ScanBamParam(which=rngs, what=c('flag', 'mapq')); 
     if (is.na(s[2])) input<-s[1] else input<-DownloadFile(s[2], paste(yml$output, 'input', sep='/')); 

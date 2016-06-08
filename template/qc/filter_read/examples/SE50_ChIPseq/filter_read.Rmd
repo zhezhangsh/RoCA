@@ -82,7 +82,7 @@ rngs <- GRanges(rngs[[1]], IRanges(rngs[[2]], rngs[[3]]));
 summarizeANDfilter<-function(s, yml, rngs) {
   fn<-yml$input$sample[[s]]; 
   paired<-yml$parameter$paired
-  gr<-ImportR(DownloadFile(fn, paste(yml$output, 'input', sep='/')));
+  gr<-ImportR(fn);
   
   if (class(gr)!='GAlignments' & class(gr)!='GAlignmentPairs') stop('Error: data class is wrong, expected GAlignments or GAlignmentPairs, but got', class(gr), '\n'); 
   if (paired & class(gr)=='GAlignments') warning('Warning: loaded reads are not pair-ended, will be treated as single-ended\n');
