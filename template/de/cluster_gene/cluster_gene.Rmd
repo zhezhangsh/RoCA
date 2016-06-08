@@ -27,7 +27,7 @@ output:
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'cluster_gene.yaml'; 
 name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'rchive', 'RoCA', 'awsomics'); 
-name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 'path.cl'='cluster'); 
 
 ## Default knitr parameters
 knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);

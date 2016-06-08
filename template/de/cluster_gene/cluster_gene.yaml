@@ -8,7 +8,7 @@
 #   - the first column is unique Entrez gene ID matching the row names of <data>
 #   - the second column is official gene symbols matching the gene IDs
 # <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
-#   - first column is unique sample names matching column names of <data>
+#   - first column is unique sample names matching column names of <matrix>
 #   - first row is unique sample features such as genotype, treatment, and cell type
 #   - the values of parameters <term> must match one of the column names in this table
 # <geneset> a list of 2 elements saved in a .rdata, .rda, or .rds file
@@ -23,7 +23,7 @@
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/cluster_gene/cluster_gene.Rmd  # URL or file name of the .Rmd template file provided by the developer
-output: examples/circadian_rhythm                                                   # Where to write all the output files
+output: examples/NCI60_Organ                                                        # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                  # Name of the analyst
 zip: no                                                                             # Whether to zip all output files
@@ -33,15 +33,12 @@ zip: no                                                                         
 #################
 # Description of this analysis, could be any name/text pairs
 description: 
-  Project: Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein
-          2-dependent diurnal lipid transport and metabolism. (**[GSE67426](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426)**)
-  PubMed: "Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways 
-          in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. 
-          Sci Rep 2016 Apr 21;6:24631. PMID: [27097688](http://www.ncbi.nlm.nih.gov/pubmed/27097688)."
-  Experimental design: Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 
-          2 hours during 3 consecutive days.
-  Analysis: Circadian rhythm in mouse liver, wild type mice only, 3 replicates every 2 hours (12 groups).
-          Each gene was adjusted to its 0 hour mean and rescaled to make its standard deviation equal to 0.
+  Project: Comparison between cell lines from 9 different cancer tissues (NCI-60); **[GSE5949](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)**
+  PubMed: "Reinhold WC, Reimers MA, Lorenzi P, Ho J et al. **Multifactorial regulation of E-cadherin expression: an integrative study.**
+          Mol Cancer Ther 2010 Jan;9(1):1-16. PMID: [20053763](http://www.ncbi.nlm.nih.gov/pubmed/20053763)."
+  Experimental design: Comparison between cell lines from 9 different cancer tissue of origin types 
+          (Breast, Central Nervous System, Colon, Leukemia, Melanoma, Non-Small Cell Lung, Ovarian, Prostate, Renal) from NCI-60 panel
+  Analysis: Cluster genes co-expressed acroo 9 tissues/organs
           As a demonstration, only a subset of genes in the original data with high between sample variance were used.
 
 
@@ -50,18 +47,18 @@ description:
 ######################
 # Prepared input data, saved in .rds format using the saveRDS() function
 input: # Location of input files
-  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr_wt_ss.rds     ## a matrix of data, row=gene, column=sample 
+  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/expr_ss.rds     ## a matrix of data, row=gene, column=sample 
     # The order of the samples in the matrix matters, order them based on the order of the groups
     # It's optional to rescale the data matrix to make the mean and SD of rows comparable to each other, or normalize the data on the fly
     # No missing values allowed, remove rows with missing values or run imputation if estimate missing values
-  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/anno.rds     ## a data frame of gene annotation 
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/anno.rds  ## a data frame of gene annotation 
     # Row names match the row names of the data matrix
     # First column should be official gene symbol
-  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample_wt.rds    ## a data frame of sample manifest
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/sample.rds    ## a data frame of sample manifest
     # Row names match the column names of the data matrix
     # One column (specify it in parameter:term) should be the variable of interest that will classify samples into multiple groups
     # Order the samples the way you want to show them in the output
-  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/mouse.rds                   ## collection of gene sets, availble online
+  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/human.rds     ## collection of gene sets, availble online
     # the first is metadata of gene sets, 
     # the second is a list of gene set-gene mapping
     # refer to the rchive (github.com/zhezhangsh/rchive) repo for how to create a gene set collection
@@ -71,10 +68,10 @@ input: # Location of input files
 ######################
 # Parameters to run this analysis
 parameter: # All parameters
-  term: Group             ## Corresponding to a column name in sample; based on which samples will be grouped
+  term: Organ             ## Corresponding to a column name in sample; based on which samples will be grouped
   normalization:          ## Optional re-normalization of data to let genes havign comparable means and SDs
-    method: 2         ### Method of normalization. 0: no normalization; 1: mean=0 & SD=1 for all row;  2: normalize to a control group
-    control: WT_00Hr  ### Name of the control group. When the normalization method is 2, the mean of this sample group will be 0 for all genes
+    method: 1         ### Method of normalization. 0: no normalization; 1: mean=0 & SD=1 for all row;  2: normalize to a control group
+    control:          ### Name of the control group. When the normalization method is 2, the mean of this sample group will be 0 for all genes
   selection:              ## How significant genes will be selected as seeds for initiating clusters
     min: 200          ### Minimal number of genes for further selection (no further selection if number is lower than it)
     max: 1000         ### Maximum number of genes to be selected

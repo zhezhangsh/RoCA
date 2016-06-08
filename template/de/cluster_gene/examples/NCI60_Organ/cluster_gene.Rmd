@@ -25,32 +25,40 @@ output:
 &nbsp;
 
 ```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'cluster_gene.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'rchive', 'RoCA', 'awsomics'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
+
+## Default knitr parameters
 knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
 
-require(gplots);
-require(knitr);
-require(rmarkdown); 
-require(yaml);
-require(RCurl);
-require(awsomics);
-require(rchive);
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
 
-if (!exists('yml'))                               # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
-  if (file.exists('cluster_gene.yaml'))           # assume the pairing YAML file exists in the current folder with the same name
-      yml<-yaml.load_file('cluster_gene.yaml');   
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
+## But, the developer can also provide the option to load the YAML file on the fly.
+## So, the template can be run using the "Knit HTML" button in RStudio
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
 
-# All run-specific parameters
-prms<-yml$parameter;
+prms <- yml$parameter;
 
-# folder and subfolders of output files
-f <- GenerateFolder(yml$output, c('input', 'R', 'figure', 'table', 'cluster'));
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
-path.r <- f['R'];
-path.cl <- f['cluster'];
-path.tbl <- f['table'];
-path.fig <- f['figure'];
-path.input <- f['input'];
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+```{r load_data, include=FALSE}
 # Load input data
 expr<-ImportTable(DownloadFile(yml$input$data, path.input)); 
 anno<-ImportTable(DownloadFile(yml$input$annotation, path.input)); 
@@ -77,9 +85,6 @@ if (prms$normalization$method == 2) {
 } else if (prms$normalization$method == 1) expr<-t(scale(t(expr))) else expr<-expr0; 
 
 CreateDatatable(smpl, paste(path.tbl, 'sample.html', sep='/'));
-
-# URL to project home
-home.url <- Link2Home(yml$home);
 ```
 
 `r home.url`
@@ -551,6 +556,47 @@ PlotColoredBlock(n, key='Cluster size');
 <div style="color:darkblue; padding:0 3cm">
 **Figure 10.** Color represents the size of each cluster (number of genes) after a reclustering cycle.  
 </div>
+
+`r home.url`
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
 
 `r home.url`
 

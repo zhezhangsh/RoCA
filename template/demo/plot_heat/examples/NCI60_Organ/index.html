@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2016-05-06" />
+<meta name="date" content="2016-06-07" />
 
 <title>Select variables to plot a heatmap</title>
 
@@ -223,7 +223,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Select variables to plot a heatmap</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2016-05-06</em></h4>
+<h4 class="date"><em>2016-06-07</em></h4>
 
 </div>
 
@@ -263,7 +263,7 @@ div.tocify {
 <ul>
 <li>9 sample groups</li>
 <li>60 total samples</li>
-<li>4916 total variables
+<li>3105 total variables
 <ul>
 <li>there are no variables including missing values.</li>
 </ul></li>
@@ -287,29 +287,29 @@ div.tocify {
 <tbody>
 <tr class="odd">
 <td align="left">Mean</td>
-<td align="center">2.1850</td>
-<td align="center">4.1790</td>
-<td align="center">5.518</td>
-<td align="center">5.6010</td>
-<td align="center">6.8470</td>
+<td align="center">2.274</td>
+<td align="center">4.3560</td>
+<td align="center">5.6260</td>
+<td align="center">5.6820</td>
+<td align="center">6.8810</td>
 <td align="center">12.160</td>
 </tr>
 <tr class="even">
 <td align="left">SD</td>
-<td align="center">0.2538</td>
-<td align="center">0.4567</td>
-<td align="center">0.551</td>
-<td align="center">0.6414</td>
-<td align="center">0.7145</td>
+<td align="center">0.500</td>
+<td align="center">0.5625</td>
+<td align="center">0.6536</td>
+<td align="center">0.7684</td>
+<td align="center">0.8506</td>
 <td align="center">3.108</td>
 </tr>
 <tr class="odd">
 <td align="left">Range</td>
-<td align="center">2.0000</td>
-<td align="center">2.3300</td>
-<td align="center">2.780</td>
-<td align="center">3.1570</td>
-<td align="center">3.6300</td>
+<td align="center">2.010</td>
+<td align="center">2.7500</td>
+<td align="center">3.2900</td>
+<td align="center">3.6180</td>
+<td align="center">4.2000</td>
 <td align="center">8.840</td>
 </tr>
 </tbody>
@@ -342,7 +342,7 @@ div.tocify {
 <li>if the number remaining variable is greater than 2000, select the top 2000 variables with the smallest p values</li>
 </ul></li>
 </ul>
-<p>As a result, <strong>453</strong> variables were selected. Click <a href="table/selected.html">here</a> to view these variables.</p>
+<p>As a result, <strong>396</strong> variables were selected. Click <a href="table/selected.html">here</a> to view these variables.</p>
 <div align="right">
 <em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
 </div>
@@ -360,7 +360,72 @@ div.tocify {
 <em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
 </div>
 <hr />
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">5</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">5.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">5.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+##  [1] splines   stats4    parallel  stats     graphics  grDevices utils    
+##  [8] datasets  methods   base     
+## 
+## other attached packages:
+##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      edgeR_3.10.2        
+##  [4] limma_3.26.9         NOISeq_2.16.0        GenomicRanges_1.22.4
+##  [7] GenomeInfoDb_1.6.3   IRanges_2.4.8        S4Vectors_0.8.11    
+## [10] Biobase_2.28.0       BiocGenerics_0.16.1  Matrix_1.2-2        
+## [13] vioplot_0.2          sm_2.2-5.4           rchive_0.0.0.9000   
+## [16] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
+## [19] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
+## [22] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
+## [25] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.4          XVector_0.10.0       formatR_1.3         
+##  [4] highr_0.5.1          zlibbioc_1.14.0      tools_3.2.2         
+##  [7] digest_0.6.9         lattice_0.20-33      jsonlite_0.9.20     
+## [10] evaluate_0.9         memoise_1.0.0        RSQLite_1.0.0       
+## [13] DBI_0.3.1            withr_1.0.1          stringr_1.0.0       
+## [16] gtools_3.5.0         caTools_1.17.1       grid_3.2.2          
+## [19] AnnotationDbi_1.32.3 gdata_2.17.0         magrittr_1.5        
+## [22] htmltools_0.3.5      KernSmooth_2.23-15   stringi_1.0-1</code></pre>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+<hr />
 <p><em>END OF DOCUMENT</em></p>
+</div>
 </div>
 
 
