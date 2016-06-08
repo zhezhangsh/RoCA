@@ -190,19 +190,186 @@ More info:
 
 
 
+<div style="color:darkblue; padding:0 2cm">
+**Table 1** Summary of individual clusters, with the average expression (normalized) of all genes of each cluster in all sample groups. Click on cluster name for visualization of each cluster: 1). the average and standard error of sample averages in each group; 2). hierarchical sample clustering using all genes of the cluster; and 3). heatmap of all genes and samples of the cluster.
+</div>
+
+<div align='center', style="padding:0 2cm">
+
+
+|Cluster                            | Num_Gene| Mean_Breast| Mean_CNS| Mean_Colon| Mean_Blood| Mean_Skin| Mean_Lung| Mean_Ovary| Mean_Prostate| Mean_Kidney|
+|:----------------------------------|--------:|-----------:|--------:|----------:|----------:|---------:|---------:|----------:|-------------:|-----------:|
+|[Cluster_1](cluster/Cluster_1.pdf) |       24|       0.430|   1.7071|    -0.6095|    -0.4794|   -0.3584|    -0.027|     -0.240|       -0.2200|      0.0853|
+|[Cluster_2](cluster/Cluster_2.pdf) |       82|      -0.017|  -0.5071|     1.6785|    -0.3899|   -0.4641|    -0.062|      0.097|        0.0770|     -0.2399|
+|[Cluster_3](cluster/Cluster_3.pdf) |       57|      -0.160|  -0.2906|    -0.1920|     2.0391|   -0.1890|    -0.250|     -0.230|       -0.3100|     -0.2475|
+|[Cluster_4](cluster/Cluster_4.pdf) |       16|      -0.370|  -0.5177|     1.1083|     1.0814|   -0.3114|    -0.200|     -0.200|       -0.2300|     -0.3166|
+|[Cluster_5](cluster/Cluster_5.pdf) |       24|      -0.190|  -0.1019|     0.4968|     1.2466|   -0.7612|    -0.140|      0.150|       -0.2000|     -0.1535|
+|[Cluster_6](cluster/Cluster_6.pdf) |       47|      -0.067|   0.3230|     0.0223|    -1.8258|    0.1561|     0.300|      0.230|        0.1500|      0.3767|
+|[Cluster_7](cluster/Cluster_7.pdf) |      156|      -0.310|  -0.1729|    -0.2899|    -0.2985|    1.4933|    -0.300|     -0.370|       -0.2900|     -0.3311|
+|[Cluster_8](cluster/Cluster_8.pdf) |       97|       0.260|   0.6147|    -0.7912|    -0.9946|   -0.3664|     0.190|      0.310|        0.0076|      0.7872|
+|[Cluster_9](cluster/Cluster_9.pdf) |       30|      -0.310|  -0.2642|    -0.3230|    -0.5247|   -0.3492|    -0.160|      0.270|       -0.2400|      1.5013|
+
+
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+### Gene set enrichment analysis
+
+Find predefined gene sets enriched in gene cluster comparing to the background. 
 
 
 
+<div style="color:darkblue; padding:0 2cm">
+**Table 2** Numbers of predefined gene sets significantly enriched in each gene cluster. Gene sets were split based on their sources, such as the NCBI BioSystems and KEGG databases. Click on each number to see list of the gene sets. 
+</div>
+
+<div align='center', style="padding:0 2cm">
 
 
+|          |                BioSystems                |               KEGG                |                MSigDb                |               PubTator                |
+|:---------|:----------------------------------------:|:---------------------------------:|:------------------------------------:|:-------------------------------------:|
+|Cluster_1 | [90](cluster/Cluster_1/BioSystems.html)  | [2](cluster/Cluster_1/KEGG.html)  | [215](cluster/Cluster_1/MSigDb.html) | [6](cluster/Cluster_1/PubTator.html)  |
+|Cluster_2 | [160](cluster/Cluster_2/BioSystems.html) | [8](cluster/Cluster_2/KEGG.html)  | [218](cluster/Cluster_2/MSigDb.html) | [23](cluster/Cluster_2/PubTator.html) |
+|Cluster_3 | [305](cluster/Cluster_3/BioSystems.html) | [16](cluster/Cluster_3/KEGG.html) | [383](cluster/Cluster_3/MSigDb.html) | [12](cluster/Cluster_3/PubTator.html) |
+|Cluster_4 | [75](cluster/Cluster_4/BioSystems.html)  | [5](cluster/Cluster_4/KEGG.html)  | [112](cluster/Cluster_4/MSigDb.html) | [1](cluster/Cluster_4/PubTator.html)  |
+|Cluster_5 | [178](cluster/Cluster_5/BioSystems.html) | [9](cluster/Cluster_5/KEGG.html)  | [387](cluster/Cluster_5/MSigDb.html) | [2](cluster/Cluster_5/PubTator.html)  |
+|Cluster_6 | [292](cluster/Cluster_6/BioSystems.html) | [14](cluster/Cluster_6/KEGG.html) | [364](cluster/Cluster_6/MSigDb.html) | [4](cluster/Cluster_6/PubTator.html)  |
+|Cluster_7 | [119](cluster/Cluster_7/BioSystems.html) | [5](cluster/Cluster_7/KEGG.html)  | [183](cluster/Cluster_7/MSigDb.html) | [3](cluster/Cluster_7/PubTator.html)  |
+|Cluster_8 | [363](cluster/Cluster_8/BioSystems.html) | [12](cluster/Cluster_8/KEGG.html) | [489](cluster/Cluster_8/MSigDb.html) | [63](cluster/Cluster_8/PubTator.html) |
+|Cluster_9 | [60](cluster/Cluster_9/BioSystems.html)  | [1](cluster/Cluster_9/KEGG.html)  | [87](cluster/Cluster_9/MSigDb.html)  |                   0                   |
 
 
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+## More plots
+
+<div align='center'>
+<img src="figure/plot_series-1.png" title="plot of chunk plot_series" alt="plot of chunk plot_series" width="750px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 6.**  Plot the patterns of all clusters using the mean and standard error of samples of each group.
+</div>
 
 
+&nbsp;
+
+<div align='center'>
+<img src="figure/plot_means-1.png" title="plot of chunk plot_means" alt="plot of chunk plot_means" width="480px" />
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 7.**  Color represents the average expression (normalized across samples) of all genes in the same cluster and all samples in the same group (red = higher).
+</div>
+
+&nbsp;
+
+<div align='center'>
+<img src="figure/plot_group_means-1.png" title="plot of chunk plot_group_means" alt="plot of chunk plot_group_means" width="480px" />
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 8.**  Color represents the average expression (normalized across samples) of individual genes in all samples of the same group (red = higher).
+</div>
+
+&nbsp;
+
+<div align='center'>
+<img src="figure/plot_heatmap-1.png" title="plot of chunk plot_heatmap" alt="plot of chunk plot_heatmap" width="600px" />
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 9.**  Color represents the expression level (normalized across samples) of each gene and each sample (red = higher).
+</div>
+
+&nbsp;
+
+<div align='center'>
+<img src="figure/plot_recluster_size-1.png" title="plot of chunk plot_recluster_size" alt="plot of chunk plot_recluster_size" width="480px" />
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 10.** Color represents the size of each cluster (number of genes) after a reclustering cycle.  
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
 
+```r
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
 
 
+```
+## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+##  [1] splines   stats4    parallel  stats     graphics  grDevices utils    
+##  [8] datasets  methods   base     
+## 
+## other attached packages:
+##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      edgeR_3.10.2        
+##  [4] limma_3.26.9         NOISeq_2.16.0        GenomicRanges_1.22.4
+##  [7] GenomeInfoDb_1.6.3   IRanges_2.4.8        S4Vectors_0.8.11    
+## [10] Biobase_2.28.0       BiocGenerics_0.16.1  Matrix_1.2-2        
+## [13] vioplot_0.2          sm_2.2-5.4           rchive_0.0.0.9000   
+## [16] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
+## [19] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
+## [22] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
+## [25] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.4          XVector_0.10.0       formatR_1.3         
+##  [4] highr_0.5.1          zlibbioc_1.14.0      tools_3.2.2         
+##  [7] digest_0.6.9         lattice_0.20-33      jsonlite_0.9.20     
+## [10] evaluate_0.9         memoise_1.0.0        RSQLite_1.0.0       
+## [13] DBI_0.3.1            withr_1.0.1          stringr_1.0.0       
+## [16] gtools_3.5.0         caTools_1.17.1       grid_3.2.2          
+## [19] AnnotationDbi_1.32.3 gdata_2.17.0         magrittr_1.5        
+## [22] htmltools_0.3.5      KernSmooth_2.23-15   stringi_1.0-1
+```
 
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
+***
+_END OF DOCUMENT_
 
