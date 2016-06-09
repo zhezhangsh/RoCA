@@ -65,17 +65,16 @@ home.url <- Link2Home(yml$home);
 
 ```{r star_options, include=FALSE}
 prms <- yml$parameter;
-lns <- sapply(names(prms), function(nm) {
+lns <- lapply(names(prms), function(nm) {
   x <- prms[[nm]];
   if (class(x) != 'list') paste('  - **', nm, '**: ', as.vector(x), sep='') else {
     l0 <- paste('  - **', nm, '**:', sep='');
     y <- prms[[nm]];
     l <- sapply(names(y), function(nm) paste('    - **', nm, '**: ', as.vector(y[[nm]]), sep=''));
-    l <- paste(l, collapse='\n');
     c(l0, '\n', l);
   }
-})
-lns <- paste(lns, collapse='\n'); 
+});
+lns <- paste(unlist(lns, use.names=FALSE), collapse='\n'); 
 ```
 
 STAR was run using the following options:
