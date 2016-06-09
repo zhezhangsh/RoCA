@@ -1,0 +1,63 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <data> a data matrixes in .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds files
+#   - the row names are the matching unique gene IDs or symbols
+#   - the column names are the matching unique sample IDs or symbols
+#   - impact of missing values not tested
+# <annotation> a table in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the row names are unique Entrez gene IDs matching the row names of <data>
+# <group> a list of character vectors in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - each vector includes the sample IDs of a sample group; IDs must match column names of <data>
+# <geneset> collection of gene sets as in https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set
+#############################################################################################################################
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/
+template: identify_outlier.Rmd
+output: examples/NCI60_Organ              # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+# Analyst describes the analysis to run, such as project title
+description:
+  Project: Comparison between cell lines from 9 different cancer tissues (NCI-60); **[GSE5949](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)**
+  PubMed: "Reinhold WC, Reimers MA, Lorenzi P, Ho J et al. **Multifactorial regulation of E-cadherin expression: an integrative study.**
+          Mol Cancer Ther 2010 Jan;9(1):1-16. PMID: [20053763](http://www.ncbi.nlm.nih.gov/pubmed/20053763)."
+  Experimental design: Comparison between cell lines from 9 different cancer tissue of origin types 
+          (Breast, Central Nervous System, Colon, Leukemia, Melanoma, Non-Small Cell Lung, Ovarian, Prostate, Renal) from NCI-60 panel
+  Analysis: Whether there are outliers in each organ group  
+  
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+# Location (local or URL) of files with formatted input data
+input:
+  data: expr.rds                                   ## Data matrix to be analyzed. Genes are rows and samples are columns
+  annotation: anno.rds                             ## Gene annotation, match rows of the data matrix
+  group: group2sample.rds                          ## A list of group name to sample name matching. Sample names must match column names of data matrix
+  geneset: human_ss.rds                            ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
+
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+# Parameters to run this analysis                                                                                                              ## Whether the template file if local or remote
+parameter: 
+  min.n: 4.0        ## Minimal number of replicated samples in each group for outlier detection
+  max.corr: 0.95    ## Maximal mean correlation coefficient for a sample to be outlier
+  n.sd: 3.0         ## Number of standard deviations less than the mean of correlation coefficients of non-outlier samples
+  cut.corr: 0.5     ## Cutoff of correlation coefficent of outlier/non-outlier differential expression between a pair of outliers to determin they had similar quality issue
+  difference:       ## Criteria to select outlier/non-outlier top genes
+    mean: 2.0         ## Minimal difference between outlier and the mean of non-outliers
+    nsd: 2.0          ## Minimal number of standard deviations
+    min: 100.0        ## Minimal number of top genes to be selected (the nsd requirement must also be met, so the final number could be smaller)
+    max: 250.0        ## Maximal number of tog genes to be selected
+    
+######################    END OF DOCUMENT    ######################
+
