@@ -65,7 +65,7 @@ home.url <- Link2Home(yml$home);
 
 STAR was run using the following options:
 
-`r pandoc.list(prms)`
+`r pandoc.list.return(prms)`
 
 `r home.url`
 
