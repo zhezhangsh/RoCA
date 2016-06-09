@@ -21,7 +21,7 @@ output:
 
 ```{r global_setup, include=FALSE}
 name.yaml <- 'summarize_star.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets'); 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'pander'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
 ## Default knitr parameters
@@ -63,23 +63,9 @@ home.url <- Link2Home(yml$home);
 
 # STAR options
 
-```{r star_options, include=FALSE}
-prms <- yml$parameter;
-lns <- lapply(names(prms), function(nm) {
-  x <- prms[[nm]];
-  if (class(x) != 'list') paste('  - **', nm, '**: ', as.vector(x), sep='') else {
-    l0 <- paste('  - **', nm, '**:\n', sep='');
-    y <- prms[[nm]];
-    l <- sapply(names(y), function(z) paste('    * **', z, '**: ', as.vector(y[[z]]), sep=''));
-    c(l0, l);
-  }
-});
-lns <- paste(unlist(lns, use.names=FALSE), collapse='\n'); 
-```
-
 STAR was run using the following options:
 
-`r lns`
+`r pandoc.list(prms)`
 
 `r home.url`
 
