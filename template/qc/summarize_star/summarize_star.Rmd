@@ -63,9 +63,19 @@ home.url <- Link2Home(yml$home);
 
 # STAR options
 
+```{r star_options, included=FALSE}
+pr <- function(lst) {
+  lapply(names(lst), function(nm) {
+    v <- lst[[nm]]; 
+    if (class(v)=='list') pr(v) else paste('**', nm, '**: ', v, sep='');
+  });
+}
+prms.print <- pr(prms); 
+```
+
 STAR was run using the following options:
 
-`r pandoc.list.return(prms)`
+`r pandoc.list.return(prms.print)`
 
 `r home.url`
 
