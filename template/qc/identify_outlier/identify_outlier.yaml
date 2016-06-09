@@ -15,8 +15,7 @@
 #########################    REQUIRED    ##########################
 ###################################################################
 # Required by the RoCA framework to generate a reproducible report
-#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/
-template: identify_outlier.Rmd
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/identify_outlier/identify_outlier.Rmd
 output: examples/NCI60_Organ              # Where to save the output files
 home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
@@ -39,10 +38,10 @@ description:
 ###################################################################
 # Location (local or URL) of files with formatted input data
 input:
-  data: expr.rds                                   ## Data matrix to be analyzed. Genes are rows and samples are columns
-  annotation: anno.rds                             ## Gene annotation, match rows of the data matrix
-  group: group2sample.rds                          ## A list of group name to sample name matching. Sample names must match column names of data matrix
-  geneset: human_ss.rds                            ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
+  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/expr.txt          ## Data matrix to be analyzed. Genes are rows and samples are columns
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/anno.rds    ## Gene annotation, match rows of the data matrix
+  group: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/group2sample.rds ## A list of group name to sample name matching. Sample names must match column names of data matrix
+  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/human.rds       ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
 
 ###################################################################
 ########################    PARAMETERS    #########################
