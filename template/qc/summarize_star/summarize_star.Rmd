@@ -68,10 +68,10 @@ prms <- yml$parameter;
 lns <- lapply(names(prms), function(nm) {
   x <- prms[[nm]];
   if (class(x) != 'list') paste('  - **', nm, '**: ', as.vector(x), sep='') else {
-    l0 <- paste('  - **', nm, '**:', sep='');
+    l0 <- paste('  - **', nm, '**:\n', sep='');
     y <- prms[[nm]];
-    l <- sapply(names(y), function(nm) paste('    - **', paste(nm, names(y), sep=':'), '**: ', as.vector(y[[nm]]), sep=''));
-    c(l0, '\n', l);
+    l <- sapply(names(y), function(z) paste('    * **', z, '**: ', as.vector(y[[z]]), sep=''));
+    c(l0, l);
   }
 });
 lns <- paste(unlist(lns, use.names=FALSE), collapse='\n'); 
