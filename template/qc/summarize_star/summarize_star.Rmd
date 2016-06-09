@@ -72,7 +72,7 @@ lns <- sapply(names(prms), function(nm) {
     y <- prms[[nm]];
     l <- sapply(names(y), function(nm) paste('    - **', nm, '**: ', as.vector(y[[nm]]), sep=''));
     l <- paste(l, collapse='\n');
-    paste(l0, l, sep='\n');
+    paste(l0, '\n', l, sep='\n');
   }
 })
 lns <- paste(lns, collapse='\n'); 
