@@ -3,46 +3,55 @@
 ####################
 #template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/Pairwise_Comparison.Rmd
 template: Pairwise_Comparison.Rmd
-output: examples/rnaseq
-home: https://github.com/zhezhangsh/RoCA
+output: examples/microarray
+home: http://mybic.chop.edu/labs/falkm/Worm_Lifespan_CI_RNAi
 zip: no
 
 #################
 ##### ABOUT #####
 #################
 description:      
-  Project: "Transcriptome in immune cells of control-patient samples"
-  Data: "Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. 
-        Raw data was processed to get gene-level read counts."
-  Analysis: "This is a demo."
+  Project: This project studies C. elegans strains treated with RNAi to impair their complex I functions. 
+  Analysis: Pairwise comparisons of long-lived and short-lived strains to wild type and to each other
+  Analyst: Zhe Zhang
 
 ##################
 ##### INPUTS #####
 ##################
 input:
-  anno: anno.rds
-  expr: count_unique.rds
-  comparison: group.rds
-  geneset: human_ss.rds
+  anno: anno_url.rds
+  expr: expr.rds
+  comparison: comparison.rds
+  geneset: geneset.rds
 
 ######################
 ##### PARAMETERS #####
 ######################
 parameter:
-  genome: human
+  genome: worm
   paired: no
   processing:
-    logged: no
-    normalized: no
+    logged: yes
+    normalized: yes
+  comparison:
+    WildType:
+    - N2HT-A
+    - N2HT-B
+    - N2HT-C
+    - N2HT-D
+    Marginal:
+    - C50-A
+    - C50-B
+    - C50-C
   deg:
-    method: DeEdgeR
-    penalty: 0
+    method: DeRankP
+    penalty: 0.6
     reprocessed: no
-    nperm: 100.0
     cutoff.l2r: 0.0e+00
     cutoff.p: 0.05
     cutoff.fdr: 0.05
     num.top: 250.0
+    nperm: 100.0
     rank: both
 
   ################
@@ -53,10 +62,25 @@ parameter:
     thread: 4
     kegg: /nas/is1/rchive/data/pathway/public/kegg/src
     gmt:
+      GO_BP: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/GO_BP.gmt
+      GO_MF: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/GO_MF.gmt
+      GO_CC: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/GO_CC.gmt
+      OMIM_gene: /nas/is1/rchive/data/gene.set/gmt/worm/OMIM/OMIM_gene.gmt
       MSigDb_Hallmark: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C0_Hallmark.gmt
+      MSigDb_Positional: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C1_Positional.gmt
+      MsigDb_Chemical_and_genetic_perturbations: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C2_Chemical_and_genetic_perturbations.gmt
+      MSigDb_MicroRNA_targets: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C3_MicroRNA_targets.gmt
+      MSigDb_TF_targets: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C3_TF_targets.gmt
+      MSigDb_Oncogenic_signatures: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C6_Oncogenic_signatures.gmt
+      MSigDb_Immunologic_signatures: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C7_Immunologic_signatures.gmt
       BioCarta_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C2_BioCarta_Pathways.gmt
       REACTOME_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/REACTOME.gmt                
+      Wiki_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/WikiPathways.gmt                 
       KEGG_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_pathway.gmt
+      KEGG_compound: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_compound.gmt
+      KEGG_enzyme: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_enzyme.gmt
+      KEGG_module: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_module.gmt
+      KEGG_reaction: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_reaction.gmt  
     options:
       ##############################################
       # parameters commonly changed from run to run
