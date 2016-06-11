@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<!DOCTYPE pathway SYSTEM "http://www.kegg.jp/kegg/xml/KGML_v0.7.1_.dtd">
+<!-- Creation date: May 14, 2014 13:41:21 +0900 (GMT+09:00) -->
+<pathway name="path:cel03050" org="cel" number="03050"
+         title="Proteasome"
+         image="http://www.kegg.jp/kegg/pathway/cel/cel03050.png"
+         link="http://www.kegg.jp/kegg-bin/show_pathway?cel03050">
+    <entry id="1" name="ko:K04687" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K04687">
+        <graphics name="K04687" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="342" y="653" width="46" height="17"/>
+    </entry>
+    <entry id="2" name="cel:CELE_C30C11.2" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C30C11.2">
+        <graphics name="rpn-3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="693" y="106" width="46" height="17"/>
+    </entry>
+    <entry id="3" name="cel:CELE_F10G7.8" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F10G7.8">
+        <graphics name="rpn-5" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="739" y="106" width="46" height="17"/>
+    </entry>
+    <entry id="4" name="cel:CELE_F57B9.10" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F57B9.10">
+        <graphics name="rpn-6.1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="784" y="106" width="46" height="17"/>
+    </entry>
+    <entry id="5" name="cel:CELE_F49C12.8" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F49C12.8">
+        <graphics name="rpn-7" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="830" y="106" width="46" height="17"/>
+    </entry>
+    <entry id="6" name="cel:CELE_R12E2.3" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_R12E2.3">
+        <graphics name="rpn-8" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="693" y="123" width="46" height="17"/>
+    </entry>
+    <entry id="7" name="cel:CELE_T06D8.8" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T06D8.8">
+        <graphics name="rpn-9" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="739" y="123" width="46" height="17"/>
+    </entry>
+    <entry id="8" name="cel:CELE_F37A4.5 cel:CELE_K07D4.3" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F37A4.5+cel:CELE_K07D4.3">
+        <graphics name="F37A4.5..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="785" y="123" width="46" height="17"/>
+    </entry>
+    <entry id="9" name="cel:CELE_ZK20.5" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_ZK20.5">
+        <graphics name="rpn-12" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="830" y="123" width="46" height="17"/>
+    </entry>
+    <entry id="10" name="cel:CELE_Y119D3B.15" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y119D3B.15">
+        <graphics name="dss-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="876" y="123" width="46" height="17"/>
+    </entry>
+    <entry id="11" name="cel:CELE_B0205.3" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_B0205.3">
+        <graphics name="rpn-10" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="693" y="153" width="46" height="17"/>
+    </entry>
+    <entry id="12" name="cel:CELE_T22D1.9" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T22D1.9">
+        <graphics name="rpn-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="693" y="204" width="46" height="17"/>
+    </entry>
+    <entry id="13" name="cel:CELE_C23G10.4" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C23G10.4">
+        <graphics name="rpn-2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="739" y="204" width="46" height="17"/>
+    </entry>
+    <entry id="14" name="ko:K06691" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06691">
+        <graphics name="K06691" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="785" y="204" width="46" height="17"/>
+    </entry>
+    <entry id="15" name="cel:CELE_C52E4.4" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C52E4.4">
+        <graphics name="rpt-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="693" y="221" width="46" height="17"/>
+    </entry>
+    <entry id="16" name="cel:CELE_C10G11.8 cel:CELE_F29G9.5" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C10G11.8+cel:CELE_F29G9.5">
+        <graphics name="C10G11.8..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="739" y="221" width="46" height="17"/>
+    </entry>
+    <entry id="17" name="cel:CELE_F23F12.6" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F23F12.6">
+        <graphics name="rpt-3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="922" y="221" width="46" height="17"/>
+    </entry>
+    <entry id="18" name="cel:CELE_F23F1.8" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F23F1.8">
+        <graphics name="rpt-4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="830" y="221" width="46" height="17"/>
+    </entry>
+    <entry id="19" name="cel:CELE_F56H1.4" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F56H1.4">
+        <graphics name="rpt-5" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="876" y="221" width="46" height="17"/>
+    </entry>
+    <entry id="20" name="cel:CELE_F56F11.4 cel:CELE_Y49E10.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F56F11.4+cel:CELE_Y49E10.1">
+        <graphics name="F56F11.4..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="785" y="221" width="46" height="17"/>
+    </entry>
+    <entry id="21" name="ko:K06696" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06696">
+        <graphics name="K06696" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="971" y="122" width="46" height="17"/>
+    </entry>
+    <entry id="22" name="ko:K06697" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06697">
+        <graphics name="K06697" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="1017" y="122" width="46" height="17"/>
+    </entry>
+    <entry id="23" name="cel:CELE_Y66D12A.9" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y66D12A.9">
+        <graphics name="Y66D12A.9" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="1086" y="124" width="46" height="17"/>
+    </entry>
+    <entry id="24" name="cel:CELE_C14C10.5 cel:CELE_T28B8.3" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C14C10.5+cel:CELE_T28B8.3">
+        <graphics name="C14C10.5..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="993" y="220" width="46" height="17"/>
+    </entry>
+    <entry id="25" name="cel:CELE_C15H11.7" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C15H11.7">
+        <graphics name="pas-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="699" y="403" width="46" height="17"/>
+    </entry>
+    <entry id="26" name="cel:CELE_D1054.2" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_D1054.2">
+        <graphics name="pas-2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="745" y="403" width="46" height="17"/>
+    </entry>
+    <entry id="27" name="cel:CELE_Y110A7A.14" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y110A7A.14">
+        <graphics name="pas-3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="791" y="403" width="46" height="17"/>
+    </entry>
+    <entry id="28" name="cel:CELE_C36B1.4" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C36B1.4">
+        <graphics name="pas-4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="837" y="403" width="46" height="17"/>
+    </entry>
+    <entry id="29" name="cel:CELE_F25H2.9" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F25H2.9">
+        <graphics name="pas-5" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="883" y="403" width="46" height="17"/>
+    </entry>
+    <entry id="30" name="cel:CELE_CD4.6" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_CD4.6">
+        <graphics name="pas-6" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="929" y="403" width="46" height="17"/>
+    </entry>
+    <entry id="31" name="cel:CELE_ZK945.2" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_ZK945.2">
+        <graphics name="pas-7" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="975" y="403" width="46" height="17"/>
+    </entry>
+    <entry id="32" name="cel:CELE_K08D12.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_K08D12.1">
+        <graphics name="pbs-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="699" y="420" width="46" height="17"/>
+    </entry>
+    <entry id="33" name="cel:CELE_C47B2.4" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C47B2.4">
+        <graphics name="pbs-2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="745" y="420" width="46" height="17"/>
+    </entry>
+    <entry id="34" name="cel:CELE_Y38A8.2" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y38A8.2">
+        <graphics name="pbs-3" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="791" y="420" width="46" height="17"/>
+    </entry>
+    <entry id="35" name="cel:CELE_T20F5.2" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T20F5.2">
+        <graphics name="pbs-4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="837" y="420" width="46" height="17"/>
+    </entry>
+    <entry id="36" name="cel:CELE_K05C4.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_K05C4.1">
+        <graphics name="pbs-5" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="883" y="420" width="46" height="17"/>
+    </entry>
+    <entry id="37" name="cel:CELE_C02F5.9" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C02F5.9">
+        <graphics name="pbs-6" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="929" y="420" width="46" height="17"/>
+    </entry>
+    <entry id="38" name="cel:CELE_F39H11.5" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F39H11.5">
+        <graphics name="pbs-7" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="975" y="420" width="46" height="17"/>
+    </entry>
+    <entry id="39" name="ko:K02741" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K02741">
+        <graphics name="K02741" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="699" y="487" width="46" height="17"/>
+    </entry>
+    <entry id="40" name="ko:K02733" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K02733">
+        <graphics name="K02733" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="759" y="487" width="46" height="17"/>
+    </entry>
+    <entry id="41" name="ko:K02740" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K02740">
+        <graphics name="K02740" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="815" y="487" width="46" height="17"/>
+    </entry>
+    <entry id="42" name="ko:K11598" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K11598">
+        <graphics name="K11598" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="929" y="487" width="46" height="17"/>
+    </entry>
+    <entry id="43" name="ko:K03432" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K03432">
+        <graphics name="K03432" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="699" y="561" width="46" height="17"/>
+    </entry>
+    <entry id="44" name="ko:K03433" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K03433">
+        <graphics name="K03433" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="699" y="578" width="46" height="17"/>
+    </entry>
+    <entry id="45" name="ko:K03420" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K03420">
+        <graphics name="K03420" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="993" y="304" width="46" height="17"/>
+    </entry>
+    <entry id="46" name="path:cel04120" type="map"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel04120">
+        <graphics name="Ubiquitin mediated proteolysis" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="126" y="448" width="128" height="34"/>
+    </entry>
+    <entry id="47" name="path:cel03050" type="map"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel03050">
+        <graphics name="TITLE:Proteasome" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="102" y="58" width="124" height="25"/>
+    </entry>
+    <entry id="48" name="ko:K06700" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06700">
+        <graphics name="K06700" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="393" y="845" width="46" height="17"/>
+    </entry>
+    <entry id="49" name="ko:K11599" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K11599">
+        <graphics name="K11599" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="343" y="813" width="46" height="17"/>
+    </entry>
+    <entry id="50" name="ko:K02741" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K02741">
+        <graphics name="K02741" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="293" y="693" width="46" height="17"/>
+    </entry>
+    <entry id="51" name="ko:K02733" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K02733">
+        <graphics name="K02733" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="343" y="693" width="46" height="17"/>
+    </entry>
+    <entry id="52" name="ko:K02740" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K02740">
+        <graphics name="K02740" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="393" y="693" width="46" height="17"/>
+    </entry>
+    <entry id="53" name="ko:K06696" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06696">
+        <graphics name="K06696" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="343" y="756" width="46" height="17"/>
+    </entry>
+    <entry id="54" name="ko:K06697" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06697">
+        <graphics name="K06697" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="343" y="773" width="46" height="17"/>
+    </entry>
+    <entry id="55" name="ko:K13527" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K13527">
+        <graphics name="K13527" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="762" y="304" width="46" height="17"/>
+    </entry>
+</pathway>
