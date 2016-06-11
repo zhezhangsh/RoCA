@@ -1,0 +1,58 @@
+cel_M00001_Glycolysis_Embden_Meyerhof_pathway_glucose_pyruvate 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00001 	173393	179335	175827	172751	172744	174578	172376	180601	3565504	171965	176788	174603	174423	174844	180583	173227
+cel_M00002_Glycolysis_core_module_involving_three_carbon_compounds 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00002 	172744	174578	172376	180601	3565504	171965	174603	174423	174844
+cel_M00003_Gluconeogenesis_oxaloacetate_fructose_6P 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00003 	175827	174578	172376	266822	180601	3565504	172556	171965	176788	174603	174423	175171	174844
+cel_M00004_Pentose_phosphate_pathway_Pentose_phosphate_cycle_ 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00004 	178046	175995	177906	176043	177971	177202	178398	173227
+cel_M00009_Citrate_cycle_TCA_cycle_Krebs_cycle_ 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00009 	181108	181570	172430	172968	181311	181528	177555	175936	175252	174692	175598	174482	172655	179041	181280	176121	177775	176059	178387	260040	176437	177235	179063	181324
+cel_M00010_Citrate_cycle_first_carbon_oxidation_oxaloacetate_2_oxoglutarate 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00010 	172430	181311	181528	175598	172655	176121	177775	176437	181324
+cel_M00011_Citrate_cycle_second_carbon_oxidation_2_oxoglutarate_oxaloacetate 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00011 	181108	181570	172968	177555	175936	175252	174692	174482	179041	181280	176059	178387	260040	177235	179063
+cel_M00013_Malonate_semialdehyde_pathway_propanoyl_CoA_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00013 	180037	175766	174800	173979	176376	172310	181758
+cel_M00048_Inosine_monophosphate_biosynthesis_PRPP_glutamine_IMP 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00048 	173772	177576	175608	180935	172466	175613
+cel_M00049_Adenine_ribonucleotide_biosynthesis_IMP_ADP_ATP 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00049 	176118	178872	174511	172939	172744	172466	174608
+cel_M00050_Guanine_ribonucleotide_biosynthesis_IMP_GDP_GTP 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00050 	172939	172744	174672	171963	177457
+cel_M00073_N_glycan_precursor_trimming 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00073 	172510	177998	179364	180400	180787	177726
+cel_M00085_Fatty_acid_biosynthesis_elongation_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00085 	181169	176216	180037	177905	184065	176756	186222	178638	176376	172310	174963	176534
+cel_M00086_beta_Oxidation_acyl_CoA_synthesis 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00086 	180859	3565680	176005	171714	187666	177918	187742	178677	171643	176785
+cel_M00087_beta_Oxidation 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00087 	181169	176216	180037	176353	174180	177905	184065	173162	184167	173164	176756	186222	177386	181668	173979	178638	176376	172310	181758
+cel_M00089_Triacylglycerol_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00089 	180824	178928	180519	173734	181671	179540	181241	179031	179398	179032
+cel_M00092_Phosphatidylethanolamine_PE_biosynthesis_ethanolamine_PE 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00092 	181905	181904	175565	181047	180703	172097	188971	171770
+cel_M00120_Coenzyme_A_biosynthesis_pantothenate_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00120 	180779	179829	176375	171657	175394
+cel_M00128_Ubiquinone_biosynthesis_eukaryotes_4_hydroxybenzoate_ubiquinone 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00128 	175969	179316	178403	175729	176099
+cel_M00142_NADH_ubiquinone_oxidoreductase_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00142 	2565698	2565695	2565696	2565705	2565694	2565703	2565699
+cel_M00143_NADH_dehydrogenase_ubiquinone_Fe_S_protein_flavoprotein_complex_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00143 	174696	184827	179850	181646	172363	176023	188912	172734	178735	266824	172037
+cel_M00148_Succinate_dehydrogenase_ubiquinone_ 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00148 	181108	172968	174692	174482	260040
+cel_M00160_V_type_ATPase_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00160 	177442	178219	172134	180692	177626	172216	177757	179223	176338	187779	176383	174272	180534	174743	172137	177017	177018	3564970	177103	176257	174596
+cel_M00177_Ribosome_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00177 	172074	180343	175796	175628	175235	178352	172815	172818	180044	172201	174695	176146	175901	175879	179154	179153	173873	171949	172401	178173	177583	171750	175460	172062	172061	180535	174311	174166	175501	172943	174379	178188	185243	172693	176011	176007	176006	173342	178083	174699	177503	172617	175338	171602	174371	175786	180748	178538	175584	175413	178279	177365	187141	176891	175455	179739	176071	176015	179998	178012	172805	176858	172313	178778	174443	175141	173235	173309	177203	171766	171767	176975	177481	178342	175070	171692	178408	178297	173260	171853	190636	172901	176718	176097
+cel_M00180_RNA_polymerase_II_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00180 	174630	175668	172680	184886	175660	177190	174208	172412	175056	171763	171877	179178
+cel_M00181_RNA_polymerase_III_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00181 	174630	177491	172321	175767	184886	175660	176362	172412	178823	189252	172081	171763	176950	179418
+cel_M00261_DNA_polymerase_alpha_primase_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00261 	176358	176439	188846	173122	176544
+cel_M00285_MCM_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00285 	180010	178831	175552	174841	171793	176385
+cel_M00289_RF_C_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00289 	178259	179967	175976	176131	176946
+cel_M00290_Holo_TFIIH_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00290 	173602	176838	176421	171784	190078	175190	190298	176584	178431
+cel_M00307_Pyruvate_oxidation_pyruvate_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00307 	177108	178524	179945	178387	3565996
+cel_M00338_Cysteine_biosynthesis_homocysteine_serine_cysteine 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00338 	172759	180079	186197	181215	174155
+cel_M00340_Proteasome_20S_core_particle 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00340 	176161	179941	172679	173168	178943	179493	172942	172674	173334	176978	171975	172139	173858	174571
+cel_M00341_Proteasome_19S_regulatory_particle_PA700_ 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00341 	172977	172324	175877	176196	179641	173807	173384	175925	178988	185404	177753	175403	172238	175972	173744	172009	174715	177455	175284	176661	174786
+cel_M00351_Spliceosome_U1_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00351 	179639	177674	176002	174072	173204	178483	176668	171834	176103
+cel_M00352_Spliceosome_U2_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00352 	4363023	175469	173394	179639	178147	173767	172406	175549	174364	174072	178542	173440	173204	178483	176668	3564851	171834	176103
+cel_M00353_Spliceosome_Prp19_CDC5L_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00353 	172757	179500	172639	3565569	178507	174579	174805	174806	172214	180069	188435	176847
+cel_M00354_Spliceosome_U4_U6_U5_tri_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00354 	183250	176153	179639	175818	181319	173606	179140	180047	174193	176461	174645	172652	174394	179833	174072	173204	172146	178483	174901	176561	176668	180180	178303	171834	190601	177393	175851	177988	176103
+cel_M00355_Spliceosome_35S_U5_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00355 	176368	172757	191627	176153	171970	179639	179500	172639	181319	3565569	178507	174805	174806	172999	179524	176003	178979	175574	180069	177979	188435	179598	174072	173204	178487	178483	174901	176668	175308	177037	171834	180232	175851	176103
+cel_M00361_Nucleotide_sugar_biosynthesis_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00361 	175497	183400	173171	177631	179484	176814	172033
+cel_M00380_SCF_BTRC_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00380 	174257	191765	178496	178494	178493	178495	176466	180081	172773	172775	180148	173729	260116	181447	174058	181445	178447	191763	178840	178839	191762	179358
+cel_M00381_SCF_SKP2_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00381 	174257	191765	178496	178494	178493	178495	176466	180081	172773	172775	180148	175749	173729	260116	181447	181445	178447	191763	178840	178839	191762	179358
+cel_M00383_ECV_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00383 	181321	176605	190775	179358	176806
+cel_M00387_SCF_FBW7_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00387 	174257	191765	178496	178494	178493	178495	176466	180081	172773	172775	180148	173729	179878	260116	181447	181445	178447	191763	178840	178839	191762	179358
+cel_M00396_Lsm_2_8_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00396 	180047	174193	179833	178303	190601	177393	177988
+cel_M00397_Lsm_1_7_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00397 	180047	174193	174700	179833	178303	190601	177988
+cel_M00398_Sm_core_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00398 	179639	174072	173204	178483	176668	171834	176103
+cel_M00400_p97_Ufd1_Npl4_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00400 	174624	174309	3565860	3565577	172586
+cel_M00404_COPII_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00404 	178078	180317	176957	178183	177217
+cel_M00412_ESCRT_III_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00412 	182050	183288	174091	171801	179242	174010	174442	173863	189590	174908	171654
+cel_M00426_Survival_motor_neuron_SMN_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00426 	176610	172783	183887	184305	178469	189726
+cel_M00428_eIF4F_complex 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00428 	178536	180464	186440	175966	174322	180393	174871
+cel_M00430_Exon_junction_complex_EJC_ 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00430 	177735	177283	174546	175534	172030	179760	177738	173013	172258	179371	175244	178157	175572	173073	179783	173203	171696	190485	171866	177397
+cel_M00679_BMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00679 	175781	174044	175815	179068	176229
+cel_M00688_MAPK_JNK_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00688 	172246	177460	185682	181004	178895	175862	190882
+cel_M00689_MAPK_p38_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00689 	191743	172246	177611	178895	181043	175862	190882
+cel_M00694_cGMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00694 	191657	176991	176270	172051	173202	191649
+cel_M00695_cAMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+cel_M00695 	179806	179075	175622	180673	180527	171687	3565407

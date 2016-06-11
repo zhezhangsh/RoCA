@@ -1,0 +1,129 @@
+hsa_M00001_Glycolysis_Embden_Meyerhof_pathway_glucose_pyruvate 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00001 	2023	2026	2027	226	229	230	2597	2645	2821	3098	3099	3101	441531	5211	5213	5214	5223	5224	5230	5232	5313	5315	7167	80201	83440
+hsa_M00002_Glycolysis_core_module_involving_three_carbon_compounds 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00002 	2023	2026	2027	2597	441531	5223	5224	5230	5232	5313	5315	7167
+hsa_M00003_Gluconeogenesis_oxaloacetate_fructose_6P 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00003 	2023	2026	2027	2203	226	229	230	2597	441531	5105	5106	5223	5224	5230	5232	7167	8789
+hsa_M00004_Pentose_phosphate_pathway_Pentose_phosphate_cycle_ 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00004 	22934	2539	25796	2821	5226	6120	6888	7086	729020	8277	84076	9563
+hsa_M00007_Pentose_phosphate_pathway_non_oxidative_phase_fructose_6P_ribose_5P 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00007 	22934	6120	6888	7086	729020	8277	84076
+hsa_M00009_Citrate_cycle_TCA_cycle_Krebs_cycle_ 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00009 	1431	1738	1743	2271	3417	3418	3419	3420	3421	4190	4191	48	4967	50	55753	6389	6390	6391	6392	8801	8802	8803
+hsa_M00010_Citrate_cycle_first_carbon_oxidation_oxaloacetate_2_oxoglutarate 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00010 	1431	3417	3418	3419	3420	3421	48	50
+hsa_M00011_Citrate_cycle_second_carbon_oxidation_2_oxoglutarate_oxaloacetate 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00011 	1738	1743	2271	4190	4191	4967	55753	6389	6390	6391	6392	8801	8802	8803
+hsa_M00013_Malonate_semialdehyde_pathway_propanoyl_CoA_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00013 	1892	1962	26275	3030	34	4329
+hsa_M00014_Glucuronate_pathway_uronate_pathway_ 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00014 	10327	10720	10941	2990	51084	51181	54490	54575	54576	54577	54578	54579	54600	54657	54658	54659	574537	6652	7358	7363	7364	7365	7366	7367	79799	9365	9942
+hsa_M00029_Urea_cycle 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00029 	1373	383	384	435	445	5009
+hsa_M00032_Lysine_degradation_lysine_saccharopine_acetoacetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00032 	10157	1743	1892	1962	2639	3030	3033	4967	501	51166	55753
+hsa_M00034_Methionine_salvage_pathway 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00034 	262	27430	4143	4144	4507	51074	55256	58478	6723	6898	84245
+hsa_M00035_Methionine_degradation 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00035 	102724560	10768	1786	1788	1789	191	23382	27430	4143	4144	875
+hsa_M00036_Leucine_degradation_leucine_acetoacetate_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00036 	1629	1738	3155	34	3712	54511	549	56922	586	587	593	594	64087
+hsa_M00037_Melatonin_biosynthesis_tryptophan_serotonin_melatonin 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00037 	121278	15	1644	438	7166
+hsa_M00042_Catecholamine_biosynthesis_tyrosine_dopamine_noradrenaline_adrenaline 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00042 	1621	1644	5409	7054	7299
+hsa_M00044_Tyrosine_degradation_tyrosine_homogentisate 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00044 	2184	259307	2954	3081	3242
+hsa_M00047_Creatine_pathway 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00047 	1152	1158	1159	1160	2593	2628	548596
+hsa_M00048_Inosine_monophosphate_biosynthesis_PRPP_glutamine_IMP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00048 	10606	158	2618	471	5198	5471
+hsa_M00049_Adenine_ribonucleotide_biosynthesis_IMP_ADP_ATP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00049 	100507855	10201	102157402	122481	122622	158	158067	159	203	204	205	221264	26289	29922	390877	4830	4831	4832	4833	50808	5313	5315	654364	8382
+hsa_M00050_Guanine_ribonucleotide_biosynthesis_IMP_GDP_GTP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00050 	10201	2987	29922	3614	3615	4830	4831	4832	4833	5313	5315	654364	8382	8833
+hsa_M00052_Pyrimidine_ribonucleotide_biosynthesis_UMP_UDP_UTP_CDP_CTP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00052 	10201	129607	1503	221264	29922	4830	4831	4832	4833	51727	56474	654364	8382
+hsa_M00055_N_glycan_precursor_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00055 	10195	144245	1798	199857	29880	29929	440138	56052	79053	79087	79796	79868	84920	85365
+hsa_M00056_O_glycan_biosynthesis_mucin_type_core 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00056 	100528030	11226	11227	114805	117248	168391	192134	2589	2590	2591	26290	2650	29071	374378	442117	50614	51301	51809	55568	56913	57452	63917	64409	79623	79695	8693	9245
+hsa_M00057_Glycosaminoglycan_biosynthesis_linkage_tetrasaccharide 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00057 	11285	126792	26229	64131	64132
+hsa_M00058_Glycosaminoglycan_biosynthesis_chondroitin_sulfate_backbone 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00058 	22856	337876	54480	55454	55790	79586
+hsa_M00059_Glycosaminoglycan_biosynthesis_heparan_sulfate_backbone 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00059 	2131	2132	2134	2135	2137	26035	3340	64579	8509	9348
+hsa_M00065_GPI_anchor_biosynthesis_core_oligosaccharide 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00065 	23556	284098	5277	5281	55650	93183	9487	9488
+hsa_M00071_Glycosphingolipid_biosynthesis_neolacto_series_LacCer_nLc4Cer 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00071 	2683	84002	8702	8703	8704
+hsa_M00072_N_glycosylation_by_oligosaccharyltransferase 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00072 	1603	1650	201595	3703	6184	6185	7991
+hsa_M00073_N_glycan_precursor_trimming 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00073 	10905	11253	23193	4121	57134	7841
+hsa_M00075_N_glycan_biosynthesis_complex_type 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00075 	11282	11320	146664	152586	2530	25834	2683	4122	4124	4247	4248	4249	6480	84620	8703	8704
+hsa_M00076_Dermatan_sulfate_degradation 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00076 	23553	2990	3373	3423	3425	411	6677	8372	8692
+hsa_M00077_Chondroitin_sulfate_degradation 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00077 	23553	2588	2990	3373	411	6677	8372	8692
+hsa_M00078_Heparan_sulfate_degradation 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00078 	10855	138050	2799	2990	3423	3425	4669	60495	6448
+hsa_M00079_Keratan_sulfate_degradation 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00079 	2588	2720	2799	3073	3074
+hsa_M00085_Fatty_acid_biosynthesis_elongation_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00085 	10449	1892	3030	3032	3033	51102
+hsa_M00086_beta_Oxidation_acyl_CoA_synthesis 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00086 	2180	2181	2182	23205	23305	51703	81616
+hsa_M00087_beta_Oxidation 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00087 	10449	1892	1962	30	3030	3032	3033	33	34	37	51	8310
+hsa_M00089_Triacylglycerol_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00089 	10554	10555	129642	137964	150763	154141	253558	346606	56894	56895	57678	84649	84803	8611	8612	8613	8694
+hsa_M00090_Phosphatidylcholine_PC_biosynthesis_choline_PC 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00090 	10390	1119	1120	5130	56994	9468
+hsa_M00092_Phosphatidylethanolamine_PE_biosynthesis_ethanolamine_PE 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00092 	10390	1119	1120	55224	55500	5833	85465
+hsa_M00094_Ceramide_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00094 	10558	10715	123099	204219	2531	253782	29956	55304	79603	8560	91012	9517
+hsa_M00095_C5_isoprenoid_biosynthesis_mevalonate_pathway 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00095 	10654	3156	3157	3158	3422	38	39	4597	4598	91734
+hsa_M00098_Acylglycerol_degradation 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00098 	1056	11343	119548	3990	5406	5407	5408	57104	80339	8513	9388
+hsa_M00099_Sphingosine_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00099 	10558	10715	123099	125981	204219	2531	253782	29956	340485	427	55304	56624	79603	8560	91012	9517
+hsa_M00101_Cholesterol_biosynthesis_squalene_2_3_epoxide_cholesterol 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00101 	10682	10826	1595	1717	1718	4047	50814	51478	6307	6309	7108
+hsa_M00104_Bile_acid_biosynthesis_cholesterol_cholate_chenodeoxycholate 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00104 	10005	10998	1109	1581	1582	1593	23600	3295	6342	6718	80270	8309
+hsa_M00109_C21_Steroid_hormone_biosynthesis_progesterone_cortisol_cortisone 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00109 	1584	1585	1586	1589	3290	3291
+hsa_M00120_Coenzyme_A_biosynthesis_pantothenate_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00120 	53354	55229	60490	79646	79717	80025	80347
+hsa_M00128_Ubiquinone_biosynthesis_eukaryotes_4_hydroxybenzoate_ubiquinone 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00128 	10229	27235	51004	51805	84274
+hsa_M00130_Inositol_phosphate_metabolism_PI_PIP2_Ins_1_4_5_P3_Ins_1_3_4_5_P4 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00130 	113026	138429	23236	23396	3706	3707	51196	5297	5298	5330	5331	5332	5333	5335	5336	55300	55361	80271	8394	8395	84812	89869
+hsa_M00131_Inositol_phosphate_metabolism_Ins_1_3_4_5_P4_Ins_1_3_4_P3_myo_inositol 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00131 	27124	3612	3613	3628	3631	3632	51763	54928	8821
+hsa_M00135_GABA_biosynthesis_eukaryotes_putrescine_GABA 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00135 	112483	217	219	223	224	4128	4129	501	6303
+hsa_M00141_C1_unit_interconversion_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00141 	10797	25902	441024	4522	6470	6472
+hsa_M00142_NADH_ubiquinone_oxidoreductase_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00142 	4535	4536	4537	4538	4539	4540	4541
+hsa_M00143_NADH_dehydrogenase_ubiquinone_Fe_S_protein_flavoprotein_complex_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00143 	374291	4719	4720	4722	4723	4724	4725	4726	4728	4729	4731
+hsa_M00146_NADH_dehydrogenase_ubiquinone_1_alpha_subcomplex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00146 	126328	4694	4695	4696	4697	4698	4700	4701	4702	4704	4705	4706	51079	55967	56901
+hsa_M00147_NADH_dehydrogenase_ubiquinone_1_beta_subcomplex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00147 	100532726	4707	4708	4709	4710	4711	4712	4713	4714	4715	4716	4717	4718	54539
+hsa_M00152_Cytochrome_bc1_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00152 	10975	1537	27089	29796	440567	4519	7381	7384	7385	7386	7388
+hsa_M00154_Cytochrome_c_oxidase 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00154 	10063	125965	1327	1329	1337	1339	1340	1345	1346	1347	1349	1350	1351	1352	1353	1355	170712	341947	4512	4513	4514	84701	9167	9377
+hsa_M00158_F_type_ATPase_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00158 	10476	10632	4508	4509	498	506	509	513	514	515	516	517	518	521	522	539	9551
+hsa_M00160_V_type_ATPase_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00160 	10312	127124	155066	23545	245972	245973	50617	51382	51606	523	525	526	527	528	529	533	534	535	537	8992	90423	9114	9296	9550
+hsa_M00177_Ribosome_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00177 	100529097	100529239	101929876	11224	140032	140801	200916	2197	23521	25873	3921	4736	51065	51121	51187	6122	6123	6124	6125	6128	6129	6130	6132	6133	6134	6135	6136	6137	6138	6139	6141	6142	6143	6144	6146	6147	6152	6154	6155	6156	6157	6158	6159	6160	6161	6164	6165	6166	6167	6168	6169	6170	6171	6173	6175	6176	6181	6187	6188	6189	6191	6192	6193	6194	6201	6202	6203	6204	6205	6206	6207	6208	6209	6210	6217	6218	6222	6223	6224	6227	6228	6229	6230	6231	6232	6233	6234	6235	7311	9045	9349
+hsa_M00180_RNA_polymerase_II_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00180 	246721	5430	5431	5432	5433	5434	5435	5436	5437	5438	5439	5440	5441	548644
+hsa_M00181_RNA_polymerase_III_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00181 	101060521	10621	10622	10623	11128	171568	51082	51728	5434	5435	5437	5440	5441	55703	55718	661	84265	9533
+hsa_M00182_RNA_polymerase_I_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00182 	221830	25885	30834	51082	5434	5435	5437	5440	5441	64425	84172	9533
+hsa_M00284_Origin_recognition_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00284 	23594	23595	4998	4999	5000	5001
+hsa_M00285_MCM_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00285 	4171	4172	4173	4174	4175	4176
+hsa_M00289_RF_C_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00289 	5981	5982	5983	5984	5985
+hsa_M00290_Holo_TFIIH_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00290 	1022	2068	2071	2965	2966	2967	2968	404672	4331	728340	730394	902
+hsa_M00295_BRCA1_associated_genome_surveillance_complex_BASC_ 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00295 	10111	2956	4292	4361	4436	4683	472	5111	5395	5981	5982	5983	5984	5985	641	672
+hsa_M00296_BER_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00296 	10038	10039	142	143	27301	27343	328	3980	5423	7515
+hsa_M00307_Pyruvate_oxidation_pyruvate_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00307 	1737	1738	5160	5161	5162
+hsa_M00337_Immunoproteasome 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00337 	143471	5682	5683	5684	5685	5686	5687	5688	5689	5690	5691	5692	5696	5698	5699	5720	5721
+hsa_M00340_Proteasome_20S_core_particle 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00340 	143471	5682	5683	5684	5685	5686	5687	5688	5689	5690	5691	5692	5693	5694	5695
+hsa_M00341_Proteasome_19S_regulatory_particle_PA700_ 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00341 	10213	5700	5701	5702	5704	5705	5706	5707	5708	5709	5710	5713	5714	5717	5718	5719	7979	9861
+hsa_M00351_Spliceosome_U1_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00351 	6625	6626	6628	6631	6632	6633	6634	6635	6636	6637
+hsa_M00352_Spliceosome_U2_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00352 	10262	10291	10946	10992	11325	23450	23451	51639	6627	6628	6629	6632	6633	6634	6635	6636	6637	8175	83443	84844
+hsa_M00353_Spliceosome_Prp19_CDC5L_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00353 	10084	10286	27339	3303	3304	3305	3306	3310	3312	51503	51729	5356	56259	988
+hsa_M00354_Spliceosome_U4_U6_U5_tri_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00354 	10421	10465	10594	10713	10907	11017	11157	23020	23658	24148	25804	26121	27258	4809	51690	51691	57819	6628	6632	6633	6634	6635	6636	6637	9092	9128	9129	9343	9410	9416
+hsa_M00355_Spliceosome_35S_U5_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00355 	100534599	10286	10450	10594	151903	22938	23020	25949	27339	3303	3304	3305	3306	3310	3312	51340	51362	51503	51645	5356	55094	55696	56949	57461	60625	6628	6632	6633	6634	6635	6636	6637	8896	9343	9410	9716	988
+hsa_M00359_Aminoacyl_tRNA_biosynthesis_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00359 	10056	10352	10667	123283	124454	16	1615	2058	2193	23395	23438	25973	2617	3035	3376	3735	4141	4677	51067	51520	54938	55157	55699	57038	57176	57505	5859	5917	6301	6897	7407	7453	79587	79731	80222	833	8565	92935
+hsa_M00361_Nucleotide_sugar_biosynthesis_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00361 	2582	29925	29926	6675	7358	7360	80146	91373
+hsa_M00380_SCF_BTRC_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00380 	23291	6500	8454	8945	9978
+hsa_M00382_SCF_FBS_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00382 	26232	26270	6500	8454	9978
+hsa_M00383_ECV_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00383 	6921	6923	7428	8453	9978
+hsa_M00385_Cul4_DDB1_DDB2_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00385 	1642	1643	8450	8451	9978
+hsa_M00386_Cul4_DDB1_CSA_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00386 	1161	1642	8450	8451	9978
+hsa_M00388_ECS_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00388 	1154	122809	30837	6921	6923	8065	8651	8835	9021	9306	9616	9655
+hsa_M00389_APC_C_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00389 	10393	246184	25847	29882	29945	51343	51433	51434	51529	64682	8697	8881	991	996
+hsa_M00391_Exosome_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00391 	11340	118460	22894	23016	23404	51010	51013	5393	54512	56915
+hsa_M00395_Decapping_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00395 	1656	167227	196513	219988	55802	80153
+hsa_M00396_Lsm_2_8_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00396 	11157	23658	25804	27258	51690	51691	57819
+hsa_M00397_Lsm_1_7_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00397 	11157	23658	25804	27257	27258	51690	57819
+hsa_M00398_Sm_core_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00398 	6628	6632	6633	6634	6635	6636	6637
+hsa_M00403_HRD1_SEL1_ERAD_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00403 	10956	27248	51009	55666	55829	6400	7353	7415	79139	80343	84447	91319	9709
+hsa_M00404_COPII_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00404 	10427	10483	10484	10802	22872	25956	51128	56681	6396	9632	9871
+hsa_M00405_THC_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00405 	57187	79228	80145	8563	9984
+hsa_M00406_TREX_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00406 	10189	57187	7919	79228	80145	84321	8563	9984
+hsa_M00409_ESCRT_I_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00409 	137492	155382	51160	55048	7251	79720	89853	93343
+hsa_M00412_ESCRT_III_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00412 	100526767	128866	25978	27183	27243	29082	51510	51652	57132	79643	91782	92421	9525
+hsa_M00413_FA_core_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00413 	2175	2176	2178	2187	2188	2189	55120	57697	80233	91442
+hsa_M00414_Bloom_s_syndrome_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00414 	116028	641	7156	80010	8940
+hsa_M00415_Fatty_acid_biosynthesis_elongation_endoplasmic_reticulum 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00415 	201562	401494	51144	51495	54898	60481	64834	6785	79071	79993	83401	9200	9524
+hsa_M00424_Shelterin_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00424 	25913	26277	54386	65057	7013	7014
+hsa_M00426_Survival_motor_neuron_SMN_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00426 	11171	11218	25929	50628	54960	6606	6607	79760	79833	8487
+hsa_M00427_Nuclear_pore_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00427 	100101267	101929087	10762	11097	129401	23165	23225	23279	23511	23636	285190	348995	387082	400966	4927	4928	53371	55706	55746	57122	5903	5905	59343	6396	653489	6612	6613	7175	727851	729857	7329	7341	79023	79902	8021	8086	81929	84220	8480	91181	94026	9631	9688	9818	9883	9972
+hsa_M00428_eIF4F_complex 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00428 	1973	1974	1977	1981	1982	253314	8672	9470
+hsa_M00430_Exon_junction_complex_EJC_ 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00430 	10189	10250	10284	10921	22794	22985	26019	29107	4116	5411	55110	55916	5976	65109	65110	7919	9775	9939
+hsa_M00549_Nucleotide_sugar_biosynthesis_glucose_UDP_glucose 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00549 	2645	3098	3099	3101	5236	7360	80201
+hsa_M00676_PI3K_Akt_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00676 	10000	207	208	2308	2309	23533	3643	3667	5290	5291	5293	5294	5295	5296	8503
+hsa_M00677_Wnt_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00677 	11211	1499	1855	1856	1857	2535	2932	51176	51384	54361	6932	6934	7471	7472	7473	7474	7475	7476	7477	7478	7479	7480	7481	7482	7483	7484	7855	7976	80326	81029	8321	8322	8323	8324	8325	8326	89780
+hsa_M00678_Hedgehog_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00678 	27148	2735	2736	2737	3549	374654	50846	51684	5727	6469	6608
+hsa_M00679_BMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00679 	151449	268	269	353500	392255	4086	4089	4090	4093	650	652	653	654	655	656	657	658	659	8200	90	92	93
+hsa_M00680_TGF_beta_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00680 	4087	4088	4089	7040	7042	7043	7046	7048
+hsa_M00681_Activin_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00681 	3624	3625	3626	4087	4088	4089	83729	91	92	93
+hsa_M00682_Notch_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00682 	10683	11317	23385	28514	3516	4851	4853	4854	4855	51107	54567	55851	5663	5664	6868	83464
+hsa_M00683_Hippo_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00683 	10413	122786	23286	25937	26524	4771	55233	60485	6788	7003	7004	7005	79981	8463	9113	92597
+hsa_M00684_JAK_STAT_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00684 	1154	122809	30837	3716	3717	3718	6772	6773	6774	6775	6776	6777	6778	7297	8651	8835	9021	9306	9655
+hsa_M00687_MAPK_ERK1_2_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00687 	369	4342	5594	5595	5604	5605	5894	673
+hsa_M00688_MAPK_JNK_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00688 	10746	1326	4214	4215	4216	4217	4293	4294	4296	51347	5599	5601	5602	5609	57551	6416	6885	7786	84451	9064	9344
+hsa_M00689_MAPK_p38_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00689 	10746	1326	1432	4214	4215	4216	4217	4293	4294	4296	51347	5600	5603	5606	5608	57551	6300	6885	7786	84451	9064	9344
+hsa_M00691_DNA_damage_induced_cell_cycle_checkpoints 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00691 	1111	11200	472	545	993	994	995
+hsa_M00692_Cell_cycle 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00692 	1017	1019	1021	1869	1870	1871	5925	5933	595	894	896	898	9134
+hsa_M00693_Cell_cycle 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00693 	1017	494551	7465	85417	890	8900	891	9133	983	995
+hsa_M00694_cGMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00694 	1258	1259	2977	2982	2983	4881	4882	5138	5592	5593
+hsa_M00695_cAMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+hsa_M00695 	107	108	109	111	112	113	114	115	196883	2778	5566	5567	5568	5613
