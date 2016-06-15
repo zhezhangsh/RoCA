@@ -92,6 +92,7 @@ if (!is.null(yml$input$kegg)) {
     if (grepl('.zip$', x)) {
       fns.xml <- unzip(x, exdir=dir.kegg);
       file.rename(fns.xml, paste(dir.kegg, TrimPath(fns.xml), sep='/')) -> x; 
+      file.remove(x); 
     }
   }
 }
