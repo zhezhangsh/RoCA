@@ -61,7 +61,7 @@ input:
     # the first is metadata of gene sets, 
     # the second is a list of gene set-gene mapping
     # see examples at https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set
-  gsea: gsea2-2.2.0.jar   ## the Java program of GSEA
+  gsea: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/gmt/gsea2-2.2.0.jar   ## the Java program of GSEA
   kegg: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/pathway/kegg/human.zip             ## the .xml files of KEGG pathway maps; if empty, the files will be downloaded from KEGG website
   gmt:                    ## the gene set collection files as defined here: http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29
     MSigDb_Hallmark: C0_Hallmark.gmt
