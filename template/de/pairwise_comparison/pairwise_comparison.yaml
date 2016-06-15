@@ -1,0 +1,134 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <expr> numeric matrix of full transcriptome data set saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - commonly RMA processed microarray data, RNA-seq read count or FPKM/TPM
+#   - the first column or the row names of an R object must be unique Entrez gene IDs
+#   - the first row or column names of an R object is unique sample IDs
+# <anno> a table of gene annotation saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column or the row names of an R object must be unique Entrez gene ID matching the row names of <data>
+#   - the second column is official gene symbols matching the gene IDs
+# <comparison> a list of 2 named character vectors saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - vector names will be used as group names
+#   - each vector includes unique sample IDs matching column names of <data>
+#   - each vector must include multiple sample IDs matching the column names of <data>, as replicates of each group
+#   - the two vectors cannot have any overlapping
+# <geneset> a list of 2 elements saved in a .rdata, .rda, or .rds file
+#   - see https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set for examples
+#   - the first element of the list is a table of gene set annotation
+#   - the second element of this list is itself of a list of gene-gene set mapping
+#   - the element names of the seconde element must match the row names of the first element
+# <gsea> the jave GSEA program, that can also be downloaded from http://software.broadinstitute.org/gsea/downloads.jsp
+# <kegg> the folder including .xml files KEGG pathway maps
+#   - If not given, all .xml map files will be downloaded from KEGG on the fly
+#   - KEGG map files of a few model animals: https://github.com/zhezhangsh/RoCA/tree/master/data/pathway/kegg
+#   - Download and unpack a .zip file to local computer or provide the URL of the .zip file
+# <gmt> all .gmt files of gene set collections for GSEA 
+#   - Collections of .gmt file of a few model animals: https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set/gmt
+#   - More about .gmt format: http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats
+#############################################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for generating any report using the RoCA::CreateReport() function
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/pairwise_comparison.Rmd
+#template: pairwise_comparison.Rmd
+output: examples/rnaseq                                                             # Where to write all the output files
+home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                                                  # Name of the analyst
+zip: no                                                                             # Whether to zip all output files
+
+#################
+##### ABOUT #####
+#################
+# Description of this analysis, could be any name/text pairs
+description:      
+  Project: "Transcriptome in immune cells of control-patient samples"
+  Data: "Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. 
+        Raw data was processed to get gene-level read counts."
+  Analysis: "This is a demo."
+
+##################
+##### INPUTS #####
+##################
+# Prepared input data, saved in .rds format using the saveRDS() function
+input:
+  expr: count_ss.rds      ## a matrix of data, row=gene, column=sample, row names must be unique NCBI Entrez gene IDs
+  anno: anno_ss.rds       ## a data frame of gene annotation, row names match the row names of the data matrix, the first column is optimally official gene symbol
+  comparison: group.rds   ## a list of 2 named character vectors of sample IDs, matching column names of the data matrix, vector names are names of the 2 groups to be compared
+  geneset: human_ss.rds   ## collection of gene sets, availble online
+    # the first is metadata of gene sets, 
+    # the second is a list of gene set-gene mapping
+    # see examples at https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set
+  gsea: gsea2-2.2.0.jar   ## the Java program of GSEA
+  kegg: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/pathway/kegg/human.zip             ## the .xml files of KEGG pathway maps; if empty, the files will be downloaded from KEGG website
+  gmt:                    ## the gene set collection files as defined here: http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29
+    MSigDb_Hallmark: C0_Hallmark.gmt
+    Wiki_pathway: WikiPathways.gmt
+    KEGG_pathway: KEGG_pathway_ss.gmt     
+#    MSigDb_Hallmark:  https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/gmt/human/MSigDb/C0_Hallmark.gmt
+#    REACTOME_pathway: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/gmt/human/BioSystems/REACTOME.gmt              
+#    KEGG_pathway:     https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/gmt/human/KEGG/KEGG_pathway.gmt
+  
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter: # All parameters
+  genome: human               # Name of the reference genome, in the form of "human", "hsa", or "hg38".
+  paired: no                  # Whether it's a paired comparison, if TRUE, the two sample ID vectors must have matched orders
+  processing:                 # Whether the gene expression matrix has be normalized
+    logged: no                ## Data has been log2-transformed? (RNA-seq read count -> no; RNA-seq FPKM/TPM -> no; RMA processed microarray data -> yes)
+    normalized: no            ## Data has been normalized between samples? (RNA-seq read count -> no; RNA-seq FPKM/TPM -> yes; RMA processed microarray data -> yes)
+    # RMA processed microarray data: logged=yes, normalized=yes
+    # RNA-seq read count: logged=no, normalized=no
+    # RNA-seq FPKM/TMP: logged=no, normalized=yes
+  deg:                        # Options of selecting differentially expressed genes 
+    method: DeEdgeR           ## Statistical tests, use one of the returned values of DeMethods()
+    penalty: 0                ## Only applicable when method=DeRankP; penalty to be given to genes with high between-sample variance, ranging from 0 to 1 (1=maximal penalty)
+    reprocessed: no           ## Whether to use reprocessed data (logged transformed and/or normalized) from statistical test
+    nperm: 100.0              ## Number of permutations for methods such as DeRankP
+    cutoff.l2r: 0.0e+00       ## Log2-ratio cutoff to select top DEGs
+    cutoff.p: 0.05            ## P value cutoff to select top DEGs
+    cutoff.fdr: 0.05          ## FDR cutoff to select top DEGs
+    num.top: 250.0            ## The maximal number of DEGs to select; if more genes are left after filtering with all 3 cutoffs; select those with biggest log2-ratios
+    rank: both                ## The method to pre-rank genes for GSEA ('p' = by p value only; 'fc' = by fold change only; 'both' = by combination of p value and fold change)
+    # RMA processed microarray data: method=DeT/DeSam/DeRankP; reprocessed=no
+    # RNA-seq read count: method=DeDeSeq2/DeEdgeR/DeVoomLimma; reprocessed=no
+    # RNA-seq FPKM/TMP: method=DeT/DeSam/DeRankP; reprocessed=yes
+
+################
+##### GSEA #####
+# Set up the GSEA runs
+gsea:
+  thread: 4       # Number of CPU cores for parallel computing
+  kegg:           # Options to plot KEGG pathway maps
+    collection: KEGG_pathway      # Name of the gmt file corresponding to gene set collection of KEGG pathways
+    p: 0.05                       # GSEA p value cutoff to select KEGG pathways to be plotted
+    top: 3                        # The number of top-ranked pathways to be plotted
+  options: # All GSEA options, check GSEA website for instruction: http://software.broadinstitute.org/gsea/doc/GSEAUserGuideFrame.html
+  ##############################################
+  # parameters commonly changed from run to run
+    metric: Diff_of_Classes   # metric for raning genes: <Signal2Noise>, <tTest>, <Cosine>, <Euclidean>, <Manhatten>, <Pearson>, <Ratio_of_Classes>, <Diff_of_Classes>, or <log2_Ratio_of_Classes>
+    nperm: 1000                # number of permuations
+    permute: gene_set         # type of permuation: <gene_set> or <phenotype>
+    plot_top_x: 100           # number of top pathways to plot 
+    set_max: 500 
+    set_min: 5 
+    ##############################################
+    # paramater rarely to be changed
+    scoring_scheme: weighted    # weighted enrichment statistics: <classic>, <weighted>, <weighted_p2> or <weighted_p1.5>
+    collapse: true              # collapse redundant genes: <true> or <false>
+    mode: Max_probe             # which one to use when there is redudant genes: <Max_probe> or <Median_of_probes>
+    norm: meandiv               # normalization mode: <none> or <meandiv>
+    rnd_type: no_balance 
+    sort: real 
+    order: descending 
+    include_only_symbols: true 
+    make_sets: true 
+    median: false 
+    num: 100 
+    rnd_seed: timestamp 
+    save_rnd_lists: false 
+    zip_report: false 
+    gui: false
