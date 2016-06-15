@@ -8,21 +8,22 @@
 #   - the first column or the row names of an R object must be unique Entrez gene ID matching the row names of <data>
 #   - the second column is official gene symbols matching the gene IDs
 # <comparison> a list of 2 named character vectors saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
-#   - vector names will be used as group names
-#   - each vector includes unique sample IDs matching column names of <data>
-#   - each vector must include multiple sample IDs matching the column names of <data>, as replicates of each group
-#   - the two vectors cannot have any overlapping
+#   - Vector names will be used as group names
+#   - The first vector has the control samples and the second has the case samples
+#   - Each vector includes unique sample IDs matching column names of <data>
+#   - Each vector must include multiple sample IDs matching the column names of <data>, as replicates of each group
+#   - The two vectors cannot have any overlapping
 # <geneset> a list of 2 elements saved in a .rdata, .rda, or .rds file
-#   - see https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set for examples
-#   - the first element of the list is a table of gene set annotation
-#   - the second element of this list is itself of a list of gene-gene set mapping
-#   - the element names of the seconde element must match the row names of the first element
-# <gsea> the jave GSEA program, that can also be downloaded from http://software.broadinstitute.org/gsea/downloads.jsp
-# <kegg> the folder including .xml files KEGG pathway maps
+#   - See https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set for examples
+#   - The first element of the list is a table of gene set annotation
+#   - The second element of this list is itself of a list of gene-gene set mapping
+#   - The element names of the seconde element must match the row names of the first element
+# <gsea> The jave GSEA program, that can also be downloaded from http://software.broadinstitute.org/gsea/downloads.jsp
+# <kegg> The folder including .xml files KEGG pathway maps
 #   - If not given, all .xml map files will be downloaded from KEGG on the fly
 #   - KEGG map files of a few model animals: https://github.com/zhezhangsh/RoCA/tree/master/data/pathway/kegg
 #   - Download and unpack a .zip file to local computer or provide the URL of the .zip file
-# <gmt> all .gmt files of gene set collections for GSEA 
+# <gmt> All .gmt files of gene set collections for GSEA 
 #   - Collections of .gmt file of a few model animals: https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set/gmt
 #   - More about .gmt format: http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats
 #############################################################################################################################
