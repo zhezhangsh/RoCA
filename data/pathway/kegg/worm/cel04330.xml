@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!DOCTYPE pathway SYSTEM "http://www.kegg.jp/kegg/xml/KGML_v0.7.1_.dtd">
+<!-- Creation date: Mar 31, 2009 11:06:20 +0900 (JST) -->
+<pathway name="path:cel04330" org="cel" number="04330"
+         title="Notch signaling pathway"
+         image="http://www.kegg.jp/kegg/pathway/cel/cel04330.png"
+         link="http://www.kegg.jp/kegg-bin/show_pathway?cel04330">
+    <entry id="1" name="cel:CELE_ZC434.6" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_ZC434.6">
+        <graphics name="aph-2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="263" y="290" width="46" height="17"/>
+    </entry>
+    <entry id="2" name="cel:CELE_VF36H2L.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_VF36H2L.1">
+        <graphics name="aph-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="309" y="290" width="46" height="17"/>
+    </entry>
+    <entry id="3" name="cel:CELE_C18E3.8 cel:CELE_F35H12.3 cel:CELE_ZK524.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C18E3.8+cel:CELE_F35H12.3+cel:CELE_ZK524.1">
+        <graphics name="hop-1..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="309" y="273" width="46" height="17"/>
+    </entry>
+    <entry id="4" name="path:cel04010" type="map"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel04010">
+        <graphics name="MAPK signaling pathway" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="394" y="395" width="109" height="40"/>
+    </entry>
+    <entry id="5" name="cel:CELE_C08B11.2 cel:CELE_C53A5.3 cel:CELE_R06C1.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C08B11.2+cel:CELE_C53A5.3+cel:CELE_R06C1.1">
+        <graphics name="hda-2..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="663" y="325" width="46" height="17"/>
+    </entry>
+    <entry id="6" name="cel:CELE_F55F8.4" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F55F8.4">
+        <graphics name="cir-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="707" y="302" width="46" height="17"/>
+    </entry>
+    <entry id="7" name="ko:K04497" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K04497">
+        <graphics name="K04497" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="646" y="302" width="46" height="17"/>
+    </entry>
+    <entry id="8" name="cel:CELE_F49E10.5" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_F49E10.5">
+        <graphics name="ctbp-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="596" y="302" width="46" height="17"/>
+    </entry>
+    <entry id="9" name="ko:K06064" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06064">
+        <graphics name="K06064" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="623" y="279" width="46" height="17"/>
+    </entry>
+    <entry id="10" name="ko:K06065" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06065">
+        <graphics name="K06065" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="693" y="279" width="46" height="17"/>
+    </entry>
+    <entry id="11" name="ko:K06056" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06056">
+        <graphics name="K06056" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="810" y="234" width="46" height="17"/>
+    </entry>
+    <entry id="12" name="ko:K06054 ko:K06055" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06054+K06055">
+        <graphics name="K06054..." fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="810" y="205" width="46" height="17"/>
+    </entry>
+    <entry id="13" name="cel:CELE_K08B4.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_K08B4.1">
+        <graphics name="lag-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="663" y="220" width="46" height="17"/>
+    </entry>
+    <entry id="14" name="cel:CELE_T27F2.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T27F2.1">
+        <graphics name="skp-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="685" y="181" width="46" height="17"/>
+    </entry>
+    <entry id="15" name="cel:CELE_R10E11.1 cel:CELE_Y47G6A.6" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_R10E11.1+cel:CELE_Y47G6A.6">
+        <graphics name="cbp-1..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="608" y="189" width="46" height="17"/>
+    </entry>
+    <entry id="16" name="ko:K06061" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06061">
+        <graphics name="K06061" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="608" y="172" width="46" height="17"/>
+    </entry>
+    <entry id="17" name="cel:CELE_ZK154.7" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_ZK154.7">
+        <graphics name="adm-4" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="146" y="319" width="46" height="17"/>
+    </entry>
+    <entry id="18" name="cel:CELE_T28D6.9" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T28D6.9">
+        <graphics name="pen-2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="263" y="273" width="46" height="17"/>
+    </entry>
+    <entry id="19" name="ko:K06058" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06058">
+        <graphics name="K06058" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="333" y="194" width="46" height="17"/>
+    </entry>
+    <entry id="20" name="cel:CELE_T03D8.1" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T03D8.1">
+        <graphics name="num-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="297" y="164" width="46" height="17"/>
+    </entry>
+    <entry id="21" name="ko:K06052" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06052">
+        <graphics name="K06052" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="83" y="266" width="46" height="17"/>
+    </entry>
+    <entry id="22" name="ko:K02599" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K02599">
+        <graphics name="K02599" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="189" y="220" width="46" height="17"/>
+    </entry>
+    <entry id="23" name="cel:CELE_C34F11.9" type="gene"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C34F11.9">
+        <graphics name="dsh-1" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="244" y="145" width="46" height="17"/>
+    </entry>
+    <entry id="24" name="path:cel04330" type="map"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel04330">
+        <graphics name="TITLE:Notch signaling pathway" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="160" y="58" width="239" height="25"/>
+    </entry>
+    <entry id="25" name="ko:K05948" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K05948">
+        <graphics name="K05948" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="137" y="144" width="46" height="17"/>
+    </entry>
+    <entry id="26" name="ko:K06051" type="ortholog"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K06051">
+        <graphics name="K06051" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="83" y="220" width="46" height="17"/>
+    </entry>
+    <entry id="27" name="undefined" type="group">
+        <graphics fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="629" y="313" width="113" height="40"/>
+        <component id="5"/>
+        <component id="8"/>
+    </entry>
+    <entry id="28" name="undefined" type="group">
+        <graphics fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="685" y="313" width="90" height="40"/>
+        <component id="5"/>
+        <component id="6"/>
+    </entry>
+    <relation entry1="15" entry2="13" type="PPrel">
+        <subtype name="activation" value="--&gt;"/>
+    </relation>
+    <relation entry1="27" entry2="13" type="PPrel">
+        <subtype name="inhibition" value="--|"/>
+    </relation>
+    <relation entry1="5" entry2="13" type="PPrel">
+        <subtype name="inhibition" value="--|"/>
+    </relation>
+    <relation entry1="28" entry2="13" type="PPrel">
+        <subtype name="inhibition" value="--|"/>
+    </relation>
+    <relation entry1="13" entry2="14" type="PPrel">
+        <subtype name="binding/association" value="---"/>
+    </relation>
+</pathway>

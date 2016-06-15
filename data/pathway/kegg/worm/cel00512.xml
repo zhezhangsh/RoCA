@@ -1,0 +1,311 @@
+<?xml version="1.0"?>
+<!DOCTYPE pathway SYSTEM "http://www.kegg.jp/kegg/xml/KGML_v0.7.1_.dtd">
+<!-- Creation date: Jun 4, 2012 15:07:46 +0900 (GMT+09:00) -->
+<pathway name="path:cel00512" org="cel" number="00512"
+         title="Mucin type O-Glycan biosynthesis"
+         image="http://www.kegg.jp/kegg/pathway/cel/cel00512.png"
+         link="http://www.kegg.jp/kegg-bin/show_pathway?cel00512">
+    <entry id="14" name="path:cel00533" type="map"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel00533">
+        <graphics name="Glycosaminoglycan biosynthesis - keratan sulfate" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="604" y="180" width="92" height="34"/>
+    </entry>
+    <entry id="15" name="gl:G00034" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00034">
+        <graphics name="G00034" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="340" y="497" width="8" height="8"/>
+    </entry>
+    <entry id="16" name="gl:G00033" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00033">
+        <graphics name="G00033" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="340" y="433" width="8" height="8"/>
+    </entry>
+    <entry id="17" name="gl:G00032" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00032">
+        <graphics name="G00032" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="471" y="370" width="8" height="8"/>
+    </entry>
+    <entry id="18" name="gl:G00031" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00031">
+        <graphics name="G00031" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="340" y="370" width="8" height="8"/>
+    </entry>
+    <entry id="19" name="gl:G00030" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00030">
+        <graphics name="G00030" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="340" y="306" width="8" height="8"/>
+    </entry>
+    <entry id="20" name="gl:G00029" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00029">
+        <graphics name="G00029" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="471" y="242" width="8" height="8"/>
+    </entry>
+    <entry id="21" name="gl:G00028" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00028">
+        <graphics name="G00028" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="340" y="242" width="8" height="8"/>
+    </entry>
+    <entry id="22" name="gl:G00027" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00027">
+        <graphics name="G00027" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="601" y="116" width="8" height="8"/>
+    </entry>
+    <entry id="23" name="gl:G00026" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00026">
+        <graphics name="G00026" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="471" y="116" width="8" height="8"/>
+    </entry>
+    <entry id="24" name="gl:G00025" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00025">
+        <graphics name="G00025" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="471" y="179" width="8" height="8"/>
+    </entry>
+    <entry id="25" name="gl:G00023" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00023">
+        <graphics name="G00023" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="206" y="242" width="8" height="8"/>
+    </entry>
+    <entry id="26" name="gl:G00035" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00035">
+        <graphics name="G00035" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="204" y="116" width="8" height="8"/>
+    </entry>
+    <entry id="28" name="ko:K09662" type="ortholog" reaction="rn:R05915"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K09662">
+        <graphics name="K09662" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="402" y="240" width="46" height="17"/>
+    </entry>
+    <entry id="29" name="cel:CELE_T15D6.2" type="gene" reaction="rn:R05910"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T15D6.2">
+        <graphics name="gly-16" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="267" y="359" width="46" height="17"/>
+    </entry>
+    <entry id="32" name="ko:K09905" type="ortholog" reaction="rn:R07628"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K09905">
+        <graphics name="K09905" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="402" y="371" width="46" height="17"/>
+    </entry>
+    <entry id="33" name="ko:K03479" type="ortholog" reaction="rn:R05914"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K03479">
+        <graphics name="K03479" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="535" y="115" width="46" height="17"/>
+    </entry>
+    <entry id="34" name="ko:K03479" type="ortholog" reaction="rn:R05911"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K03479">
+        <graphics name="K03479" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="204" y="153" width="46" height="17"/>
+    </entry>
+    <entry id="35" name="ko:K00780 ko:K03368" type="ortholog" reaction="rn:R05913"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K00780+K03368">
+        <graphics name="K00780..." fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="402" y="116" width="46" height="17"/>
+    </entry>
+    <entry id="37" name="ko:K00739" type="ortholog" reaction="rn:R05909"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K00739">
+        <graphics name="K00739" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="rectangle" x="267" y="240" width="46" height="17"/>
+    </entry>
+    <entry id="38" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="149" y="243" width="46" height="17"/>
+    </entry>
+    <entry id="39" name="cel:CELE_C38H2.2" type="gene" reaction="rn:R05908"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C38H2.2">
+        <graphics name="C38H2.2" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="267" y="180" width="46" height="17"/>
+    </entry>
+    <entry id="40" name="cel:CELE_T15D6.2" type="gene" reaction="rn:R05912"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T15D6.2">
+        <graphics name="gly-16" fgcolor="#000000" bgcolor="#BFFFBF"
+             type="rectangle" x="402" y="180" width="46" height="17"/>
+    </entry>
+    <entry id="41" name="path:cel00512" type="map"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel00512">
+        <graphics name="TITLE:Mucin type O-Glycan biosynthesis" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="roundrectangle" x="190" y="58" width="299" height="25"/>
+    </entry>
+    <entry id="42" name="cpd:C02189" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?C02189">
+        <graphics name="C02189" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="75" y="242" width="8" height="8"/>
+    </entry>
+    <entry id="43" name="gl:G10611" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G10611">
+        <graphics name="G10611" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="96" y="207" width="8" height="8"/>
+    </entry>
+    <entry id="46" name="ko:K09905" type="ortholog" reaction="rn:R07628"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K09905">
+        <graphics name="K09905" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="line" coords="417,860,437,860"/>
+    </entry>
+    <entry id="47" name="ko:K03479" type="ortholog" reaction="rn:R05911"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K03479">
+        <graphics name="K03479" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="line" coords="133,678,153,678"/>
+    </entry>
+    <entry id="48" name="ko:K00780 ko:K03368" type="ortholog" reaction="rn:R05913"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K00780+K03368">
+        <graphics name="K00780..." fgcolor="#000000" bgcolor="#FFFFFF"
+             type="line" coords="134,792,154,792"/>
+    </entry>
+    <entry id="49" name="ko:K00739" type="ortholog" reaction="rn:R05909"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K00739">
+        <graphics name="K00739" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="line" coords="437,744,447,734"/>
+    </entry>
+    <entry id="50" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="500,987,520,987"/>
+    </entry>
+    <entry id="52" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="518,930,538,930"/>
+    </entry>
+    <entry id="53" name="cel:CELE_T15D6.2" type="gene" reaction="rn:R05910"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T15D6.2">
+        <graphics name="gly-16" fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="498,860,518,860"/>
+    </entry>
+    <entry id="54" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="579,860,599,860"/>
+    </entry>
+    <entry id="56" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="519,801,539,801"/>
+    </entry>
+    <entry id="57" name="ko:K09662" type="ortholog" reaction="rn:R05915"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K09662">
+        <graphics name="K09662" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="line" coords="438,711,448,721"/>
+    </entry>
+    <entry id="58" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="508,726,528,726"/>
+    </entry>
+    <entry id="59" name="cel:CELE_C38H2.2" type="gene" reaction="rn:R05908"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C38H2.2">
+        <graphics name="C38H2.2" fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="436,641,446,631"/>
+    </entry>
+    <entry id="60" name="cel:CELE_T15D6.2" type="gene" reaction="rn:R05912"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_T15D6.2">
+        <graphics name="gly-16" fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="437,608,447,618"/>
+    </entry>
+    <entry id="61" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="507,623,527,623"/>
+    </entry>
+    <entry id="62" name="cel:CELE_C38H2.2" type="gene" reaction="rn:R05908"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_C38H2.2">
+        <graphics name="C38H2.2" fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="194,791,204,781"/>
+    </entry>
+    <entry id="63" name="ko:K03479" type="ortholog" reaction="rn:R05914"
+        link="http://www.kegg.jp/dbget-bin/www_bget?K03479">
+        <graphics name="K03479" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="line" coords="195,758,205,768"/>
+    </entry>
+    <entry id="64" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="265,773,285,773"/>
+    </entry>
+    <entry id="65" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="215,678,235,678"/>
+    </entry>
+    <entry id="66" name="cel:CELE_Y116F11B.12 cel:CELE_Y39E4B.12 cel:CELE_Y45F10D.3 cel:CELE_Y46H3A.6 cel:CELE_ZK688.8" type="gene" reaction="rn:R05907"
+        link="http://www.kegg.jp/dbget-bin/www_bget?cel:CELE_Y116F11B.12+cel:CELE_Y39E4B.12+cel:CELE_Y45F10D.3+cel:CELE_Y46H3A.6+cel:CELE_ZK688.8">
+        <graphics name="gly-4..." fgcolor="#66CC66" bgcolor="#FFFFFF"
+             type="line" coords="131,604,151,604"/>
+    </entry>
+    <entry id="67" name="gl:G00024" type="compound"
+        link="http://www.kegg.jp/dbget-bin/www_bget?G00024">
+        <graphics name="G00024" fgcolor="#000000" bgcolor="#FFFFFF"
+             type="circle" x="340" y="179" width="8" height="8"/>
+    </entry>
+    <relation entry1="38" entry2="39" type="ECrel">
+        <subtype name="compound" value="25"/>
+    </relation>
+    <relation entry1="29" entry2="38" type="ECrel">
+        <subtype name="compound" value="25"/>
+    </relation>
+    <relation entry1="29" entry2="39" type="ECrel">
+        <subtype name="compound" value="25"/>
+    </relation>
+    <relation entry1="40" entry2="14" type="maplink">
+        <subtype name="compound" value="24"/>
+    </relation>
+    <relation entry1="39" entry2="40" type="ECrel">
+        <subtype name="compound" value="67"/>
+    </relation>
+    <reaction id="29" name="rn:R05910" type="irreversible">
+        <substrate id="25" name="gl:G00023"/>
+        <product id="18" name="gl:G00031"/>
+    </reaction>
+    <reaction id="38" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="50" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="52" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="53" name="rn:R05910" type="irreversible">
+        <substrate id="25" name="gl:G00023"/>
+        <product id="18" name="gl:G00031"/>
+    </reaction>
+    <reaction id="54" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="56" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="58" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="61" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="64" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="65" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+    <reaction id="66" name="rn:R05907" type="irreversible">
+        <substrate id="43" name="gl:G10611"/>
+        <substrate id="42" name="cpd:C02189"/>
+        <product id="25" name="gl:G00023"/>
+    </reaction>
+</pathway>
