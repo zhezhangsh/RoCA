@@ -298,7 +298,6 @@ This report is generated based on the following inputs:
     - **Maximum number of genes:** `r prms$deg$num.top`
   - **Gene set analysis:**
     - **Gene set collection:** `r yml$input$geneset` (`r nrow(geneset[[1]])` total gene sets)
-    - **KEGG pathway maps:** `r yml$input$kegg` (`r length(kegg.fns)` total maps)
     - **GSEA Java program:** `r yml$input$gsea`
     - **GSEA .gmt files:**
     
