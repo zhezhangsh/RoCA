@@ -130,7 +130,7 @@ if (!prms$processing$normalized) inputs$normalized <- e1.2 <- NormLoess(e1.2);
 res<-list(inputs=inputs);  # Result set
 
 yml$gsea$jar <- DownloadFile(yml$input$gsea, path.input); 
-yml$gsea$gmt <- lapply(yml$input$gmt, function(x) DownloadFile(x, path.input)); 
+yml$gsea$gmt <- lapply(yml$input$gmt, function(x) DownloadFile(x, paste(path.input, 'gmt', sep='/'))); 
 
 fn.xls <- paste(g1.name, '-vs-', g2.name, '.xlsx', sep='');
 ```
