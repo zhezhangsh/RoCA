@@ -89,10 +89,12 @@ parameter: # All parameters
     penalty: 0                ## Only applicable when method=DeRankP; penalty to be given to genes with high between-sample variance, ranging from 0 to 1 (1=maximal penalty)
     reprocessed: no           ## Whether to use reprocessed data (logged transformed and/or normalized) from statistical test
     nperm: 100.0              ## Number of permutations for methods such as DeRankP
-    cutoff.l2r: 0.0e+00       ## Log2-ratio cutoff to select top DEGs
     cutoff.p: 0.05            ## P value cutoff to select top DEGs
     cutoff.fdr: 0.05          ## FDR cutoff to select top DEGs
-    num.top: 250.0            ## The maximal number of DEGs to select; if more genes are left after filtering with all 3 cutoffs; select those with biggest log2-ratios
+    cutoff.l2r: 0.0e+00       ## Log2-ratio cutoff to select top DEGs
+    num.top: 250.0            ## Selection of top DEGs. 
+                              ## If less genes than this number are selected by all 3 cutoffs, release the l2r cutoff and select genes with largest l2r; 
+                              ## If more genes than this number are selected by all 3 cutoffs, keep all of them
     rank: both                ## The method to pre-rank genes for GSEA ('p' = by p value only; 'fc' = by fold change only; 'both' = by combination of p value and fold change)
     # RMA processed microarray data: method=DeT/DeSam/DeRankP; reprocessed=no
     # RNA-seq read count: method=DeDeSeq2/DeEdgeR/DeVoomLimma; reprocessed=no
