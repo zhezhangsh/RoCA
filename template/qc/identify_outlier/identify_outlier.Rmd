@@ -90,7 +90,6 @@ if (prms$min.n < 4) {
 
 `r WriteDescription(yml$description)`
 
-`r home.url`
 
 ```{r, functions, include=FALSE}
 IdentifyOutlierByCorr<-function(d, RMX=0.99, NMN=4, NSD=3) {
