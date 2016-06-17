@@ -70,31 +70,13 @@ home.url <- Link2Home(yml$home);
 
 ```{r load_data, include=FALSE}
 inputs<-yml$input;
+res<-list(inputs=inputs);  # Result set
 
 # All input variables
 anno <- ImportTable(DownloadFile(inputs$anno, path.input));
 expr <- as.matrix(ImportTable(DownloadFile(inputs$expr, path.input)));
 grps <- ImportR(DownloadFile(inputs$comparison, path.input));
 geneset <- ImportR(DownloadFile(inputs$geneset, path.input));
-
-
-# .xml files of KEGG pathway maps 
-dir.kegg <- paste(path.input, 'kegg', sep='/'); 
-if (file.exists(dir.kegg)) unlink(dir.kegg, recursive = TRUE); 
-dir.create(dir.kegg, recursive = TRUE); 
-if (!is.null(yml$input$kegg)) {
-  if (dir.exists(yml$input$kegg)) {
-    kegg.fns <- dir(yml$input$kegg); 
-    kegg.fns <- kegg.fns[grep('.xml$', kegg.fns, ignore.case = TRUE)]; 
-    file.copy(paste(yml$input$kegg, kegg.fns, sep='/'), paste(dir.kegg, kegg.fns, sep='/'), overwrite = TRUE) -> x; 
-  } else if (url.exists(yml$input$kegg)) {
-    x <- DownloadFile(yml$input$kegg, dir.kegg);
-    if (grepl('.zip$', x)) {
-      fns.xml <- unzip(x, exdir=dir.kegg);
-      file.rename(fns.xml, paste(dir.kegg, TrimPath(fns.xml), sep='/')) -> x; 
-    }
-  }
-}
 
 genome  <- prms$genome;
 paired  <- prms$paired;
@@ -127,12 +109,31 @@ inputs$expr<-e1.2;
 if (!prms$processing$logged) inputs$logged <- e1.2 <- log2(e1.2+1); 
 if (!prms$processing$normalized) inputs$normalized <- e1.2 <- NormLoess(e1.2); 
 
-res<-list(inputs=inputs);  # Result set
 
 yml$gsea$jar <- DownloadFile(yml$input$gsea, path.input); 
-yml$gsea$gmt <- lapply(yml$input$gmt, function(x) DownloadFile(x, paste(path.input, 'gmt', sep='/'))); 
 
-fn.xls <- paste(g1.name, '-vs-', g2.name, '.xlsx', sep='');
+dir.gmt <- paste(path.input, 'gmt', sep='/'); 
+if (file.exists(dir.gmt)) unlink(dir.gmt, recursive = TRUE); 
+dir.create(dir.gmt, recursive = TRUE); 
+yml$gsea$gmt <- lapply(yml$input$gmt, function(x) DownloadFile(x, dir.gmt)); 
+
+# .xml files of KEGG pathway maps 
+dir.kegg <- paste(path.input, 'kegg', sep='/'); 
+if (file.exists(dir.kegg)) unlink(dir.kegg, recursive = TRUE); 
+dir.create(dir.kegg, recursive = TRUE); 
+if (!is.null(yml$input$kegg)) {
+  if (dir.exists(yml$input$kegg)) {
+    kegg.fns <- dir(yml$input$kegg); 
+    kegg.fns <- kegg.fns[grep('.xml$', kegg.fns, ignore.case = TRUE)]; 
+    file.copy(paste(yml$input$kegg, kegg.fns, sep='/'), paste(dir.kegg, kegg.fns, sep='/'), overwrite = TRUE) -> x; 
+  } else if (url.exists(yml$input$kegg)) {
+    x <- DownloadFile(yml$input$kegg, dir.kegg);
+    if (grepl('.zip$', x)) {
+      fns.xml <- unzip(x, exdir=dir.kegg);
+      file.rename(fns.xml, paste(dir.kegg, TrimPath(fns.xml), sep='/')) -> x; 
+    }
+  }
+}
 ```
 
 `r home.url` 
@@ -239,7 +240,10 @@ up <- degs[[1]];
 dn <- degs[[2]];
 #saveRDS(de, file=paste(path.r, 'deg_all.rds', sep='/')); 
 ```
-  
+
+```{r glance, include=FALSE}
+if (yml$zip) l <- paste('; [All files](', TrimPath(path) ,'.zip)', sep='') else l <- '';
+```
 <div style="background-color:rgba(0, 0, 0, 0.025); font-size:1.5em; padding:60px 0">
     
 Click links below to go directly to results or read the rest of this report for details: 
@@ -252,9 +256,7 @@ Click links below to go directly to results or read the rest of this report for 
     - [All top hits](GSEA/full_table.html)
     - [KEGG pathway maps](GSEA/kegg/index.html)
   - [Biclustering](table/bicluster_index.html) of significant genes and gene sets
-  - Download
-    - [Result tables in Excel](table/`r fn.xls`)
-    - [Figures in PDF](figure/figures.zip)
+  - Download [Figures](figure/figures.zip); [Tables](table/tables.zip); [R objects](R/R.zip)`r l`
 </div>
 
 `r home.url` 
@@ -1115,11 +1117,6 @@ if (!identical(NA, ex.bic)) ln <- paste("![](", TruncatePathPrefix(ex.bic, path)
 </div>
 
 ```{r write_out, eval=TRUE, include=FALSE}
-# PDF figures
-fn.pdf <- paste(path.fig, dir(path.fig), sep='/'); 
-fn.pdf <- fn.pdf[grep('.pdf$', fn.pdf)];
-zip(paste(path.fig, 'figures.zip', sep='/'), fn.pdf); 
-
 # Excel spreadsheets
 xls<-list(stat.table, stat.table[rownames(up), , drop=FALSE], stat.table[rownames(dn), , drop=FALSE],
           ora.table[[1]], ora.table[[2]], gsea.tbl);
@@ -1128,7 +1125,7 @@ xls<-lapply(xls, function(x) {
     if (is.numeric(x[, i])) x[, i] <- FormatNumeric(x[, i, drop=FALSE]) else x[, i] <- CleanHtmlTags(x[, i], FALSE);
   x;
 });
-names(xls) <- c('Complete List', 
+names(xls) <- c('DEG, complete list', 
                 paste('Top', nrow(up), ', higher in ', g2.name, sep=''), 
                 paste('Top', nrow(dn), ', lower in ', g2.name, sep=''),
                 paste('ORA, higher in ', g2.name, sep=''),
@@ -1141,12 +1138,16 @@ xls <- lapply(xls, function(x) if (nrow(x) > 0) x else {
 }); 
 tbl<-sapply(names(xls), function(nm) write.csv(xls[[nm]], paste(path.tbl, paste(nm, '.csv', sep=''), sep='/'))); 
 #fn.xls<-paste(path.tbl, paste(g1.name, g2.name, sep='-vs-'), sep='/');
-WriteExcel(xls, paste(path.tbl, fn.xls, sep='/')); 
+#WriteExcel(xls, paste(path.tbl, fn.xls, sep='/')); 
 
 res$de<-de;
 res$ora<-ora;
 res$gsea<-gsea;
 saveRDS(res, file=paste(path.r, 'result.rds', sep='/'));
+
+zip(paste(path.fig, 'figures.zip', sep='/'), path.fig); 
+zip(paste(path.tbl, 'tables.zip', sep='/'), path.tbl); 
+zip(paste(path.r, 'R.zip', sep='/'), path.r); 
 ```
 
 `r home.url` 

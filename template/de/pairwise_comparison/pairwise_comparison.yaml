@@ -32,12 +32,12 @@
 ##### REQUIRED #####
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/pairwise_comparison.Rmd
-#template: pairwise_comparison.Rmd
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/pairwise_comparison.Rmd
+template: pairwise_comparison.Rmd
 output: examples/rnaseq                                                             # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                  # Name of the analyst
-zip: no                                                                             # Whether to zip all output files
+zip: yes                                                                             # Whether to zip all output files
 
 #################
 ##### ABOUT #####
@@ -61,8 +61,8 @@ input:
     # the first is metadata of gene sets, 
     # the second is a list of gene set-gene mapping
     # see examples at https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set
-  gsea: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/gmt/gsea2-2.2.0.jar   ## the Java program of GSEA
-  kegg: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/pathway/kegg/human.zip             ## the .xml files of KEGG pathway maps; if empty, the files will be downloaded from KEGG website
+  gsea: gsea2-2.2.0.jar   ## the Java program of GSEA
+  kegg: human             ## the .xml files of KEGG pathway maps; if empty, the files will be downloaded from KEGG website
   gmt:                    ## the gene set collection files as defined here: http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29
     MSigDb_Hallmark: C0_Hallmark.gmt
     Wiki_pathway: WikiPathways.gmt
