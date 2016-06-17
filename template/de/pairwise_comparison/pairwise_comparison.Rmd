@@ -34,7 +34,7 @@ output:
 ```{r global_setup, include=FALSE}
 name.yaml <- 'pairwise_comparison.yaml'; 
 name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'MASS', 'gplots', 'pathview', 'PGSEA', 
-                   'xlsxjars', 'xlsx', 'flexclust', 'colorspace', 'RoCA', 'rchive', 'awsomics', 'DEGandMore'); 
+                   'flexclust', 'colorspace', 'RoCA', 'rchive', 'awsomics', 'DEGandMore'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 'path.deg'='DEG', 
                      'path.ora'='ORA', 'path.gsea'='GSEA');
 
@@ -75,7 +75,7 @@ res<-list(inputs=inputs);  # Result set
 # All input variables
 anno <- ImportTable(DownloadFile(inputs$anno, path.input));
 expr <- as.matrix(ImportTable(DownloadFile(inputs$expr, path.input)));
-grps <- ImportR(DownloadFile(inputs$comparison, path.input));
+grps <- inputs$comparison <- ImportR(DownloadFile(inputs$comparison, path.input));
 geneset <- ImportR(DownloadFile(inputs$geneset, path.input));
 
 genome  <- prms$genome;
@@ -108,7 +108,6 @@ pctl<-apply(e1.2, 2, function(e) 100*rank(e)/length(e)); # percentile
 inputs$expr<-e1.2;
 if (!prms$processing$logged) inputs$logged <- e1.2 <- log2(e1.2+1); 
 if (!prms$processing$normalized) inputs$normalized <- e1.2 <- NormLoess(e1.2); 
-
 
 yml$gsea$jar <- DownloadFile(yml$input$gsea, path.input); 
 
