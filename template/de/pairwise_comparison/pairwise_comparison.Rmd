@@ -70,13 +70,12 @@ home.url <- Link2Home(yml$home);
 
 ```{r load_data, include=FALSE}
 inputs<-yml$input;
-res<-list(inputs=inputs);  # Result set
 
 # All input variables
-anno <- ImportTable(DownloadFile(inputs$anno, path.input));
-expr <- as.matrix(ImportTable(DownloadFile(inputs$expr, path.input)));
+anno <- inputs$anno <- ImportTable(DownloadFile(inputs$anno, path.input));
+expr <- inputs$expr <- as.matrix(ImportTable(DownloadFile(inputs$expr, path.input)));
 grps <- inputs$comparison <- ImportR(DownloadFile(inputs$comparison, path.input));
-geneset <- ImportR(DownloadFile(inputs$geneset, path.input));
+geneset <- inputs$geneset <- ImportR(DownloadFile(inputs$geneset, path.input));
 
 genome  <- prms$genome;
 paired  <- prms$paired;
@@ -105,7 +104,8 @@ e2<-expr[, g2.ind, drop=FALSE];
 e1.2<-cbind(e1, e2); 
 pctl<-apply(e1.2, 2, function(e) 100*rank(e)/length(e)); # percentile
 
-inputs$expr<-e1.2;
+inputs$expr <- e1.2;
+inputs$anno <- anno[rownames(e1.2), ]; 
 if (!prms$processing$logged) inputs$logged <- e1.2 <- log2(e1.2+1); 
 if (!prms$processing$normalized) inputs$normalized <- e1.2 <- NormLoess(e1.2); 
 
@@ -133,6 +133,8 @@ if (!is.null(yml$input$kegg)) {
     }
   }
 }
+
+res<-list(inputs=inputs);  # Result set
 ```
 
 `r home.url` 
@@ -1144,9 +1146,9 @@ res$ora<-ora;
 res$gsea<-gsea;
 saveRDS(res, file=paste(path.r, 'result.rds', sep='/'));
 
-zip(paste(path.fig, 'figures.zip', sep='/'), path.fig); 
-zip(paste(path.tbl, 'tables.zip', sep='/'), path.tbl); 
-zip(paste(path.r, 'R.zip', sep='/'), path.r); 
+zip(paste(path.fig, 'figures.zip', sep='/'), path.fig, zip = 'zip'); 
+zip(paste(path.tbl, 'tables.zip', sep='/'), path.tbl, zip = 'zip'); 
+zip(paste(path.r, 'R.zip', sep='/'), path.r, zip = 'zip'); 
 ```
 
 `r home.url` 
