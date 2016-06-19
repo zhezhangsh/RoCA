@@ -307,7 +307,7 @@ write.csv(aov.stat, paste(path.tbl, 'anova_stat.csv', sep='/'));
 mn <- apply(pvl, 1, min); 
 sg <- paov[rownames(paov) %in% rownames(pvl)[mn < 0.05], , drop=FALSE]; 
 id <- rownames(sg)[1:min(4, nrow(sg))];
-ttl <- sapply(id, function(id) if (is.na(anno[id, 1])) id else paste(id, anno[id, 1], sep=': ')); 
+ttl <- sapply(id, function(id) if (is.na(anno[id, 1])) id else paste(id, CleanHtmlTags(anno[id, 1]), sep=': ')); 
 
 par(mar=c(8, 2, 2, 2), mfrow=c(2,2), omi=c(0, 1, 0, 0)); 
 c<-rep(c("#FF666633", "#FF000088", "#66FF6633", "#00FF0088"), sapply(grps, length)); 
