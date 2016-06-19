@@ -74,6 +74,9 @@ grp <- lapply(res, function(res) names(res$inputs$comparison));
 smp <- lapply(res, function(x) x$inputs$comparison);
 names(res) <- names(grp) <- names(smp) <- names(yml$input$comparison);
 
+sapply(names(res), function(nm) 
+  saveRDS(res[[nm]], paste(path.input, paste('result_', nm, '.rds', sep=''), sep='/'))) -> x;
+
 grps<-do.call('c', lapply(res, function(res) res$inputs$comparison)); 
 smpl <- smpl[unlist(smp, use.names=FALSE), ]; 
 
