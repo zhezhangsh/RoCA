@@ -1,5 +1,5 @@
 ---
-title: "Summarize three pairwise comparisons of differential expression"
+title: "Summarize two pairwise comparisons of differential expression"
 author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
 date: "`r Sys.Date()`"
 output:
