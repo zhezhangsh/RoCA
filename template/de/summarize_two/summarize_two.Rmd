@@ -303,7 +303,7 @@ write.csv(aov.stat, paste(path.tbl, 'anova_stat.csv', sep='/'));
 2-way ANOVA analysis is performed to identify genes responding to **_`r prms$gene$anova$f2`_** differently in different **_`r prms$gene$anova$f1`_**. The analysis reported 3 p values, corresponding to the effect of **_`r prms$gene$anova$f2`_**, **_`r prms$gene$anova$f1`_**, and their interaction. The analysis identified `r nrow(sig.aov)` significant genes with interaction p values less than `r prms$gene$anova$p`. The ANOVA results are summarized in a table [here](table/anova_table.html). 
 
 <div align='center'>
-```{r aov_top, out.width='800px'}
+```{r aov_top, include=TRUE, fig.width=12, fig.height=9, out.width='800px'}
 mn <- apply(pvl, 1, min); 
 sg <- paov[rownames(paov) %in% rownames(pvl)[mn < 0.05], , drop=FALSE]; 
 id <- rownames(sg)[1:min(4, nrow(sg))];
