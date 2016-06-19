@@ -163,11 +163,11 @@ anno[is.na(anno[, 1]), 1] <- rownames(anno)[is.na(anno[, 1])];
 
 # DE statistics
 s <- lapply(stat, function(s) data.frame(s)[gid, ]); 
-l2r<-sapply(stat, function(stat) stat[, 'LogFC']); 
+l2r<-sapply(s, function(s) s[, 'LogFC']); 
 l2r[is.na(l2r)]<-0;
-pvl<-sapply(stat, function(stat) stat[, 'Pvalue']); 
+pvl<-sapply(s, function(s) s[, 'Pvalue']); 
 pvl[is.na(pvl)]<-1;
-fdr<-sapply(stat, function(stat) stat[, 'FDR']); 
+fdr<-sapply(s, function(s) s[, 'FDR']); 
 fdr[is.na(fdr)]<-1;
 rnk<-apply(-sign(l2r)*log10(pvl), 2, rank);
 l2r<-round(l2r, 3);
