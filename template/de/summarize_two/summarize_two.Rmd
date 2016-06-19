@@ -701,8 +701,14 @@ reCl<-function(d, cl, r, dif, nmax) {
   });
   c;
 }
-for (i in 1:prms$geneset$cluster$recluster$time) 
-  cl<-reCl(d0, cl, prms$geneset$cluster$recluster$corr, prms$geneset$cluster$recluster$diff, prms$geneset$cluster$recluster$nmax); 
+for (i in 1:prms$geneset$cluster$recluster$time) {
+  cl <- reCl(d0, cl, 
+           prms$geneset$cluster$recluster$corr, 
+           prms$geneset$cluster$recluster$diff, 
+           prms$geneset$cluster$recluster$nmax); 
+  cl <- cl[sapply(cl, length) >= 5]; 
+}
+  
 cls<-reCl(d1, cl, prms$geneset$cluster$recluster$corr, prms$geneset$cluster$recluster$diff, prms$geneset$cluster$recluster$nmax); 
 cls <- lapply(cls, function(x) x[x %in% rownames(d1)]); 
 cls <- cls[sapply(cls, length) >= 5];
