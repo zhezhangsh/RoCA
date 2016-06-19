@@ -71,11 +71,11 @@ gset <- ImportR(DownloadFile(yml$input$geneset, path.input));
 smpl <- ImportR(DownloadFile(yml$input$sample, path.input));
 comp <- names(yml$input$comparison); 
 
-grp <- lapply(res, function(res) names(res$input$comparison));
-smp <- lapply(res, function(x) x$input$comparison);
+grp <- lapply(res, function(res) names(res$inputs$comparison));
+smp <- lapply(res, function(x) x$inputs$comparison);
 names(res) <- names(grp) <- names(smp) <- names(yml$input$comparison);
 
-grps<-do.call('c', lapply(res, function(res) res$input$comparison)); 
+grps<-do.call('c', lapply(res, function(res) res$inputs$comparison)); 
 smpl <- smpl[unlist(smp, use.names=FALSE), ]; 
 
 s0 <- setdiff(unlist(smp), rownames(smpl));
@@ -85,8 +85,17 @@ de<-lapply(res, function(res) res$de);
 ora<-lapply(res, function(res) res$ora); 
 gsea<-lapply(res, function(res) res$gsea); 
 
-ind1<-c(1,1,2);
-ind2<-c(2,3,3);
+ind1 <- c(1,1,2);
+ind2 <- c(2,3,3);
+
+# Combined matrix
+expr.all <- lapply(res, function(res) {
+  input<-res$inputs;
+  s<-c(input$comparison[[1]], input$comparison[[2]]); 
+  sapply(s, function(s) input$expr[, s]); 
+}); 
+g<-Reduce('intersect', lapply(expr.all, rownames)); 
+expr.all<-do.call('cbind', lapply(expr.all, function(d) d[g, ])); 
 ```
 
 `r home.url` 
@@ -106,7 +115,7 @@ lns <- sapply(names(yml$input$comparison), function(nm) {
   c <- yml$input$comparison[[nm]];
   ind <- c$index[1];
   l <- paste(grp[[nm]], collapse=' vs. ', sep='');
-  if (is.null(ind) | is.na(ind) | ind=='') l else paste('[', l, '](', yml$input$comparison[[1]]$index, ')', sep=''); 
+  if (is.null(ind) | identical('', ind) | identical(NA, ind)) l else paste('[', l, '](', yml$input$comparison[[1]]$index, ')', sep=''); 
 });
 lns <- as.vector(lns); 
 ```
@@ -123,20 +132,25 @@ lns <- as.vector(lns);
 ```{r gene_level, include=TRUE}
 stat<-lapply(de, function(de) de$result$stat); 
 deg<-lapply(de, function(de) de$DEG); 
-anno<-lapply(res, function(res) res$input$anno); 
-names(stat)<-names(deg)<-names(anno)<-comp
+names(stat)<-names(deg)<-comp; 
 
 # union set of gene id
 if (prms$gene$union) gid<-Reduce('union', lapply(stat, rownames)) else 
   gid<-Reduce('intersect', lapply(stat, rownames)); 
 
 # Gene annotation
-x<-lapply(anno, rownames); 
-y<-unlist(x, use.names=FALSE);
-x<-sapply(anno, function(a) as.integer(gid %in% rownames(a)));
-y<-max.col(x, 'first'); 
-z<-lapply(1:length(anno), function(i) anno[[i]][gid[y==i], , drop=FALSE]);
-anno<-do.call('rbind', z)[gid, ]; 
+anno<-lapply(res, function(res) res$inputs$anno); 
+cnm <- Reduce('intersect', lapply(anno, colnames)); 
+anno[[1]] <- anno[[1]][, colnames(anno[[1]]) %in% cnm, drop = FALSE]; 
+anno[[2]] <- anno[[2]][, colnames(anno[[1]]), drop=FALSE];
+anno[[3]] <- anno[[3]][, colnames(anno[[1]]), drop=FALSE];
+anno.all <- lapply(anno, function(a) a[rownames(a) %in% gid, , drop=FALSE]); 
+anno <- anno.all[[1]]; 
+anno <- rbind(anno, anno.all[[2]][setdiff(rownames(anno.all[[2]]), rownames(anno)), , drop=FALSE]); 
+anno <- rbind(anno, anno.all[[3]][setdiff(rownames(anno.all[[3]]), rownames(anno)), , drop=FALSE]); 
+anno <- anno[gid, , drop=FALSE];
+rownames(anno) <- gid;
+anno[is.na(anno[, 1]), 1] <- rownames(anno)[is.na(anno[, 1])]; 
 
 # DE statistics
 s <- lapply(stat, function(s) data.frame(s)[gid, ]); 
@@ -150,23 +164,27 @@ rnk<-apply(-sign(l2r)*log10(pvl), 2, rank);
 l2r<-round(l2r, 3);
 rownames(l2r)<-rownames(pvl)<-rownames(fdr)<-rownames(rnk)<-gid; 
 
-tbl<-lapply(stat, function(s) s[gid, c(1,2,4,5,6)]); 
-tbl<-do.call('cbind', tbl);
-colnames(tbl)[c(3:5, 8:10, 13:15)]<-paste(rep(colnames(tbl)[3:5], 3), rep(names(grp), each=3), sep='_'); 
-tbl<-cbind(anno, FormatNumeric(tbl)); 
-CreateDatatable(tbl, paste(path, 'gene_table.html', sep='/'), caption='Gene-level differential expression of all 3 pairwise comparisons')->fn; 
-
-corr<-round(sapply(1:3, function(i) cor(l2r[, ind1[i]], l2r[, ind2[i]], use='pairwise')), 3);
-lns<-paste('  - Corr(', comp[ind1], ':', comp[ind2], ') = ', corr, sep='');
-lns<-paste(lns, collapse='\n'); 
-
-tbl0<-tbl;
-tbl0[, 1]<-CleanHtmlTags(tbl0[, 1], FALSE); 
-saveRDS(tbl, paste(path.r, 'gene_stat.rds', sep='/')); 
+tbl <- lapply(stat, function(s) s[gid, c(1,2,4,5,6)]); 
+cnm <- lapply(tbl, colnames); 
+tbl <- do.call('cbind', tbl);
+rownames(tbl) <- gid; 
+tbl <- cbind(anno[rownames(tbl), ], FormatNumeric(tbl)); 
+colnames(tbl)[ncol(anno)+c(1:15)]<-paste(rep(names(grp), each=5), unlist(cnm), sep='::'); 
+tbl[, 1] <- CleanHtmlTags(tbl[, 1], FALSE); 
+tbl0 <- tbl;
 write.csv(tbl0, paste(path.tbl, 'gene_stat.csv', sep='/')); 
+saveRDS(tbl0, paste(path.r, 'gene_stat.rds', sep='/')); 
+tbl[, 1] <- AddHref(tbl[, 1], UrlEntrezGene(rownames(tbl))); 
+CreateDatatable(tbl, paste(path.tbl, 'gene_table.html', sep='/'), 
+                caption='Gene-level differential expression of all 3 pairwise comparisons')->fn; 
+
+corr <- round(sapply(1:3, function(i) cor(l2r[, ind1[i]], l2r[, ind2[i]], use='pairwise')), 3);
+lns <- paste('  - Corr(', comp[ind1], ':', comp[ind2], ') = ', corr, sep='');
+lns <- paste(lns, collapse='\n'); 
+
 ```
 
-Both comparisons reported the log ratio of sample and control group means for each gene. The global agreement of log ratios of all genes indicates how much the results of these 3 comparisons are similar to or different from each other. Full table of gene-level statistics side-by-side is [here](gene_table.html). 
+Both comparisons reported the log ratio of sample and control group means for each gene. The global agreement of log ratios of all genes indicates how much the results of these 3 comparisons are similar to or different from each other. Full table of gene-level statistics side-by-side is [here](table/gene_table.html). 
 
 `r lns`
 
@@ -202,7 +220,7 @@ colnames(deg.n)[1:2]<-c('Total_gene', paste('P <', prms$gene$pvalue));
 Both comparisons identified DEGs from 2 compared groups. Check report of individual comparisons for how the DEGs were selected. Overlapped DEGs identified by all 3 comparisons are worthy of a closer look. 
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 1** Number of DEGs identified by each comparison.
+**Table 1.** Number of DEGs identified by each comparison.
 </div>
 
 <div align='center', style="padding:0 2cm">
@@ -235,8 +253,10 @@ fn.tbl<-lapply(names(deg.all), function(nm) {
 
 deg.up3<-Reduce('intersect', deg.up);
 deg.dn3<-Reduce('intersect', deg.dn);
-CreateDatatable(tbl[deg.up3, , drop=FALSE], paste(path.deg, 'up_all3.html', sep='/'), caption='Genes up-regulated in all 3 comparisons')->f; 
-CreateDatatable(tbl[deg.dn3, , drop=FALSE], paste(path.deg, 'down_all3.html', sep='/'), caption='Genes down-regulated in all 3 comparisons')->f;
+CreateDatatable(tbl[deg.up3, , drop=FALSE], paste(path.deg, 'up_all3.html', sep='/'), 
+                caption='Genes up-regulated in all 3 comparisons')->f; 
+CreateDatatable(tbl[deg.dn3, , drop=FALSE], paste(path.deg, 'down_all3.html', sep='/'), 
+                caption='Genes down-regulated in all 3 comparisons')->f;
 
 lns<-sapply(fn.tbl, function(f) {
   l<-paste('  - [', names(f), '](', paste('DEG', f, sep='/'), ')', sep=''); 
@@ -276,14 +296,7 @@ PlotVenn3Way(deg.dn, names=comp)->x;
 ## ANOVA
 
 ```{r anova, include=FALSE}
-# Combined matrix
-d<-lapply(res, function(res) {
-  input<-res$input;
-  s<-c(input$comparison[[1]], input$comparison[[2]]); 
-  sapply(s, function(s) input$expr[, s]); 
-}); 
-g<-Reduce('intersect', lapply(d, rownames)); 
-d<-do.call('cbind', lapply(d, function(d) d[g, ])); 
+d <- expr.all;
 
 # Prepare for ANOVA
 s<-smpl[colnames(d), ]
@@ -292,11 +305,11 @@ s$d<-d[1, ];
 d0 <- d;
 if (!prms$gene$processing$logged) d0 <- log2(d0+1);
 if (!prms$gene$processing$normalized) d0 <- NormLoess(d0); 
-d0<-lapply(1:nrow(d0), function(i) d[i, ]);
+d.anova<-lapply(1:nrow(d0), function(i) d0[i, ]);
 f<-formula(prms$gene$anova$formula);
 
 # Run ANOVA
-paov <- parallel::mclapply(d0, function(x) {
+paov <- parallel::mclapply(d.anova, function(x) {
   s$d<-x;
   smm<-summary(aov(f, data=s))[[1]];
   if (length(smm)==1) smm[[1]] else smm;
@@ -316,10 +329,12 @@ colnames(paov)<-paste('P', colnames(paov), sep='_');
 sig.aov<-paov[paov[, 3]<=prms$gene$anova$p, , drop=FALSE]; 
 
 # full table
-m<-sapply(grps, function(g) rowMeans(d[, g, drop=FALSE])); 
-aov.stat<-cbind(m[rownames(paov), ], paov); 
-aov.tbl<-data.frame(anno[rownames(paov), ], FormatNumeric(aov.stat), stringsAsFactors = FALSE);
-CreateDatatable(aov.tbl, paste(path, 'anova_table.html', sep='/'), caption='ANOVA results'); 
+m <- sapply(grps, function(g) exp(log(2)*rowMeans(d0[, g, drop=FALSE]))); 
+aov.stat <- cbind(m[rownames(paov), ], paov); 
+cnm <- c(colnames(anno), colnames(aov.stat));
+aov.tbl <- data.frame(tbl[rownames(paov), colnames(anno)], FormatNumeric(aov.stat), stringsAsFactors = FALSE);
+colnames(aov.tbl) <- cnm; 
+CreateDatatable(aov.tbl, paste(path.tbl, 'anova_table.html', sep='/'), caption='ANOVA results'); 
 
 # Write out
 saveRDS(d, paste(path.r, 'expr.rds', sep='/'));
@@ -330,17 +345,19 @@ write.csv(anno[rownames(d), ], paste(path.tbl, 'anno.csv', sep='/'));
 write.csv(aov.stat, paste(path.tbl, 'anova_stat.csv', sep='/'));
 ```
 
-2-way ANOVA analysis was performed to identify genes responding to **_`r prms$gene$anova$f2`_** differently in different **_`r prms$gene$anova$f1`_**. The analysis reported 3 p values, corresponding to the effect of **_`r prms$gene$anova$f2`_**, **_`r prms$gene$anova$f1`_**, and their interaction. The analysis identified `r nrow(sig.aov)` significant genes with interaction p values less than `r prms$gene$anova$p`. The full ANOVA results were summarized in a table [here](anova_table.html). 
+2-way ANOVA analysis was performed to identify genes responding to **_`r prms$gene$anova$f2`_** differently in different **_`r prms$gene$anova$f1`_**. The analysis reported 3 p values, corresponding to the effect of **_`r prms$gene$anova$f2`_**, **_`r prms$gene$anova$f1`_**, and their interaction. The analysis identified `r nrow(sig.aov)` significant genes with interaction p values less than `r prms$gene$anova$p`. The full ANOVA results were summarized in a table [here](table/anova_table.html). 
 
 <div align='center'>
 ```{r aov_top, out.width='800px'}
-id<-rownames(sig.aov)[1:4];
-ttl<-paste(id, CleanHtmlTags(anno[id, 1], FALSE), sep=': '); 
+mn <- apply(pvl, 1, min); 
+sg <- paov[rownames(paov) %in% rownames(pvl)[mn < 0.05], , drop=FALSE]; 
+id <- rownames(sg)[1:min(4, nrow(sg))];
+ttl <- sapply(id, function(id) if (is.na(anno[id, 1])) id else paste(id, anno[id, 1], sep=': ')); 
 
 par(mar=c(8, 2, 2, 2), mfrow=c(2,2), omi=c(0, 1, 0, 0)); 
 c<-rep(c("#FF666633", "#FF000088", "#66FF6633", "#00FF0088", "#6666FF33", "#0000FF88"), sapply(grps, length)); 
-for (i in 1:4) {
-  barplot(d[id[i], ], col=c, las=3, ylab='Normalized expression level', cex.lab=1.5, main=ttl[i], cex.main=1.5);
+for (i in 1:length(id)) {
+  barplot(d0[id[i], ], col=c, las=3, ylab='Normalized expression level', cex.lab=1.5, main=ttl[i], cex.main=1.5);
   if (i==1) legend('topleft', legend=names(grps), pch=15, col=unique(c), bty='n', cex = 0.5);
 }
 title(ylab='Normalized expression level', outer=TRUE, line=1, cex.lab=2); 
@@ -348,7 +365,7 @@ title(ylab='Normalized expression level', outer=TRUE, line=1, cex.lab=2);
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 3** Examples: the top 4 genes having the most significant interactive p value (less than `r sig.aov[4, 3]`). 
+**Figure 3.** Examples: the top 4 genes having the most significant interactive p value, among the genes with significant differential expression in at least one of the three pairwise comparisons. 
 </div>
 
 `r home.url` 
@@ -386,12 +403,12 @@ corr<-round(sapply(1:3, function(i) cor(mean.gs[, ind1[i]], mean.gs[, ind2[i]]))
 lns<-paste('  - Corr(', comp[ind1], ':', comp[ind2], ') = ', corr, sep='');
 lns<-paste(lns, collapse='\n'); 
 
-CreateDatatable(gs.tbl, paste(path, 'geneset_table.html', sep='/'), rownames = FALSE, caption='Gene set average'); 
+CreateDatatable(gs.tbl, paste(path.tbl, 'geneset_table.html', sep='/'), rownames = FALSE, caption='Gene set average'); 
 saveRDS(gs.tbl, paste(path.r, 'geneset_stat.rds', sep='/'));
 write.csv(gs.tbl, paste(path.tbl, 'geneset_stat.csv', sep='/')); 
 ```
 
-Average differential expression of genes in the same gene set. The gene set-level mean of log-ratio were summarized in this table [here](geneset_table.html).
+Average differential expression of genes in the same gene set. The gene set-level mean of log-ratio were summarized in this table [here](table/geneset_table.html).
 
 <div align='center'>
 ```{r geneset_average_plot, include=TRUE, fig.width=8, fig.height=4, out.width='800px'}
@@ -407,7 +424,7 @@ scatterplot3d(mean.gs, pch=19, angle=135, cex.symbols =.25, color=col);
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 4**  Each dot represents a gene set and the average log-ratio of all genes in this gene set. The same 3D plot was showed in 2 different angles.
+**Figure 4.**  Each dot represents a gene set and the average log-ratio of all genes in this gene set. The same 3D plot was showed in 2 different angles.
 
 `r lns`
 </div>
@@ -459,7 +476,7 @@ ora.tbl<-FormatNumeric(cbind(ora.n, ora.or, ora.p));
 ora.tbl<-cbind(gset[[1]][rownames(ora.tbl), ], ora.tbl); 
 ora.tbl$Name<-AddHref(ora.tbl$Name, ora.tbl$URL); 
 ora.tbl<-ora.tbl[, -5];
-CreateDatatable(ora.tbl, paste(path, 'ora_table.html', sep='/'), caption='Combined table of ORA statistics'); 
+CreateDatatable(ora.tbl, paste(path, 'table/ora_table.html', sep='/'), caption='Combined table of ORA statistics'); 
 
 saveRDS(ora.tbl, paste(path.r, 'ora_stat.rds', sep='/'));
 write.csv(ora.tbl, paste(path.tbl, 'ora_stat.csv', sep='/')); 
@@ -486,13 +503,14 @@ lnk<-sapply(fn.tbl, function(fn) {
   f<-sapply(fn, names); 
   paste('[', c, '](', f, ')', sep='');
 });
-dimnames(lnk)<-list(gset.src, names(ora.s)); 
+colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='::'); 
+rownames(lnk) <- gset.src;
 ```
 
-Each 2-group comparison performs gene set over-representation analysis (ORA) that identifies gene sets over-represented with differentially expressed genes. The results of ORA of both 2-group comparisons are summarized and compared here.  The ORA of each gene set reports an odds ratio and p value. These statistics from both comparisons were combined and listed side-by-side, as well as the difference of their odds ratios and ratio of their p values (p set to 0.5 when not available), in this table [here](ora_table.html)
+Each 2-group comparison performs gene set over-representation analysis (ORA) that identifies gene sets over-represented with differentially expressed genes. The results of ORA of both 2-group comparisons are summarized and compared here.  The ORA of each gene set reports an odds ratio and p value. These statistics from both comparisons were combined and listed side-by-side, as well as the difference of their odds ratios and ratio of their p values (p set to 0.5 when not available), in this table [here](table/ora_table.html)
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 2** Gene sets were broken down into subgroups by their sources. Click on the numbers of over-represented gene sets to see a full list. 
+**Table 2.** Gene sets were broken down into subgroups by their sources. Click on the numbers of over-represented gene sets to see a full list. 
 </div>
 
 <div align='center', style="padding:0 2cm">
@@ -539,7 +557,7 @@ PlotVenn3Way(ora.up, names=comp)->x;
 </div>
 
 <div style="color:darkblue; padding:0 2.5cm">
-**Figure 5A** The overlapping of over-represented gene sets by up-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
+**Figure 5A.** The overlapping of over-represented gene sets by up-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
 
 `r lns.up`
 </div>
@@ -551,7 +569,7 @@ PlotVenn3Way(ora.dn, names=comp)->x;
 </div>
 
 <div style="color:darkblue; padding:0 2.5cm">
-**Figure 5B** The overlapping of over-represented gene sets by down-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
+**Figure 5B.** The overlapping of over-represented gene sets by down-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
 
 `r lns.dn`
 </div>
@@ -581,7 +599,7 @@ gsea.anno<-do.call('rbind', gsea.anno)[gsea.univ, ];
 gsea.tbl<-FormatNumeric(do.call('cbind', lapply(gsea.stat, function(x) x[, 4:6]))); 
 gsea.tbl<-cbind(gsea.anno, gsea.tbl); 
 colnames(gsea.tbl)[4:ncol(gsea.tbl)]<-paste(unlist(lapply(gsea.stat, function(x) colnames(x)[4:6]), use.names=FALSE), rep(names(grp), each=3), sep='_'); 
-CreateDatatable(gsea.tbl, paste(path, 'gsea_table.html', sep='/'), rownames = FALSE, caption='GSEA statistics'); 
+CreateDatatable(gsea.tbl, paste(path.tbl, 'gsea_table.html', sep='/'), rownames = FALSE, caption='GSEA statistics'); 
 
 saveRDS(gsea.tbl, paste(path.r, 'gsea_stat.rds', sep='/'));
 write.csv(gsea.tbl, paste(path.tbl, 'gsea_stat.csv', sep='/')); 
@@ -607,7 +625,8 @@ lnk<-sapply(fn.tbl, function(fn) {
   f<-sapply(fn, names); 
   paste('[', c, '](', f, ')', sep='');
 });
-dimnames(lnk)<-list(gset.cll, names(ora.s)); 
+colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='::'); 
+rownames(lnk) <- gset.cll;
 
 gsea.nes<-sapply(gsea.stat, function(x) x[, 'NES']);
 gsea.nes[is.na(gsea.nes)]<-0; 
@@ -619,10 +638,10 @@ lns<-paste('  - Corr(', comp[ind1], ':', comp[ind2], ') = ', corr, sep='');
 lns<-paste(lns, collapse='\n'); 
 ```
 
-Each 2-group comparison performs gene set enrichment analysis (GSEA) on genes ranked by their differential expression. The results of GSEA of both 2-group comparisons are summarized and compared here. The GSEA of each gene set reports an enrichment score and p value. These statistics from both comparisons were combined and listed side-by-side in this table [here](gsea_table.html)
+Each 2-group comparison performs gene set enrichment analysis (GSEA) on genes ranked by their differential expression. The results of GSEA of both 2-group comparisons are summarized and compared here. The GSEA of each gene set reports an enrichment score and p value. These statistics from both comparisons were combined and listed side-by-side in this table [here](table/gsea_table.html)
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 3** Gene sets were broken down into subgroups by collections. Click on the numbers of enriched gene sets to see a full list. 
+**Table 3.** Gene sets were broken down into subgroups by collections. Click on the numbers of enriched gene sets to see a full list. 
 </div>
 
 <div align='center', style="padding:0 2cm">
@@ -640,7 +659,7 @@ scatterplot3d(gsea.nes, pch=19, angle=135, cex.symbols =.25, color=col);
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 6** This plot shows the global correlation (correlation coefficient = `r corr`) of nominal enrichment scores between the 3 pairwise comparisons: **`r comp[1]`**, **`r comp[2]`**, and **`r comp[3]`**. The same 3D plot was showed in 2 different angles. Gene sets obtained p values less than 0.01 from any 1, any 2, or all 3 comparisons were highlighted in yellow, orange, or red respectively. The correlatio coefficients between enrichment scores of each pair of comparisons are: 
+**Figure 6.** This plot shows the global correlation (correlation coefficient = `r corr`) of nominal enrichment scores between the 3 pairwise comparisons: **`r comp[1]`**, **`r comp[2]`**, and **`r comp[3]`**. The same 3D plot was showed in 2 different angles. Gene sets obtained p values less than 0.01 from any 1, any 2, or all 3 comparisons were highlighted in yellow, orange, or red respectively. The correlatio coefficients between enrichment scores of each pair of comparisons are: 
 
 `r lns`
 </div>
@@ -684,7 +703,7 @@ PlotVenn3Way(gsea.up, names=comp)->x;
 </div>
 
 <div style="color:darkblue; padding:0 2.5cm">
-**Figure 7A** The overlapping of enriched gene sets by up-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
+**Figure 7A.** The overlapping of enriched gene sets by up-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
 
 `r lns.up`
 </div>
@@ -696,7 +715,7 @@ PlotVenn3Way(gsea.dn, names=comp)->x;
 </div>
 
 <div style="color:darkblue; padding:0 2.5cm">
-**Figure 7B** The overlapping of enriched gene sets by down-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
+**Figure 7B.** The overlapping of enriched gene sets by down-regulated genes in all 3 comparisons. Click links to view overlapping gene sets:
 
 `r lns.dn`
 </div>
@@ -711,14 +730,14 @@ if (!file.exists(path.cl)) dir.create(path.cl, recursive = TRUE);
 
 # normalize data
 d1 <- lapply(res, function(x) {
-  y<-x$input; 
+  y<-x$inputs; 
   y$expr[, unlist(y$comparison)];
 });
 d1 <- do.call('cbind', d1); 
 if (!prms$gene$processing$logged) d1 <- log2(d1+1); 
 if (!prms$gene$processing$normalized) d1 <- NormLoess(d1+1); 
 for (i in 1:3) {
-  y <- res[[i]]$input$comparison;
+  y <- res[[i]]$inputs$comparison;
   d1[, unlist(y)] <- d1[, unlist(y)] - rowMeans(d1[, y[[1]]]);
   d1[, unlist(y)] <- t(apply(d1[, unlist(y)], 1, function(x) x/sd(x))); 
 }
@@ -817,10 +836,11 @@ cl.tbl<-data.frame(Size=sz, mm, Gene_set=lnk, stringsAsFactors = FALSE);
 cl.tbl[, 1]<-paste('[', sz, '](CLUSTER/', names(cls), '.html)', sep=''); 
 cl.tbl<-cbind(ID=rownames(cl.tbl), cl.tbl); 
 cl.tbl[, 1]<-paste('[', cl.tbl[, 1], '](CLUSTER/Heatmap_', names(cls), '.pdf)', sep=''); 
+colnames(cl.tbl)[3:8] <- paste(rep(comp, each=2), unlist(grp), sep='::');
 ```
 
 <div style="color:darkblue; padding:0 0.5cm">
-**Table 4** This table lists the number of genes in each cluster (click the numbers to see gene lists), the average expression of all genes in a cluster of all sample groups (normalized so the mean of the control groups equals to 0 and the mean is the number of standard deviations), and then the gene sets over-represented in each cluster (click the numbers to see gene set lists). 
+**Table 4.** This table lists the number of genes in each cluster (click the numbers to see gene lists), the average expression of all genes in a cluster of all sample groups (normalized so the mean of the control groups equals to 0 and the mean is the number of standard deviations), and then the gene sets over-represented in each cluster (click the numbers to see gene set lists). 
 </div>
 
 <div align='center', style="padding:0 0.5cm">
@@ -835,7 +855,7 @@ PlotColoredBlock(ms, min=-1*mx, max=mx, key='Normalized expression level', group
 </div>
 
 <div style="color:darkblue; padding:0 2cm">
-**Figure 8**  This plot shows below the average expression levels of each cluster. Data was normalized before the analysis, so the mean of the control groups was zero and the standard deviation of all samples of each gene was 1.0. Values indicate number of standard deviation from mean of relative control group.
+**Figure 8.**  This plot shows below the average expression levels of each cluster. Data was normalized before the analysis, so the mean of the control groups was zero and the standard deviation of all samples of each gene was 1.0. Values indicate number of standard deviation from mean of relative control group.
 </div>
 
 <div align='center'>
@@ -848,7 +868,7 @@ PlotSeries(m, se, c('', names(grps)));
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 9** This plot summarizes the group means and standard errors of all clusters.
+**Figure 9.** This plot summarizes the group means and standard errors of all clusters.
 </div>
 
 `r home.url` 
