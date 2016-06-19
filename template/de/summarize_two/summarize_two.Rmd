@@ -221,7 +221,7 @@ rownames(ind)<-c('up-up', 'up-down', 'down-up', 'down-down');
 par(mfrow=c(2,2));
 apply(ind, 1, function(i) 
   PlotVenn(deg1[[i[1]]], deg2[[i[2]]], 
-           paste(names(grp), c(names(deg1)[i[1]], names(deg2)[i[2]]), sep=', '), gid))->vnn;
+           paste(names(grp), c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='::'), gid))->vnn;
 
 ol <- sapply(rownames(ind), function(nm) {
   i <- ind[nm, ];
@@ -483,7 +483,11 @@ Each 2-group comparison performs gene set over-representation analysis (ORA) tha
 ind<-cbind(c(1, 1, 2, 2), c(1, 2, 1, 2));
 rownames(ind)<-c('up-up', 'up-down', 'down-up', 'down-down');
 par(mfrow=c(2,2));
-apply(ind, 1, function(i) PlotVenn(ora.sets[[1]][[i[1]]], ora.sets[[2]][[i[2]]], c(names(ora.sets[[1]])[i[1]], names(ora.sets[[2]])[i[2]]), u=ora.univ))->vnn;
+apply(ind, 1, function(i) 
+  PlotVenn(ora.sets[[1]][[i[1]]], ora.sets[[2]][[i[2]]], 
+           c(paste(comp[1], names(ora.sets[[1]])[i[1]], sep='::'), 
+             paste(comp[2], names(ora.sets[[2]])[i[2]], sep='::')), 
+           u=ora.univ))->vnn;
 
 ol<-sapply(rownames(ind), function(nm) {
   i<-ind[nm, ];
@@ -597,7 +601,10 @@ names(gsea.st[[2]])<-names(ora.sets[[2]]);
 ind<-cbind(c(1, 1, 2, 2), c(1, 2, 1, 2));
 rownames(ind)<-c('up-up', 'up-down', 'down-up', 'down-down');
 par(mfrow=c(2,2));
-apply(ind, 1, function(i) PlotVenn(gsea.st[[1]][[i[1]]], gsea.st[[2]][[i[2]]], c(names(gsea.st[[1]])[i[1]], names(gsea.st[[2]])[i[2]]), u=gsea.univ))->vnn;
+apply(ind, 1, function(i) 
+  PlotVenn(gsea.st[[1]][[i[1]]], gsea.st[[2]][[i[2]]], 
+           paste(names(grp), c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='::'), 
+           u=gsea.univ))->vnn;
 
 ol<-sapply(rownames(ind), function(nm) {
   i<-ind[nm, ];
