@@ -66,7 +66,13 @@ yml$input$comparison <- lapply(yml$input$comparison, function(c) {
   }
 })
 
-res <- lapply(yml$input$comparison, function(f) ImportR(DownloadFile(f$result, path.input))); 
+res <- lapply(names(yml$input$comparison), function(nm) {
+  f <- yml$input$comparison[[nm]]; 
+  fn0 <- DownloadFile(f$result, path.input); 
+  fn1 <- sub('result.rds$', paste(nm, '.rds', sep=''), fn0);
+  if (fn1 != fn0) file.rename(fn0, fn1); 
+  ImportR(fn1); 
+});
 gset <- ImportR(DownloadFile(yml$input$geneset, path.input)); 
 smpl <- ImportR(DownloadFile(yml$input$sample, path.input));
 comp <- names(yml$input$comparison); 
