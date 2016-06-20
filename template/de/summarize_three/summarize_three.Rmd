@@ -742,7 +742,8 @@ d1 <- lapply(res, function(x) {
   y<-x$inputs; 
   y$expr[, unlist(y$comparison)];
 });
-d1 <- do.call('cbind', d1); 
+gs <- Reduce('intersect', lapply(d1, rownames)); 
+d1 <- do.call('cbind', lapply(d1, function(x) x[gs, , drop=FALSE])); 
 if (!prms$gene$processing$logged) d1 <- log2(d1+1); 
 if (!prms$gene$processing$normalized) d1 <- NormLoess(d1+1); 
 for (i in 1:3) {
