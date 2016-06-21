@@ -1,0 +1,89 @@
+dme_M00001_Glycolysis_Embden_Meyerhof_pathway_glucose_pyruvate 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00001 	40409	35728	39945	43447	46246	33351	43582	33475	45875	33461	43191	117364	36060	43189	43183	39555	42621	42620	41787	44008	35886	32545	36904	33459
+dme_M00002_Glycolysis_core_module_involving_three_carbon_compounds 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00002 	40409	35728	39945	43447	46246	33351	43582	33475	33461	42621	42620	41787	32545	36904	33459
+dme_M00003_Gluconeogenesis_oxaloacetate_fructose_6P 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00003 	37130	35728	43447	46246	33351	37131	43582	33461	35265	43189	43183	32545	36904	33459
+dme_M00004_Pentose_phosphate_pathway_Pentose_phosphate_cycle_ 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00004 	32974	37166	32013	37804	246599	35692	31185	40012	40445	41027	35886
+dme_M00006_Pentose_phosphate_pathway_oxidative_phase_glucose_6P_ribulose_5P 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00006 	32974	37166	32013	31185	40445
+dme_M00007_Pentose_phosphate_pathway_non_oxidative_phase_fructose_6P_ribose_5P 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00007 	37804	246599	35692	40012	41027
+dme_M00009_Citrate_cycle_TCA_cycle_Krebs_cycle_ 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00009 	42808	44001	38447	39469	39470	39899	41067	32940	41468	37228	318995	317829	35590	317974	37900	31579	31605	31606	41326	42689	43102	41360	34414	39348	39281	42326	41269	42586	41324	41340	44291	32887	39988	42185	44149
+dme_M00010_Citrate_cycle_first_carbon_oxidation_oxaloacetate_2_oxoglutarate 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00010 	32940	41468	317829	37900	31579	41326	42689	43102	41269	42586	44291	44149
+dme_M00011_Citrate_cycle_second_carbon_oxidation_2_oxoglutarate_oxaloacetate 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00011 	42808	44001	38447	39469	39470	39899	41067	37228	318995	35590	317974	31605	31606	41360	34414	39348	39281	42326	41324	41340	32887	39988	42185
+dme_M00013_Malonate_semialdehyde_pathway_propanoyl_CoA_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00013 	38864	30995	34276	41869	36536
+dme_M00014_Glucuronate_pathway_uronate_pathway_ 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00014 	38760	36624	35105	35307	33993	53513	53512	37197	37421	53501	53504	35138	53511	40836	43746	40946	43708	42047	40079	37420	37590	41313	53503	41573	41574	42538	53507	41334	41333	53506	53502	32880	53583	53584	32592
+dme_M00034_Methionine_salvage_pathway 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00034 	32334	43713	40630	32381	48552	326189	36955	34396	41167
+dme_M00036_Leucine_degradation_leucine_acetoacetate_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00036 	33978	38864	32297	3355069	43750	59261	32441	38979	39988	41149	36392
+dme_M00048_Inosine_monophosphate_biosynthesis_PRPP_glutamine_IMP 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00048 	38753	42973	40935	33986	42051	32228	33847
+dme_M00049_Adenine_ribonucleotide_biosynthesis_IMP_ADP_ATP 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00049 	40409	39945	43661	39396	42466	43739	33475	37834	42051	32396	41318	42621	42620	41787	41174	36379
+dme_M00050_Guanine_ribonucleotide_biosynthesis_IMP_GDP_GTP 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00050 	40409	39213	39945	43661	43873	43739	33475	32396	42621	42620	41787	41174	45830
+dme_M00055_N_glycan_precursor_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00055 	40402	43031	38374	43443	42146	326193	37754	31623	34409	34711	32479	34134	41191
+dme_M00059_Glycosaminoglycan_biosynthesis_heparan_sulfate_backbone 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00059 	36614	37198	35569	38736	3772101
+dme_M00072_N_glycosylation_by_oligosaccharyltransferase 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00072 	34159	33082	2768916	37029	43005	34137	31849
+dme_M00073_N_glycan_precursor_trimming 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00073 	43436	49953	32073	318624	31957
+dme_M00082_Fatty_acid_biosynthesis_initiation 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00082 	35761	3355111	33524	117361	39910
+dme_M00085_Fatty_acid_biosynthesis_elongation_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00085 	36540	34276	37784	34313	36536
+dme_M00087_beta_Oxidation 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00087 	38864	35213	34276	37784	31641	34313	37028	36536	37217	33898	37445	37446
+dme_M00089_Triacylglycerol_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00089 	40472	40471	40470	40469	40468	40672	44887	37852	32230	39820	39819	43350	35966	53558
+dme_M00092_Phosphatidylethanolamine_PE_biosynthesis_ethanolamine_PE 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00092 	35417	326259	32585	34716	36496	34063
+dme_M00094_Ceramide_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00094 	43043	50392	36448	34910	33836
+dme_M00095_C5_isoprenoid_biosynthesis_mevalonate_pathway 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00095 	35255	42803	31695	3772247	44154	42526	32520	38147
+dme_M00099_Sphingosine_biosynthesis 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00099 	43043	250736	43618	50392	36448	34910	33836
+dme_M00120_Coenzyme_A_biosynthesis_pantothenate_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00120 	38647	246533	42295	46234	33742
+dme_M00128_Ubiquinone_biosynthesis_eukaryotes_4_hydroxybenzoate_ubiquinone 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00128 	44007	32272	33777	35383	40988
+dme_M00130_Inositol_phosphate_metabolism_PI_PIP2_Ins_1_4_5_P3_Ins_1_3_4_5_P4 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00130 	31247	3885565	40670	31376	37633	34300	32601	32285	33204	45374	37356
+dme_M00131_Inositol_phosphate_metabolism_Ins_1_3_4_5_P4_Ins_1_3_4_P3_myo_inositol 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00131 	32279	39739	39741	39740	41701	2768892	326119	40347	40346	32629
+dme_M00142_NADH_ubiquinone_oxidoreductase_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00142 	19893558	19893529	19893542	19893551	19893552	19893549	19893555
+dme_M00143_NADH_dehydrogenase_ubiquinone_Fe_S_protein_flavoprotein_complex_mitochondria 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00143 	36998	33179	43073	38378	32936	43798	43477	31762	44207	32740	39926	36695	33744	33852	32565
+dme_M00146_NADH_dehydrogenase_ubiquinone_1_alpha_subcomplex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00146 	50178	33443	317928	5740593	31578	31190	37946	40272	42591	39214	40477	36159	38154	37385
+dme_M00147_NADH_dehydrogenase_ubiquinone_1_beta_subcomplex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00147 	37466	33528	36640	34925	31697	31604	3355155	8673970	32434	42282	44228	34747	46260
+dme_M00148_Succinate_dehydrogenase_ubiquinone_ 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00148 	42808	37228	35590	39348	41324	41340	32887
+dme_M00154_Cytochrome_c_oxidase 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00154 	19893533	19893535	19893540	35491	35279	33918	33919	46040	40066	32989	41432	37728	40995	50246	246451	318868	33776	37809	34394	40390	32439	50002
+dme_M00158_F_type_ATPase_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00158 	19893539	19893538	43829	43693	31950	326144	41745	37617	41845	42759	37931	39761	42291	46069	34054	43507	39143	44046
+dme_M00160_V_type_ATPase_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00160 	40748	40679	38503	45668	34587	38521	36328	42041	43442	34997	41550	42216	31342	246543	44307	39282	317846	45012	34695	42341	34482	45247	41806	40389	42214	35944	36826	44702	36731	31235	36900
+dme_M00177_Ribosome_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00177 	37430	35098	43039	44059	31700	39480	39484	43723	43321	36142	44251	38397	35453	34149	32953	40687	31106	47218	47219	33654	43564	42464	42470	3354918	3355124	43864	3355144	35988	43594	44150	40654	43768	37995	33629	33487	31897	251466	45329	31613	31588	39108	37628	37589	41811	39088	37849	37580	33214	31483	32635	34329	43103	41347	34352	36855	34420	34625	42830	43349	44783	34309	43169	34526	38983	36985	41343	41372	42761	40060	39338	34098	31022	40451	31009	37235	43532	43573	38208	36851	36576	41200	38794	36321	37292	32700	32446	34754	41120	37669
+dme_M00180_RNA_polymerase_II_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00180 	40415	48312	36160	42942	32100	261631	41721	41741	5740790	14462484	326128	35043	34796
+dme_M00181_RNA_polymerase_III_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00181 	40325	35196	40415	48312	36160	41542	42942	32524	39941	3772344	5740790	33712	40002	42619	39310	36289
+dme_M00182_RNA_polymerase_I_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00182 	36617	35196	40415	48312	36160	42563	42942	33963	42201	5740790	33712	33210
+dme_M00284_Origin_recognition_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00284 	35686	36017	37970	41703	36454	34794
+dme_M00285_MCM_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00285 	35679	31603	41296	31449	39014	40973
+dme_M00289_RF_C_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00289 	40607	38492	34423	34550	32763
+dme_M00290_Holo_TFIIH_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00290 	40509	31441	7354403	33294	40429	36130	39688	39202	36598	37414
+dme_M00295_BRCA1_associated_genome_surveillance_complex_BASC_ 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00295 	35257	40607	35796	38492	34565	34842	34423	34550	37564	41839	44259	41366	39654	32763	36705	37290
+dme_M00307_Pyruvate_oxidation_pyruvate_acetyl_CoA 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00307 	43437	34021	31406	31407	39988
+dme_M00340_Proteasome_20S_core_particle 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00340 	36951	41079	40639	40621	45269	36018	42457	33449	33451	34999	43679	31511	45780	246582	318924	39628	32584	39855	37910	34359	41531	34726	46058	37378	37690
+dme_M00341_Proteasome_19S_regulatory_particle_PA700_ 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00341 	36638	42802	42805	40717	2768973	43449	35701	50428	33105	32047	33738	43635	37894	31567	39845	35176	42828	42641	39351	40388	40174	41190
+dme_M00351_Spliceosome_U1_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00351 	44668	40781	36314	34080	34426	42274	36306	33982	32636
+dme_M00352_Spliceosome_U2_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00352 	44668	39456	50007	40781	38720	38093	35713	36314	42048	34080	33235	40678	33514	31558	34426	39218	36306	33909	32636
+dme_M00353_Spliceosome_Prp19_CDC5L_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00353 	41068	53435	32168	44920	31259	48582	48581	44921	41840	43348	42852	37123	50022	48583	38062	41609	39542
+dme_M00354_Spliceosome_U4_U6_U5_tri_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00354 	35112	39408	44668	40781	35003	36314	35571	3772012	47457	34080	38229	33645	42842	33180	44173	43358	34432	34426	39737	39955	38693	34608	40064	39655	32881	40172	36306	36304	37372	32636
+dme_M00355_Spliceosome_35S_U5_snRNP 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00355 	44668	53435	36143	40781	38069	40529	43556	32069	36314	32168	34080	44920	48582	48581	41437	44921	31208	33680	33180	41840	43358	36984	43348	34426	42852	37123	50022	39737	42593	36514	48583	38062	41609	31840	36306	39535	36304	39542	40960	32636
+dme_M00359_Aminoacyl_tRNA_biosynthesis_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00359 	40929	45786	35194	45785	31904	38331	36547	34156	37177	37965	33518	31740	318604	41733	326155	326262	36420	45783	39829	39828	38595	41862	45784	42834	39762	39023	42888	32841	39644	36909	39989	38581	36563	36784	32539	45399
+dme_M00361_Nucleotide_sugar_biosynthesis_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00361 	38760	40599	38076	39065	38911	36730	33903
+dme_M00380_SCF_BTRC_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00380 	32996	32997	37713	32995	37763	31014	31016	53445	35742	42504	36298
+dme_M00381_SCF_SKP2_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00381 	32996	32997	37713	32995	37763	31014	31016	53445	35742	36298	40548
+dme_M00383_ECV_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00383 	53433	35420	31014	53445	42435	37237
+dme_M00387_SCF_FBW7_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00387 	32996	32997	37713	32995	38516	37763	31014	31016	53445	35742	36298
+dme_M00389_APC_C_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00389 	45574	36975	31594	37808	35315	45922	45906	318886	31835	3885654	5740853	34968	42753	38798	32473
+dme_M00391_Exosome_eukaryotes 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00391 	34721	319033	37731	41270	34548	42900	40173	36766	32665
+dme_M00395_Decapping_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00395 	37790	34364	42058	39722	39957
+dme_M00396_Lsm_2_8_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00396 	39408	35003	3772012	38229	42842	38693	37372
+dme_M00397_Lsm_1_7_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00397 	39408	35003	3772012	42842	37413	38693	37372
+dme_M00398_Sm_core_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00398 	44668	40781	36314	34080	34426	36306	32636
+dme_M00404_COPII_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00404 	33409	40694	36025	44437	42615	35877
+dme_M00405_THC_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00405 	38033	40723	37810	326153	39394
+dme_M00406_TREX_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00406 	44029	34667	38033	40723	37810	326153	39394	33781	40983
+dme_M00409_ESCRT_I_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00409 	40624	47408	31006	32791	39881
+dme_M00412_ESCRT_III_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00412 	43164	37581	40036	38599	40250	39964	32777	35933	40542
+dme_M00415_Fatty_acid_biosynthesis_elongation_endoplasmic_reticulum 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00415 	38457	39245	31703	317841	34614	34762
+dme_M00427_Nuclear_pore_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00427 	42816	32350	43041	43040	33002	41397	31881	317813	35784	33226	46091	32630	33981	34527	34549	37078	42825	36830	32851	34481	44437	41562	42680	41804	42342	42209	35512	36264	35762	36397	36360	37467	35223
+dme_M00428_eIF4F_complex 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00428 	38743	43839	43422	326255	46020	45525	38923	33835
+dme_M00430_Exon_junction_complex_EJC_ 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00430 	35173	44029	37792	39483	37769	43331	32153	41147	34667	31724	5740122	41965	33781	40987	41185	35924	37402
+dme_M00549_Nucleotide_sugar_biosynthesis_glucose_UDP_glucose 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00549 	45875	43191	117364	39065	44010	35923	44008
+dme_M00678_Hedgehog_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00678 	33196	35653	43767	35851	42737	41565	32855
+dme_M00679_BMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00679 	33529	33753	43725	35731	37778	41772	33432
+dme_M00682_Notch_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00682 	40260	33467	251430	34881	42313	31293	42964	43558
+dme_M00683_Hippo_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00683 	37247	43651	42634	32979	252554	41783	37851	33218	32536
+dme_M00684_JAK_STAT_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00684 	35085	32080	35786	42428	32760
+dme_M00688_MAPK_JNK_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00688 	32948	39659	44111	318725	32256	42366	42692	44801	41020
+dme_M00689_MAPK_p38_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00689 	32257	32948	39659	44111	318725	2768679	42366	42692	42866	34780
+dme_M00693_Cell_cycle 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00693 	42453	37618	33965	34411	42971	39340
+dme_M00694_cGMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00694 	44817	43682	43493	41927	37376	33253	34348
+dme_M00695_cAMP_signaling 	http://www.genome.jp/dbget-bin/www_bget?module+dme_M00695 	36670	40333	43644	39861	35419	53427	53432	37805	38285	317967	34284	38284	34689	39733	40180	32485	32406
