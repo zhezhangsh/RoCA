@@ -180,7 +180,7 @@ y <- cumsum(x[1:min(length(x), 10)]);
 y/sum(x)*100; 
 }); 
 top10 <- top10[, order(top10[nrow(top10), , drop=FALSE])]; 
-CreateDatatable(top10, paste(path.tbl, 'top10.html', sep='/')); 
+CreateDatatable(top10, paste(path.tbl, 'top_gene_count.html', sep='/')) -> x; 
 
 par(mar=c(8, 5, 3, 2)); 
 plot(0, type='n', ylim=c(min(top10), max(top10)), xlim=c(1, ncol(top10)), xaxs='i', xaxt='n', 
@@ -205,7 +205,7 @@ if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; ');
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 3.** The cumulative read counts of top `r nrow(top10)` genes and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+**Figure 3.** The cumulative read counts of [top `r nrow(top10)` genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
 
 - Samples with extremely low percent of reads from top `r nrow(top10)` genes: ***`r lo`***
 - Samples with extremely high percent of reads from top `r nrow(top10)` genes: ***`r hi`***

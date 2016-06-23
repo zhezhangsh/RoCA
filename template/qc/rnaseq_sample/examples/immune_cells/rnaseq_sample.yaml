@@ -4,10 +4,10 @@
 #   - each cell is the number of sequence reads of each sample mapped to each gene
 #   - the first matrix will be used for the most of the analyses
 #     - each of the other matrixes corresponds to reads with a different mapping type, such as reads mapped to multiple genes
-#   - the column names of all matrixes are the matching unique gene IDs or symbols
-#   - the row names of all matrixes are the matching unique sample IDs or symbols
+#   - the row names of all matrixes are the matching unique gene IDs or symbols
+#   - the column names of all matrixes are the matching unique sample IDs or symbols
 # <annotation> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
-#   - the column names are unique gene IDs or symbols matching the row names of <count>
+#   - the row names are unique gene IDs or symbols matching the row names of <count>
 #   - must include a column for the chromosome each gene is located in
 #   - muse include a column for the average length (of multiple alternative transcripts) of each gene
 # <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds

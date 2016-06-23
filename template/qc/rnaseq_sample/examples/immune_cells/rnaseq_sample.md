@@ -1,7 +1,7 @@
 ---
 title: "Analysis of RNA-seq samples using read counts"
 author: "Jim Zhang"
-date: "2016-06-07"
+date: "2016-06-23"
 output:
   html_document:
     number_sections: yes
@@ -102,6 +102,11 @@ Due to the variability of gene length and expression level, it is expected that 
 &nbsp;
 
 <div align='center'>
+
+```
+## [1] "/Users/zhangz/Documents/RoCA/template/qc/rnaseq_sample/examples/immune_cells/table/top10.html"
+```
+
 <img src="figure/read_count_gene_top-1.png" title="plot of chunk read_count_gene_top" alt="plot of chunk read_count_gene_top" width="800px" />
 </div>
 
@@ -138,7 +143,7 @@ This analysis accepts multiple matching matrixes of read counts corresponding to
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
 <div align='left'>
-<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
+
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -220,7 +225,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 |Original          | 1.1953|          1.00|            0|            0|                  NaN|
 |Total_Count       | 1.2474|          1.00|         3389|        14577|               0.2325|
 |Median            | 1.1795|          0.99|        11758|         8296|               1.4173|
-|Quantile_Quantile | 1.1412|          0.81|        13004|         7683|               1.6926|
+|Quantile_Quantile | 1.1406|          0.81|        13006|         7669|               1.6959|
 |Upper_Quantile    | 1.1564|          1.00|        12031|         6330|               1.9006|
 |Trimmed_Mean      | 1.1801|          0.99|        10116|         9188|               1.1010|
 |DESeq             | 1.1666|          0.99|        12290|         6686|               1.8382|
@@ -343,37 +348,51 @@ If there is no complaint, go to the _output_ folder and open the ***index.html**
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] DESeq_1.20.0          lattice_0.20-33       locfit_1.5-9.1       
-##  [4] Biobase_2.28.0        edgeR_3.10.2          limma_3.26.9         
-##  [7] gplots_3.0.1          DEGandMore_0.0.0.9000 snow_0.4-1           
-## [10] Rnaseq_0.0.0.9000     GenomicRanges_1.22.4  GenomeInfoDb_1.6.3   
-## [13] IRanges_2.4.8         S4Vectors_0.8.11      BiocGenerics_0.16.1  
-## [16] fpc_2.1-10            vioplot_0.2           sm_2.2-5.4           
-## [19] htmlwidgets_0.5       DT_0.1                awsomics_0.0.0.9000  
-## [22] yaml_2.1.13           rmarkdown_0.9.6       knitr_1.12.3         
-## [25] RoCA_0.0.0.9000       RCurl_1.95-4.8        bitops_1.0-6         
-## [28] devtools_1.11.1      
+##  [1] DESeq_1.20.0            lattice_0.20-33        
+##  [3] locfit_1.5-9.1          Biobase_2.28.0         
+##  [5] gplots_3.0.1            Rnaseq_0.0.0.9000      
+##  [7] fpc_2.1-10              vioplot_0.2            
+##  [9] sm_2.2-5.4              htmlwidgets_0.5        
+## [11] DT_0.1                  yaml_2.1.13            
+## [13] rmarkdown_0.9.6         knitr_1.13             
+## [15] DEGandMore_0.0.0.9000   edgeR_3.10.2           
+## [17] awsomics_0.0.0.9000     RoCA_0.0.0.9000        
+## [19] RCurl_1.95-4.8          bitops_1.0-6           
+## [21] RankProd_2.42.0         devtools_1.11.1        
+## [23] DESeq2_1.8.1            RcppArmadillo_0.5.300.4
+## [25] Rcpp_0.12.4             GenomicRanges_1.22.4   
+## [27] GenomeInfoDb_1.6.3      IRanges_2.4.8          
+## [29] S4Vectors_0.8.11        BiocGenerics_0.16.1    
+## [31] limma_3.26.9            snow_0.4-1             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] genefilter_1.50.0    gtools_3.5.0         modeltools_0.2-21   
-##  [4] kernlab_0.9-22       splines_3.2.2        htmltools_0.3.5     
-##  [7] survival_2.38-3      XML_3.98-1.3         DBI_0.3.1           
-## [10] withr_1.0.1          prabclus_2.2-6       RColorBrewer_1.1-2  
-## [13] robustbase_0.92-5    stringr_1.0.0        zlibbioc_1.14.0     
-## [16] caTools_1.17.1       mvtnorm_1.0-3        memoise_1.0.0       
-## [19] evaluate_0.9         geneplotter_1.46.0   flexmix_2.3-13      
-## [22] class_7.3-13         AnnotationDbi_1.30.1 highr_0.5.1         
-## [25] DEoptimR_1.0-3       trimcluster_0.1-2    Rcpp_0.12.4         
-## [28] KernSmooth_2.23-15   xtable_1.7-4         diptest_0.75-7      
-## [31] formatR_1.3          gdata_2.17.0         jsonlite_0.9.20     
-## [34] annotate_1.46.1      XVector_0.10.0       digest_0.6.9        
-## [37] stringi_1.0-1        grid_3.2.2           tools_3.2.2         
-## [40] magrittr_1.5         RSQLite_1.0.0        cluster_2.0.3       
-## [43] MASS_7.3-43          mclust_5.0.2         nnet_7.3-10
+##  [1] RColorBrewer_1.1-2   httr_1.2.0           prabclus_2.2-6      
+##  [4] tools_3.2.2          R6_2.1.2             KernSmooth_2.23-15  
+##  [7] rpart_4.1-10         Hmisc_3.16-0         DBI_0.3.1           
+## [10] colorspace_1.2-6     trimcluster_0.1-2    nnet_7.3-10         
+## [13] withr_1.0.1          gridExtra_2.0.0      curl_0.9.7          
+## [16] git2r_0.15.0         formatR_1.3          caTools_1.17.1      
+## [19] diptest_0.75-7       scales_0.2.5         DEoptimR_1.0-3      
+## [22] mvtnorm_1.0-3        robustbase_0.92-5    genefilter_1.50.0   
+## [25] stringr_1.0.0        digest_0.6.9         foreign_0.8-66      
+## [28] XVector_0.10.0       htmltools_0.3.5      highr_0.5.1         
+## [31] RSQLite_1.0.0        jsonlite_0.9.22      mclust_5.0.2        
+## [34] BiocParallel_1.2.20  gtools_3.5.0         acepack_1.3-3.3     
+## [37] magrittr_1.5         modeltools_0.2-21    Formula_1.2-1       
+## [40] futile.logger_1.4.1  munsell_0.4.2        proto_0.3-10        
+## [43] stringi_1.0-1        MASS_7.3-43          zlibbioc_1.14.0     
+## [46] flexmix_2.3-13       plyr_1.8.3           grid_3.2.2          
+## [49] gdata_2.17.0         splines_3.2.2        annotate_1.46.1     
+## [52] geneplotter_1.46.0   reshape2_1.4.1       futile.options_1.0.0
+## [55] XML_3.98-1.3         evaluate_0.9         latticeExtra_0.6-26 
+## [58] lambda.r_1.1.7       gtable_0.1.2         kernlab_0.9-22      
+## [61] ggplot2_1.0.1        xtable_1.7-4         e1071_1.6-7         
+## [64] class_7.3-13         survival_2.38-3      AnnotationDbi_1.30.1
+## [67] memoise_1.0.0        cluster_2.0.3
 ```
 
 <div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
