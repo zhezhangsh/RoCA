@@ -104,14 +104,14 @@ Due to the variability of gene length and expression level, it is expected that 
 <div align='center'>
 
 ```
-## [1] "/Users/zhangz/Documents/RoCA/template/qc/rnaseq_sample/examples/immune_cells/table/top10.html"
+## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 0, 10
 ```
 
 <img src="figure/read_count_gene_top-1.png" title="plot of chunk read_count_gene_top" alt="plot of chunk read_count_gene_top" width="800px" />
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 3.** The cumulative read counts of top 10 genes and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+**Figure 3.** The cumulative read counts of [top 10 genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
 
 - Samples with extremely low percent of reads from top 10 genes: ***none***
 - Samples with extremely high percent of reads from top 10 genes: ***none***
@@ -143,7 +143,7 @@ This analysis accepts multiple matching matrixes of read counts corresponding to
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
 <div align='left'>
-
+<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -225,7 +225,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 |Original          | 1.1953|          1.00|            0|            0|                  NaN|
 |Total_Count       | 1.2474|          1.00|         3389|        14577|               0.2325|
 |Median            | 1.1795|          0.99|        11758|         8296|               1.4173|
-|Quantile_Quantile | 1.1406|          0.81|        13006|         7669|               1.6959|
+|Quantile_Quantile | 1.1378|          0.81|        12958|         7687|               1.6857|
 |Upper_Quantile    | 1.1564|          1.00|        12031|         6330|               1.9006|
 |Trimmed_Mean      | 1.1801|          0.99|        10116|         9188|               1.1010|
 |DESeq             | 1.1666|          0.99|        12290|         6686|               1.8382|

@@ -298,11 +298,11 @@ div.tocify {
 </div>
 <p> </p>
 <div align="center">
-<pre><code>## [1] &quot;/Users/zhangz/Documents/RoCA/template/qc/rnaseq_sample/examples/immune_cells/table/top10.html&quot;</code></pre>
+<pre><code>## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 0, 10</code></pre>
 <img src="figure/read_count_gene_top-1.png" title="plot of chunk read_count_gene_top" alt="plot of chunk read_count_gene_top" width="800px" />
 </div>
 <div style="color:darkblue; padding:0 1cm">
-<p><strong>Figure 3.</strong> The cumulative read counts of top 10 genes and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples:</p>
+<p><strong>Figure 3.</strong> The cumulative read counts of <a href="table/top_gene_count.html">top 10 genes</a> and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples:</p>
 <ul>
 <li>Samples with extremely low percent of reads from top 10 genes: <strong><em>none</em></strong></li>
 <li>Samples with extremely high percent of reads from top 10 genes: <strong><em>none</em></strong></li>
@@ -331,7 +331,7 @@ div.tocify {
 <p> </p>
 <p>When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information.</p>
 <div align="left">
-
+<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
 </div>
 <div style="color:darkblue; padding:0 1cm">
 <strong>Figure 5.</strong> The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman’s correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click <a href="table/corr_mapping_type.html">here</a> to view correlation coefficients between all pairs of mapping types.
@@ -427,11 +427,11 @@ div.tocify {
 </tr>
 <tr class="even">
 <td align="left">Quantile_Quantile</td>
-<td align="right">1.1406</td>
+<td align="right">1.1378</td>
 <td align="right">0.81</td>
-<td align="right">13006</td>
-<td align="right">7669</td>
-<td align="right">1.6959</td>
+<td align="right">12958</td>
+<td align="right">7687</td>
+<td align="right">1.6857</td>
 </tr>
 <tr class="odd">
 <td align="left">Upper_Quantile</td>
