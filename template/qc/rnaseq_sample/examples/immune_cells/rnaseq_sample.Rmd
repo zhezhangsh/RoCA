@@ -180,7 +180,7 @@ y <- cumsum(x[1:min(length(x), 10)]);
 y/sum(x)*100; 
 }); 
 top10 <- top10[, order(top10[nrow(top10), , drop=FALSE])]; 
-CreateDatatable(cbind(anno[rownames(top10), , drop=FALSE], top10), paste(path.tbl, 'top_gene_count.html', sep='/')) -> x; 
+CreateDatatable(top10, paste(path.tbl, 'top_gene_count.html', sep='/')) -> x; 
 
 par(mar=c(8, 5, 3, 2)); 
 plot(0, type='n', ylim=c(min(top10), max(top10)), xlim=c(1, ncol(top10)), xaxs='i', xaxt='n', 

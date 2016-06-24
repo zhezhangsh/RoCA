@@ -102,11 +102,6 @@ Due to the variability of gene length and expression level, it is expected that 
 &nbsp;
 
 <div align='center'>
-
-```
-## Error in data.frame(..., check.names = FALSE): arguments imply differing number of rows: 0, 10
-```
-
 <img src="figure/read_count_gene_top-1.png" title="plot of chunk read_count_gene_top" alt="plot of chunk read_count_gene_top" width="800px" />
 </div>
 
@@ -225,7 +220,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 |Original          | 1.1953|          1.00|            0|            0|                  NaN|
 |Total_Count       | 1.2474|          1.00|         3389|        14577|               0.2325|
 |Median            | 1.1795|          0.99|        11758|         8296|               1.4173|
-|Quantile_Quantile | 1.1378|          0.81|        12958|         7687|               1.6857|
+|Quantile_Quantile | 1.1367|          0.81|        13003|         7639|               1.7022|
 |Upper_Quantile    | 1.1564|          1.00|        12031|         6330|               1.9006|
 |Trimmed_Mean      | 1.1801|          0.99|        10116|         9188|               1.1010|
 |DESeq             | 1.1666|          0.99|        12290|         6686|               1.8382|
