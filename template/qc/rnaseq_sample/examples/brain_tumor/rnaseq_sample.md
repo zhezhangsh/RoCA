@@ -1,7 +1,7 @@
 ---
 title: "Analysis of RNA-seq samples using read counts"
 author: "Jim Zhang"
-date: "2016-06-07"
+date: "2016-06-24"
 output:
   html_document:
     number_sections: yes
@@ -106,7 +106,7 @@ Due to the variability of gene length and expression level, it is expected that 
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 3.** The cumulative read counts of top 10 genes and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+**Figure 3.** The cumulative read counts of [top 10 genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
 
 - Samples with extremely low percent of reads from top 10 genes: ***none***
 - Samples with extremely high percent of reads from top 10 genes: ***T1_5***
@@ -138,7 +138,7 @@ This analysis accepts multiple matching matrixes of read counts corresponding to
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
 <div align='left'>
-
+<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -182,16 +182,18 @@ There are many ways to normalize RNA-seq data to remove systematic bias between 
 - **Median**: Rescale data so all the samples have the same median read count.
 - **Quantile_Quantile**: Make all the samples have exactly the same distribution.
 - **Upper_Quantile**: Rescale data so all the samples have the same upper quantile read count.
-- **Trimmed_Mean**: The TMM method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Trimmed_Mean**: The "weighted trimmed mean of M-values" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Relative_Log**: The "relative log expression" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
 - **DESeq**: The normalization method of the [DESeq](https://bioconductor.org/packages/release/bioc/html/DESeq.html) package.
 - **FPKM**: Fragments Per Kilobase of transcript per Million mapped reads.
 - **TPM**: Transcript per Million mapped reads.
 - **Loess**: Make all the samples have the similar distribution by fitting them to same Loess distribution.
+- **Cyclic_Loess**: The "cyclic loess" method implemented by the [limma](https://bioconductor.org/packages/release/bioc/html/limma.html) package.
 
 Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
 
 <div align='center'>
-<img src="figure/normalization_boxplot-1.png" title="plot of chunk normalization_boxplot" alt="plot of chunk normalization_boxplot" width="900px" />
+<img src="figure/normalization_boxplot-1.png" title="plot of chunk normalization_boxplot" alt="plot of chunk normalization_boxplot" width="800px" />
 </div>
 
 <div style="color:darkblue; padding:0 0.5cm">
@@ -215,18 +217,20 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 <div align='center', style="padding:0 2cm">
 
 
-|Method            | Mean| Corr2Original| Num_Decrease| Num_Increase| Decrease_vs_Increase|
-|:-----------------|----:|-------------:|------------:|------------:|--------------------:|
-|Original          | 0.94|          1.00|            0|            0|                  NaN|
-|Total_Count       | 0.92|          1.00|        12282|         5818|               2.1110|
-|Median            | 0.93|          1.00|        10506|         8206|               1.2803|
-|Quantile_Quantile | 0.89|          0.91|        13230|         5949|               2.2239|
-|Upper_Quantile    | 0.91|          1.00|        13546|         4575|               2.9609|
-|Trimmed_Mean      | 0.94|          1.00|         7394|         9627|               0.7680|
-|DESeq             | 0.92|          1.00|        12571|         5552|               2.2642|
-|FPKM              | 0.92|          1.00|        12884|         6568|               1.9616|
-|TPM               | 0.94|          1.00|        10637|         8799|               1.2089|
-|Loess             | 0.90|          0.99|        12667|         5193|               2.4392|
+|Method            | Mean| Change(%)| Corr2Original| Num_Decrease| Num_Increase| Decrease/Increase|
+|:-----------------|----:|---------:|-------------:|------------:|------------:|-----------------:|
+|Original          | 0.94|    0.0000|          1.00|            0|            0|               NaN|
+|Total_Count       | 0.92|   -2.2981|          1.00|        12800|         6549|              1.95|
+|Median            | 0.92|   -1.6242|          1.00|        11365|         8222|              1.38|
+|Quantile_Quantile | 0.89|   -5.1722|          0.90|        13254|         5918|              2.24|
+|Upper_Quantile    | 0.91|   -2.9796|          1.00|        14253|         5266|              2.71|
+|Trimmed_Mean      | 0.94|    0.1900|          1.00|         8850|        10608|              0.83|
+|Relative_Log      | 0.94|    0.1900|          1.00|         8850|        10608|              0.83|
+|DESeq             | 0.92|   -2.3596|          1.00|        13071|         6353|              2.06|
+|FPKM              | 0.92|   -2.2981|          1.00|        12884|         6568|              1.96|
+|TPM               | 0.94|   -0.3191|          1.00|        10637|         8799|              1.21|
+|Loess             | 0.87|   -7.0426|          0.99|        14856|         5163|              2.88|
+|Cyclic_Loess      | 0.90|   -3.7413|          0.99|        13802|         6217|              2.22|
 
 
 </div>
@@ -339,39 +343,53 @@ If there is no complaint, go to the _output_ folder and open the ***index.html**
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] gplots_3.0.1          DESeq_1.20.0          lattice_0.20-33      
-##  [4] locfit_1.5-9.1        Biobase_2.28.0        edgeR_3.10.2         
-##  [7] limma_3.26.9          DEGandMore_0.0.0.9000 snow_0.4-1           
-## [10] awsomics_0.0.0.9000   Rnaseq_0.0.0.9000     GenomicRanges_1.22.4 
-## [13] GenomeInfoDb_1.6.3    IRanges_2.4.8         S4Vectors_0.8.11     
-## [16] BiocGenerics_0.16.1   fpc_2.1-10            vioplot_0.2          
-## [19] sm_2.2-5.4            htmlwidgets_0.5       DT_0.1               
-## [22] yaml_2.1.13           knitr_1.12.3          rmarkdown_0.9.6      
-## [25] RoCA_0.0.0.9000       RCurl_1.95-4.8        bitops_1.0-6         
-## [28] devtools_1.11.1      
+##  [1] Rnaseq_0.0.0.9000       DEGandMore_0.0.0.9000  
+##  [3] samr_2.0                matrixStats_0.14.2     
+##  [5] impute_1.42.0           DESeq_1.20.0           
+##  [7] lattice_0.20-33         locfit_1.5-9.1         
+##  [9] Biobase_2.28.0          gplots_3.0.1           
+## [11] fpc_2.1-10              vioplot_0.2            
+## [13] sm_2.2-5.4              htmlwidgets_0.5        
+## [15] DT_0.1                  yaml_2.1.13            
+## [17] rmarkdown_0.9.6         knitr_1.13             
+## [19] edgeR_3.10.2            awsomics_0.0.0.9000    
+## [21] RoCA_0.0.0.9000         RCurl_1.95-4.8         
+## [23] bitops_1.0-6            RankProd_2.42.0        
+## [25] devtools_1.11.1         DESeq2_1.8.1           
+## [27] RcppArmadillo_0.5.300.4 Rcpp_0.12.4            
+## [29] GenomicRanges_1.22.4    GenomeInfoDb_1.6.3     
+## [31] IRanges_2.4.8           S4Vectors_0.8.11       
+## [33] BiocGenerics_0.16.1     limma_3.26.9           
+## [35] snow_0.4-1             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] mclust_5.0.2         Rcpp_0.12.4          mvtnorm_1.0-3       
-##  [4] class_7.3-13         gtools_3.5.0         digest_0.6.9        
-##  [7] R6_2.1.2             RSQLite_1.0.0        evaluate_0.9        
-## [10] highr_0.5.1          httr_1.1.0           zlibbioc_1.14.0     
-## [13] diptest_0.75-7       curl_0.9.7           annotate_1.46.1     
-## [16] gdata_2.17.0         kernlab_0.9-22       splines_3.2.2       
-## [19] geneplotter_1.46.0   stringr_1.0.0        htmltools_0.3.5     
-## [22] nnet_7.3-10          XML_3.98-1.3         withr_1.0.1         
-## [25] MASS_7.3-43          grid_3.2.2           jsonlite_0.9.20     
-## [28] xtable_1.7-4         DBI_0.3.1            git2r_0.15.0        
-## [31] magrittr_1.5         formatR_1.3          KernSmooth_2.23-15  
-## [34] stringi_1.0-1        XVector_0.10.0       genefilter_1.50.0   
-## [37] flexmix_2.3-13       robustbase_0.92-5    RColorBrewer_1.1-2  
-## [40] tools_3.2.2          trimcluster_0.1-2    DEoptimR_1.0-3      
-## [43] survival_2.38-3      AnnotationDbi_1.30.1 cluster_2.0.3       
-## [46] caTools_1.17.1       prabclus_2.2-6       memoise_1.0.0       
-## [49] modeltools_0.2-21
+##  [1] RColorBrewer_1.1-2   httr_1.2.0           prabclus_2.2-6      
+##  [4] tools_3.2.2          R6_2.1.2             KernSmooth_2.23-15  
+##  [7] rpart_4.1-10         Hmisc_3.16-0         DBI_0.3.1           
+## [10] colorspace_1.2-6     trimcluster_0.1-2    nnet_7.3-10         
+## [13] withr_1.0.1          gridExtra_2.0.0      curl_0.9.7          
+## [16] git2r_0.15.0         formatR_1.3          caTools_1.17.1      
+## [19] diptest_0.75-7       scales_0.2.5         DEoptimR_1.0-3      
+## [22] mvtnorm_1.0-3        robustbase_0.92-5    genefilter_1.50.0   
+## [25] stringr_1.0.0        digest_0.6.9         foreign_0.8-66      
+## [28] XVector_0.10.0       htmltools_0.3.5      highr_0.5.1         
+## [31] RSQLite_1.0.0        jsonlite_0.9.22      mclust_5.0.2        
+## [34] BiocParallel_1.2.20  gtools_3.5.0         acepack_1.3-3.3     
+## [37] magrittr_1.5         modeltools_0.2-21    Formula_1.2-1       
+## [40] futile.logger_1.4.1  munsell_0.4.2        proto_0.3-10        
+## [43] stringi_1.0-1        MASS_7.3-43          zlibbioc_1.14.0     
+## [46] flexmix_2.3-13       plyr_1.8.3           grid_3.2.2          
+## [49] gdata_2.17.0         splines_3.2.2        annotate_1.46.1     
+## [52] geneplotter_1.46.0   reshape2_1.4.1       futile.options_1.0.0
+## [55] XML_3.98-1.3         evaluate_0.9         latticeExtra_0.6-26 
+## [58] lambda.r_1.1.7       gtable_0.1.2         kernlab_0.9-22      
+## [61] ggplot2_1.0.1        xtable_1.7-4         e1071_1.6-7         
+## [64] class_7.3-13         survival_2.38-3      AnnotationDbi_1.30.1
+## [67] memoise_1.0.0        cluster_2.0.3
 ```
 
 <div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>

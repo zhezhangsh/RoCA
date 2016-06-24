@@ -176,7 +176,11 @@ Differentially expressed genes (DEGs) were selected as seeds for generating gene
   - If there are still more than `r prms$selection$max` genes left, select the top `r prms$selection$max` with the biggest ranges
 
 ```{r selection, include=FALSE}
-e<-expr[q<=prms$selection$fdr, , drop=FALSE]; 
+e <- expr[q<=prms$selection$fdr, , drop=FALSE]; 
+if (nrow(e) < prms$selection$min) {
+  q0 <- sort(q); 
+  e <- expr[q <= q0[min(nrow(expr), prms$selection$min)], , drop=FALSE];
+};
 if (nrow(e) > prms$selection$min) { # continue if there are more selected genes than minimum
   s<-stat[rownames(e), , drop=FALSE];
   s<-s[order(s[, 'pANOVA']), , drop=FALSE];

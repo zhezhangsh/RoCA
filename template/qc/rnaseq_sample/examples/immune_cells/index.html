@@ -330,7 +330,7 @@ div.tocify {
 <p> </p>
 <p>When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information.</p>
 <div align="left">
-
+<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
 </div>
 <div style="color:darkblue; padding:0 1cm">
 <strong>Figure 5.</strong> The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman’s correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click <a href="table/corr_mapping_type.html">here</a> to view correlation coefficients between all pairs of mapping types.
@@ -395,16 +395,18 @@ div.tocify {
 <tr class="header">
 <th align="left">Method</th>
 <th align="right">Mean</th>
+<th align="right">Change(%)</th>
 <th align="right">Corr2Original</th>
 <th align="right">Num_Decrease</th>
 <th align="right">Num_Increase</th>
-<th align="right">Decrease_vs_Increase</th>
+<th align="right">Decrease/Increase</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">Original</td>
-<td align="right">1.0695</td>
+<td align="right">1.1953</td>
+<td align="right">0.0000</td>
 <td align="right">1.00</td>
 <td align="right">0</td>
 <td align="right">0</td>
@@ -412,91 +414,102 @@ div.tocify {
 </tr>
 <tr class="even">
 <td align="left">Total_Count</td>
-<td align="right">1.1161</td>
+<td align="right">1.2474</td>
+<td align="right">4.3598</td>
 <td align="right">1.00</td>
 <td align="right">5372</td>
 <td align="right">16591</td>
-<td align="right">0.3238</td>
+<td align="right">0.32</td>
 </tr>
 <tr class="odd">
 <td align="left">Median</td>
-<td align="right">1.0496</td>
-<td align="right">1.00</td>
+<td align="right">1.1731</td>
+<td align="right">-1.8580</td>
+<td align="right">0.99</td>
 <td align="right">13328</td>
 <td align="right">8561</td>
-<td align="right">1.5568</td>
+<td align="right">1.56</td>
 </tr>
 <tr class="even">
 <td align="left">Quantile_Quantile</td>
-<td align="right">1.0376</td>
-<td align="right">0.91</td>
-<td align="right">13016</td>
-<td align="right">7613</td>
-<td align="right">1.7097</td>
+<td align="right">1.1588</td>
+<td align="right">-3.0535</td>
+<td align="right">0.90</td>
+<td align="right">13043</td>
+<td align="right">7571</td>
+<td align="right">1.72</td>
 </tr>
 <tr class="odd">
 <td align="left">Upper_Quantile</td>
-<td align="right">1.0329</td>
+<td align="right">1.1544</td>
+<td align="right">-3.4250</td>
 <td align="right">1.00</td>
 <td align="right">13455</td>
 <td align="right">7861</td>
-<td align="right">1.7116</td>
+<td align="right">1.71</td>
 </tr>
 <tr class="even">
 <td align="left">Trimmed_Mean</td>
-<td align="right">1.0588</td>
+<td align="right">1.1834</td>
+<td align="right">-0.9987</td>
 <td align="right">0.99</td>
 <td align="right">11259</td>
 <td align="right">10438</td>
-<td align="right">1.0787</td>
+<td align="right">1.08</td>
 </tr>
 <tr class="odd">
 <td align="left">Relative_Log</td>
-<td align="right">1.0588</td>
+<td align="right">1.1834</td>
+<td align="right">-0.9987</td>
 <td align="right">0.99</td>
 <td align="right">11259</td>
 <td align="right">10438</td>
-<td align="right">1.0787</td>
+<td align="right">1.08</td>
 </tr>
 <tr class="even">
 <td align="left">DESeq</td>
-<td align="right">1.0442</td>
+<td align="right">1.1670</td>
+<td align="right">-2.3660</td>
 <td align="right">0.99</td>
 <td align="right">14207</td>
 <td align="right">8032</td>
-<td align="right">1.7688</td>
+<td align="right">1.77</td>
 </tr>
 <tr class="odd">
 <td align="left">FPKM</td>
-<td align="right">1.1161</td>
+<td align="right">1.2474</td>
+<td align="right">4.3598</td>
 <td align="right">1.00</td>
 <td align="right">5253</td>
 <td align="right">16590</td>
-<td align="right">0.3166</td>
+<td align="right">0.32</td>
 </tr>
 <tr class="even">
 <td align="left">TPM</td>
-<td align="right">1.1403</td>
+<td align="right">1.2744</td>
+<td align="right">6.6166</td>
 <td align="right">1.00</td>
 <td align="right">4349</td>
 <td align="right">17477</td>
-<td align="right">0.2488</td>
+<td align="right">0.25</td>
 </tr>
 <tr class="odd">
 <td align="left">Loess</td>
-<td align="right">1.0832</td>
-<td align="right">0.96</td>
+<td align="right">1.1054</td>
+<td align="right">-7.5214</td>
+<td align="right">0.99</td>
 <td align="right">17831</td>
-<td align="right">7376</td>
-<td align="right">2.4174</td>
+<td align="right">4723</td>
+<td align="right">3.78</td>
 </tr>
 <tr class="even">
 <td align="left">Cyclic_Loess</td>
-<td align="right">1.1540</td>
-<td align="right">0.89</td>
+<td align="right">1.1064</td>
+<td align="right">-7.4394</td>
+<td align="right">0.99</td>
 <td align="right">16524</td>
-<td align="right">8683</td>
-<td align="right">1.9030</td>
+<td align="right">6030</td>
+<td align="right">2.74</td>
 </tr>
 </tbody>
 </table>

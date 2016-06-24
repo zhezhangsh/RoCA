@@ -138,7 +138,7 @@ This analysis accepts multiple matching matrixes of read counts corresponding to
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
 <div align='left'>
-
+<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -217,20 +217,20 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 <div align='center', style="padding:0 2cm">
 
 
-|Method            |   Mean| Corr2Original| Num_Decrease| Num_Increase| Decrease_vs_Increase|
-|:-----------------|------:|-------------:|------------:|------------:|--------------------:|
-|Original          | 1.0695|          1.00|            0|            0|                  NaN|
-|Total_Count       | 1.1161|          1.00|         5372|        16591|               0.3238|
-|Median            | 1.0496|          1.00|        13328|         8561|               1.5568|
-|Quantile_Quantile | 1.0376|          0.91|        13016|         7613|               1.7097|
-|Upper_Quantile    | 1.0329|          1.00|        13455|         7861|               1.7116|
-|Trimmed_Mean      | 1.0588|          0.99|        11259|        10438|               1.0787|
-|Relative_Log      | 1.0588|          0.99|        11259|        10438|               1.0787|
-|DESeq             | 1.0442|          0.99|        14207|         8032|               1.7688|
-|FPKM              | 1.1161|          1.00|         5253|        16590|               0.3166|
-|TPM               | 1.1403|          1.00|         4349|        17477|               0.2488|
-|Loess             | 1.0832|          0.96|        17831|         7376|               2.4174|
-|Cyclic_Loess      | 1.1540|          0.89|        16524|         8683|               1.9030|
+|Method            |   Mean| Change(%)| Corr2Original| Num_Decrease| Num_Increase| Decrease/Increase|
+|:-----------------|------:|---------:|-------------:|------------:|------------:|-----------------:|
+|Original          | 1.1953|    0.0000|          1.00|            0|            0|               NaN|
+|Total_Count       | 1.2474|    4.3598|          1.00|         5372|        16591|              0.32|
+|Median            | 1.1731|   -1.8580|          0.99|        13328|         8561|              1.56|
+|Quantile_Quantile | 1.1588|   -3.0535|          0.90|        13043|         7571|              1.72|
+|Upper_Quantile    | 1.1544|   -3.4250|          1.00|        13455|         7861|              1.71|
+|Trimmed_Mean      | 1.1834|   -0.9987|          0.99|        11259|        10438|              1.08|
+|Relative_Log      | 1.1834|   -0.9987|          0.99|        11259|        10438|              1.08|
+|DESeq             | 1.1670|   -2.3660|          0.99|        14207|         8032|              1.77|
+|FPKM              | 1.2474|    4.3598|          1.00|         5253|        16590|              0.32|
+|TPM               | 1.2744|    6.6166|          1.00|         4349|        17477|              0.25|
+|Loess             | 1.1054|   -7.5214|          0.99|        17831|         4723|              3.78|
+|Cyclic_Loess      | 1.1064|   -7.4394|          0.99|        16524|         6030|              2.74|
 
 
 </div>

@@ -321,7 +321,7 @@ if (length(count.all) > 1) {
 norm <- NormalizeRNAseq(ct, gn.len); 
 
 mns <- sapply(norm, function(x) rowMeans(x, na.rm=TRUE)); 
-ind <- which(rowSums(mns)>0); 
+ind <- which(rowSums(ct)>0); 
 
 grps <- split(rownames(smpl), smpl[, 1]); 
 grps <- grps[sapply(grps, length) > 1]; 
@@ -398,7 +398,7 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 col <- gray.colors(length(unique(smpl[, 1]))+1)[-1]; 
 col <- col[as.integer(factor(smpl[, 1]))]; 
 par(mfrow=c(3, 4), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
-for (i in 1:10) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
+for (i in 1:length(norm)) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
                         axes=FALSE, col=col, lwd=.5, main=names(norm)[i], cex.main=1.5);
 title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1); 
 ```
@@ -423,8 +423,14 @@ saveRDS(cv, paste(path.r, 'Coeff_of_Var.rds', sep='/'));
 fn <- CreateDatatable(cbind(anno[rownames(cv), ], cv), paste(path.tbl, 'Coeff_of_Var.html', sep='/')); 
 
 c <- t(apply(dff, 2, function(x) c(length(x[x<0]), length(x[x>0]))));
-tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), Corr2Original=cor(cv, cv)[, 1],
-                  Num_Decrease=c[, 1], Num_Increase=c[, 2], "Decrease_vs_Increase" = c[, 1]/c[, 2]);  
+corr <- round(cor(cv, cv[, 1])[, 1], 4); 
+cv.m <- colMeans(cv);
+chg <- round(100*(cv.m/cv.m[1]-1), 4); 
+tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), "Change(%)"=chg,
+                  Corr2Original=corr, Num_Decrease=c[, 1], Num_Increase=c[, 2], 
+                  "Decrease/Increase" = round(c[, 1]/c[, 2], 2), stringsAsFactors = FALSE);  
+colnames(tbl)[3] <- 'Change(%)';
+colnames(tbl)[7] <- 'Decrease/Increase';
 ```
 </div>
 

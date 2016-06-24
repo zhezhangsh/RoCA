@@ -180,6 +180,7 @@ y <- cumsum(x[1:min(length(x), 10)]);
 y/sum(x)*100; 
 }); 
 top10 <- top10[, order(top10[nrow(top10), , drop=FALSE])]; 
+CreateDatatable(top10, paste(path.tbl, 'top_gene_count.html', sep='/')) -> x; 
 
 par(mar=c(8, 5, 3, 2)); 
 plot(0, type='n', ylim=c(min(top10), max(top10)), xlim=c(1, ncol(top10)), xaxs='i', xaxt='n', 
@@ -204,7 +205,7 @@ if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; ');
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
-**Figure 3.** The cumulative read counts of top `r nrow(top10)` genes and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+**Figure 3.** The cumulative read counts of [top `r nrow(top10)` genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
 
 - Samples with extremely low percent of reads from top `r nrow(top10)` genes: ***`r lo`***
 - Samples with extremely high percent of reads from top `r nrow(top10)` genes: ***`r hi`***
@@ -320,7 +321,7 @@ if (length(count.all) > 1) {
 norm <- NormalizeRNAseq(ct, gn.len); 
 
 mns <- sapply(norm, function(x) rowMeans(x, na.rm=TRUE)); 
-ind <- which(rowSums(mns)>0); 
+ind <- which(rowSums(ct)>0); 
 
 grps <- split(rownames(smpl), smpl[, 1]); 
 grps <- grps[sapply(grps, length) > 1]; 
@@ -382,20 +383,22 @@ There are many ways to normalize RNA-seq data to remove systematic bias between 
 - **Median**: Rescale data so all the samples have the same median read count.
 - **Quantile_Quantile**: Make all the samples have exactly the same distribution.
 - **Upper_Quantile**: Rescale data so all the samples have the same upper quantile read count.
-- **Trimmed_Mean**: The TMM method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Trimmed_Mean**: The "weighted trimmed mean of M-values" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Relative_Log**: The "relative log expression" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
 - **DESeq**: The normalization method of the [DESeq](https://bioconductor.org/packages/release/bioc/html/DESeq.html) package.
 - **FPKM**: Fragments Per Kilobase of transcript per Million mapped reads.
 - **TPM**: Transcript per Million mapped reads.
 - **Loess**: Make all the samples have the similar distribution by fitting them to same Loess distribution.
+- **Cyclic_Loess**: The "cyclic loess" method implemented by the [limma](https://bioconductor.org/packages/release/bioc/html/limma.html) package.
 
 Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
 
 <div align='center'>
-```{r normalization_boxplot, fig.width=10.5, fig.heigth=3.6, out.width='900px'}
+```{r normalization_boxplot, fig.width=10.5, fig.heigth=5.4, out.width='800px'}
 col <- gray.colors(length(unique(smpl[, 1]))+1)[-1]; 
 col <- col[as.integer(factor(smpl[, 1]))]; 
-par(mfrow=c(2, 5), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
-for (i in 1:10) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
+par(mfrow=c(3, 4), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
+for (i in 1:length(norm)) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
                         axes=FALSE, col=col, lwd=.5, main=names(norm)[i], cex.main=1.5);
 title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1); 
 ```
@@ -420,8 +423,14 @@ saveRDS(cv, paste(path.r, 'Coeff_of_Var.rds', sep='/'));
 fn <- CreateDatatable(cbind(anno[rownames(cv), ], cv), paste(path.tbl, 'Coeff_of_Var.html', sep='/')); 
 
 c <- t(apply(dff, 2, function(x) c(length(x[x<0]), length(x[x>0]))));
-tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), Corr2Original=cor(cv, cv)[, 1],
-                  Num_Decrease=c[, 1], Num_Increase=c[, 2], "Decrease_vs_Increase" = c[, 1]/c[, 2]);  
+corr <- round(cor(cv, cv[, 1])[, 1], 4); 
+cv.m <- colMeans(cv);
+chg <- round(100*(cv.m/cv.m[1]-1), 4); 
+tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), "Change(%)"=chg,
+                  Corr2Original=corr, Num_Decrease=c[, 1], Num_Increase=c[, 2], 
+                  "Decrease/Increase" = round(c[, 1]/c[, 2], 2), stringsAsFactors = FALSE);  
+colnames(tbl)[3] <- 'Change(%)';
+colnames(tbl)[7] <- 'Decrease/Increase';
 ```
 </div>
 
