@@ -1,7 +1,7 @@
 ---
 title: "Analysis of RNA-seq samples using read counts"
 author: "Jim Zhang"
-date: "2016-06-23"
+date: "2016-06-24"
 output:
   html_document:
     number_sections: yes
@@ -138,7 +138,7 @@ This analysis accepts multiple matching matrixes of read counts corresponding to
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
 <div align='left'>
-<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
+
 </div>
 
 <div style="color:darkblue; padding:0 1cm">
@@ -182,16 +182,18 @@ There are many ways to normalize RNA-seq data to remove systematic bias between 
 - **Median**: Rescale data so all the samples have the same median read count.
 - **Quantile_Quantile**: Make all the samples have exactly the same distribution.
 - **Upper_Quantile**: Rescale data so all the samples have the same upper quantile read count.
-- **Trimmed_Mean**: The TMM method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Trimmed_Mean**: The "weighted trimmed mean of M-values" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Relative_Log**: The "relative log expression" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
 - **DESeq**: The normalization method of the [DESeq](https://bioconductor.org/packages/release/bioc/html/DESeq.html) package.
 - **FPKM**: Fragments Per Kilobase of transcript per Million mapped reads.
 - **TPM**: Transcript per Million mapped reads.
 - **Loess**: Make all the samples have the similar distribution by fitting them to same Loess distribution.
+- **Cyclic_Loess**: The "cyclic loess" method implemented by the [limma](https://bioconductor.org/packages/release/bioc/html/limma.html) package.
 
 Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
 
 <div align='center'>
-<img src="figure/normalization_boxplot-1.png" title="plot of chunk normalization_boxplot" alt="plot of chunk normalization_boxplot" width="900px" />
+<img src="figure/normalization_boxplot-1.png" title="plot of chunk normalization_boxplot" alt="plot of chunk normalization_boxplot" width="800px" />
 </div>
 
 <div style="color:darkblue; padding:0 0.5cm">
@@ -217,16 +219,18 @@ Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.l
 
 |Method            |   Mean| Corr2Original| Num_Decrease| Num_Increase| Decrease_vs_Increase|
 |:-----------------|------:|-------------:|------------:|------------:|--------------------:|
-|Original          | 1.1953|          1.00|            0|            0|                  NaN|
-|Total_Count       | 1.2474|          1.00|         3389|        14577|               0.2325|
-|Median            | 1.1795|          0.99|        11758|         8296|               1.4173|
-|Quantile_Quantile | 1.1367|          0.81|        13003|         7639|               1.7022|
-|Upper_Quantile    | 1.1564|          1.00|        12031|         6330|               1.9006|
-|Trimmed_Mean      | 1.1801|          0.99|        10116|         9188|               1.1010|
-|DESeq             | 1.1666|          0.99|        12290|         6686|               1.8382|
-|FPKM              | 1.2474|          1.00|         5253|        16590|               0.3166|
-|TPM               | 1.2744|          1.00|         4349|        17477|               0.2488|
-|Loess             | 1.1614|          1.00|        11959|         4334|               2.7593|
+|Original          | 1.0695|          1.00|            0|            0|                  NaN|
+|Total_Count       | 1.1161|          1.00|         5372|        16591|               0.3238|
+|Median            | 1.0496|          1.00|        13328|         8561|               1.5568|
+|Quantile_Quantile | 1.0376|          0.91|        13016|         7613|               1.7097|
+|Upper_Quantile    | 1.0329|          1.00|        13455|         7861|               1.7116|
+|Trimmed_Mean      | 1.0588|          0.99|        11259|        10438|               1.0787|
+|Relative_Log      | 1.0588|          0.99|        11259|        10438|               1.0787|
+|DESeq             | 1.0442|          0.99|        14207|         8032|               1.7688|
+|FPKM              | 1.1161|          1.00|         5253|        16590|               0.3166|
+|TPM               | 1.1403|          1.00|         4349|        17477|               0.2488|
+|Loess             | 1.0832|          0.96|        17831|         7376|               2.4174|
+|Cyclic_Loess      | 1.1540|          0.89|        16524|         8683|               1.9030|
 
 
 </div>
@@ -347,22 +351,24 @@ If there is no complaint, go to the _output_ folder and open the ***index.html**
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] DESeq_1.20.0            lattice_0.20-33        
-##  [3] locfit_1.5-9.1          Biobase_2.28.0         
-##  [5] gplots_3.0.1            Rnaseq_0.0.0.9000      
-##  [7] fpc_2.1-10              vioplot_0.2            
-##  [9] sm_2.2-5.4              htmlwidgets_0.5        
-## [11] DT_0.1                  yaml_2.1.13            
-## [13] rmarkdown_0.9.6         knitr_1.13             
-## [15] DEGandMore_0.0.0.9000   edgeR_3.10.2           
-## [17] awsomics_0.0.0.9000     RoCA_0.0.0.9000        
-## [19] RCurl_1.95-4.8          bitops_1.0-6           
-## [21] RankProd_2.42.0         devtools_1.11.1        
-## [23] DESeq2_1.8.1            RcppArmadillo_0.5.300.4
-## [25] Rcpp_0.12.4             GenomicRanges_1.22.4   
-## [27] GenomeInfoDb_1.6.3      IRanges_2.4.8          
-## [29] S4Vectors_0.8.11        BiocGenerics_0.16.1    
-## [31] limma_3.26.9            snow_0.4-1             
+##  [1] Rnaseq_0.0.0.9000       DEGandMore_0.0.0.9000  
+##  [3] samr_2.0                matrixStats_0.14.2     
+##  [5] impute_1.42.0           DESeq_1.20.0           
+##  [7] lattice_0.20-33         locfit_1.5-9.1         
+##  [9] Biobase_2.28.0          gplots_3.0.1           
+## [11] fpc_2.1-10              vioplot_0.2            
+## [13] sm_2.2-5.4              htmlwidgets_0.5        
+## [15] DT_0.1                  yaml_2.1.13            
+## [17] rmarkdown_0.9.6         knitr_1.13             
+## [19] edgeR_3.10.2            awsomics_0.0.0.9000    
+## [21] RoCA_0.0.0.9000         RCurl_1.95-4.8         
+## [23] bitops_1.0-6            RankProd_2.42.0        
+## [25] devtools_1.11.1         DESeq2_1.8.1           
+## [27] RcppArmadillo_0.5.300.4 Rcpp_0.12.4            
+## [29] GenomicRanges_1.22.4    GenomeInfoDb_1.6.3     
+## [31] IRanges_2.4.8           S4Vectors_0.8.11       
+## [33] BiocGenerics_0.16.1     limma_3.26.9           
+## [35] snow_0.4-1             
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] RColorBrewer_1.1-2   httr_1.2.0           prabclus_2.2-6      

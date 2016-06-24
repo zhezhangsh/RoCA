@@ -383,19 +383,21 @@ There are many ways to normalize RNA-seq data to remove systematic bias between 
 - **Median**: Rescale data so all the samples have the same median read count.
 - **Quantile_Quantile**: Make all the samples have exactly the same distribution.
 - **Upper_Quantile**: Rescale data so all the samples have the same upper quantile read count.
-- **Trimmed_Mean**: The TMM method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Trimmed_Mean**: The "weighted trimmed mean of M-values" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Relative_Log**: The "relative log expression" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
 - **DESeq**: The normalization method of the [DESeq](https://bioconductor.org/packages/release/bioc/html/DESeq.html) package.
 - **FPKM**: Fragments Per Kilobase of transcript per Million mapped reads.
 - **TPM**: Transcript per Million mapped reads.
 - **Loess**: Make all the samples have the similar distribution by fitting them to same Loess distribution.
+- **Cyclic_Loess**: The "cyclic loess" method implemented by the [limma](https://bioconductor.org/packages/release/bioc/html/limma.html) package.
 
 Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
 
 <div align='center'>
-```{r normalization_boxplot, fig.width=10.5, fig.heigth=3.6, out.width='900px'}
+```{r normalization_boxplot, fig.width=10.5, fig.heigth=5.4, out.width='800px'}
 col <- gray.colors(length(unique(smpl[, 1]))+1)[-1]; 
 col <- col[as.integer(factor(smpl[, 1]))]; 
-par(mfrow=c(2, 5), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
+par(mfrow=c(3, 4), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
 for (i in 1:10) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
                         axes=FALSE, col=col, lwd=.5, main=names(norm)[i], cex.main=1.5);
 title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1); 
