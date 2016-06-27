@@ -12,7 +12,8 @@ output:
 ---
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-**Introduction: ** 
+
+**Introduction: ** The goal of this analysis is to find genes in a microarray or RNA-seq data set correlated to a series of sample feature, such as time and drug dosage. It first calculates the correlation between the sample feature and the expression level of each gene. Depending on the nature of the sample feature, the correlation could be linear or non-linear. The genes with the strongest correlation are then selected based on their correlation coefficient, p value, false discovery rate, and range across samples. The selected genes are further analyzed to identify pre-defined gene sets over-represented in these genes. 
 
 </div>
 
@@ -219,24 +220,13 @@ heatmap.size <- c(min(6, 0.25*nrow(smpl)), min(8, 0.15*(nrow(sel[[1]])+nrow(sel[
 ```
 </div>
 
-<div align='center'>
-```{r heatmap, include=TRUE, fig.width=heatmap.size[1], fig.height=heatmap.size[2], out.width='800px'}
-e <- lapply(sel, function(s) {
-  e <- expr[rownames(s), , drop=FALSE]; 
-  e[hclust(as.dist(1-cor(t(e))))$order, , drop=FALSE]; 
-}); 
-m <- rowMeans(abs(sapply(e, function(e) colMeans(e, na.rm=TRUE))));
-g <- lapply(grps, function(g) sort(m[g])); 
-e <- rbind(e[[1]], e[[2]])[, unlist(lapply(g, names), use.names=FALSE), drop=FALSE]; 
-x <- max(abs(e), na.rm=TRUE); 
-PlotColoredBlock(e, groups=grps, min=-x, max=x, key='Normalized expression'); 
-```
+<div style="color:darkblue; padding:0 2cm">
+**Figure 1.** The averages of normalized expression level of selected genes positively (red) and negatively (blue) correlated to `r prms$series`. The larger diamonds are the averages of sample groups and the smaller ones correspond to the individual samples. 
 </div>
 
 `r home.url`
 
 ## Gene set enrichment analysis
-
 
 Find predefined gene sets over-represented in the two groups of genes correlated to `r prms$series`. 
   
@@ -264,7 +254,25 @@ tbl[is.na(tbl)]<-'0';
 `r kable(tbl, row.names=FALSE)`
 </div>
 
-            
+<div align='center'>
+```{r heatmap, include=TRUE, fig.width=heatmap.size[1], fig.height=heatmap.size[2], out.width='800px'}
+e <- lapply(sel, function(s) {
+  e <- expr[rownames(s), , drop=FALSE]; 
+  e[hclust(as.dist(1-cor(t(e))))$order, , drop=FALSE]; 
+}); 
+m <- rowMeans(abs(sapply(e, function(e) colMeans(e, na.rm=TRUE))));
+g <- lapply(grps, function(g) sort(m[g])); 
+e <- rbind(e[[1]], e[[2]])[, unlist(lapply(g, names), use.names=FALSE), drop=FALSE]; 
+x <- max(abs(e), na.rm=TRUE); 
+PlotColoredBlock(e, groups=grps, min=-x, max=x, key='Normalized expression'); 
+abline(h=nrow(sel[[2]]), lwd=1); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 2.** Heatmap of all genes correlated, positively or negatively, to `r prms$series`. The colors represent the normalized expression levels (red = higher). 
+</div>
+
 `r home.url`
 
 ***
