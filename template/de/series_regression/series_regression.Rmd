@@ -251,7 +251,7 @@ tbl[is.na(tbl)]<-'0';
 </div>
   
 <div align='center', style="padding:0 2cm">
-`r kable(tbl, row.names=FALSE)`
+`r kable(tbl, row.names=TRUE)`
 </div>
 
 <div align='center'>
