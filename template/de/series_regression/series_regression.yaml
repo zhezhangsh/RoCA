@@ -23,8 +23,7 @@
 ##### REQUIRED #####
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/cluster_gene/series_regression.Rmd  # URL or file name of the .Rmd template file provided by the developer
-#template: series_regression.Rmd
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/series_regression/series_regression.Rmd  # URL or file name of the .Rmd template file provided by the developer
 output: examples/circadian_rhythm                                                   # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                  # Name of the analyst
@@ -50,21 +49,17 @@ description:
 ######################
 # Prepared input data, saved in .rds format using the saveRDS() function
 input: # Location of input files
-#  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr_0_12.rds     ## a matrix of data, row=gene, column=sample 
-  data: expr_0_12.rds     ## a matrix of data, row=gene, column=sample 
+  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/expr_0_12.rds      ## a matrix of data, row=gene, column=sample 
     # The order of the samples in the matrix matters, order them based on the order of the groups
     # It's optional to rescale the data matrix to make the mean and SD of rows comparable to each other, or normalize the data on the fly
     # No missing values allowed, remove rows with missing values or run imputation if estimate missing values
-#  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/anno.rds     ## a data frame of gene annotation 
-  annotation: anno.rds     ## a data frame of gene annotation 
+  annotation: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/anno.rds      ## a data frame of gene annotation 
     # Row names match the row names of the data matrix
     # First column should be official gene symbol
-#  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample_0_12.rds    ## a data frame of sample manifest
-  sample: sample_0_12.rds    ## a data frame of sample manifest
+  sample: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/circadian_rhythm/sample_0_12.rds    ## a data frame of sample manifest
     # Row names match the column names of the data matrix
     # One column (specify it in parameter:term) should be the variable of interest that will classify samples into multiple groups
     # Order the samples the way you want to show them in the output
-#  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/mouse.rds                   ## collection of gene sets, availble online
   geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/mouse.rds ## collection of gene sets, availble online
     # the first is metadata of gene sets, 
     # the second is a list of gene set-gene mapping
