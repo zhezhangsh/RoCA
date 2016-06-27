@@ -8,6 +8,7 @@
 #   - the first column is unique Entrez gene ID matching the row names of <data>
 #   - the second column is official gene symbols matching the gene IDs
 # <sample> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - !!! rows must be ordered by the column corresponding to data series
 #   - first column is unique sample names matching column names of <data>
 #   - first row is unique sample features such as genotype, treatment, and cell type
 #   - the values of parameters <term> must match one of the column names in this table
@@ -22,8 +23,8 @@
 ##### REQUIRED #####
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
-#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/cluster_gene/series_regression.Rmd  # URL or file name of the .Rmd template file provided by the developer
-template: series_regression.Rmd
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/cluster_gene/series_regression.Rmd  # URL or file name of the .Rmd template file provided by the developer
+#template: series_regression.Rmd
 output: examples/circadian_rhythm                                                   # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                  # Name of the analyst
@@ -64,7 +65,7 @@ input: # Location of input files
     # One column (specify it in parameter:term) should be the variable of interest that will classify samples into multiple groups
     # Order the samples the way you want to show them in the output
 #  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/mouse.rds                   ## collection of gene sets, availble online
-  geneset: mouse.rds                   ## collection of gene sets, availble online
+  geneset: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set/mouse.rds ## collection of gene sets, availble online
     # the first is metadata of gene sets, 
     # the second is a list of gene set-gene mapping
     # refer to the rchive (github.com/zhezhangsh/rchive) repo for how to create a gene set collection
