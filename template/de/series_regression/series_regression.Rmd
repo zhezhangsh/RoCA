@@ -132,7 +132,7 @@ stat <- cbind(Min=rng[, 1], Max=rng[, 2], Corr=crr, Pval=pvl, FDR=qvl, mns);
 tbl  <- cbind(anno, stat); 
 saveRDS(stat, paste(path.r, 'stat.rds', sep='/')); 
 CreateDatatable(tbl, paste(path.tbl, 'stat.html', sep='/')); 
-for (i in 1:ncol(anno)) tbl[, i] <- CleanHtmlTags(tbl[, i]); 
+for (i in 1:ncol(anno)) tbl[, i] <- CleanHtmlTags(tbl[, i], remove.empty = FALSE); 
 write.csv(tbl, paste(path.tbl, 'stat.csv', sep='/')); 
 ```
 
