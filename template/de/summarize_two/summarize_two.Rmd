@@ -218,9 +218,12 @@ points(l2r[d, , drop=FALSE], cex=0.6, col='#FF3333', pch=19);
 ## Differentially expressed genes (DEGs)
 
 ```{r deg, include=TRUE}
-deg.n<-sapply(deg, function(deg) sapply(deg, nrow)); 
-g<-paste(sapply(grp, function(x) x[2]), collapse='/'); 
-rownames(deg.n)<-paste(c('Higher', 'Lower'), 'in the 2nd group');
+deg.n<-t(sapply(deg, function(deg) sapply(deg, nrow))); 
+colnames(deg.n)<-c('DEG, > control', 'DEG, < control');
+n0<-sapply(stat, nrow);
+n1<-apply(pvl, 2, function(x) length(x[!is.na(x) & x<= prms$gene$pvalue])); 
+deg.n<-cbind(n0, n1, deg.n);
+colnames(deg.n)[1:2]<-c('Total_gene', paste('P <', prms$gene$pvalue));
 ```
 
 Both comparisons identified DEGs between 2 compared groups. Overlapped DEGs identified by both comparisons are worthy of a closer look. 
