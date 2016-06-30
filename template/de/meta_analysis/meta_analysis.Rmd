@@ -55,27 +55,25 @@ for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.su
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
 ```
+cp <- ImportTable(DownloadFile(yml$input$comparison, path.input), rownames = FALSE, colnames = FALSE); 
 
-```{r load_data, include=FALSE}
-# Loading results from pairwsie DEG analysis
-yml$input <- lapply(yml$input, function(c) {
-  if (is.list(c)) c else {
-    if (is.character(c) & dir.exists(c[1])) 
-      list(result=paste(c, 'R/result.rds', sep='/'), index=paste(c, 'index.html', sep='/')) else
-        stop('Error: comparison results not found\n'); 
-  }
-}); 
-
-NM <- names(yml$input)
+NM <- comp[[1]]; 
 N  <- length(NM);
 
-res <- lapply(names(yml$input), function(nm) {
-  f <- yml$input[[nm]]; 
-  fn0 <- DownloadFile(f$result, path.input); 
-  fn1 <- sub('result.rds$', paste(nm, '.rds', sep=''), fn0);
-  if (fn1 != fn0) file.rename(fn0, fn1); 
-  res <- ImportR(fn1); 
-  saveRDS(res[[nm]], paste(path.input, paste('result_', nm, '.rds', sep=''), sep='/')); 
+c <- as.vector(cp[, 2]); 
+names(c) <- as.vector(cp[, 1]); 
+res <- lapply(names(c), function(nm) {
+  f <- c[[nm]]; 
+  
+  if (dir.exists(f)) {
+    res <- ImportR(paste(f, 'R', 'result.rds', sep='/')); 
+  } else {
+    fn <- DownloadFile(f, path.input); 
+    res <- ImportR(fn); 
+  };
+  
+  saveRDS(res, paste(path.input, paste('result_', nm, '.rds', sep=''), sep='/')); 
+
   res; 
 });
 
@@ -113,12 +111,8 @@ nds <- sapply(deg, function(x) sapply(x, nrow));
 
 tbl <- data.frame(Name=names(comp), Group1=nms[1, ], Group2=nms[2, ], Num1=szs[1,], Num2=szs[2,], Num_Gene=sapply(expr, nrow),
                   Test=mtd, Paired=prd, DEG_Higher=nds[1, ], DEG_Lower=nds[2, ], stringsAsFactors = FALSE); 
-for (i in 1:length(res)) {
-  ind <- yml$input[[i]][[2]]; 
-  if (!is.null(ind) & !identical('', ind) & !identical(NA, ind)) 
-    if (url.exists(ind) | file.exists(ind))
-      tbl[i, 1] <- paste('[', tbl[i, 1], '](', ind, ')', sep=''); 
-}
+
+if (ncol(cp) >=3) tbl[, 1] <- paste('[', tbl[, 1], '](', as.vector(cp[, 3]), ')', sep=''); 
 ```
 
 <div style="color:darkblue; padding:0 1cm">
