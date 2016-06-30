@@ -1,0 +1,3 @@
+B_Cell	https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/pairwise_comparison/immune_cells/b_cell.rds
+T_Cell	https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/log/pairwise_comparison/immune_cells/t_cell.rds
+
