@@ -223,10 +223,10 @@ heatmap(1-corr, cexRow=1/wid, cexCol=1/wid, scale='none');
 
 ## Top genes
 
-Selection of the top genes with the most significant meta-analysis results. 
+Selection of the top genes with the most prominent meta-analysis results. 
 
 <div align='center'>
-```{r gene_top_mean, include=TRUE, fig.width=max(4, 0.5*(N+1)), fig.height=min(4.8, 0.1*prms$gene$top+1), out.width=paste(100*min(6, 0.5*N+2), 'px', sep='')}
+```{r gene_top_mean, include=TRUE, fig.width=max(4, 0.5*(N+1)), fig.height=min(8, 0.1*prms$gene$top+1), out.width=paste(100*min(6, 0.5*N+2), 'px', sep='')}
 x <- rev(sort(rowMeans(abs(rnk))))[1:min(length(p0), prms$gene$top)]; 
 x <- rnk[names(x), , drop=FALSE]; 
 x <- x[hclust(dist(x))$order, , drop=FALSE]; 
@@ -247,7 +247,7 @@ write.csv(tbl, paste(path.tbl, 'gene_top_mean.csv', sep='/'));
 &nbsp;
 
 <div align='center'>
-```{r gene_top_diff, include=TRUE, fig.width=max(4, 0.5*(N+1)), fig.height=min(4.8, 0.1*prms$gene$top+1), out.width=paste(100*min(6, 0.5*N+2), 'px', sep='')}
+```{r gene_top_diff, include=TRUE, fig.width=max(4, 0.5*(N+1)), fig.height=min(8, 0.1*prms$gene$top+1), out.width=paste(100*min(6, 0.5*N+2), 'px', sep='')}
 x <- apply(rnk, 1, sd)
 x <- rev(sort(x))[1:min(length(p0), prms$gene$top)]; 
 x <- rnk[names(x), , drop=FALSE]; 
@@ -330,7 +330,7 @@ if (prms$geneset$union) l1 <- 'Gene sets presented in any of the comparisons are
   l1 <- 'Only gene sets presented in all of the comparisons are included.'
 
 x <- prms$geneset$heatmap$sort$comparison[1]
-if (x>=1 & x<=N) l2 <- paste('with the highest _|NES|_ from comparison ', NM[ind], '.', sep='') else 
+if (x>=1 & x<=N) l2 <- paste('with the highest _|NES|_ from comparison ', NM[x], '.', sep='') else 
   l2 <- 'with the highest average _|NES|_ of all comparisons.'
 ```
 
@@ -376,7 +376,7 @@ sortNES <- function(x, top, ind, ord) {
 ```
 
 <div align='center'>
-```{r gsea_top_nes, include=TRUE, fig.width=max(4, 0.5*(N+4)), fig.height=min(4.8, 0.1*prms$gene$top+1), out.width='600px'}
+```{r gsea_top_nes, include=TRUE, fig.width=max(4, 0.5*(N+4)), fig.height=min(8, 0.1*prms$gene$top+1), out.width='600px'}
 rownames(nes) <- rownames(pvl) <- nms;
 x <- y <- sortNES(nes, prms$geneset$heatmap$top$overall, prms$geneset$heatmap$sort$comparison, prms$geneset$heatmap$sort$order); 
 rownames(y) <- substr(rownames(y), 1, 200);
@@ -395,7 +395,7 @@ write.csv(tbl, paste(path.tbl, 'gsea_top_nes.csv', sep='/'), row.names = FALSE);
 &nbsp;
 
 <div align='center'>
-```{r gsea_top_diff, include=TRUE, fig.width=max(4, 0.5*(N+4)), fig.height=min(4.8, 0.1*prms$gene$top+1), out.width='600px'}
+```{r gsea_top_diff, include=TRUE, fig.width=max(4, 0.5*(N+4)), fig.height=min(8, 0.1*prms$gene$top+1), out.width='600px'}
 x <- nes[rev(order(apply(nes, 1, sd))), , drop=FALSE]; 
 x <- x[1:min(length(p0), prms$geneset$heatmap$top$overall), , drop=FALSE]; 
 x <- y <- sortNES(x, prms$geneset$heatmap$top$overall, prms$geneset$heatmap$sort$comparison, prms$geneset$heatmap$sort$order); 
