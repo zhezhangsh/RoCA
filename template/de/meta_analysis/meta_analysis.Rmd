@@ -111,7 +111,7 @@ mtd <- sub('^De', '', sapply(de, function(de) de$method));
 prd <- sapply(de, function(de) de$parameter$paired);
 nds <- sapply(deg, function(x) sapply(x, nrow)); 
 
-tbl <- data.frame(Name=names(comp), Group1=nms[1, ], Group2=nms[2, ], Num1=szs[1,], Num2=szs[2,], Num_Gene=sapply(expr, nrow),
+tbl <- data.frame(Name=names(comp), Group1=nms[1, ], Group2=nms[2, ], Num1=szs[1,], Num2=szs[2,], Num_Gene=gns,
                   Test=mtd, Paired=prd, DEG_Higher=nds[1, ], DEG_Lower=nds[2, ], stringsAsFactors = FALSE); 
 
 if (ncol(cp) >=3) tbl[, 1] <- paste('[', tbl[, 1], '](', as.vector(cp[, 3]), ')', sep=''); 

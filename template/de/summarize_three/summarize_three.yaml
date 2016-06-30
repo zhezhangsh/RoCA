@@ -10,7 +10,7 @@
 #   - The first element of the list is a table of gene set annotation
 #   - The second element of this list is itself of a list of gene-gene set mapping
 #   - The element names of the seconde element must match the row names of the first element
-# <comparison> a table of 2 or 3 columns saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+# <comparison> a table of 2 or 3 columns and 3 rows saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
 #   - No row and column names
 #   - First column is unique names of comparisons
 #   - Second column is the URL or path to the result file of each comparison or the output folder of the comparison
