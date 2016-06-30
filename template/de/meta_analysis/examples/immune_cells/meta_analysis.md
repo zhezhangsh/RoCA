@@ -20,39 +20,8 @@ output:
 &nbsp;
 
 
-cp <- ImportTable(DownloadFile(yml$input$comparison, path.input), rownames = FALSE, colnames = FALSE); 
 
-NM <- comp[[1]]; 
-N  <- length(NM);
 
-c <- as.vector(cp[, 2]); 
-names(c) <- as.vector(cp[, 1]); 
-res <- lapply(names(c), function(nm) {
-  f <- c[[nm]]; 
-  
-  if (dir.exists(f)) {
-    res <- ImportR(paste(f, 'R', 'result.rds', sep='/')); 
-  } else {
-    fn <- DownloadFile(f, path.input); 
-    res <- ImportR(fn); 
-  };
-  
-  saveRDS(res, paste(path.input, paste('result_', nm, '.rds', sep=''), sep='/')); 
-
-  res; 
-});
-
-expr <- lapply(res, function(res) res$inputs$expr);
-anno <- lapply(res, function(res) res$inputs$anno);
-comp <- lapply(res, function(res) res$inputs$comparison);
-de   <- lapply(res, function(res) res$de); 
-ora  <- lapply(res, function(res) res$ora); 
-gsea <- lapply(res, function(res) res$gsea); 
-stat <- lapply(de, function(de) de$results$stat); 
-deg  <- lapply(de, function(de) de$DEG); 
-names(res) <- names(expr) <- names(anno) <- names(comp) <- names(de) <- NM;
-names(ora) <- names(gsea) <- names(stat) <- names(deg) <- NM; 
-```
 
 <div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
 
@@ -85,31 +54,205 @@ This report performs meta-analysis on the results of the following pairwise comp
 
 
 
+<div style="color:darkblue; padding:0 1cm">
+**Table 1.** Information about individual comparisons, including comparison name, group names, group size, total number of genes, etc. 
+</div>
+  
+<div align='center', style="padding:0 1cm">
+
+
+|   Name   | Group1  | Group2 | Num1 | Num2 | Num_Gene | Test  | Paired | DEG_Higher | DEG_Lower |
+|:--------:|:-------:|:------:|:----:|:----:|:--------:|:-----:|:------:|:----------:|:---------:|
+|  B_Cell  | Control |  SLE   |  3   |  3   |  23272   | EdgeR | FALSE  |    984     |   1853    |
+|  T_Cell  | Control |  SLE   |  3   |  3   |  23272   | EdgeR | FALSE  |    693     |    671    |
+| Monocyte | Control |  SLE   |  3   |  3   |  23272   | EdgeR | FALSE  |    501     |    465    |
+
+
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
+
+# Gene-level analysis
 
 
 
 
 
+Gene-level statistics, log2 of fold change and p value, are retrieved from all individual comparisons. Genes presented in any of the comparisons are included. [Fisher's method](https://en.wikipedia.org/wiki/Fisher%27s_method) of meta-analysis is performed on the p values of individual comparisons to get a combined p value for each gene. Other summary statistics of each gene include its maximum p value from all comparisons, and the average/minimum of _|log2 of fold change|_ from all comparisons. The joint of p value and fold change, _sign(log2FC)*sqrt(abs(log10(p)*logFC))_, is used as a representative statistic of the differential expression of each gene in each comparisons.
+
+<div align='center'>
+<img src="FIGURE/gene_cluster-1.png" title="plot of chunk gene_cluster" alt="plot of chunk gene_cluster" width="640px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 1.** Clustering of all the pairwise comparisons. The joint of p value and fold change, _sign(log2FC)*sqrt(abs(log10(p)*logFC))_, is used as a representative statistic of the differential expression of each gene in each comparisons. The representative statistics of all genes are then used for the clustering.  
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
+
+## Top genes
+
+Selection of the top genes with the most significant meta-analysis results. 
+
+<div align='center'>
+<img src="FIGURE/gene_top_mean-1.png" title="plot of chunk gene_top_mean" alt="plot of chunk gene_top_mean" width="350px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2A.** The [top  genes](table/gene_top_mean.html) with the most overall differential expression across all comparisons, based on their representative statistics. 
+</div>
+
+&nbsp;
+
+<div align='center'>
+<img src="FIGURE/gene_top_diff-1.png" title="plot of chunk gene_top_diff" alt="plot of chunk gene_top_diff" width="350px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2B.** The [top  genes](table/gene_top_diff.html) with the most different results of differential expression between the comparisons, based on their representative statistics. 
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
+
+# Gene set-level analysis
 
 
 
 
 
+Statisitcs of gene set enrichment analysis, p value and normalized enriched score (NES), are retrieved from individual comparisons. Gene sets presented in any of the comparisons are included. [Fisher's method](https://en.wikipedia.org/wiki/Fisher%27s_method) of meta-analysis is performed on the GSEA p values of individual comparisons to get a combined p value for each gene set. For the meta-analysis, p values of 0 from the original GSEA are rounded to 0.001. Other summary statistics of each gene set include its maximum p value from all comparisons, and the average/minimum of _|NES|_ from all comparisons.
+
+<div align='center'>
+<img src="FIGURE/gsea_cluster-1.png" title="plot of chunk gsea_cluster" alt="plot of chunk gsea_cluster" width="640px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 3.** Clustering of all the pairwise comparisons, using NES of all gene sets.
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
+
+## Top gene sets
+
+Selection of the top gene sets with the most significant meta-analysis results. 
 
 
 
+<div align='center'>
+<img src="FIGURE/gsea_top_nes-1.png" title="plot of chunk gsea_top_nes" alt="plot of chunk gsea_top_nes" width="600px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 4A.** The [top  gene sets](table/gsea_top_nes.html) with the highest average _|NES|_ of all comparisons.
+</div>
+
+&nbsp;
+
+<div align='center'>
+<img src="FIGURE/gsea_top_diff-1.png" title="plot of chunk gsea_top_diff" alt="plot of chunk gsea_top_diff" width="600px" />
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 4B.** The [top  gene sets](table/gsea_top_diff.html) with the most different NES values among all comparisons.
+</div>
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
+
+## Gene set collections
 
 
 
+Gene sets are split into different collections. Click on the collection names to view a plot of NES values of top gene sets and the numbers to see a full table of all gene sets:
+
+  - [C0_Hallmark](figure/collection_C0_Hallmark.png) :   [50 gene sets](table/collection_C0_Hallmark.html)
+  - [C1_Positional](figure/collection_C1_Positional.png) :   [312 gene sets](table/collection_C1_Positional.html)
+  - [C2_BioCarta_Pathways](figure/collection_C2_BioCarta_Pathways.png) :   [217 gene sets](table/collection_C2_BioCarta_Pathways.html)
+  - [C2_Chemical_and_genetic_perturbations](figure/collection_C2_Chemical_and_genetic_perturbations.png) :   [3252 gene sets](table/collection_C2_Chemical_and_genetic_perturbations.html)
+  - [C3_MicroRNA_targets](figure/collection_C3_MicroRNA_targets.png) :   [213 gene sets](table/collection_C3_MicroRNA_targets.html)
+  - [C3_TF_targets](figure/collection_C3_TF_targets.png) :   [573 gene sets](table/collection_C3_TF_targets.html)
+  - [C4_Cancer_gene_neighborhoods](figure/collection_C4_Cancer_gene_neighborhoods.png) :   [427 gene sets](table/collection_C4_Cancer_gene_neighborhoods.html)
+  - [C4_Cancer_modules](figure/collection_C4_Cancer_modules.png) :   [415 gene sets](table/collection_C4_Cancer_modules.html)
+  - [C6_Oncogenic_signatures](figure/collection_C6_Oncogenic_signatures.png) :   [189 gene sets](table/collection_C6_Oncogenic_signatures.html)
+  - [C7_Immunologic_signatures](figure/collection_C7_Immunologic_signatures.png) :   [1910 gene sets](table/collection_C7_Immunologic_signatures.html)
+  - [GO_BP](figure/collection_GO_BP.png) :   [7131 gene sets](table/collection_GO_BP.html)
+  - [GO_CC](figure/collection_GO_CC.png) :   [875 gene sets](table/collection_GO_CC.html)
+  - [GO_MF](figure/collection_GO_MF.png) :   [1541 gene sets](table/collection_GO_MF.html)
+  - [KEGG_compound](figure/collection_KEGG_compound.png) :   [526 gene sets](table/collection_KEGG_compound.html)
+  - [KEGG_enzyme](figure/collection_KEGG_enzyme.png) :   [33 gene sets](table/collection_KEGG_enzyme.html)
+  - [KEGG_module](figure/collection_KEGG_module.png) :   [128 gene sets](table/collection_KEGG_module.html)
+  - [KEGG_pathway](figure/collection_KEGG_pathway.png) :   [285 gene sets](table/collection_KEGG_pathway.html)
+  - [KEGG_reaction](figure/collection_KEGG_reaction.png) :   [193 gene sets](table/collection_KEGG_reaction.html)
+  - [OMIM_gene](figure/collection_OMIM_gene.png) :   [101 gene sets](table/collection_OMIM_gene.html)
+  - [REACTOME](figure/collection_REACTOME.png) :   [1372 gene sets](table/collection_REACTOME.html)
+  - [WikiPathways](figure/collection_WikiPathways.png) :   [216 gene sets](table/collection_WikiPathways.html)
+
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div> 
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
 
+```r
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
 
 
+```
+## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] rchive_0.0.0.9000     DEGandMore_0.0.0.9000 snow_0.4-1           
+##  [4] gplots_3.0.1          MASS_7.3-45           htmlwidgets_0.6      
+##  [7] DT_0.1                awsomics_0.0.0.9000   yaml_2.1.13          
+## [10] rmarkdown_0.9.6       knitr_1.13            RoCA_0.0.0.9000      
+## [13] RCurl_1.95-4.8        bitops_1.0-6          devtools_1.12.0      
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.5        magrittr_1.5       highr_0.6         
+##  [4] stringr_1.0.0      caTools_1.17.1     tools_3.2.2       
+##  [7] KernSmooth_2.23-15 withr_1.0.2        htmltools_0.3.5   
+## [10] gtools_3.5.0       digest_0.6.9       formatR_1.4       
+## [13] memoise_1.0.0      evaluate_0.9       gdata_2.17.0      
+## [16] stringi_1.1.1      jsonlite_0.9.22
+```
 
+<div align='right'>_[Go to project home](http://zhezhangsh.github.io/RoCA)_</div>
 
-
-
-
-
-
-
+***
+**END OF DOCUMENT**

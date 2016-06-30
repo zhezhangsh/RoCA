@@ -55,9 +55,11 @@ for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.su
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
 ```
+
+```{r load_data, include=FALSE}
 cp <- ImportTable(DownloadFile(yml$input$comparison, path.input), rownames = FALSE, colnames = FALSE); 
 
-NM <- comp[[1]]; 
+NM <- as.vector(cp[[1]]); 
 N  <- length(NM);
 
 c <- as.vector(cp[, 2]); 

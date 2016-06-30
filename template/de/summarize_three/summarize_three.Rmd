@@ -58,28 +58,32 @@ home.url <- Link2Home(yml$home);
 
 ```{r load_data, include=FALSE}
 # Loading results from pairwsie DEG analysis
-yml$input$comparison <- lapply(yml$input$comparison, function(c) {
-  if (is.list(c)) c else {
-    if (is.character(c) & dir.exists(c[1])) 
-      list(result=paste(c, 'R/result.rds', sep='/'), index=paste(c, 'index.html', sep='/')) else
-        stop('Error: comparison results not found\n'); 
-  }
-})
+cp <- ImportTable(DownloadFile(yml$input$comparison, path.input), rownames = FALSE, colnames = FALSE); 
 
-res <- lapply(names(yml$input$comparison), function(nm) {
-  f <- yml$input$comparison[[nm]]; 
-  fn0 <- DownloadFile(f$result, path.input); 
-  fn1 <- sub('result.rds$', paste(nm, '.rds', sep=''), fn0);
-  if (fn1 != fn0) file.rename(fn0, fn1); 
-  ImportR(fn1); 
+c <- as.vector(cp[, 2]); 
+names(c) <- as.vector(cp[, 1]); 
+res <- lapply(names(c), function(nm) {
+  f <- c[[nm]]; 
+  
+  if (dir.exists(f)) {
+    res <- ImportR(paste(f, 'R', 'result.rds', sep='/')); 
+  } else {
+    fn <- DownloadFile(f, path.input); 
+    res <- ImportR(fn); 
+  };
+  
+  saveRDS(res, paste(path.input, paste('result_', nm, '.rds', sep=''), sep='/')); 
+
+  res; 
 });
+
 gset <- ImportR(DownloadFile(yml$input$geneset, path.input)); 
 smpl <- ImportR(DownloadFile(yml$input$sample, path.input));
-comp <- names(yml$input$comparison); 
+comp <- as.vector(cp[[1]]); 
 
 grp <- lapply(res, function(res) names(res$inputs$comparison));
 smp <- lapply(res, function(x) x$inputs$comparison);
-names(res) <- names(grp) <- names(smp) <- names(yml$input$comparison);
+names(res) <- names(grp) <- names(smp) <- comp;
 
 sapply(names(res), function(nm) 
   saveRDS(res[[nm]], paste(path.input, paste('result_', nm, '.rds', sep=''), sep='/'))) -> x;
@@ -90,9 +94,9 @@ smpl <- smpl[unlist(smp, use.names=FALSE), ];
 s0 <- setdiff(unlist(smp), rownames(smpl));
 if (length(s0) > 0) stop('Error: missing metadata of sample(s): ', paste(s0, collapse='; '), '\n');
 
-de<-lapply(res, function(res) res$de); 
-ora<-lapply(res, function(res) res$ora); 
-gsea<-lapply(res, function(res) res$gsea); 
+de   <-lapply(res, function(res) res$de); 
+ora  <-lapply(res, function(res) res$ora); 
+gsea <-lapply(res, function(res) res$gsea); 
 
 ind1 <- c(1,1,2);
 ind2 <- c(2,3,3);
@@ -119,18 +123,28 @@ expr.all<-do.call('cbind', lapply(expr.all, function(d) d[g, ]));
 
 This report compares the results of the  following pairwise comparisons.  
 
-```{r link_lines, include=FALSE}
-lns <- sapply(names(yml$input$comparison), function(nm) {
-  c <- yml$input$comparison[[nm]];
-  ind <- c$index[1];
-  l <- paste(grp[[nm]], collapse=' vs. ', sep='');
-  if (is.null(ind) | identical('', ind) | identical(NA, ind)) l else paste('[', l, '](', yml$input$comparison[[1]]$index, ')', sep=''); 
-});
-lns <- as.vector(lns); 
+```{r comparisons, include=FALSE}
+nms <- sapply(res, function(res) names(res$inputs$comparison));
+szs <- sapply(res, function(res) sapply(res$inputs$comparison, length));
+gns <- sapply(res, function(res) nrow(res$inputs$expr));
+mtd <- sub('^De', '', sapply(de, function(de) de$method));
+prd <- sapply(de, function(de) de$parameter$paired);
+nds <- sapply(de, function(de) sapply(de$DEG, nrow)); 
+
+tbl <- data.frame(Name=comp, Group1=nms[1, ], Group2=nms[2, ], Num1=szs[1,], Num2=szs[2,], Num_Gene=sapply(expr, nrow),
+                  Test=mtd, Paired=prd, DEG_Higher=nds[1, ], DEG_Lower=nds[2, ], stringsAsFactors = FALSE); 
+
+if (ncol(cp) >=3) tbl[, 1] <- paste('[', tbl[, 1], '](', as.vector(cp[, 3]), ')', sep=''); 
 ```
-  - **`r comp[1]`**: `r lns[1]`
-  - **`r comp[2]`**: `r lns[2]`
-  - **`r comp[3]`**: `r lns[3]`
+
+<div style="color:darkblue; padding:0 1cm">
+**Table 1.** Information about all 3 individual comparisons, including comparison name, group names, group size, total number of genes, etc. 
+</div>
+  
+<div align='center', style="padding:0 1cm">
+`r kable(tbl, row.names=FALSE, align=rep('c', ncol(tbl)))`
+</div>
+
 
 `r home.url` 
 
@@ -229,7 +243,7 @@ colnames(deg.n)[1:2]<-c('Total_gene', paste('P <', prms$gene$pvalue));
 Both comparisons identified DEGs from 2 compared groups. Check report of individual comparisons for how the DEGs were selected. Overlapped DEGs identified by all 3 comparisons are worthy of a closer look. 
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 1.** Number of DEGs identified by each comparison.
+**Table 2.** Number of DEGs identified by each comparison.
 </div>
 
 <div align='center', style="padding:0 2cm">
