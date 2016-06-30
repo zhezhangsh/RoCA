@@ -79,7 +79,7 @@ res <- lapply(names(c), function(nm) {
 
 gset <- ImportR(DownloadFile(yml$input$geneset, path.input)); 
 smpl <- ImportR(DownloadFile(yml$input$sample, path.input));
-comp <- names(yml$input$comparison); 
+comp <- as.vector(cp[[1]]); 
 
 grp <- lapply(res, function(res) names(res$inputs$comparison));
 smp <- lapply(res, function(x) x$inputs$comparison);
