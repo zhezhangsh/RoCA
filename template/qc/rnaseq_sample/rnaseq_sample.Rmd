@@ -247,23 +247,15 @@ When the gene-level read counts of two mapping types are strongly correlated to 
 ```{r read_count_type_corr, fig.width=6, fig.height=1+5*as.integer(length(mr)>1), out.width='600px'}
 if (length(count.all) > 1) {
   corr <- cor(count.sum2, use='pair', method='spearman'); 
-  saveRDS(corr, paste(path.r, 'corr_mapping_type.rds', sep='/')); 
-  fn <- CreateDatatable(round(corr, 4), paste(path.tbl, 'corr_mapping_type.html', sep='/'), 
-                        caption='Correlation of read counts between mapping types'); 
-  for (i in 2:ncol(count.sum2)) {
-    nm <- colnames(count.sum2)[c(1, i)]; 
-    fn <- paste('corr2', nm[2], '.pdf', sep='');
-    pdf(paste(path.fig, fn, sep='/'), w=8, h=8); 
-    PlotLogScatter(count.sum2[, 1], count.sum2[, i], xlab=nm[1], ylab=nm[2], 
-    main = paste('R =', round(corr[1, i], 4))); 
-    abline(0, 1, lwd=1, col='red'); 
-    dev.off();
-  }
   r <- corr[-1, 1];
   nm <- rownames(corr)[-1][r==max(r)];
   PlotLogScatter(count.sum2[, 1], count.sum2[, nm], xlab=colnames(count.sum2)[1], ylab=nm, 
                  main = paste('R =', round(corr[1, nm], 4))); 
   abline(0, 1, lwd=1, col='red'); 
+  
+  saveRDS(corr, paste(path.r, 'corr_mapping_type.rds', sep='/')); 
+  fn <- CreateDatatable(round(corr, 4), paste(path.tbl, 'corr_mapping_type.html', sep='/'), 
+                        caption='Correlation of read counts between mapping types'); 
 } else {
   corr <- matrix(nr=1, nc=1, dimnames = list(NA, 'No correlation results: only one mapping type')); 
   fn <- CreateDatatable(corr, paste(path.tbl, 'corr_mapping_type.html', sep='/'), rownames = FALSE); 
@@ -273,6 +265,20 @@ if (length(count.all) > 1) {
 }
 ```
 </div>
+
+```{r read_count_type_corr_plot, include=FALSE}
+if (length(count.all) > 1) {
+  for (i in 2:ncol(count.sum2)) {
+    nm <- colnames(count.sum2)[c(1, i)]; 
+    fn <- paste('corr2', nm[2], '.pdf', sep='');
+    pdf(paste(path.fig, fn, sep='/'), w=8, h=8); 
+    PlotLogScatter(count.sum2[, 1], count.sum2[, i], xlab=nm[1], ylab=nm[2], 
+    main = paste('R =', round(corr[1, i], 4))); 
+    abline(0, 1, lwd=1, col='red'); 
+    dev.off();
+  }
+}
+```
 
 <div style="color:darkblue; padding:0 1cm">
 **Figure 5.** The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman's correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click [here](table/corr_mapping_type.html) to view correlation coefficients between all pairs of mapping types.
