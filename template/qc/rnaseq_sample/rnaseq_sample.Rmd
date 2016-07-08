@@ -96,7 +96,7 @@ names(gn.len) <- rownames(anno);
 
 - Number of samples: _`r nrow(smpl)`_
 - Number of genes: _`r format(nrow(ct), big.mark=',')`_
-- Average number of total reads per gene: _`r mean(count.sum2[, 1])`_
+- Average number of total reads per gene: _`r round(mean(count.sum2[, 1]), 1)`_
 - Average number of total reads per sample: _`r format(mean(count.sum1[, 1]), big.mark=',')`_
 
 ## Read count by sample
