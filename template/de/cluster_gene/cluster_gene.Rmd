@@ -74,7 +74,7 @@ anno<-anno[rownames(anno) %in% rownames(expr), , drop=FALSE];
 smpl<-smpl[rownames(smpl) %in% colnames(expr), , drop=FALSE];
 if (nrow(anno) <= 1) stop("Not enough genes to perform clustering.\n");
 if (nrow(smpl) <= 1) stop("Not enough samples to perform clustering.\n");
-expr0<-expr[rownames(anno), rownames(smpl)];  # Original matrix
+expr0<-expr<-expr[rownames(anno), rownames(smpl)];  # Original matrix
 
 phen <- setdiff(prms$term, names(smpl));
 if (length(phen) > 0) stop("Sample phenotype(s): ", paste(phen, collapse=';'), ' not available.\n');
