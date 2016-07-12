@@ -231,6 +231,7 @@ select.gene <- function(expr, stat, prms) {
 if (length(prms$term) == 1) e <- select.gene(expr, stat, prms) else {
   es <- lapply(1:ncol(pvs), function(i) {
     ss <- cbind(Range=stat[, 'Range'], pANOVA=pvs[, i], FDR=qvs[, i]); 
+    rownames(ss) <- rownames(stat); 
     select.gene(expr, ss, prms); 
   });
   ids <- Reduce('union', lapply(es, rownames)); 
