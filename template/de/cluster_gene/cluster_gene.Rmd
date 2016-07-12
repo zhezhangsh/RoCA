@@ -176,7 +176,7 @@ if (length(prms$term) == 1) {
 } else {
   par(mfrow=c(length(prms$term), 1), mar=c(5,5,3,2)); 
   sapply(1:length(prms$term), function(i) hist(pvs[, i], br=100, xlab='ANOVA p value', ylab='Number of genes', 
-                                               cex.lab=1.5, main=prms$term[i]), cex.main=2) -> x;
+                                               cex.lab=1.5, main=prms$term[i], cex.main=2)) -> x;
   n <- apply(pvs[, 1:length(prms$term)], 2, function(p) length(p[p<=prms$selection$p])); 
   ln <- paste(min(n), 'to', max(n), 'genes have p values less than', prms$selection$p);
 }
