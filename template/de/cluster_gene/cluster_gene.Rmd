@@ -76,11 +76,14 @@ if (nrow(anno) <= 1) stop("Not enough genes to perform clustering.\n");
 if (nrow(smpl) <= 1) stop("Not enough samples to perform clustering.\n");
 expr0<-expr[rownames(anno), rownames(smpl)];  # Original matrix
 
-phen<-smpl[, prms$term[1]]; 
+phen <- setdiff(prms$term, names(smpl));
+if (length(phen) > 0) stop("Sample phenotype(s): ", paste(phen, collapse=';'), ' not available.\n');
+phen <- sapply(prms$term, function(x) as.vector(smpl[, x])); 
+phen <- apply(phen, 1, function(x) paste(x, collapse='_')); 
 
 if (prms$normalization$method == 2) {
-  ind<-which(smpl[, prms$term[1]]==prms$normalization$control);
-  if (length(ind)==0) stop('Error: no samples belong to control group "', prms$normalization$control,  '".\n')
+  ind<-which(smpl[, prms$normalization$control$column]==prms$normalization$control$name);
+  if (length(ind)==0) stop('Error: no samples belong to control group "', prms$normalization$control$name,  '".\n')
   expr<-t(apply(expr0, 1, function(x) (x-mean(x[ind]))/sd(x))); 
 } else if (prms$normalization$method == 1) expr<-t(scale(t(expr))) else expr<-expr0; 
 
@@ -98,7 +101,7 @@ CreateDatatable(smpl, paste(path.tbl, 'sample.html', sep='/'));
 ## Data and samples
 
 ```{r normalization, include=FALSE}
-if (prms$normalization$method == 2) ln<-paste('The input data matrix was normalized using sample group _', prms$normalization$control, '_ as control, so, the data of each gene was substracted by control group mean and had SD equal to 1.0', sep='') else if (prms$normalization$method == 1) ln<-paste('The input data matrix was normalized so each gene had mean of 0 and SD of 1.0') else 
+if (prms$normalization$method == 2) ln<-paste('The input data matrix was normalized using sample group _', prms$normalization$control$name, '_ as control, so, the data of each gene was substracted by control group mean and had SD equal to 1.0', sep='') else if (prms$normalization$method == 1) ln<-paste('The input data matrix was normalized so each gene had mean of 0 and SD of 1.0') else 
   ln<-'It was presumed that the input data matrix had been properly processed for this analysis, so no further normalization was done'
 ```
 
@@ -130,20 +133,33 @@ legend(x='topright', legend=names(col), text.col=col, bty='n', cex=.5);
 
 ```{r anova, include=FALSE}
 # Summary statistics and ANOVA
-grp<-split(rownames(smpl), phen)[unique(phen)];
-m<-sapply(grp, function(s) rowMeans(expr0[, s, drop=FALSE])); 
-mn<-apply(expr0, 1, min);
-mx<-apply(expr0, 1, max); 
+grp <-split(rownames(smpl), phen)[unique(phen)];
+m   <-sapply(grp, function(s) rowMeans(expr0[, s, drop=FALSE])); 
+mn  <-apply(expr0, 1, min);
+mx  <-apply(expr0, 1, max); 
+colnames(m) <- paste('Mean', colnames(m), sep='_'); 
 
-f<-as.factor(phen); 
-dat<-data.frame(t(expr0));
-dat$Group<-f;
-formula = as.formula(paste0("cbind(", paste(names(dat)[-length(dat)],collapse=","), ")~Group") ) 
-aov<-aov(formula, data=dat);
-p<-as.vector(sapply(summary(aov), function(x) x[1, 5])); 
-q<-p.adjust(p, method='BH');
-stat<-cbind(m, Min=mn, Max=mx, Range=mx-mn, pANOVA=p, FDR=q); 
-
+if (length(prms$term) == 1) { # One way ANOVA
+  f<-as.factor(phen); 
+  dat<-data.frame(t(expr0));
+  dat$Group<-f;
+  formula <- as.formula(paste0("cbind(", paste(names(dat)[-length(dat)],collapse=","), ")~Group") ) 
+  aov<-aov(formula, data=dat);
+  p<-as.vector(sapply(summary(aov), function(x) x[1, 5])); 
+  q<-p.adjust(p, method='BH');
+  stat<-cbind(m, Min=mn, Max=mx, Range=mx-mn, pANOVA=p, FDR=q); 
+} else {
+  aov <- apply(expr0, 1, function(e) summary(aov(formula(paste('e ~ ', paste(prms$term, collapse='*'))), data=smpl)));  
+  aov <- lapply(aov, function(x) x[[1]]); 
+  pvs <- t(sapply(aov, function(x) x[1:(nrow(x)-1), 5])); 
+  cnm <- rownames(aov[[1]]); 
+  cnm <- gsub(' ', '', cnm[-length(cnm)]); 
+  cnm <- gsub(':', '*', cnm);
+  qvs <- apply(pvs, 2, function(p) p.adjust(p, method='BH')); 
+  colnames(pvs) <- paste('pANOVA', cnm, sep='_');
+  colnames(qvs) <- paste('FDR', cnm, sep='_');
+  stat<-cbind(m, Min=mn, Max=mx, Range=mx-mn, pANOVA=pvs, FDR=qvs); 
+}
 CreateDatatable(cbind(anno, FormatNumeric(stat)), paste(path.tbl, 'anova.html', sep='/'), caption="ANOVA results")
 ```
 
@@ -152,14 +168,24 @@ Summary statistics and ANOVA p value across all sample groups were calculated fo
 - [Summary statistics and ANOVA result.](table/anova.html) 
 
 <div align='center'>
-```{r anova_pvalue, fig.width=8, fig.height=6, out.width='640'}
-par(mar=c(5,5,2,2));
-hist(p, br=100, xlab='ANOVA p value', ylab='Number of genes', cex.lab=2, main='');
+```{r anova_pvalue, fig.width=8, fig.height=4.8*length(prms$term), out.width='640px'}
+if (length(prms$term) == 1) {
+  par(mfrow=c(1,1), mar=c(5,5,2,2));
+  hist(p, br=100, xlab='ANOVA p value', ylab='Number of genes', cex.lab=2, main='');
+  ln <- paste(length(p[p<prms$selection$p]), 'genes have p values less than', prms$selection$p);
+} else {
+  par(mfrow=c(length(prms$term), 1), mar=c(5,5,3,2)); 
+  sapply(1:length(prms$term), function(i) hist(pvs[, i], br=100, xlab='ANOVA p value', ylab='Number of genes', 
+                                               cex.lab=1.5, main=prms$term[i]), cex.main=2) -> x;
+  n <- apply(pvs[, 1:length(prms$term)], 2, function(p) length(p[p<=prms$selection$p])); 
+  ln <- paste(min(n), 'to', max(n), 'genes have p values less than', prms$selection$p);
+}
+
 ```
 </div>
   
 <div style="color:darkblue; padding:0 3cm">
-**Figure 2.** Distribution of ANOVA p values. `r length(p[p<prms$selection$p])` genes have p values less than `r prms$selection$p`.
+**Figure 2.** Distribution of ANOVA p values. `r ln`.
 </div>
   
 `r home.url`
@@ -176,25 +202,39 @@ Differentially expressed genes (DEGs) were selected as seeds for generating gene
   - If there are still more than `r prms$selection$max` genes left, select the top `r prms$selection$max` with the biggest ranges
 
 ```{r selection, include=FALSE}
-e <- expr[q<=prms$selection$fdr, , drop=FALSE]; 
-if (nrow(e) < prms$selection$min) {
-  q0 <- sort(q); 
-  e <- expr[q <= q0[min(nrow(expr), prms$selection$min)], , drop=FALSE];
-};
-if (nrow(e) > prms$selection$min) { # continue if there are more selected genes than minimum
-  s<-stat[rownames(e), , drop=FALSE];
-  s<-s[order(s[, 'pANOVA']), , drop=FALSE];
-  e<-e[rownames(s), , drop=FALSE]; 
-  e<-e[1:max(prms$selection$min, max(which(s[, 'pANOVA']<=prms$selection$p))), , drop=FALSE]; 
-  
-  if (nrow(e) > prms$selection$min) { # continue if there are more selected genes than minimum 
+select.gene <- function(expr, stat, prms) {
+  q <- stat[, 'FDR'];
+  e <- expr[q<=prms$selection$fdr, , drop=FALSE]; 
+  if (nrow(e) < prms$selection$min) {
+    q0 <- sort(q); 
+    e <- expr[q <= q0[min(nrow(expr), prms$selection$min)], , drop=FALSE];
+  };
+  if (nrow(e) > prms$selection$min) { # continue if there are more selected genes than minimum
     s<-stat[rownames(e), , drop=FALSE];
-    s<-s[rev(order(s[, 'Range'])), , drop=FALSE];
+    s<-s[order(s[, 'pANOVA']), , drop=FALSE];
     e<-e[rownames(s), , drop=FALSE]; 
-    e<-e[1:max(prms$selection$min, max(which(s[, 'Range']>=prms$selection$range))), , drop=FALSE]; 
+    e<-e[1:max(prms$selection$min, max(which(s[, 'pANOVA']<=prms$selection$p))), , drop=FALSE]; 
+    
+    if (nrow(e) > prms$selection$min) { # continue if there are more selected genes than minimum 
+      s<-stat[rownames(e), , drop=FALSE];
+      s<-s[rev(order(s[, 'Range'])), , drop=FALSE];
+      e<-e[rownames(s), , drop=FALSE]; 
+      e<-e[1:max(prms$selection$min, max(which(s[, 'Range']>=prms$selection$range))), , drop=FALSE]; 
+    }
+    
+    if (nrow(e) > prms$selection$max) e<-e[1:prms$selection$max, , drop=FALSE]; # trim if more selected genes than maximum
   }
   
-  if (nrow(e) > prms$selection$max) e<-e[1:prms$selection$max, , drop=FALSE]; # trim if more selected genes than maximum
+  e; 
+}
+
+if (length(prms$term) == 1) e <- select.gene(expr, stat, prms) else {
+  es <- lapply(1:ncol(pvs), function(i) {
+    ss <- cbind(Range=stat[, 'Range'], pANOVA=pvs[, i], FDR=qvs[, i]); 
+    select.gene(expr, ss, prms); 
+  });
+  ids <- Reduce('union', lapply(es, rownames)); 
+  e <- expr[ids, , drop=FALSE]; 
 }
 ```
 
@@ -292,7 +332,9 @@ sortColumn<-function(ms, g) {
 }
 
 n<-sapply(cl, length); 
-d<-expr[stat[, 'pANOVA']<=prms$recluster$p, , drop=FALSE]; 
+ps <- stat[, grep('pANOVA', colnames(stat)), drop=FALSE]; 
+ids <- union(rownames(e), rownames(expr)[apply(ps, 1, min) <= prms$recluster$p]);
+d<-expr[ids, , drop=FALSE]; 
 ```
 
 **`r length(cl)`** gene clusters of **`r sum(n)`** genes were identified from **`r nrow(e)`** seed DEGs.

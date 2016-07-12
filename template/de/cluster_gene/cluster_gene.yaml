@@ -71,12 +71,15 @@ input: # Location of input files
 ######################
 # Parameters to run this analysis
 parameter: # All parameters
-  term: Group             ## Corresponding to a column name in sample; based on which samples will be grouped
+  term:                   ## Corresponding to a column name in sample; based on which samples will be grouped
+  - Group           ### Can have more than terms for multi-way ANOVA
   normalization:          ## Optional re-normalization of data to let genes havign comparable means and SDs
     method: 2         ### Method of normalization. 0: no normalization; 1: mean=0 & SD=1 for all row;  2: normalize to a control group
-    control: WT_00Hr  ### Name of the control group. When the normalization method is 2, the mean of this sample group will be 0 for all genes
-  selection:              ## How significant genes will be selected as seeds for initiating clusters
-    min: 200          ### Minimal number of genes for further selection (no further selection if number is lower than it)
+    control:          ### Name of the control group. When the normalization method is 2, the mean of this sample group will be 0 for all genes
+      column: Group
+      name: WT_00Hr
+  selection:              ## How significant genes will be selected as seeds for initiating clusters; selection will be done for each term for multi-way ANOVA
+    min: 100          ### Minimal number of genes for further selection (no further selection if number is lower than it)
     max: 1000         ### Maximum number of genes to be selected
     fdr: 0.10         ### First selection criteria, maximum FDR value (ANOVA p value adjusted by BH method)
     p: 0.01           ### Second selection criteria, maximum ANOVA p value
