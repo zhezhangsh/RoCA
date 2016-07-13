@@ -251,8 +251,8 @@ if (yml$zip) l <- paste('; [All files](', TrimPath(path) ,'.zip)', sep='') else 
 Click links below to go directly to results or read the rest of this report for details: 
   
   - [Differential gene expression](DEG/all_genes.html)
-    - [`r nrow(degs[[1]])` DEGs with lower expression in `r g2.name`](`r paste('DEG', names(degs)[1], 'index.html', sep='/')`)
-    - [`r nrow(degs[[2]])` DEGs with higher expression in `r g2.name`](`r paste('DEG', names(degs)[2], 'index.html', sep='/')`)
+    - [`r nrow(degs[[1]])` DEGs with higher expression in `r g2.name`](`r paste('DEG', names(degs)[1], 'index.html', sep='/')`)
+    - [`r nrow(degs[[2]])` DEGs with lower expression in `r g2.name`](`r paste('DEG', names(degs)[2], 'index.html', sep='/')`)
   - [ORA](ORA/index.html) (Over-representation analysis) 
   - [GSEA](GSEA/index.html) (Gene set enrichment analysis)
     - [All top hits](GSEA/full_table.html)

@@ -32,8 +32,8 @@
 ##### REQUIRED #####
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/pairwise_comparison.Rmd
-#template: pairwise_comparison.Rmd
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/pairwise_comparison.Rmd
+template: pairwise_comparison.Rmd
 output: examples/rnaseq                                                             # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                  # Name of the analyst
