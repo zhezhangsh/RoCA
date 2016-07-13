@@ -244,7 +244,7 @@ A total of **`r nrow(e)`** genes were selected. These genes would be used as see
 <div align='center'>
 ```{r hierarchical_clustering, include=TRUE, fig.width=8, fig.height=4*min(2, ceiling(nrow(smpl)/32)), out.width='800px'}
 if (nrow(smpl)>32) par(mfrow=c(2, 1), mar=c(2,2,2,2)) else par(mfrow=c(1, 2), mar=c(2,2,2,2)); 
-plot(hclust(as.dist(1-cor(expr0[, colSums(abs(expr0))>0, drop=FALSE))), main='All genes', xlab='', sub='', ylab='');
+plot(hclust(as.dist(1-cor(expr0[, colSums(abs(expr0))>0, drop=FALSE]))), main='All genes', xlab='', sub='', ylab='');
 plot(hclust(as.dist(1-cor(expr0[rownames(e), colSums(abs(expr0))>0, drop=FALSE]))), main='Selected DEGs', xlab='', sub='', ylab='');
 ```
 </div>
