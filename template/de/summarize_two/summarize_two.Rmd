@@ -176,7 +176,7 @@ tbl <- do.call('cbind', tbl);
 rownames(tbl) <- gid; 
 tbl <- cbind(anno[rownames(tbl), ], FormatNumeric(tbl)); 
 rownames(tbl) <- gid; 
-colnames(tbl)[ncol(anno)+c(1:10)]<-paste(rep(names(grp), each=5), unlist(cnm), sep='::'); 
+colnames(tbl)[ncol(anno)+c(1:10)]<-paste(rep(names(grp), each=5), unlist(cnm), sep='__'); 
 tbl[, 1] <- CleanHtmlTags(tbl[, 1], FALSE); 
 tbl0 <- tbl;
 write.csv(tbl0, paste(path.tbl, 'gene_stat.csv', sep='/')); 
@@ -248,14 +248,14 @@ rownames(ind)<-c('up-up', 'up-down', 'down-up', 'down-down');
 par(mfrow=c(2,2));
 apply(ind, 1, function(i) 
   PlotVenn(deg1[[i[1]]], deg2[[i[2]]], 
-           paste(names(grp), c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='::'), gid))->vnn;
+           paste(names(grp), c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='__'), gid))->vnn;
 
 ol <- sapply(rownames(ind), function(nm) {
   i <- ind[nm, ];
   g <- intersect(deg1[[i[1]]], deg2[[i[2]]]); 
   f <- paste('DEG/', 'gene_', nm, '.html', sep='');
   t <- tbl[g, , drop=FALSE];
-  c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='::'), collapse=' and ')
+  c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='__'), collapse=' and ')
   fn <- CreateDatatable(t, paste(path, f, sep='/'), caption=c); 
   list(c, f); 
 });
@@ -491,7 +491,7 @@ lnk<-sapply(fn.tbl, function(fn) {
   f<-sapply(fn, names); 
   paste('[', c, '](', f, ')', sep='');
 });
-colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='::'); 
+colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='__'); 
 rownames(lnk) <- gset.src;
 ```
 
@@ -512,15 +512,15 @@ rownames(ind)<-c('up-up', 'up-down', 'down-up', 'down-down');
 par(mfrow=c(2,2));
 apply(ind, 1, function(i) 
   PlotVenn(ora.sets[[1]][[i[1]]], ora.sets[[2]][[i[2]]], 
-           c(paste(comp[1], names(ora.sets[[1]])[i[1]], sep='::'), 
-             paste(comp[2], names(ora.sets[[2]])[i[2]], sep='::')), 
+           c(paste(comp[1], names(ora.sets[[1]])[i[1]], sep='__'), 
+             paste(comp[2], names(ora.sets[[2]])[i[2]], sep='__')), 
            u=ora.univ))->vnn;
 
 ol<-sapply(rownames(ind), function(nm) {
   i<-ind[nm, ];
   g<-intersect(ora.sets[[1]][[i[1]]], ora.sets[[2]][[i[2]]]); 
   f<-paste('ORA/', 'ora_', nm, '.html', sep='');
-  c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='::'), collapse=' and ')
+  c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='__'), collapse=' and ')
   t<-gset[[1]][g, ]; 
   t$Name<-AddHref(t$Name, t$URL); 
   t<-t[, 1:3]; 
@@ -588,7 +588,7 @@ lnk<-sapply(fn.tbl, function(fn) {
   f<-sapply(fn, names); 
   paste('[', c, '](', f, ')', sep='');
 });
-colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='::'); 
+colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='__'); 
 rownames(lnk) <- gset.cll;
 ```
 
@@ -630,14 +630,14 @@ rownames(ind)<-c('up-up', 'up-down', 'down-up', 'down-down');
 par(mfrow=c(2,2));
 apply(ind, 1, function(i) 
   PlotVenn(gsea.st[[1]][[i[1]]], gsea.st[[2]][[i[2]]], 
-           paste(names(grp), c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='::'), 
+           paste(names(grp), c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='__'), 
            u=gsea.univ))->vnn;
 
 ol<-sapply(rownames(ind), function(nm) {
   i<-ind[nm, ];
   g<-intersect(gsea.st[[1]][[i[1]]], gsea.st[[2]][[i[2]]]); 
   f<-paste('GSEA/', 'gsea_', nm, '.html', sep='');
-  c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='::'), collapse=' and ')
+  c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep='__'), collapse=' and ')
   t<-gsea.stat[[1]][g, 1:3]; 
   t<-t[, 1:3]; 
   t<-cbind(t, gsea.stat[[1]][g, c(4, 5, 6)], gsea.stat[[2]][g, c(4, 5, 6)]); 
@@ -784,7 +784,7 @@ cl.tbl<-data.frame(Size=sz, mm, Gene_set=lnk, stringsAsFactors = FALSE);
 cl.tbl[, 1]<-paste('[', sz, '](CLUSTER/', names(cls), '.html)', sep=''); 
 cl.tbl<-cbind(ID=rownames(cl.tbl), cl.tbl); 
 cl.tbl[, 1]<-paste('[', cl.tbl[, 1], '](CLUSTER/Heatmap_', names(cls), '.pdf)', sep=''); 
-colnames(cl.tbl)[3:6] <- paste(rep(comp, each=2), unlist(grp), sep='::');
+colnames(cl.tbl)[3:6] <- paste(rep(comp, each=2), unlist(grp), sep='__');
 ```
 
 <div style="color:darkblue; padding:0 2cm">
