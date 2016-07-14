@@ -710,7 +710,7 @@ while(flag) {
 }
 
 # Sort clusters
-m<-sapply(cl, function(cl) colMeans(d1[cl, ])); 
+m<-sapply(cl, function(cl) colMeans(d1[cl, , drop=FALSE])); 
 ind<-apply(m, 2, function(x) which(x==max(x)));  
 cl<-cl[order(ind)]; 
 names(cl)<-paste('Cluster', 1:length(cl), sep='_'); 
@@ -740,7 +740,7 @@ for (i in 1:prms$geneset$cluster$recluster$time) {
 cls<-reCl(d1, cl, prms$geneset$cluster$recluster$corr, prms$geneset$cluster$recluster$diff, prms$geneset$cluster$recluster$nmax); 
 cls <- lapply(cls, function(x) x[x %in% rownames(d1)]); 
 cls <- cls[sapply(cls, length) >= 5];
-ms<-t(sapply(cls, function(x) colMeans(d1[x, ]))); 
+ms<-t(sapply(cls, function(x) colMeans(d1[x, , drop=FALSE]))); 
 rownames(ms)<-names(cls)<-paste('Cluster', 1:length(cls), sep='_'); 
 
 fn.htmp<-sapply(names(cls), function(nm) {
