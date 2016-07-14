@@ -739,7 +739,7 @@ for (i in 1:prms$geneset$cluster$recluster$time) {
   
 cls<-reCl(d1, cl, prms$geneset$cluster$recluster$corr, prms$geneset$cluster$recluster$diff, prms$geneset$cluster$recluster$nmax); 
 cls <- lapply(cls, function(x) x[x %in% rownames(d1)]); 
-cls <- cls[sapply(cls, length) >= 5];
+cls <- cls[sapply(cls, length) >= min(5, max(sapply(cls, length))];
 ms<-t(sapply(cls, function(x) colMeans(d1[x, , drop=FALSE]))); 
 rownames(ms)<-names(cls)<-paste('Cluster', 1:length(cls), sep='_'); 
 
