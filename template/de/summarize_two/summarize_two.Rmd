@@ -673,8 +673,8 @@ d1 <- lapply(res, function(x) {
 });
 gs <- Reduce('intersect', lapply(d1, rownames)); 
 d1 <- do.call('cbind', lapply(d1, function(x) x[gs, , drop=FALSE])); 
-if (!prms$gene$processing$logged) d1 <- log2(d1+1); 
-if (!prms$gene$processing$normalized) d1 <- NormLoess(d1+1); 
+if (!prms$gene$processing$logged) d1 <- log2(d1+0.5); 
+if (!prms$gene$processing$normalized) d1 <- NormLoess(d1+0.5); 
 for (i in 1:2) {
   y <- res[[i]]$inputs$comparison;
   d1[, unlist(y)] <- d1[, unlist(y)] - rowMeans(d1[, y[[1]]]);
@@ -696,7 +696,7 @@ cl<-split(names(cl), cl);
 flag<-TRUE;
 while(flag) {
   cat('Number of clusters ', length(cl), '\n'); 
-  ms<-sapply(cl, function(cl) colMeans(d0[cl, ])); 
+  ms<-sapply(cl, function(cl) colMeans(d0[cl, , drop=FALSE])); 
   tr<-cutree(hclust(as.dist(1-cor(ms))), k=length(cl)-1); # find the 2 most similar clusters
   i<-tr[duplicated(tr)];
   c<-ms[, tr==i]; 
