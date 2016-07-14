@@ -136,7 +136,7 @@ gsea:
     permute: gene_set         # type of permuation: <gene_set> or <phenotype>
     plot_top_x: 100           # number of top pathways to plot 
     set_max: 500 
-    set_min: 5 
+    set_min: 15 
     ##############################################
     # paramater rarely to be changed
     scoring_scheme: weighted    # weighted enrichment statistics: <classic>, <weighted>, <weighted_p2> or <weighted_p1.5>
