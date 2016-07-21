@@ -134,7 +134,8 @@ nds <- sapply(de, function(de) sapply(de$DEG, nrow));
 tbl <- data.frame(Name=comp, Group1=nms[1, ], Group2=nms[2, ], Num1=szs[1,], Num2=szs[2,], Num_Gene=gns,
                   Test=mtd, Paired=prd, DEG_Higher=nds[1, ], DEG_Lower=nds[2, ], stringsAsFactors = FALSE); 
 
-if (ncol(cp) >=3) tbl[, 1] <- paste('[', tbl[, 1], '](', as.vector(cp[, 3]), ')', sep=''); 
+pind <- as.vector(sapply(as.vector(cp[, 3]), function(path) ConvertPath2Relative(path, yml$output)));
+if (ncol(cp) >=3) tbl[, 1] <- paste('[', tbl[, 1], '](', pind, ')', sep=''); 
 ```
 
 <div style="color:darkblue; padding:0 1cm">
