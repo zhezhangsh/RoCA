@@ -103,6 +103,7 @@ e1<-expr[, g1.ind, drop=FALSE];
 e2<-expr[, g2.ind, drop=FALSE];
 e1.2<-cbind(e1, e2); 
 pctl<-apply(e1.2, 2, function(e) 100*rank(e)/length(e)); # percentile
+norm<-NormQQ(e1.1); 
 
 inputs$expr <- e1.2;
 inputs$anno <- anno[rownames(e1.2), ]; 
@@ -553,7 +554,7 @@ wid<-min(1.8, 1.2/(0.1*max(nchar(colnames(expr[, c(g1.ind, g2.ind)])))));
 fn.barplot<-sapply(names(ids), function(nm) {
   pdf(nm, w=8, h=6); 
   par(mai=c(1.2, 1, 0.6, 0.2));
-  barplot(expr[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Expression level', cex.lab=wid, cex.names=wid);
+  barplot(norm[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Normalized expression', cex.lab=wid, cex.names=wid);
   title(main=paste(ids[nm], CleanHtmlTags(as.vector(anno[ids[nm], 1])), sep=' - '), cex.main=2);
   #plot.new();
   par(mai=c(1.2, 1, 0.6, 0.2));
