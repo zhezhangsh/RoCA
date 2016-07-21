@@ -103,7 +103,7 @@ e1<-expr[, g1.ind, drop=FALSE];
 e2<-expr[, g2.ind, drop=FALSE];
 e1.2<-cbind(e1, e2); 
 pctl<-apply(e1.2, 2, function(e) 100*rank(e)/length(e)); # percentile
-norm<-NormQQ(e1.1); 
+norm<-NormQQ(e1.2); 
 
 inputs$expr <- e1.2;
 inputs$anno <- anno[rownames(e1.2), ]; 
