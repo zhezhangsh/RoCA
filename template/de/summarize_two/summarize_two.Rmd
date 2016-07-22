@@ -176,7 +176,6 @@ cnm <- lapply(tbl, colnames);
 tbl <- do.call('cbind', tbl);
 rownames(tbl) <- gid; 
 tbl <- cbind(anno[rownames(tbl), ], FormatNumeric(tbl)); 
-rownames(tbl) <- gid; 
 colnames(tbl)[ncol(anno)+c(1:10)]<-paste(rep(names(grp), each=5), unlist(cnm), sep='__'); 
 tbl[, 1] <- CleanHtmlTags(tbl[, 1], FALSE); 
 tbl0 <- tbl;
