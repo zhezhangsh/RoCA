@@ -193,7 +193,7 @@ cnm <- lapply(tbl, colnames);
 tbl <- do.call('cbind', tbl);
 rownames(tbl) <- gid; 
 tbl <- cbind(anno[rownames(tbl), ], FormatNumeric(tbl)); 
-colnames(tbl)[ncol(anno)+c(1:15)]<-paste(rep(names(grp), each=5), unlist(cnm), sep='__'); 
+colnames(tbl)[ncol(anno)+c(1:15)]<-paste(rep(names(grp), each=5), unlist(cnm), sep=', '); 
 tbl[, 1] <- CleanHtmlTags(tbl[, 1], FALSE); 
 tbl0 <- tbl;
 write.csv(tbl0, paste(path.tbl, 'gene_stat.csv', sep='/')); 
@@ -528,7 +528,7 @@ lnk<-sapply(fn.tbl, function(fn) {
   f<-sapply(fn, names); 
   paste('[', c, '](', f, ')', sep='');
 });
-colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='__'); 
+colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep=', '); 
 rownames(lnk) <- gset.src;
 ```
 
@@ -650,7 +650,7 @@ lnk<-sapply(fn.tbl, function(fn) {
   f<-sapply(fn, names); 
   paste('[', c, '](', f, ')', sep='');
 });
-colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep='__'); 
+colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep=', '); 
 rownames(lnk) <- gset.cll;
 
 gsea.nes<-sapply(gsea.stat, function(x) x[, 'NES']);
@@ -862,7 +862,7 @@ cl.tbl<-data.frame(Size=sz, mm, Gene_set=lnk, stringsAsFactors = FALSE);
 cl.tbl[, 1]<-paste('[', sz, '](CLUSTER/', names(cls), '.html)', sep=''); 
 cl.tbl<-cbind(ID=rownames(cl.tbl), cl.tbl); 
 cl.tbl[, 1]<-paste('[', cl.tbl[, 1], '](CLUSTER/Heatmap_', names(cls), '.pdf)', sep=''); 
-colnames(cl.tbl)[3:8] <- paste(rep(comp, each=2), unlist(grp), sep='__');
+colnames(cl.tbl)[3:8] <- paste(rep(comp, each=2), unlist(grp), sep=', ');
 ```
 
 <div style="color:darkblue; padding:0 0.5cm">
