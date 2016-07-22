@@ -83,7 +83,7 @@ comp <- as.vector(cp[[1]]);
 
 grp <- lapply(res, function(res) names(res$inputs$comparison));
 smp <- lapply(res, function(x) x$inputs$comparison);
-names(res) <- names(grp) <- names(smp) <- names(yml$input$comparison);
+names(res) <- names(grp) <- names(smp) <- cp[, 1];
 
 sapply(names(res), function(nm) 
   saveRDS(res[[nm]], paste(path.input, paste('result_', nm, '.rds', sep=''), sep='/'))) -> x;
