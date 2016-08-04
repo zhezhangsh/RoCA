@@ -427,8 +427,11 @@ PlotColoredBlock(x, min=-1*max(abs(x), na.rm=TRUE), max=max(abs(x), na.rm=TRUE),
 ids<-as.vector(unlist(cl)); 
 c<-rep(names(cl), sapply(cl, length)); 
 
-tbl1<-data.frame(anno[ids, ], Cluster=c, FormatNumeric(expr[ids, ])); 
-tbl2<-data.frame(anno[ids, ], Cluster=c, FormatNumeric(stat[ids, ])); 
+a <- anno[ids, , drop=FALSE];
+for (i in 1:ncol(a)) a[[i]] <- CleanHtmlTags(a[[i]], FALSE); 
+
+tbl1<-data.frame(a, Cluster=c, FormatNumeric(expr[ids, ])); 
+tbl2<-data.frame(a, Cluster=c, FormatNumeric(stat[ids, ])); 
 
 write.csv2(tbl1, paste(path.tbl, 'clustered_data.csv', sep='/')); 
 write.csv2(tbl2, paste(path.tbl, 'clustered_stat.csv', sep='/')); 
