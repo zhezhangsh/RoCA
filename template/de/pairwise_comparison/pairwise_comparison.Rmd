@@ -992,6 +992,7 @@ if (nrow(kegg.stat) == 0) {
   kegg.id <- tolower(substr(kegg.stat$Gene_set, 1, 8)); 
   kegg.dff <- rk; 
   
+  attachNamespace("AnnotationDbi", pos=2); 
   fn.kegg<-sapply(kegg.id, function(id) {
     capture.output(kegg<-pathview(kegg.dff, pathway.id=id, species = GetGenomeAlias(genome, "code"), 
                                   low = list(gene = "blue"), kegg.dir=dir.kegg))->x; 
