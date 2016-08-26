@@ -310,7 +310,7 @@ The motifs discovered previously are re-matched to the DNA sequences by applying
 &nbsp;
 
 <div align='center'>
-```{r rematch_position, include=TRUE, fig.width=9.6, fig.height=max(1.2, 3.6*round(length(res)/2)), out.width='960px'}
+```{r rematch_position, include=TRUE, fig.width=9.6, fig.height=max(1.2, 3.6*round(length(res)/3)), out.width='960px'}
 if (length(res) == 0) {
   par(mar=c(1,1,1,1));
   frame();
