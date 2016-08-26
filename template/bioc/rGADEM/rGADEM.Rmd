@@ -316,7 +316,7 @@ if (length(res) == 0) {
   frame();
   text(0.5, 0, pos=3, label='No motif found', cex=2);
 } else {
-  par(mfrow=c(round(length(res)/2), 2));
+  par(mfrow=c(ceiling(length(res)/2), 2));
   sapply(names(matches), function(nm) {
     m   <- matches[[nm]]; 
     pos <- m$start;
