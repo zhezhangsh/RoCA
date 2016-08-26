@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-08-23" />
+
+<title>Just testing</title>
+
+<script src="test_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="test_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="test_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="test_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="test_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="test_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="test_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="test_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="test_files/highlight/default.css"
+      type="text/css" />
+<script src="test_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="test_files/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Just testing</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-08-23</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong></p>
+<p>Developer of this R Markdown template should describe here the goal, scope, input data and major steps of this analysis.</p>
+<p>This skeleton helps developers to implement their own reproducible analysis using the RoCA framework. Visit the <a href="http://zhezhangsh.github.io/RoCA">RoCA site</a> for more information about this project.</p>
+<p>Definitation of terms:</p>
+<ul>
+<li><strong><em>RoCA framework</em></strong> : RoCA is a paradigm of reproducible data analysis for bioinformaticians to share their custom analysis procedure. It creates dynamic data analysis reports based on R Markdown templates. Visit <a href="http://zhezhangsh.github.io/RoCA">RoCA home</a> for more information.</li>
+<li><strong><em>R Markdown template</em></strong> : An .Rmd document that includes both R code and documentation of a data analysis procedure. It generates dynamic report according to user-specific input data and parameters for each analysis.</li>
+<li><strong><em>YAML key-value pairs</em></strong> : The pairs are specifications of each analysis performed using the R Markdown template. They are formatted and saved together as a <a href="http://www.yaml.org">YAML file</a>. It is highly recommended to pair each R Markdown template with a YAML file having the same file name.</li>
+<li><strong><em>Knitr report</em></strong> : Data analysis report in HTML, PDF, or Word file, generated by the <a href="http://yihui.name/knitr">knitr tool</a> for each analysis, based on the R Markdown template and the YAML specifications.</li>
+<li><strong><em>Developer</em></strong> : A developer implements a data analysis procedure into a R Markdown template, so the analysis can be repeated by any data analysts using their own data and parameters. The developer should also provide introduction and examples about how to set up an analysis using the template.</li>
+<li><strong><em>Analyst</em></strong> : Given an available R Markdown template generated by a developer, an analyst only needs to work with the pairing YAML file to set up a specific analysis. The analyst should follow instructions to prepare input data and choose parameters for each analysis.</li>
+</ul>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<p><!-- plug this line anywhere you want to add a link to the project home page in the report --></p>
+<!--
+This whole section is dedicated to the <description> block in the YAML file.
+Each key-value pair in that block will be written out as a subsection. 
+Keep it unchanged for all RoCA templates
+-->
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Reporting of Custom Analysis</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.2</span> Analysis</h2>
+<p>Just a test</p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<p><strong>Table</strong></p>
+<div align="center">
+<hr />
+<p><strong>No motif found</strong></p>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

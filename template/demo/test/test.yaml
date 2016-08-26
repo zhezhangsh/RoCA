@@ -1,0 +1,17 @@
+template: test.Rmd
+output: examples/test            # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+description:    
+  Project: Reporting of Custom Analysis
+  Analysis: Just a test
+
+input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
+
+parameter: # These are examples of different types of parameters. They will not be used for the skeleton.Rmd template for act analysis.
+
+######################    END OF DOCUMENT    ######################
+
+

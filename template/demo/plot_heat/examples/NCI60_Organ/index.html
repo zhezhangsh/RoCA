@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2016-06-07" />
+<meta name="date" content="2016-08-09" />
 
 <title>Select variables to plot a heatmap</title>
 
@@ -103,7 +103,7 @@ button.code-folding-btn:focus {
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="index_files/navigation-1.0/tabsets.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -153,6 +153,7 @@ $(document).ready(function ()  {
   width: 100%;
 }
 }
+
 
 .toc-content {
   padding-left: 30px;
@@ -223,7 +224,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Select variables to plot a heatmap</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2016-06-07</em></h4>
+<h4 class="date"><em>2016-08-09</em></h4>
 
 </div>
 
@@ -397,29 +398,73 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-##  [1] splines   stats4    parallel  stats     graphics  grDevices utils    
-##  [8] datasets  methods   base     
+## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] CHOPseq_0.0.0.9000   Agri_0.0.0.9000      edgeR_3.10.2        
-##  [4] limma_3.26.9         NOISeq_2.16.0        GenomicRanges_1.22.4
-##  [7] GenomeInfoDb_1.6.3   IRanges_2.4.8        S4Vectors_0.8.11    
-## [10] Biobase_2.28.0       BiocGenerics_0.16.1  Matrix_1.2-2        
-## [13] vioplot_0.2          sm_2.2-5.4           rchive_0.0.0.9000   
-## [16] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
-## [19] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
-## [22] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
-## [25] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
+##  [1] gplots_3.0.1                           
+##  [2] htmlwidgets_0.7                        
+##  [3] DT_0.2                                 
+##  [4] awsomics_0.0.0.9000                    
+##  [5] yaml_2.1.13                            
+##  [6] rmarkdown_1.0                          
+##  [7] knitr_1.13                             
+##  [8] RoCA_0.0.0.9000                        
+##  [9] RCurl_1.95-4.8                         
+## [10] bitops_1.0-6                           
+## [11] devtools_1.12.0                        
+## [12] BiocInstaller_1.20.3                   
+## [13] GenomicAlignments_1.6.3                
+## [14] Rsamtools_1.22.0                       
+## [15] Biostrings_2.38.4                      
+## [16] XVector_0.10.0                         
+## [17] SummarizedExperiment_1.0.2             
+## [18] org.Hs.eg.db_3.2.3                     
+## [19] RSQLite_1.0.0                          
+## [20] DBI_0.4-1                              
+## [21] TxDb.Hsapiens.UCSC.hg38.knownGene_3.1.3
+## [22] GenomicFeatures_1.22.13                
+## [23] AnnotationDbi_1.32.3                   
+## [24] Biobase_2.30.0                         
+## [25] GenomicRanges_1.22.4                   
+## [26] GenomeInfoDb_1.6.3                     
+## [27] IRanges_2.4.8                          
+## [28] S4Vectors_0.8.11                       
+## [29] ggbio_1.18.5                           
+## [30] ggplot2_2.1.0                          
+## [31] BiocGenerics_0.16.1                    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.4          XVector_0.10.0       formatR_1.3         
-##  [4] highr_0.5.1          zlibbioc_1.14.0      tools_3.2.2         
-##  [7] digest_0.6.9         lattice_0.20-33      jsonlite_0.9.20     
-## [10] evaluate_0.9         memoise_1.0.0        RSQLite_1.0.0       
-## [13] DBI_0.3.1            withr_1.0.1          stringr_1.0.0       
-## [16] gtools_3.5.0         caTools_1.17.1       grid_3.2.2          
-## [19] AnnotationDbi_1.32.3 gdata_2.17.0         magrittr_1.5        
-## [22] htmltools_0.3.5      KernSmooth_2.23-15   stringi_1.0-1</code></pre>
+##  [1] jsonlite_1.0             splines_3.2.2           
+##  [3] gtools_3.5.0             Formula_1.2-1           
+##  [5] highr_0.6                latticeExtra_0.6-28     
+##  [7] RBGL_1.46.0              BSgenome_1.38.0         
+##  [9] lattice_0.20-33          biovizBase_1.18.0       
+## [11] chron_2.3-47             digest_0.6.10           
+## [13] RColorBrewer_1.1-2       colorspace_1.2-6        
+## [15] htmltools_0.3.5          Matrix_1.2-6            
+## [17] plyr_1.8.4               OrganismDbi_1.12.1      
+## [19] XML_3.98-1.4             biomaRt_2.26.1          
+## [21] zlibbioc_1.16.0          scales_0.4.0            
+## [23] gdata_2.17.0             BiocParallel_1.4.3      
+## [25] withr_1.0.2              nnet_7.3-12             
+## [27] survival_2.39-5          magrittr_1.5            
+## [29] memoise_1.0.0            evaluate_0.9            
+## [31] GGally_1.2.0             foreign_0.8-66          
+## [33] graph_1.48.0             rsconnect_0.4.3         
+## [35] tools_3.2.2              data.table_1.9.6        
+## [37] formatR_1.4              stringr_1.0.0           
+## [39] munsell_0.4.3            cluster_2.0.4           
+## [41] lambda.r_1.1.9           caTools_1.17.1          
+## [43] futile.logger_1.4.3      grid_3.2.2              
+## [45] dichromat_2.0-0          VariantAnnotation_1.16.4
+## [47] labeling_0.3             gtable_0.2.0            
+## [49] reshape_0.8.5            reshape2_1.4.1          
+## [51] gridExtra_2.2.1          rtracklayer_1.30.4      
+## [53] Hmisc_3.17-4             futile.options_1.0.0    
+## [55] KernSmooth_2.23-15       stringi_1.1.1           
+## [57] Rcpp_0.12.6              rpart_4.1-10            
+## [59] acepack_1.3-3.3</code></pre>
 <div align="right">
 <em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
 </div>
