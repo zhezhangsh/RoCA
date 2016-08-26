@@ -70,16 +70,16 @@ home.url <- Link2Home(yml$home);
 `r home.url`
 
 ```{r load_data, include=FALSE}
-tp <- yml$input$seq$type[1];
+tp <- prms$input$type[1];
 if (tp == 'DNAStringSet') {
-  seq <- ImportR(DownloadFile(yml$input$seq$file, path.input)); 
+  seq <- ImportR(DownloadFile(yml$input$seq, path.input)); 
 } else if (tp == 'character') {
-  seq <- ImportVector(DownloadFile(yml$input$seq$file, path.input));
+  seq <- ImportVector(DownloadFile(yml$input$seq, path.input));
   seq <- DNAStringSet(seq); 
 } else if (tp == 'GRanges' | tp == 'bed') {
   if (exists('rng')) rm(rng); 
-  if (tp == 'GRanges') rng <- ImportR(DownloadFile(yml$input$seq$file, path.input)) else {
-    bed <- ImportTable(DownloadFile(yml$input$seq$file, path.input), rownames = FALSE, colnames = FALSE); 
+  if (tp == 'GRanges') rng <- ImportR(DownloadFile(yml$input$seq, path.input)) else {
+    bed <- ImportTable(DownloadFile(yml$input$seq, path.input), rownames = FALSE, colnames = FALSE); 
     if (ncol(bed) >= 6) str <- as.vector(bed[, 6]) else str <- rep('*', nrow(bed)); 
     rng <- GRanges(bed[, 1], IRanges(bed[, 2], bed[, 3]), strand=str);
     if (ncol(bed) >= 4) names(rng) <- as.vector(bed[, 4]) else names(rng) <- paste('Seq', 1:length(rng), sep='_'); 
