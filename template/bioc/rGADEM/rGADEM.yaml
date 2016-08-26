@@ -5,11 +5,6 @@
 #   - "GRanges": must be a file in R format: .rds, .rda, or .rdata
 #   - "bed": must be a .bed file with at least 3 columns: chromosome, start, and end; Optionally, the 6th column is the strand
 #   - "character": a file can be read in using the ImportVector function: .rds, .rda, .rdata, .txt, .csv, .xlxs, etc.
-# <reference> The name of the BSgenome package having the reference genome
-#   - only needed when the sequences are provided as genomic regions stored in a .bed file or GRanges object
-#   - call available.genomes() to get a list of reference genomes pre-compiled as BSgenome objects
-#   - make sure the chromosome names of the reference genome and genomic location match to each other
-#   - https://bioconductor.org/packages/release/bioc/html/BSgenome.html
 #########################################################
 # As a parameter
 # <parameter:input:type> the type of file format the sequences are stored, that can take one of the following values
@@ -17,6 +12,11 @@
 #   - "GRanges": an R GRanges object object of the genomic locations of the sequences, a reference genome also needs to be provided
 #   - "bed": a .bed file with genomic regions of the sequences, a reference genome also needs to be provided
 #   - "character": a character vector of actual sequences, without letters other than A, C, G, and T
+# <parameter:input:reference> The name of the BSgenome package having the reference genome
+#   - only needed when the sequences are provided as genomic regions stored in a .bed file or GRanges object
+#   - call available.genomes() to get a list of reference genomes pre-compiled as BSgenome objects
+#   - make sure the chromosome names of the reference genome and genomic location match to each other
+#   - https://bioconductor.org/packages/release/bioc/html/BSgenome.html
 #############################################################################################################################
 
 ###################################################################
@@ -25,7 +25,7 @@
 # Required by the RoCA framework to generate a reproducible report
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/rGADEM/rGADEM.Rmd
 #template: rGADEM.Rmd
-output: examples/interferon_genes # Where to save the output files
+output: examples/random_promoter # Where to save the output files
 home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
 zip: no                                   # Whether to zip the output folder
@@ -35,15 +35,14 @@ zip: no                                   # Whether to zip the output folder
 ###################################################################
 description:    
   Project: rGADAM wrapper
-  Analysis: Search for DNA motifs around TSS of a number of interferon response genes.
+  Analysis: Search for DNA motifs around TSS of a few random genes.
 
 ###################################################################
 ########################    INPUT DATA    #########################
 ###################################################################
 # Location (local or URL) of files with formatted input data
 input:    
-  seq: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/genomic.region/promoter_interferon.rds # File that stores the DNA sequences
-  reference: # BSgenome.Hsapiens.NCBI.GRCh38  # The name of the BSgenome package of the reference genome; only needed if <seq> is a set of genomic regions
+  seq: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/genomic.region/promoter_random.bed # File that stores the DNA sequences
   
 ###################################################################
 ########################    PARAMETER    ##########################
@@ -78,7 +77,8 @@ parameter:
   ###################################################################
   # input
   input:
-    type: character
+    type: bed
+    reference: BSgenome.Hsapiens.NCBI.GRCh38  # The name of the BSgenome package of the reference genome; only needed if <seq> is a set of genomic regions
     
 ######################    END OF DOCUMENT    ######################
 

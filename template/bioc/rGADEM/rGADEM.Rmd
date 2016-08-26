@@ -84,8 +84,8 @@ if (tp == 'DNAStringSet') {
     rng <- GRanges(bed[, 1], IRanges(bed[, 2], bed[, 3]), strand=str);
     if (ncol(bed) >= 4) names(rng) <- as.vector(bed[, 4]) else names(rng) <- paste('Seq', 1:length(rng), sep='_'); 
   }
-  require(yml$input$reference, character.only = TRUE);
-  gname <- strsplit(yml$input$reference, '\\.')[[1]][2];
+  require(prms$input$reference, character.only = TRUE);
+  gname <- strsplit(prms$input$reference, '\\.')[[1]][2];
   assign('gnm', get(gname));
   genome(rng) <- genome(gnm);
   seq <- getSeq(gnm, rng);
