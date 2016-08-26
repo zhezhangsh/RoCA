@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-08-26" />
+
+<title>Package wrapper: rGADEM, de novo motif discovery</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="index_files/highlight/default.css"
+      type="text/css" />
+<script src="index_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Package wrapper: <strong><em>rGADEM</em></strong>, de novo motif discovery</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-08-26</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong></p>
+<p>This is an R markdown template that implements main functionality of Bioconductor package <strong><em>rGADEM</em></strong>. Please read the package <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/rGADEM/inst/doc/rGADEM.pdf">manual</a> first for the background information and parameter options of using this package.</p>
+<p>The main input data to this analysis is a set of DNA sequences, within which de novo motifs and their position weighted matrix (PWM) will be discovered. The DNA sequences can be provided as named character vector, an <em>DNAStringSet</em> object, or a set of genomic locations with their reference genome, such as <em><a href="http://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.NCBI.GRCh38.html">BSgenome.Hsapiens.NCBI.GRCh38</a></em>.</p>
+<p>This analysis includes three major steps:</p>
+<ol style="list-style-type: decimal">
+<li>The <strong>GADEM {rGADEM}</strong> function is used to discover de novo motifs from the DNA sequences and report the matches to the motifs</li>
+<li>The motifs and matches are summarized and visualized</li>
+<li>The motifs are re-matched to the DNA sequences using the <strong>matchPWM {Biostrings}</strong> function and a p value cutoff, to identify extra matches</li>
+</ol>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>rGADAM wrapper</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.2</span> Analysis</h2>
+<p>Search for DNA motifs around TSS of a number of interferon response genes.</p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="motif-discovery" class="section level1">
+<h1><span class="header-section-number">2</span> Motif discovery</h1>
+<p>A total of <strong>68</strong> sequences are used by the <strong>GADEM {rGADEM}</strong> function to discovery de novo motifs (see <strong>Table 1</strong>). The function call uses the following parameters:</p>
+<ul>
+<li>Seed PWM (<em>Spwm</em>): no</li>
+<li>Number of EM steps (<em>numEM</em>): 80</li>
+<li>P value cutoff of matches (<em>pValue</em>): 2e-04</li>
+<li>Mask low-complexity sequences (<em>maskR</em>): yes</li>
+<li>Maximal number of motifs allowed (<em>nmotifs</em>): 25</li>
+</ul>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Table 1</strong> Length and GC content of the sequences.
+</div>
+<div align="center" ,="" style="padding:0 2cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="center">Min.</th>
+<th align="center">1st Qu.</th>
+<th align="center">Median</th>
+<th align="center">Mean</th>
+<th align="center">3rd Qu.</th>
+<th align="center">Max.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Length (bp)</td>
+<td align="center">201.00</td>
+<td align="center">201.00</td>
+<td align="center">201.00</td>
+<td align="center">201.00</td>
+<td align="center">201.0</td>
+<td align="center">201.0</td>
+</tr>
+<tr class="even">
+<td align="left">GC (%)</td>
+<td align="center">25.87</td>
+<td align="center">44.16</td>
+<td align="center">50.75</td>
+<td align="center">52.02</td>
+<td align="center">61.2</td>
+<td align="center">79.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="motif-summary" class="section level1">
+<h1><span class="header-section-number">3</span> Motif summary</h1>
+<p>The <strong>GADEM {rGADEM}</strong> function discovers <strong>5</strong> motif(s) from the DNA sequences. For each motif, the output includes reports its consensus sequence, PWM, and detailed information about all matches.</p>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Table 2</strong> Summary of motifs found from sequences. Click motif name to see full list of matches to each motif and consensus sequence to see its PWM. (<strong><em>GC_Percent:</em></strong> average G/C percent in PWM; <strong><em>Num_Base:</em></strong> number of bases of the motif; <strong><em>Num_Match:</em></strong> total number of matches to the motif in all sequences; and <strong><em>Num_Seq:</em></strong> number of sequences including one or more matches to the motif.)
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th align="center">Name</th>
+<th align="left">Consensus</th>
+<th align="right">GC_Percent</th>
+<th align="right">Num_Base</th>
+<th align="right">Num_Match</th>
+<th align="center">Num_Seq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><a href="table/Match_Motif_1.html">Motif_1</a></td>
+<td align="left"><a href="table/PWM_Motif_1.html">rsnnnnAnyArrGymwTyAGAAAAnsrAAr</a></td>
+<td align="right">40.37</td>
+<td align="right">30</td>
+<td align="right">54</td>
+<td align="center">26</td>
+</tr>
+<tr class="even">
+<td align="center"><a href="table/Match_Motif_2.html">Motif_2</a></td>
+<td align="left"><a href="table/PWM_Motif_2.html">TCTCAAsyAGCCyAGCAryATyTGCAACATCymmAwkGsC</a></td>
+<td align="right">48.83</td>
+<td align="right">40</td>
+<td align="right">15</td>
+<td align="center">15</td>
+</tr>
+<tr class="odd">
+<td align="center"><a href="table/Match_Motif_3.html">Motif_3</a></td>
+<td align="left"><a href="table/PWM_Motif_3.html">vTykdTkGrkAACCTTGAryyTyGGCCTyTsTmmGsyrGk</a></td>
+<td align="right">51.78</td>
+<td align="right">40</td>
+<td align="right">7</td>
+<td align="center">7</td>
+</tr>
+<tr class="even">
+<td align="center"><a href="table/Match_Motif_4.html">Motif_4</a></td>
+<td align="left"><a href="table/PWM_Motif_4.html">ryvbkyAwArGyCTTAAATAGkGAACATACTrrAGn</a></td>
+<td align="right">40.66</td>
+<td align="right">36</td>
+<td align="right">14</td>
+<td align="center">14</td>
+</tr>
+<tr class="odd">
+<td align="center"><a href="table/Match_Motif_5.html">Motif_5</a></td>
+<td align="left"><a href="table/PWM_Motif_5.html">sCsCsCsCGCCCmCGCCyCb</a></td>
+<td align="right">81.02</td>
+<td align="right">20</td>
+<td align="right">37</td>
+<td align="center">21</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p> </p>
+<div align="center">
+<table>
+<thead>
+<tr class="header">
+<th align="center">Matching position</th>
+<th align="center">PWM Logo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><img src="figure/Position_Motif_1.png" /></td>
+<td align="center"><img src="figure/Logo_Motif_1.png" /></td>
+</tr>
+<tr class="even">
+<td align="center"><img src="figure/Position_Motif_2.png" /></td>
+<td align="center"><img src="figure/Logo_Motif_2.png" /></td>
+</tr>
+<tr class="odd">
+<td align="center"><img src="figure/Position_Motif_3.png" /></td>
+<td align="center"><img src="figure/Logo_Motif_3.png" /></td>
+</tr>
+<tr class="even">
+<td align="center"><img src="figure/Position_Motif_4.png" /></td>
+<td align="center"><img src="figure/Logo_Motif_4.png" /></td>
+</tr>
+<tr class="odd">
+<td align="center"><img src="figure/Position_Motif_5.png" /></td>
+<td align="center"><img src="figure/Logo_Motif_5.png" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 1.</strong> Motif visualization. The right panel shows the logo of the consensus sequence and the left panel shows the relative positions of the matches to the motif within the sequences.
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="motif-re-match" class="section level1">
+<h1><span class="header-section-number">4</span> Motif re-match</h1>
+<p>The motifs discovered previously are re-matched to the DNA sequences by applying the following steps on each motif:</p>
+<ul>
+<li>Calculate average base frequency of all DNA sequences</li>
+<li>Draw 100000 random sequences of the same length as the motif</li>
+<li>Calculate the matching scores of the random sequences to get a background distribution</li>
+<li>Use the cutoff of empirical p value (0.01) to the cutoff of matching score</li>
+<li>Re-match the motif to the sequences using the cutoff of matching score from the last step</li>
+</ul>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Table 3</strong> Summary of re-matching result. The columns are: <em>motif length, number of matches per kilobases, number of total matches, number of sequences including one or more matches, as well as the minimal, average, and maximal matching scores (highest = 100)</em>. Click on motif names to see the full lists of matches
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Motif</th>
+<th align="right">Len_Motif</th>
+<th align="right">Match_Per_Kb</th>
+<th align="right">Num_Match</th>
+<th align="right">Num_Seq</th>
+<th align="right">Strand…</th>
+<th align="right">Min_Score</th>
+<th align="right">Mean_Score</th>
+<th align="right">Max_Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="table/Rematch_Motif_1.html">Motif_1</a></td>
+<td align="right">30</td>
+<td align="right">11.2672</td>
+<td align="right">154</td>
+<td align="right">63</td>
+<td align="right">43.51</td>
+<td align="right">58.0</td>
+<td align="right">69.1818</td>
+<td align="right">93.4</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="table/Rematch_Motif_2.html">Motif_2</a></td>
+<td align="right">40</td>
+<td align="right">10.6819</td>
+<td align="right">146</td>
+<td align="right">68</td>
+<td align="right">44.52</td>
+<td align="right">48.1</td>
+<td align="right">56.3623</td>
+<td align="right">97.0</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="table/Rematch_Motif_3.html">Motif_3</a></td>
+<td align="right">40</td>
+<td align="right">8.9260</td>
+<td align="right">122</td>
+<td align="right">68</td>
+<td align="right">48.36</td>
+<td align="right">53.2</td>
+<td align="right">59.4279</td>
+<td align="right">86.3</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="table/Rematch_Motif_4.html">Motif_4</a></td>
+<td align="right">36</td>
+<td align="right">8.7065</td>
+<td align="right">119</td>
+<td align="right">62</td>
+<td align="right">47.06</td>
+<td align="right">51.2</td>
+<td align="right">58.9109</td>
+<td align="right">97.6</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="table/Rematch_Motif_5.html">Motif_5</a></td>
+<td align="right">20</td>
+<td align="right">9.5844</td>
+<td align="right">131</td>
+<td align="right">49</td>
+<td align="right">56.49</td>
+<td align="right">62.1</td>
+<td align="right">71.2313</td>
+<td align="right">89.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p> </p>
+<div align="center">
+<img src="figure/rematch_position-1.png" title="plot of chunk rematch_position" alt="plot of chunk rematch_position" width="960px" /><img src="figure/rematch_position-2.png" title="plot of chunk rematch_position" alt="plot of chunk rematch_position" width="960px" />
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Figure 2.</strong> Distribution of relative positions of motif matches within the DNA sequences. Grey bar is the number of matches within each interval and blue star is the average P values (-log10 transformed) of matches within the interval.
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">5</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">5.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">5.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+##  [1] grid      stats4    parallel  stats     graphics  grDevices utils    
+##  [8] datasets  methods   base     
+## 
+## other attached packages:
+##  [1] BSgenome.Hsapiens.NCBI.GRCh38_1.3.1000
+##  [2] Agri_0.0.0.9000                       
+##  [3] rGADEM_2.20.0                         
+##  [4] seqLogo_1.36.0                        
+##  [5] BSgenome_1.38.0                       
+##  [6] rtracklayer_1.30.4                    
+##  [7] Biostrings_2.38.4                     
+##  [8] XVector_0.10.0                        
+##  [9] GenomicFeatures_1.22.13               
+## [10] AnnotationDbi_1.32.3                  
+## [11] Biobase_2.30.0                        
+## [12] GenomicRanges_1.22.4                  
+## [13] GenomeInfoDb_1.6.3                    
+## [14] IRanges_2.4.8                         
+## [15] S4Vectors_0.8.11                      
+## [16] BiocGenerics_0.16.1                   
+## [17] htmlwidgets_0.7                       
+## [18] DT_0.2                                
+## [19] awsomics_0.0.0.9000                   
+## [20] yaml_2.1.13                           
+## [21] rmarkdown_1.0                         
+## [22] knitr_1.13                            
+## [23] RoCA_0.0.0.9000                       
+## [24] RCurl_1.95-4.8                        
+## [25] bitops_1.0-6                          
+## [26] devtools_1.12.0                       
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.6                highr_0.6                 
+##  [3] formatR_1.4                futile.logger_1.4.3       
+##  [5] futile.options_1.0.0       tools_3.2.2               
+##  [7] zlibbioc_1.16.0            biomaRt_2.26.1            
+##  [9] digest_0.6.10              jsonlite_1.0              
+## [11] evaluate_0.9               memoise_1.0.0             
+## [13] RSQLite_1.0.0              DBI_0.4-1                 
+## [15] withr_1.0.2                stringr_1.0.0             
+## [17] XML_3.98-1.4               BiocParallel_1.4.3        
+## [19] lambda.r_1.1.9             magrittr_1.5              
+## [21] Rsamtools_1.22.0           htmltools_0.3.5           
+## [23] GenomicAlignments_1.6.3    SummarizedExperiment_1.0.2
+## [25] stringi_1.1.1</code></pre>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
