@@ -284,10 +284,10 @@ if (length(res) == 0) {
     c(ln, fq, ns, sr, sc); 
   }); 
   stat <- t(stat); 
-  dimnames(stat) <- list(names(res), c('Len_Motif', 'Match_Per_Kb', 'Num_Match', 'Num_Seq', 'Strand(%)',
-                                       'Min_Score', 'Mean_Score', 'Max_Score'));
-  lnk <- paste('[', rownames(stat), '](', paste('table/Rematch_', names(res), '.html', sep=''), ')', sep='');
+   lnk <- paste('[', rownames(stat), '](', paste('table/Rematch_', names(res), '.html', sep=''), ')', sep='');
   stat <- data.frame(Motif=lnk, stat, stringsAsFactors = FALSE);
+  dimnames(stat) <- list(names(res), c('Motif', 'Len_Motif', 'Match_Per_Kb', 'Num_Match', 'Num_Seq', 'Strand(%)',
+                                       'Min_Score', 'Mean_Score', 'Max_Score'));
 }
 ```
 
