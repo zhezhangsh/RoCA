@@ -280,6 +280,7 @@ ss <- lapply(gsea, function(x) {
 }); 
 gid <- lapply(ss, rownames); 
 if (prms$geneset$union) gid <- Reduce('union', gid) else gid <- Reduce('intersect', gid);  
+gid <- gid[!is.na(gid)]; 
 
 # Gene set size
 ngs <- unlist(lapply(ss, function(ss) ss[, 3]), use.names=FALSE); 
@@ -306,6 +307,7 @@ nes <- lapply(ss, function(ss) {
   s; 
 }); 
 nes <- sapply(nes, function(x) x[gid]); 
+nes[is.na(nes)] <- 0; 
 
 n  <- apply(pvl, 1, function(x) length(x[!is.na(x)])); 
 sq <- -2*rowSums(log(pvl), na.rm=TRUE);
@@ -320,8 +322,9 @@ temp <- cbind(nes, pvl)[, as.vector(rbind(1:N, N+(1:N)))];
 colnames(temp) <- paste(rep(NM, 2), rep(c('NES', 'Pval'), N), sep='_'); 
 
 # Write out table
-tbl <- tbl0 <- data.frame(Collection=as.vector(cll), Gene_Set=as.vector(nms), Size=as.vector(ngs), meta, temp); 
-rownames(tbl) <- rownames(tbl0) <- 1:nrow(tbl); 
+tbl <- tbl0 <- data.frame(Collection=as.vector(cll), Gene_Set=as.vector(nms), Size=as.vector(ngs), 
+                          meta, temp, row.names = 1:length(cll)); 
+# rownames(tbl) <- rownames(tbl0) <- 1:nrow(tbl); 
 CreateDatatable(tbl[order(tbl[, 'Pval_Meta']), , drop=FALSE], paste(path.tbl, 'gsea_stat_all.html', sep='/')); 
 saveRDS(tbl, paste(path.r, 'gsea_stat_all.rds', sep='/')); 
 write.csv(tbl, paste(path.tbl, 'gsea_stat_all.csv', sep='/')); 
