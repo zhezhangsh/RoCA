@@ -1,0 +1,201 @@
+---
+title: "Search for matches to PWMs within DNA sequences"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+**Introduction** 
+This analysis searches for matches to position-weighted matrixes (PWMs) within a set of DNA sequences and summarizes the results.
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'match_pwm.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'GenomicRanges', 'Agri', 'RoCA', 'awsomics', 'rGADEM', 'seqLogo'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # 
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+		yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## URL to project home
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+# Input
+  
+```{r load_data, include=FALSE}
+pwm <- ImportR(yml$input$tf$pwm);
+ann <- ImportTable(yml$input$tf$annotation); 
+seq <- ImportVector(yml$input$sequence); 
+
+pwm <- pwm[names(pwm) %in% rownames(ann)];
+ann <- ann[names(pwm), , drop=FALSE];
+seq <- DNAStringSet(seq); 
+
+# save imported data to be included in the output folder
+saveRDS(pwm, paste(path.input, 'tf_pwm.rds', sep='/')); 
+saveRDS(ann, paste(path.input, 'tf_annotation.rds', sep='/')); 
+saveRDS(seq, paste(path.input, 'sequence.rds', sep='/')); 
+```
+
+```{r summarize_input, include=FALSE}
+frq <- alphabetFrequency(seq)[, 1:4]; 
+
+nm1 <- length(pwm);
+nm2 <- length(seq); 
+
+ln1 <- round(summary(ann$Length), 2);
+ln2 <- round(summary(seqlengths(seq)), 2); 
+
+gc1 <- round(100*mean(ann$GC), 2);
+gc2 <- round(100*(sum(frq[, 2:3])/sum(frq)), 2); 
+
+rw1 <- c(nm1, gc1, ln1[c(4, 1, 6)]);
+rw2 <- c(nm2, gc2, ln2[c(4, 1, 6)]);
+
+tbl <- rbind(rw1, rw2);
+dimnames(tbl) <- list(c('PWM', 'Sequence'), c('Num', 'GC_Mean', 'Length_Mean', 'Length_Min', 'Length_Max'));
+```
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 1** Summary of input PWMs and sequences.
+</div>
+
+<div align='center', style="padding:0 2cm"> 
+`r kable(tbl, align='r')`
+</div>
+
+```{r plot_pwm, include=FALSE}
+fn <- sapply(names(pwm), function(nm) {
+  fn <- paste(path.fig, paste('PWM_', nm, '.pdf', sep=''), sep='/'); 
+  pdf(fn, w=2+0.25*ncol(pwm[[nm]]), h=4); 
+  seqLogo(pwm[[nm]]);
+  dev.off();
+  fn; 
+});
+
+fns <- TruncatePathPrefix(fn, path);
+tbl <- data.frame(ID=rownames(ann), ann[, 1:5], stringsAsFactors = FALSE);
+tbl[[1]] <- paste('[', tbl[[1]], '](', fns, ')', sep=''); 
+```
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 2** PWMs
+</div>
+
+<div align='center', style="padding:0 2cm"> 
+`r kable(tbl, row.names=FALSE, align='r')`
+</div>
+
+<div align='center'> 
+```{r figure_sequence, include=TRUE, fig.width=7.2, fig.height=3.6, out.width='720px'}
+par(mfrow=c(1, 2), mar=c(5, 5, 2, 2)); 
+hist(seqlengths(seq), col='lightgrey', xlab='Sequence length (bp)', main='', cex.lab=2);
+hist(100*rowSums(frq[, 2:3])/rowSums(frq), col='lightgrey', xlab='GC %', main='', cex.lab=2); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 0cm">
+**Figure 1.** Distribution of sequence length and GC content. 
+</div>
+
+`r home.url`
+
+# Match
+
+Parameters: 
+
+  - Sampling number: **`r prms$matching$resampling`** (Number of samplings to calculate distribution of background scores)
+  - P value: **`r prms$matching$pvalue`** (Cutoff of empirical p value to report a match)
+  - Both strands: **`r prms$matching$reverse`** (Whether to match PWMs to both strand)
+  - Local max: **`r prms$matching$exclusive`** (Whether to report the match with the highest score if 2 matches overlap)
+
+```{r matching, include=FALSE}
+##################################################################################################
+matches <- ScorePWMWrapper(pwm, seq, prms$cluster, prms$matching$reverse, prms$matching$exclusive, 
+                           prms$matching$resampling, prms$matching$pvalue, fdr=TRUE); 
+##################################################################################################
+
+saveRDS(matches, paste(path.r, 'matches_all.rds', sep='/')); 
+```
+
+`r home.url`
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

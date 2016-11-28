@@ -27,7 +27,7 @@
 ###################################################################
 # Required by the RoCA framework to generate a reproducible report
 template: match_pwm.Rmd
-output: examples/irf            # Where to save the output files
+output: examples/irf1                     # Where to save the output files
 home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
 zip: no                                   # Whether to zip the output folder
@@ -37,9 +37,9 @@ zip: no                                   # Whether to zip the output folder
 ###################################################################
 # Analyst describes the analysis to run, such as project title
 description:    
-  Project: Interferon response motifs (Demo)
-  Analysis: Identification of matches to known binding motifs of interferon response factors (IRFs) 
-            within the promoters of interferon response genes.
+  Project: "IRF1 binding motifs around promoters (Demo)"
+  Analysis: Identification of matches to known IRF1 binding motifs around promoters of genes belong to GO:0071346 (cellular response to interferon-gamma).
+            Sequences within the -100bp to +100bp region of these genes are retrieved from GRCh38.
 
 ###################################################################
 ########################    INPUT DATA    #########################
@@ -47,8 +47,8 @@ description:
 # Location (local or URL) of files with formatted input data
 input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
   tf:
-    pwm: pwm.rds
-    annotation: anno.rds
+    pwm: tf_pwm.rds
+    annotation: tf_anno.rds
   sequence: seq.txt 
 
 ###################################################################
@@ -60,8 +60,8 @@ parameter: # These are examples of different types of parameters. They will not 
   matching:   # Parameters used to match sequences to PWMs.
     reverse: yes        # Whether to match the reverse-complimentary sequences too. Default is TRUE.
     exclusive: yes      # Whether to report the one with higher matching score when two matches overlap with each other. Default is TRUE.
-    resampling: 1000    # The number of random sampling to calculate the empirical p values of given scores. 
-    pvalue: 0.01        # The cutoff of empirical p value based on the resampling procedure to report a match
+    resampling: 10000   # The number of random sampling to calculate the empirical p values of given scores. 
+    pvalue: 0.01      # The cutoff of empirical p value based on the resampling procedure to report a match
  
 ######################    END OF DOCUMENT    ######################
 

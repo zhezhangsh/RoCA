@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-10-15" />
+
+<title>Search for matches to PWMs within DNA sequences</title>
+
+<script src="match_pwm_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="match_pwm_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="match_pwm_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="match_pwm_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="match_pwm_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="match_pwm_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="match_pwm_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="match_pwm_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="match_pwm_files/highlight/default.css"
+      type="text/css" />
+<script src="match_pwm_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="match_pwm_files/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Search for matches to PWMs within DNA sequences</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-10-15</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<strong>Introduction</strong> This analysis searches for matches to position-weighted matrixes (PWMs) within a set of DNA sequences and summarizes the results.
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>IRF1 binding motifs around promoters (Demo)</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.2</span> Analysis</h2>
+<p>Identification of matches to known IRF1 binding motifs around promoters of genes belong to <a href="GO:0071346" class="uri">GO:0071346</a> (cellular response to interferon-gamma). Sequences within the -100bp to +100bp region of these genes are retrieved from GRCh38.</p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="input" class="section level1">
+<h1><span class="header-section-number">2</span> Input</h1>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Table 1</strong> Summary of input PWMs and sequences.
+</div>
+<div align="center" ,="" style="padding:0 2cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Num</th>
+<th align="right">GC_Mean</th>
+<th align="right">Length_Mean</th>
+<th align="right">Length_Min</th>
+<th align="right">Length_Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">PWM</td>
+<td align="right">9</td>
+<td align="right">4118.44</td>
+<td align="right">13.44</td>
+<td align="right">9</td>
+<td align="right">18</td>
+</tr>
+<tr class="even">
+<td align="left">Sequence</td>
+<td align="right">102</td>
+<td align="right">43.63</td>
+<td align="right">200.00</td>
+<td align="right">200</td>
+<td align="right">200</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<strong>Table 2</strong> PWMs
+</div>
+<div align="center" ,="" style="padding:0 2cm">
+<table>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">Name</th>
+<th align="right">Length</th>
+<th align="right">Source</th>
+<th align="right">Consensus</th>
+<th align="right">GC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right"><a href="figure/PWM_EN0200.pdf">EN0200</a></td>
+<td align="right">IRF1</td>
+<td align="right">15</td>
+<td align="right">ENCODE</td>
+<td align="right">YYRRCCAATCRRARS</td>
+<td align="right">49.46</td>
+</tr>
+<tr class="even">
+<td align="right"><a href="figure/PWM_EN0201.pdf">EN0201</a></td>
+<td align="right">IRF1</td>
+<td align="right">10</td>
+<td align="right">ENCODE</td>
+<td align="right">RAAASYGAAA</td>
+<td align="right">28.32</td>
+</tr>
+<tr class="odd">
+<td align="right"><a href="figure/PWM_EN0203.pdf">EN0203</a></td>
+<td align="right">IRF1</td>
+<td align="right">10</td>
+<td align="right">ENCODE</td>
+<td align="right">RRGGAASTGR</td>
+<td align="right">53.30</td>
+</tr>
+<tr class="even">
+<td align="right"><a href="figure/PWM_EN0204.pdf">EN0204</a></td>
+<td align="right">IRF1</td>
+<td align="right">9</td>
+<td align="right">ENCODE</td>
+<td align="right">AGTCATYTC</td>
+<td align="right">39.57</td>
+</tr>
+<tr class="odd">
+<td align="right"><a href="figure/PWM_EN0206.pdf">EN0206</a></td>
+<td align="right">IRF1</td>
+<td align="right">14</td>
+<td align="right">ENCODE</td>
+<td align="right">GARAAHSGAAACYR</td>
+<td align="right">43.71</td>
+</tr>
+<tr class="even">
+<td align="right"><a href="figure/PWM_EN0207.pdf">EN0207</a></td>
+<td align="right">IRF1</td>
+<td align="right">15</td>
+<td align="right">ENCODE</td>
+<td align="right">MARAAWCGAAACYAA</td>
+<td align="right">35.55</td>
+</tr>
+<tr class="odd">
+<td align="right"><a href="figure/PWM_EN0213.pdf">EN0213</a></td>
+<td align="right">IRF1</td>
+<td align="right">18</td>
+<td align="right">ENCODE</td>
+<td align="right">TRSGAAWTYGAAAGYKRS</td>
+<td align="right">40.86</td>
+</tr>
+<tr class="even">
+<td align="right"><a href="figure/PWM_EN0214.pdf">EN0214</a></td>
+<td align="right">IRF1</td>
+<td align="right">15</td>
+<td align="right">ENCODE</td>
+<td align="right">WWRWAYCGAAACYAA</td>
+<td align="right">42.20</td>
+</tr>
+<tr class="odd">
+<td align="right"><a href="figure/PWM_EN0215.pdf">EN0215</a></td>
+<td align="right">IRF1</td>
+<td align="right">15</td>
+<td align="right">ENCODE</td>
+<td align="right">RRAARTGAAASYGRV</td>
+<td align="right">37.69</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="center">
+<img src="match_pwm_files/figure-html/figure_sequence-1.png" width="720px" />
+</div>
+<div style="color:darkblue; padding:0 0cm">
+<strong>Figure 1.</strong> Distribution of sequence length and GC content.
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="match" class="section level1">
+<h1><span class="header-section-number">3</span> Match</h1>
+<p>Parameters:</p>
+<ul>
+<li>Sampling number: <strong>10000</strong> (Number of samplings to calculate distribution of background scores)</li>
+<li>P value: <strong>510^{-4}</strong> (Cutoff of empirical p value to report a match)</li>
+<li>Both strands: <strong>TRUE</strong> (Whether to match PWMs to both strand)</li>
+<li>Local max: <strong>TRUE</strong> (Whether to report the match with the highest score if 2 matches overlap)</li>
+</ul>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">4</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">4.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">4.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+##  [1] grid      stats4    parallel  stats     graphics  grDevices utils    
+##  [8] datasets  methods   base     
+## 
+## other attached packages:
+##  [1] rGADEM_2.20.0        seqLogo_1.36.0       BSgenome_1.38.0     
+##  [4] rtracklayer_1.30.4   Biostrings_2.38.4    XVector_0.10.0      
+##  [7] awsomics_0.0.0.9000  Agri_0.0.0.9000      GenomicRanges_1.22.4
+## [10] GenomeInfoDb_1.6.3   IRanges_2.4.8        S4Vectors_0.8.11    
+## [13] BiocGenerics_0.16.1  htmlwidgets_0.7      DT_0.2              
+## [16] yaml_2.1.13          knitr_1.14           rmarkdown_1.0       
+## [19] RoCA_0.0.0.9000      RCurl_1.95-4.8       bitops_1.0-6        
+## [22] devtools_1.12.0     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.6                highr_0.6                 
+##  [3] formatR_1.4                futile.logger_1.4.3       
+##  [5] futile.options_1.0.0       tools_3.2.2               
+##  [7] zlibbioc_1.16.0            digest_0.6.10             
+##  [9] evaluate_0.9               memoise_1.0.0             
+## [11] withr_1.0.2                stringr_1.0.0             
+## [13] Biobase_2.30.0             XML_3.98-1.4              
+## [15] BiocParallel_1.4.3         lambda.r_1.1.9            
+## [17] magrittr_1.5               Rsamtools_1.22.0          
+## [19] htmltools_0.3.5            GenomicAlignments_1.6.3   
+## [21] SummarizedExperiment_1.0.2 stringi_1.1.1</code></pre>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,658 @@
+---
+title: "Analysis of RNA-seq samples using read counts"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+
+**Introduction** This procedure analyzes the RNA-seq data of multiple samples for quality control purpose, using the gene-level read counts. The read counts can be provided as one or multiple integer data matrixes, corresponding to different mapping types, such as unique vs. multiple mapping and sense vs. antisense strands. The following steps will be applied to the read count data:
+
+  - **Summary statistics**: the read count data is summarized by sample, gene and mapping type.
+  - **Dispersion and normalization**: different normalization methods are compared based on between-sample variance of all genes before and after normalization. 
+  - **Sample analysis**: X/Y genes are used to predict sample gender; and autosomal genes are used for unsupervised sample clustering.
+
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'rnaseq_sample.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'vioplot', 'fpc',
+                   'GenomicRanges', 'RoCA', 'Rnaseq', 'awsomics', 'DEGandMore'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
+## But, the developer can also provide the option to load the YAML file on the fly.
+## So, the template can be run using the "Knit HTML" button in RStudio
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url` 
+
+# Description {.tabset}
+
+`r WriteDescription(yml$description)`
+
+```{r load_data, include=FALSE}
+count.all <- lapply(yml$input$count, function(c) ImportTable(DownloadFile(c, path.input))); 
+anno <- ImportTable(DownloadFile(yml$input$annotation, path.input));
+smpl <- ImportTable(DownloadFile(yml$input$sample, path.input));
+
+if (class(count.all) != 'list') {
+  count.all <- list('AllRead'=count.all); 
+}
+id1 <- Reduce('intersect', lapply(count.all, rownames)); 
+id2 <- Reduce('intersect', lapply(count.all, colnames)); 
+
+anno <- anno[rownames(anno) %in% id1, , drop=FALSE];
+smpl <- smpl[rownames(smpl) %in% id2, , drop=FALSE]; 
+count.all <- lapply(count.all, function(c) c[rownames(anno), rownames(smpl), drop=FALSE]); 
+
+ct <- count.all[[1]]; 
+if (nrow(ct) < 3) stop("Error: cannot proceed with this analysis with less than 3 genes\n"); 
+if (ncol(ct) < 3) stop("Error: cannot proceed with this analysis with less than 3 samples\n"); 
+
+count.sum1 <- sapply(count.all, function(c) colSums(c, na.rm=TRUE)); 
+count.sum2 <- sapply(count.all, function(c) rowSums(c, na.rm=TRUE)); 
+
+gn.len <- anno[, prms$annotation$length]; 
+names(gn.len) <- rownames(anno); 
+```
+
+`r home.url`
+
+# Summary statistics
+
+- Number of samples: _`r nrow(smpl)`_
+- Number of genes: _`r format(nrow(ct), big.mark=',')`_
+- Average number of reads per gene: _`r format(mean(count.sum2[, 1]), big.mark=',', digit=0)`_
+- Total number of reads per sample: _`r format(mean(count.sum1[, 1]), big.mark=',')`_
+
+## Read count by sample
+
+```{r read_count_sample, include=FALSE}
+ttl <- count.sum1[, 1]/10^6;
+p.shapiro <- shapiro.test(ttl)$p.value; 
+
+nsd <- sapply(1:length(ttl), function(i) (ttl[i]-mean(ttl[-i]))/sd(ttl)); 
+hi <- names(ttl)[nsd >= 3];
+if (length(hi) == 0) hi <- 'none' else hi <- paste(hi, collapse='; '); 
+lo <- names(ttl)[nsd <=-3];
+if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; '); 
+```
+
+The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. _Shapiro-Wilk_ normality test shows that the total read counts of this data set `r if (p.shapiro>0.05) 'is' else 'is not'` normally distributed (p = `r format(p.shapiro, digit=2)`). Samples with extreme total read counts comparing to the others:
+
+- Samples with extremly low read count: ***`r lo`***
+- Samples with extremly high read count: ***`r hi`***
+
+<div align='center'>
+```{r, read_count_sample_hist, include=TRUE, fig.width=6, fig.height=3.6, out.width='600px'}
+par(mar=c(5,5,3,2));
+hist(ttl, xlab='Read count (millions)', ylab='Number of samples', main='Distribution of total read counts', cex.lab=1.5, cex.main=1.5, col='lightgrey');
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 1.** Distribution of total read counts of all samples. Total read count per sample (millions):  
+```{r summary_total_count, include=TRUE}
+summary(count.sum1[, 1]/10^6);
+```
+</div>
+
+## Read count by gene
+
+```{r read_count_gene, include=FALSE}
+ct.mean <- rowMeans(ct); 
+pct0 <- round(length(ct.mean[ct.mean==0])/length(ct.mean)*100, 2); 
+pct1 <- round(length(ct.mean[ct.mean< 1])/length(ct.mean)*100, 2);
+pct5 <- round(length(ct.mean[ct.mean< 5])/length(ct.mean)*100, 2); 
+```
+
+Due to the variability of gene length and expression level, it is expected that a large portion of the sequence reads are mapped to a small number of genes. At the same time, a large portion of the genes will have no or few reads mapped to them, making them unsuitable for statistical analysis. The distribution of read counts across genes and the consistency of such distribution between samples also provide information about RNA-seq data quality. In this data set,
+
+- `r pct0`% genes have no reads mapped to them in any sample.
+- `r pct1`% genes have less 1 read mapped to them per sample.
+- `r pct5`% genes have less 5 reads mapped to them per sample .
+
+<div align='center'>
+```{r, read_count_gene_sorted, include=TRUE, fig.width=8, fig.height=6, out.width='720px'}
+gene.ct <- count.sum2[, 1]; 
+gene.ct <- sort(gene.ct, decreasing = TRUE); 
+gene.pct <- 100*gene.ct/sum(gene.ct);
+cum.pct <- cumsum(gene.pct); # Cumulative percent of total reads
+par(mar=c(5, 5, 2, 2)); 
+plot(1:nrow(ct), cum.pct, type='l', log='x', xlab='Number of genes', ylab='Cumulative percent of total reads (%)', cex.lab=1.75, xaxs='i', yaxs='i');
+abline(h=seq(20, 80, 20), lty=2, col='lightgrey');
+polygon(c(1, 1:nrow(ct), nrow(ct)), c(0, cum.pct, 0), border=NA, col='lightgrey');
+lines(1:nrow(ct), cum.pct, lwd=2, col='gold');
+pct<-c(5, 10, 25, 50, 75, 90, 95);
+ind<-as.vector(sapply(pct, function(pct) which(cum.pct>pct)[1]));
+text(ind, cum.pct[ind], label=ind, col='purple', pos=4);
+points(ind, cum.pct[ind], pch=20);
+legend('topleft', bty='n', pch=19, legend=paste(pct, '% total reads: ', ind, ' gene(s)', sep=''))
+box();
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2.** The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking. 
+</div>
+
+&nbsp;
+
+<div align='center'>
+```{r read_count_gene_top, include=TRUE, fig.width=8, fig.height=6, out.width='800px'}
+top10 <- apply(ct, 2, function(x) {
+x <- rev(sort(x)); 
+y <- cumsum(x[1:min(length(x), 10)]); 
+y/sum(x)*100; 
+}); 
+top10 <- top10[, order(top10[nrow(top10), , drop=FALSE])]; 
+CreateDatatable(top10, paste(path.tbl, 'top_gene_count.html', sep='/')) -> x; 
+
+par(mar=c(8, 5, 3, 2)); 
+plot(0, type='n', ylim=c(min(top10), max(top10)), xlim=c(1, ncol(top10)), xaxs='i', xaxt='n', 
+xlab='Sample', ylab='Cumulative percent (%)', cex.lab=2, 
+main=paste('Reads from top', nrow(top10), 'genes'), cex.main=1.5);
+for (i in nrow(top10):1) {
+polygon(c(1, 1:ncol(top10), ncol(top10)), c(0, top10[i, ], 0), border=NA, 
+col=terrain.colors(nrow(top10))[i]);
+lines(top10[i, ], lwd=0.5, lty=1, pch=20, type='b', col='lightgrey', cex=0.5);
+}
+axis(1, at=c(1, ncol(top10)), tick=FALSE, label=colnames(top10)[c(1, ncol(top10))], las=3); 
+legend('topleft', bty='n', lty=2, pch=20, col=rev(terrain.colors(nrow(top10))), 
+legend=paste('Top ', nrow(top10):1, ', ', rev(round(rowMeans(top10), 2)), '%', sep='')); 
+
+nsd <- sapply(1:ncol(top10), function(i) 
+(top10[nrow(top10), i]-mean(top10[nrow(top10), -i]))/sd(top10[nrow(top10), -i])) 
+hi <- colnames(top10)[nsd >= 3];
+if (length(hi) == 0) hi <- 'none' else hi <- paste(hi, collapse='; '); 
+lo <- colnames(top10)[nsd <=-3];
+if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; '); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 3.** The cumulative read counts of [top `r nrow(top10)` genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+
+- Samples with extremely low percent of reads from top `r nrow(top10)` genes: ***`r lo`***
+- Samples with extremely high percent of reads from top `r nrow(top10)` genes: ***`r hi`***
+</div>
+
+## Read count by mapping type
+
+The read-to-gene mapping could be complicated by at least 3 conditions corresponding to 8 mapping types: 
+
+- Whether the read is mapped to one and only one gene or multiple genes: ***unique vs. multiple***
+- Whether both ends of paired end reads are mapped to the same gene or only one end is mapped: ***paired vs. unpaired***
+- Whether the read is mapped to the sense strand or antisense strand of a gene: ***sense vs. antisense***
+
+This analysis accepts multiple matching matrixes of read counts corresponding to different mapping types. By default, the first matrix corresponds to the most common mapping type and will be used for all the other analyses in this report. In this section, however, read counts of different mapping types are summarized and compared to each other when multiple matrixes are provided. 
+
+<div align='left'>
+```{r read_count_type_pie, fig.width=9.6, fig.height=6, out.width='800px'}
+mr<-rev(sort(colMeans(count.sum1)/10^6));
+lbl<-paste(names(mr), ' (', round(mr/sum(mr)*100, 3),  '%)', sep='');
+pie(mr, labels = '', col=rainbow(length(mr)), main="Frequency of mapping types", cex.main=1.5);
+legend('bottomleft', legend=lbl, fill=rainbow(length(mr)), bty='n');
+
+pct <- round(100*mr/sum(mr), 4); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 4.** Total mapped reads of all samples are split by mapping types, such as unique vs. multiple, paired vs. unpaired, and sense vs. antisense. Among the `r length(count.all)` mapping type(s), 
+
+- The most common mapping type is _`r names(pct)[pct==max(pct)]`_ (_`r max(pct)`%_ of total mapped reads)
+- The least common mapping type is _`r names(pct)[pct==min(pct)]`_, (_`r min(pct)`%_ of total mapped reads)
+</div>
+
+&nbsp;
+
+When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
+
+<div align='left'>
+```{r read_count_type_corr, fig.width=6, fig.height=1+5*as.integer(length(mr)>1), out.width='600px'}
+if (length(count.all) > 1) {
+  corr <- cor(count.sum2, use='pair', method='spearman'); 
+  saveRDS(corr, paste(path.r, 'corr_mapping_type.rds', sep='/')); 
+  fn <- CreateDatatable(round(corr, 4), paste(path.tbl, 'corr_mapping_type.html', sep='/'), 
+                        caption='Correlation of read counts between mapping types'); 
+  for (i in 2:ncol(count.sum2)) {
+    nm <- colnames(count.sum2)[c(1, i)]; 
+    fn <- paste('corr2', nm[2], '.pdf', sep='');
+    pdf(paste(path.fig, fn, sep='/'), w=8, h=8); 
+    PlotLogScatter(count.sum2[, 1], count.sum2[, i], xlab=nm[1], ylab=nm[2], 
+    main = paste('R =', round(corr[1, i], 4))); 
+    abline(0, 1, lwd=1, col='red'); 
+    dev.off();
+  }
+  r <- corr[-1, 1];
+  nm <- rownames(corr)[-1][r==max(r)];
+  PlotLogScatter(count.sum2[, 1], count.sum2[, nm], xlab=colnames(count.sum2)[1], ylab=nm, 
+                 main = paste('R =', round(corr[1, nm], 4))); 
+  abline(0, 1, lwd=1, col='red'); 
+} else {
+  corr <- matrix(nr=1, nc=1, dimnames = list(NA, 'No correlation results: only one mapping type')); 
+  fn <- CreateDatatable(corr, paste(path.tbl, 'corr_mapping_type.html', sep='/'), rownames = FALSE); 
+  par(mar=c(0,0,0,0)); 
+  plot(0, type='n', axes=FALSE, xlab='', ylab='');
+  text(1, 0, pos=1, label='There is no result for this analysis:\n input only includes one mapping type/read count matrix.', cex=1.5); 
+}
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 5.** The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman's correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click [here](table/corr_mapping_type.html) to view correlation coefficients between all pairs of mapping types.
+</div>
+
+&nbsp;
+
+By comparing read counts of different mapping types to each other, the ratios can be compared between samples for consistency. A sample might have quality issue if it has reads of a mapping type much less or more than the other samples.
+
+<div align='center'>
+```{r read_count_type_heatmap, fig.width=min(1+0.5*ncol(ct), 8), fig.height=1+0.25*length(mr), out.width='720px'}
+if (length(count.all) > 1) {
+  d<-count.sum1;
+  d[d<1]<-1;
+  d<-d/rowSums(d);
+  sigma<-t(sapply(1:nrow(d), function(i) log2(d[i, ]/colMeans(d[-i, ]))));
+  dimnames(sigma)<-dimnames(count.sum1)
+  PlotColoredBlock(t(sigma), min=-3, max=3, groups=as.list(colnames(pct)), key='Sigma'); 
+  ms<-colMeans(count.sum1/10^6); 
+  pct<-round(ms/sum(ms)*100, 3); 
+  s <- data.frame(as.vector(sigma), rep(rownames(sigma), ncol(sigma)), 
+                  rep(colnames(sigma), each=nrow(sigma)), stringsAsFactors = FALSE);
+  s <- s[order(s[, 1]), ][c(1, nrow(s)), ];
+} else {
+  sigma <- NA;
+  par(mar=c(0,0,0,0)); 
+  plot(0, type='n', axes=FALSE, xlab='', ylab='');
+  text(1, 0, pos=1, label='There is no result for this analysis:\n input only includes one mapping type/read count matrix.', cex=1.5); 
+  s <- data.frame(NA, NA, NA);
+}
+
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 6.** The relative frequecy of mapping types are calculated for each sample, using the first read count matrix as reference. The frequency of each mapping type are normalized across all samples (Mean = 0 and SD = 1.0). This figure shows the normalized frequency of each mapping type in each sample (red = high). 
+- Mapping type _`r s[nrow(s), 3]`_ has the most "abnormally" high relative frequency (# of standard deviations = _`r round(s[nrow(s), 1], 2)`_) in sample _`r s[, 2]`_. 
+- Mapping type _`r s[1, 3]`_ has the most "abnormally" low relative frequency (# of standard deviations = _`r round(s[1, 1], 2)`_) in sample _`r s[1, 2]`_. 
+</div>
+
+`r home.url`
+
+# Dispersion and normalization
+
+```{r normalization, include=FALSE}
+norm <- NormalizeRNAseq(ct, gn.len); 
+
+mns <- sapply(norm, function(x) rowMeans(x, na.rm=TRUE)); 
+ind <- which(rowSums(ct)>0); 
+
+grps <- split(rownames(smpl), smpl[, 1]); 
+grps <- grps[sapply(grps, length) > 1]; 
+c <- sum(sapply(grps, function(x) sum(1:(length(x)-1)))); 
+if (c < 6) grps <- list(group=rownames(smpl)); 
+
+calcCv <- function(d, grps) {
+  v <- sapply(grps, function(g) 
+    length(g[-1])*apply(d[, g, drop=FALSE], 1, function(x) var(x, na.rm=TRUE))); 
+  v <- rowSums(v)/(length(unlist(grps))-length(grps)); 
+  sqrt(v)/rowMeans(d, na.rm=TRUE); 
+}
+calcCorr <- function(d, grps) {
+  corr <- lapply(grps, function(g) as.vector(as.dist(cor(d[, g, drop=FALSE])))); 
+  as.vector(unlist(corr)); 
+}
+
+cv <- sapply(norm, function(x) calcCv(x[ind, , drop=FALSE], grps)); 
+cv[is.na(cv)] <- 0; 
+corr <- sapply(norm, function(x) calcCorr(x[ind, , drop=FALSE], grps)); 
+```
+
+Gene-specific dispersion of RNA-seq read counts is commonly used to evaluate between-sample variance of a data set. Here, the dispersion is estimated by the overall pattern of coefficient of variation (standard deviation devided by average read count) of all genes. 
+
+<div align='center'>
+```{r dispersion, include=TRUE, fig.width=12, fig.height=4, out.width='800px'}
+par(mfrow=c(1, 2), mar=c(5,5,2,2)); 
+
+ids <- rownames(mns)[mns[,1]>1]; 
+x <- log10(mns[ids, 1]/(gn.len[ids]/1000)); 
+
+dens <- density(x); 
+dens.y <- dens$y; 
+while (dens.y[length(dens.y)] < 10^-3) dens.y <- dens.y[-length(dens.y)]; 
+
+plot(dens, xlab='Read count per kilobase', ylab='Frequency of genes', 
+     xlim=c(min(dens$x[1:length(dens.y)]), max(dens$x[1:length(dens.y)])), 
+     main='', xaxt='n', cex.lab=1.5, lwd=2, col='darkblue'); 
+axis(1, at=0:ceiling(max(log10(mns[, 1]))), label=10^(0:ceiling(max(log10(mns[, 1]))))); 
+abline(v = dens$x[dens.y==max(dens.y)], lty=3, col=3); 
+
+plot(x, cv[ids, 1], pch=19, cex=.5, xaxt='n', cex.lab=1.5, col='#88888888', 
+     xlim=c(min(dens$x[1:length(dens.y)]), max(dens$x[1:length(dens.y)])), 
+     xlab='Read count per kilobase', ylab='Coefficient of variation'); 
+axis(1, at=0:ceiling(max(log10(mns[, 1]))), label=10^(0:ceiling(max(log10(mns[, 1]))))); 
+lines(lowess(cv[ids, 1]~x), col=4);
+abline(v = dens$x[dens.y==max(dens.y)], lty=3, col=3); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 7.** Left: the distribution of average gene expression level (read count divided by gene length). Right: the dispersion of gene expression level between samples, measured as the coefficient of variation. Usually, genes with lower expression will have larger dispersion on average. 
+</div>
+
+There are many ways to normalize RNA-seq data to remove systematic bias between samples, usually based on the assumption that all the samples have the same global distribution. The following analysis performs several different normalization methods and evaluate their impact on data dispersion:
+
+- **Original**: The un-normalized gene-level read counts.
+- **Total_Count**: Rescale data so all the samples have the same total read count.
+- **Median**: Rescale data so all the samples have the same median read count.
+- **Quantile_Quantile**: Make all the samples have exactly the same distribution.
+- **Upper_Quantile**: Rescale data so all the samples have the same upper quantile read count.
+- **Trimmed_Mean**: The "weighted trimmed mean of M-values" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **Relative_Log**: The "relative log expression" method implemented by the [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html) package.
+- **DESeq**: The normalization method of the [DESeq](https://bioconductor.org/packages/release/bioc/html/DESeq.html) package.
+- **FPKM**: Fragments Per Kilobase of transcript per Million mapped reads.
+- **TPM**: Transcript per Million mapped reads.
+- **Loess**: Make all the samples have the similar distribution by fitting them to same Loess distribution.
+- **Cyclic_Loess**: The "cyclic loess" method implemented by the [limma](https://bioconductor.org/packages/release/bioc/html/limma.html) package.
+
+Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
+
+<div align='center'>
+```{r normalization_boxplot, fig.width=10.5, fig.heigth=5.4, out.width='800px'}
+col <- gray.colors(length(unique(smpl[, 1]))+1)[-1]; 
+col <- col[as.integer(factor(smpl[, 1]))]; 
+par(mfrow=c(3, 4), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
+for (i in 1:length(norm)) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
+                        axes=FALSE, col=col, lwd=.5, main=names(norm)[i], cex.main=1.5);
+title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 0.5cm">
+**Figure 8.** Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their **`r names(smpl)[1]`**.
+</div>
+
+<div align='center'>
+```{r average_cv, fig.width=8, fig.height=6, out.width='600px'}
+dff <- apply(cv, 2, function(x) x - cv[, 1]); 
+
+par(mar=c(8,5,2,2)); 
+boxplot(data.frame(dff), outline=FALSE, las=3, ylab='Change of coefficient of variation', cex.lab=1.5, 
+        col='lightblue', outwex=0, lwd=0.5); 
+abline(h=0, col=3, lty=3);
+points(1:ncol(dff), colMeans(dff), pch=8, col=2, cex=0.5);
+
+saveRDS(norm, paste(path.r, 'normalized.rds', sep='/')); 
+saveRDS(cv, paste(path.r, 'Coeff_of_Var.rds', sep='/')); 
+fn <- CreateDatatable(cbind(anno[rownames(cv), ], cv), paste(path.tbl, 'Coeff_of_Var.html', sep='/')); 
+
+c <- t(apply(dff, 2, function(x) c(length(x[x<0]), length(x[x>0]))));
+corr <- round(cor(cv, cv[, 1])[, 1], 4); 
+cv.m <- colMeans(cv);
+chg <- round(100*(cv.m/cv.m[1]-1), 4); 
+tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), "Change(%)"=chg,
+                  Corr2Original=corr, Num_Decrease=c[, 1], Num_Increase=c[, 2], 
+                  "Decrease/Increase" = round(c[, 1]/c[, 2], 2), stringsAsFactors = FALSE);  
+colnames(tbl)[3] <- 'Change(%)';
+colnames(tbl)[7] <- 'Decrease/Increase';
+```
+</div>
+
+<div style="color:darkblue; padding:0 0.5cm">
+**Figure 9.** Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click [here](table/Coeff_of_Var.html) to view the table of coefficients of variation of all genes. 
+</div>
+
+&nbsp;
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 1** Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes. 
+</div>
+
+<div align='center', style="padding:0 2cm">
+`r kable(FormatNumeric(tbl), row.names=FALSE)`
+</div>
+
+`r home.url`
+
+# Sample analysis
+
+This section uses read count data to perform several sample-level analyses. The results can be used to identify potential mislabeling, outlier, confounding variable, etc. Read counts normalized by the _Loess_ method are used for all analyses in this section. 
+
+## Gender prediction
+
+```{r gender_pred, include=TRUE, fig.width=6, fig.height=6}
+ct1 <- norm[length(norm)][[1]]+1; 
+
+chrx <- prms$chromosome$f;
+chry <- prms$chromosome$m;
+id.x <- rownames(anno)[anno[, prms$annotation$chromosome]==chrx];
+id.y <- rownames(anno)[anno[, prms$annotation$chromosome]==chry];
+id.x <- id.x[!is.na(id.x)]; 
+id.y <- id.y[!is.na(id.y)]; 
+ct.x <- ct1[id.x, , drop=FALSE]; 
+ct.y <- ct1[id.y, , drop=FALSE]; 
+ct.x <- ct.x[rowSums(ct.x) > 0, , drop=FALSE]; 
+ct.y <- ct.y[rowSums(ct.y) > 0, , drop=FALSE];
+
+msg <- ''; 
+if (nrow(ct.x)>=5 & nrow(ct.y)>=5) {
+#   km.x <- pamk(colMeans(log2(ct.x+1)), krange=1:min(5, ncol(ct.x))); 
+#   km.y <- pamk(colMeans(log2(ct.y+1)), krange=1:min(5, ncol(ct.y))); 
+#   nc.x <- km.x$nc;
+#   nc.y <- km.y$nc;
+#   if (nc.x==2 & nc.y==2) msg <- 'Samples can be classified into 2 groups by both X and Y genes.' else if (nc.x==2) 
+#     msg <- 'Samples can be classified into 2 groups only by X genes.' else if (nc.y==2)
+#       msg <- 'Samples can be classified into 2 groups only by Y genes.' else
+#         msg <- 'Samples cannot be classified into 2 groups by neither X nor Y genes.'
+  km.xy <- pamk(cbind(colMeans(log2(ct.x+1)), colMeans(log2(ct.y+1))), krange=1:min(5, ncol(ct.x)));
+  nc.xy <- km.xy$nc;
+  if (nc.xy == 2) msg <- 'Samples can be classified into 2 groups by X/Y genes.' else 
+    msg <- 'Samples cannot be classified into 2 groups by X/Y genes.'
+  fig.h <- 8;
+} else {
+  msg <- 'There are not enough X/Y genes with detectable expression to make valid gender prediction.';
+  fig.h <- 1; 
+}
+
+```
+
+When enough genes on X and Y chromosomes have detectable expression, these genes can be used to predict the gender of samples. In case the gender information is already available, the predicted gender can be used to identify potential mislabeling.  
+
+<div style="color:darkblue; padding:0 2cm">
+```{r gender_pred_plot, fig.width=8, fig.height=fig.h, out.width='640px'}
+if (fig.h==8) {
+  x <- cbind(colMeans(log2(ct.x+1)), colMeans(log2(ct.y+1)));
+  if (nc.xy == 2) {
+    prd <- split(rownames(x), km.xy$pamobject$clustering); 
+    ms <- sapply(prd, function(prd) colMeans(x[prd, ])); 
+    prd.xy <- rep('NA', nrow(x)); 
+    names(prd.xy) <- rownames(x); 
+    if (ms[1,1]>ms[1,2] & ms[2,1]<ms[2,2]) {
+      prd.xy[prd[[1]]] <- 'F'; 
+      prd.xy[prd[[2]]] <- 'M';
+    }
+    if (ms[1,1]<ms[1,2] & ms[2,1]>ms[2,2]) {
+      prd.xy[prd[[1]]] <- 'M'; 
+      prd.xy[prd[[2]]] <- 'F';
+    }    
+  } else prd.xy <- rep('NA', nrow(x)); 
+
+#   if (nc.x==2) {
+#     prd <- split(rownames(x), km.x$pamobject$clustering); 
+#     ms <- sapply(prd, function(prd) mean(x[prd, 1])); 
+#     prd.x <- rep('F', nrow(x)); 
+#     names(prd.x) <- rownames(x); 
+#     if (ms[1] > ms[2]) prd.x[prd[[2]]] <- 'M' else prd.x[prd[[1]]] <- 'M';
+#   } else prd.x <- rep('NA', nrow(x)); 
+#   if (nc.y==2) {
+#     prd <- split(rownames(x), km.y$pamobject$clustering); 
+#     ms <- sapply(prd, function(prd) mean(x[prd, 2])); 
+#     prd.y <- rep('F', nrow(x)); 
+#     names(prd.y) <- rownames(x); 
+#     if (ms[1] > ms[2]) prd.y[prd[[1]]] <- 'M' else prd.y[prd[[2]]] <- 'M';
+#   } else prd.y <- rep('NA', nrow(x)); 
+#   
+  col <- rep('darkgrey', nrow(x)); 
+  col[prd.xy=='M' & prd.xy=='M'] <- 'blue';
+  col[prd.xy=='F' & prd.xy=='F'] <- 'red';
+  
+  par(mar=c(5,5,2,2)); 
+  plot(x[, 1], x[, 2], pch='*', col=col, cex=min(4, max(0.5, 64/nrow(x))), xlab="Log2(Read_Count+1), average of X genes", 
+       ylab="Log2(Read_Count+1), average of Y genes", cex.lab=1.25);
+  legend('topright', pch='*', col=c('red', 'blue', 'darkgrey'), bty='n', 
+         legend=c('Predicted to be female', 'Predicted to be male', 'Undetermined')); 
+  title(main="Gender prediction", cex.main=1.5);
+  
+  tbl <- data.frame(Mean_X_Genes = x[, 1], Mean_Y_Genes = x[, 2], Gender_Prediction = prd.xy, smpl[rownames(x), ]); 
+} else {
+  par(mar=c(0,0,0,0)); 
+  plot(0, type='n', axes=FALSE, xlab='', ylab='');
+  text(1, 0, pos=1, label='No gender prediction can be made:\n not enough X/Y genes with detectable expression.', cex=1.5); 
+  tbl <- matrix(nr=1, nc=1, dimnames = list(NA, 'No gender prediction available'));
+}
+
+fn <- CreateDatatable(FormatNumeric(tbl), paste(path.tbl, 'gender_prediction.html', sep='/')); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 10.** The average of Log2(Read Count+1) is calculated for X and Y chromosomes when there are at least 5 genes having detectable expression. The averages of each sample are plotted in this figure as X and Y axes. The averages of each chromosome are used separately to cluster samples using the pamk {fpc} function. If the optimal number of clusters is 2 for both chromosomes, gender prediction will be made, and the samples having predicted gender agreed byt the two chromosomes will be labeled with red (female) or blue (male). Click [here](table/gender_prediction.html) to veiw the full table of gender prediction. 
+</div>
+
+`r home.url`
+
+## Hierarchical clustering
+
+Hierarchical clustering groups samples based on their glabal correlation of all genes. It is a iterative procedure that merges two most similar samples/groups at each step. 
+
+<div style="color:darkblue; padding:0 2cm">
+```{r hierarchical_clustering, include=TRUE, fig.width=8, fig.height=6, out.width='640px'}
+atsm <- prms$chromosome$autosome; 
+atsm <- atsm[atsm %in% anno[, prms$annotation$chromosome]]; 
+if (length(atsm) == 0) atsm <- unique(as.vector(anno[, prms$annotation$chromosome]));
+atsm <- setdiff(atsm, c(prms$chromosome$f, prms$chromsome$m)); 
+if (length(atsm) > 0) e <- ct1[anno[, prms$annotation$chromosome] %in% atsm, , drop=FALSE] else e <- ct1;
+e <- log2(e[rowSums(e) > 0, , drop=FALSE]+1); 
+
+plot(hclust(as.dist(1-cor(e))), xlab='', sub='', ylab='1 - correlation coefficient', 
+     main='Hierarchical clustering using all autosomal genes', cex.lab=2);
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 11.** Hierarchical clustering of samples using all autosomal genes. Normalized read counts are log2-transformed before clustering. The vertical position of the common node of two samples indicates their similarity (lower = more similar).
+</div>
+
+`r home.url`
+
+## Principal components analysis {.tabset}
+
+Principal components analysis 
+
+```{r pcas, include=FALSE}
+pca <- prcomp(t(e)); 
+fns <- sapply(colnames(smpl), function(nm) { 
+  fn <- paste(path.fig, paste('pca_', nm, '.png', sep=''), sep='/');
+  png(fn, w=800, h=600); 
+  cex <- min(4, max(0.5, 64/ncol(e))); 
+  col <- rainbow(length(unique(smpl[, nm]))); 
+  col[col=='#FFFF00FF'] <- '#EEEE00FF'; 
+  col <- sub('FF$', 'DD', col); 
+  names(col) <- unique(smpl[, nm]); 
+  col <- col[smpl[, nm]]; 
+  PlotPCA(pca, groups=rownames(smpl), new.window = FALSE, cex=cex, col=col, label=1:nrow(smpl), legend=TRUE, legend.single = TRUE); 
+  if (dev.cur()!=1) dev.off(); 
+  fn; 
+}); 
+fns <- paste('figure', TrimPath(fns), sep='/'); 
+
+lns <- paste(paste('###', names(smpl)), '\n\n', paste('![](', fns, ')', sep=''), '\n\n', collapse='');
+```
+
+`r lns`
+
+<div style="color:darkblue; padding:0 1cm">
+**Figure 12.** PCA is performed using all autosomal genes after read counts are log2-transformed. The same plot is made in multiple tabs while samples are color-coded based on known sample features. 
+</div>
+
+`r home.url`
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+- _output_        : where you want to put the output files
+- _home_          : the URL if you have a home page for your project
+- _analyst_       : your name
+- _description_   : background information about your project, analysis, etc.
+- _input_         : where are your input data, read instruction for preparing them
+- _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

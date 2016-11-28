@@ -132,6 +132,7 @@ if (ncol(cp) >=3) tbl[, 1] <- paste('[', tbl[, 1], '](', as.vector(cp[, 3]), ')'
 ```{r gene_meta_analysis, include=FALSE}
 gid <- lapply(stat, rownames); 
 if (prms$gene$union) gid <- Reduce('union', gid) else gid <- Reduce('intersect', gid);  
+gid <- gid[!is.na(gid)]; 
 
 # Combined annotation
 cnm  <- Reduce('intersect', lapply(anno, colnames)); 
@@ -161,6 +162,7 @@ l2r <- lapply(de, function(de) {
   l; 
 }); 
 l2r <- sapply(l2r, function(x) x[gid]); 
+rownames(l2r) <- gid; 
 
 n  <- apply(pvl, 1, function(x) length(x[!is.na(x)])); 
 sq <- -2*rowSums(log(pvl), na.rm=TRUE);

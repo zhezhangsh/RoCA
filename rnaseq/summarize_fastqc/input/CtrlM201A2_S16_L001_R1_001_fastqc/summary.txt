@@ -1,0 +1,12 @@
+PASS	Basic Statistics	CtrlM201A2_S16_L001_R1_001.fastq.gz
+PASS	Per base sequence quality	CtrlM201A2_S16_L001_R1_001.fastq.gz
+FAIL	Per tile sequence quality	CtrlM201A2_S16_L001_R1_001.fastq.gz
+PASS	Per sequence quality scores	CtrlM201A2_S16_L001_R1_001.fastq.gz
+FAIL	Per base sequence content	CtrlM201A2_S16_L001_R1_001.fastq.gz
+FAIL	Per sequence GC content	CtrlM201A2_S16_L001_R1_001.fastq.gz
+PASS	Per base N content	CtrlM201A2_S16_L001_R1_001.fastq.gz
+WARN	Sequence Length Distribution	CtrlM201A2_S16_L001_R1_001.fastq.gz
+PASS	Sequence Duplication Levels	CtrlM201A2_S16_L001_R1_001.fastq.gz
+FAIL	Overrepresented sequences	CtrlM201A2_S16_L001_R1_001.fastq.gz
+PASS	Adapter Content	CtrlM201A2_S16_L001_R1_001.fastq.gz
+FAIL	Kmer Content	CtrlM201A2_S16_L001_R1_001.fastq.gz
