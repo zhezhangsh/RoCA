@@ -183,7 +183,7 @@ if (prms$gene$rank == 'fc') rnk <- y else
 # Prepare table
 meta <- cbind(N_Comp=n, Pval_Max=p1, Pval_Meta=p0, Abs_LogFC_Min=l1, Abs_LogFC_Avg=l0);
 temp <- cbind(l2r, pvl)[, as.vector(rbind(1:N, N+(1:N)))]; 
-colnames(temp) <- paste(rep(NM, 2), rep(c('Log2FC', 'Pval'), N), sep='_'); 
+colnames(temp) <- paste(rep(NM, each=2), rep(c('Log2FC', 'Pval'), N), sep='_'); 
 
 # Write out table
 tbl <- tbl0 <- cbind(anno, meta, temp); 
@@ -319,7 +319,7 @@ s1 <- apply(nes, 1, function(x) min(abs(x), na.rm=TRUE));
 # Prepare table
 meta <- cbind(N_Comp=n, Pval_Max=p1, Pval_Meta=p0, Abs_NES_Min=s1, Abs_NES_Avg=s0);
 temp <- cbind(nes, pvl)[, as.vector(rbind(1:N, N+(1:N)))]; 
-colnames(temp) <- paste(rep(NM, 2), rep(c('NES', 'Pval'), N), sep='_'); 
+colnames(temp) <- paste(rep(NM, each=2), rep(c('NES', 'Pval'), N), sep='_'); 
 
 # Write out table
 tbl <- tbl0 <- data.frame(Collection=as.vector(cll), Gene_Set=as.vector(nms), Size=as.vector(ngs), 
