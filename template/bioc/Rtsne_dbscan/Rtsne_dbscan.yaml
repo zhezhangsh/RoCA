@@ -13,7 +13,7 @@
 #########################    REQUIRED    ##########################
 ###################################################################
 # Required by the RoCA framework to generate a reproducible report
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/demo/skeleton/Rtsne_dbscan.Rmd
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/Rtsne_dbscan.Rmd
 # template: Rtsne_dbscan.Rmd
 output: /Users/zhangz/Documents/RoCA/template/bioc/Rtsne_dbscan/immune_cell # Where to save the output files
 home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
