@@ -1,5 +1,5 @@
 # Use this template to create a data analysis report based on an R markdown template
-CreatePlotlyReport<-function(yml) {
+CreateReport<-function(yml) {
   # yml     The yaml file or an yaml list defines the inputs and parameters of the analysis
   
   require(knitr);

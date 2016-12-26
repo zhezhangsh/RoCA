@@ -30,7 +30,7 @@ name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'plotly', 
                    'Rtsne', 'dbscan', 'gplots', 'e1071'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 'path.tsne'='tsne'); 
 
-knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+knitr::opts_chunk$set(dpi=300, dev=c('png'), echo=FALSE, warning=FALSE, message=FALSE);
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
