@@ -9,7 +9,6 @@ table(s[, 1])
 s[, 2]
 s[, 3]
 s<-s[, -2]
-s<-s[, -2]
 names(s)
 table(s[, 2])
 table(s[, 3])
@@ -24,3 +23,4 @@ dim(s)
 names(s)
 saveRDS(s, file='sample_p53.rds')
 file.remove('sample_slim.rds')
+load("/Users/zhangz/Documents/RoCA/data/gex/NCI60/sample.rds")
