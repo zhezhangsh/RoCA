@@ -1,5 +1,5 @@
 # Use this template to create a data analysis report based on an R markdown template
-CreateReport<-function(yml) {
+TestCreateReport<-function(yml) {
   # yml     The yaml file or an yaml list defines the inputs and parameters of the analysis
   
   require(knitr);
@@ -52,21 +52,21 @@ CreateReport<-function(yml) {
     fn.md<-TrimPath(fn.md);
     
     # Run template, save error message
-    roca.message$knit<-try(
-      ################################
-      knitr::knit(fn.tmpl, fn.md), ###
-      ################################
-    silent=TRUE);
-    if (!identical(roca.message$knit, fn.md)) roca.message$noError<-FALSE else
-      roca.message$knit<-paste(getwd(), roca.message$knit, sep='/'); 
+#     roca.message$knit<-try(
+#       ################################
+#       knitr::knit(fn.tmpl, fn.md), ###
+#       ################################
+#     silent=TRUE);
+#     if (!identical(roca.message$knit, fn.md)) roca.message$noError<-FALSE else
+#       roca.message$knit<-paste(getwd(), roca.message$knit, sep='/'); 
     
     # Convert markdown file to html file
     if (roca.message$noError) {
       roca.message$render<-try({
         ###############################################################################################################
-        rmarkdown::render(fn.md, output_format="html_document", output_file="index_alone.html", output_dir=getwd(), ###
+        rmarkdown::render(fn.tmpl, output_format="html_document", output_file="index_alone.html", output_dir=getwd(), ###
                           output_options=list('self_contained'=TRUE), quiet=TRUE, envir=new.env());                 ###
-        rmarkdown::render(fn.md, output_format="html_document", output_file="index.html", output_dir=getwd(),       ###
+        rmarkdown::render(fn.tmpl, output_format="html_document", output_file="index.html", output_dir=getwd(),       ###
                           quiet=TRUE, envir=new.env());                                                             ###
         ###############################################################################################################
       }, silent=TRUE);

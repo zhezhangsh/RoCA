@@ -14,8 +14,8 @@
 ###################################################################
 # Required by the RoCA framework to generate a reproducible report
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/Rtsne_dbscan/Rtsne_dbscan.Rmd
-# template: Rtsne_dbscan.Rmd
-output: /Users/zhangz/Documents/RoCA/template/bioc/Rtsne_dbscan/immune_cell/examples # Where to save the output files
+#template: Rtsne_dbscan.Rmd
+output: /Users/zhangz/Documents/RoCA/template/bioc/Rtsne_dbscan/examples/immune_cell # Where to save the output files
 home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
 zip: no                                   # Whether to zip the output folder
@@ -43,7 +43,7 @@ input:    # These are examples of different types of data saved in different typ
 # Parameters to run this analysis
 parameter:  # These are examples of different types of parameters. They will not be used for the skeleton.Rmd template for act analysis.
   Optimization:     # Parameters to run the algorithms to get the best fit results.
-    tsne: 5         # How many times to run t-SNE to get the lowest Kullback–Leibler divergence
+    tsne: 1000      # How many times to run t-SNE to get the lowest Kullback–Leibler divergence
     dbscan:         # Values of the minPts parameter when runing dbscan
       min: 2
       max: 9

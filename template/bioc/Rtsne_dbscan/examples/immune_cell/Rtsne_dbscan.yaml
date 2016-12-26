@@ -1,0 +1,68 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <matrix> a numeric matrix saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column is unique sample names
+#   - the first row is the variable names on high dimensional space
+#   - for transcriptome data, it's preferred to have data normalized between samples and log2-transformed
+# <group> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - the first column is unique sample names matching column names of <matrix>
+#   - the first row is the name of a known sample features such as genotype, treatment, and cell type
+#   - it's acceptable to have no known sample feature and the table have a single column of sample names
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/Rtsne_dbscan/Rtsne_dbscan.Rmd
+template: Rtsne_dbscan.Rmd
+output: /Users/zhangz/Documents/RoCA/template/bioc/Rtsne_dbscan/examples/immune_cell # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+# Analyst describes the analysis to run, such as project title
+description:    
+  Project: Classification of immune cells
+  Analysis: This analysis uses transcriptome data to classify samples from different immune cells and disease states.
+  Samples: 3 immune cell types (B, T, and monocyte) from 6 donors, including 3 healthy controls and 3 patients.
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+# Location (local or URL) of files with formatted input data
+input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
+  matrix: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/tSNE_data.rds
+  group: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/immune_cells_rnaseq/tSNE_group.rds
+  
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+# Parameters to run this analysis
+parameter:  # These are examples of different types of parameters. They will not be used for the skeleton.Rmd template for act analysis.
+  Optimization:     # Parameters to run the algorithms to get the best fit results.
+    tsne: 3         # How many times to run t-SNE to get the lowest Kullback–Leibler divergence
+    dbscan:         # Values of the minPts parameter when runing dbscan
+      min: 2
+      max: 9
+  Rtsne:    # Rtsne {Rtsne}
+    dims: 2           # integer; Output dimensionality (default: 2)
+    initial_dims: 50	# integer; the number of dimensions that should be retained in the initial PCA step (default: 50)
+    perplexity: 2     # numeric; Perplexity parameter
+    # For experienced users only 
+    theta: 0.5        # numeric; Speed/accuracy trade-off (increase for less accuracy), set to 0.0 for exact TSNE (default: 0.5)
+    pca: TRUE	        # logical; Whether an initial PCA step should be performed (default: TRUE)
+    max_iter: 1000    # integer; Number of iterations (default: 1000)
+  dbscan:   # dbscan {dbscan} 
+    minPts: 2         # number of minimum points in the eps region (for core points). Default is 5 points.
+    # For experienced users only 
+    search: kdtree    # nearest neighbor search strategy (one of "kdtree" or "linear", "dist").
+    bucketSize: 10    # max size of the kd-tree leafs.
+    splitRule: suggest  # rule to split the kd-tree. One of "STD", "MIDPT", "FAIR", "SL_MIDPT", "SL_FAIR" or "SUGGEST" (SL stands for sliding). "SUGGEST" uses ANNs best guess.
+    approx: 0         # relative error bound for approximate nearest neighbor searching.
+    
+######################    END OF DOCUMENT    ######################
+
+
