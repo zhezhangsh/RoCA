@@ -101,19 +101,17 @@ h <- max(0, min(1, p$theta)); # Speed/accuracy trade-off (higher=less accuracy, 
 
 # Run tSNE multiple times and save results
 fns <- paste(path.tsne, '/ts_', 1:n, '.rds', sep='');
-sapply(1:n, function(i) {
-  ts <- Rtsne(d, dims = e, initial_dims = s, perplexity = m, theta = h, pca = p$pca, max_iter = p$max_iter); 
-  saveRDS(ts, fns[i]); 
-}) -> x;
+ts <- lapply(1:n, function(i) Rtsne(d, dims = e, initial_dims = s, perplexity = m, theta = h, pca = p$pca, max_iter = p$max_iter)); 
+saveRDS(ts, paste(path.r, 'tsne_runs.rds', sep='/')); 
 ```
 
 ```{r kl_divergence, include=FALSE}
-kl <- sapply(fns, function(f) readRDS(f)$itercosts); 
+kl <- sapply(ts, function(x) x$itercosts); 
 i0 <- which(kl[nrow(kl), ]==min(kl[nrow(kl), ])); 
 i1 <- which(kl[nrow(kl), ]==max(kl[nrow(kl), ])); 
 
-t0 <- readRDS(fns[i0])$Y; 
-t1 <- readRDS(fns[i1])$Y; 
+t0 <- ts[[i0]]$Y; 
+t1 <- ts[[i1]]$Y; 
 
 colnames(kl) <- paste('Run', 1:ncol(kl)); 
 write.table(round(t(kl), 4), paste(path.tbl, 'kl_divergence.txt', sep='/'), quote = FALSE, col.names = FALSE, sep='\t'); 
@@ -236,8 +234,9 @@ tbl <- FormatNumeric(tbl);
 cl <- rep("rgb(49,130,189)", length(pt)); 
 cl[sc==max(sc)] <- "rgb(189,0,0)";
 
-plot_ly(x=as.character(pt), y=sc, type='bar', marker=list(color=cl)) %>% 
-  layout(xaxis=list(title='Minimum cluster size'), yaxis=list(title='Silhouette score'));
+plot_ly(x=1:length(sc), y=sc, type='bar', marker=list(color=cl)) %>% 
+  layout(xaxis=list(title='Minimum cluster size', tickvals = 1:length(sc), ticktext = as.character(pt)), 
+         yaxis=list(title='Silhouette score'));
 ```
 </div>
 

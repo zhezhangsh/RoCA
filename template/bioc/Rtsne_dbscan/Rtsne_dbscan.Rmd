@@ -101,19 +101,17 @@ h <- max(0, min(1, p$theta)); # Speed/accuracy trade-off (higher=less accuracy, 
 
 # Run tSNE multiple times and save results
 fns <- paste(path.tsne, '/ts_', 1:n, '.rds', sep='');
-sapply(1:n, function(i) {
-  ts <- Rtsne(d, dims = e, initial_dims = s, perplexity = m, theta = h, pca = p$pca, max_iter = p$max_iter); 
-  saveRDS(ts, fns[i]); 
-}) -> x;
+ts <- lapply(1:n, function(i) Rtsne(d, dims = e, initial_dims = s, perplexity = m, theta = h, pca = p$pca, max_iter = p$max_iter)); 
+saveRDS(ts, paste(path.r, 'tsne_runs.rds', sep='/')); 
 ```
 
 ```{r kl_divergence, include=FALSE}
-kl <- sapply(fns, function(f) readRDS(f)$itercosts); 
+kl <- sapply(ts, function(x) x$itercosts); 
 i0 <- which(kl[nrow(kl), ]==min(kl[nrow(kl), ])); 
 i1 <- which(kl[nrow(kl), ]==max(kl[nrow(kl), ])); 
 
-t0 <- readRDS(fns[i0])$Y; 
-t1 <- readRDS(fns[i1])$Y; 
+t0 <- ts[[i0]]$Y; 
+t1 <- ts[[i1]]$Y; 
 
 colnames(kl) <- paste('Run', 1:ncol(kl)); 
 write.table(round(t(kl), 4), paste(path.tbl, 'kl_divergence.txt', sep='/'), quote = FALSE, col.names = FALSE, sep='\t'); 
@@ -199,6 +197,9 @@ pt <- mn:mx;
 
 db <- lapply(pt, function(i) OptimizeDBSCAN(ts, minPts = i, search = p$search, bucketSize = p$bucketSize,
                                             splitRule = p$splitRule, approx = p$approx));
+names(db) <- pt; 
+saveRDS(db, paste(path.r, 'dbscan.rds', sep='/')); 
+
 sc <- sapply(db, function(db) {
   s <- silhouette(db$cluster, dist(ts)); 
   if (identical(NA, s)) 0 else mean(s[, 3]); 
