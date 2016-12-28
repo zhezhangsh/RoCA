@@ -197,6 +197,9 @@ pt <- mn:mx;
 
 db <- lapply(pt, function(i) OptimizeDBSCAN(ts, minPts = i, search = p$search, bucketSize = p$bucketSize,
                                             splitRule = p$splitRule, approx = p$approx));
+names(db) <- pt; 
+saveRDS(db, paste(path.r, 'dbscan.rds', sep='/')); 
+
 sc <- sapply(db, function(db) {
   s <- silhouette(db$cluster, dist(ts)); 
   if (identical(NA, s)) 0 else mean(s[, 3]); 
