@@ -188,7 +188,7 @@ if (ncol(t0) == 2) {
   - **approx**: relative error bound for approximate nearest neighbor searching = **`r prms$dbscan$approx`**.
 
 ```{r dbscan, include=FALSE}
-ts <- tss[[i0]]$Y; 
+ts <- readRDS(fns[i0])$Y; 
 p  <- yml$parameter$dbscan; 
 
 mn <- yml$parameter$Optimization$dbscan$min;
