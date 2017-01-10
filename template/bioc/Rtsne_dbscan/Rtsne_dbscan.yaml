@@ -48,7 +48,7 @@ parameter:  # These are examples of different types of parameters. They will not
   Rtsne:    # Rtsne {Rtsne}
     dims: 2           # integer; Output dimensionality (default: 2)
     initial_dims: 50	# integer; the number of dimensions that should be retained in the initial PCA step (default: 50)
-    perplexity: 5     # numeric; Perplexity parameter
+    perplexity: 4     # numeric; Perplexity parameter
     # For experienced users only 
     theta: 0.5        # numeric; Speed/accuracy trade-off (increase for less accuracy), set to 0.0 for exact TSNE (default: 0.5)
     pca: TRUE	        # logical; Whether an initial PCA step should be performed (default: TRUE)

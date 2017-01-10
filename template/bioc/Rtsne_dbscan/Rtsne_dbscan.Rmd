@@ -28,7 +28,7 @@ Additionally, the result of unsupervised clustering is compared to any known sam
 name.yaml <- 'Rtsne_dbscan.yaml'; 
 name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'plotly', 'RoCA', 'awsomics', 'webshot', 
                    'Rtsne', 'dbscan', 'gplots', 'e1071'); 
-name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 'path.tsne'='tsne'); 
 
 knitr::opts_chunk$set(dpi=300, dev=c('png'), echo=FALSE, warning=FALSE, message=FALSE);
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
