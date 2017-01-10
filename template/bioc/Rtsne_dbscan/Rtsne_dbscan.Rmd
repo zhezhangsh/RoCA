@@ -28,7 +28,7 @@ Additionally, the result of unsupervised clustering is compared to any known sam
 name.yaml <- 'Rtsne_dbscan.yaml'; 
 name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'plotly', 'RoCA', 'awsomics', 'webshot', 
                    'Rtsne', 'dbscan', 'gplots', 'e1071'); 
-name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 'path.tsne'='tsne'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); 
 
 knitr::opts_chunk$set(dpi=300, dev=c('png'), echo=FALSE, warning=FALSE, message=FALSE);
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
@@ -118,7 +118,7 @@ write.table(round(t(kl), 4), paste(path.tbl, 'kl_divergence.txt', sep='/'), quot
 ```
 
 ```{r plot_parameter, include=FALSE}
-sz <- ceiling(max(30/ceiling(log(nrow(d))), 2)); 
+sz <- ceiling(max(50/ceiling(log(nrow(d))), 2)); 
 mk <- list(symbol=16, size=sz); 
 xa <- list(title='ts_1', zeroline=FALSE, showgrid=TRUE, showline=TRUE);
 ya <- list(title='ts_2', zeroline=FALSE, showgrid=TRUE, showline=TRUE);

@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2016-12-28" />
+
+<title>tSNE-DBSCAN classification</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/htmlwidgets-0.7/htmlwidgets.js"></script>
+<link href="index_files/plotlyjs-1.16.3/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="index_files/plotlyjs-1.16.3/plotly-latest.min.js"></script>
+<script src="index_files/plotly-binding-4.5.2/plotly.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="index_files/highlight/default.css"
+      type="text/css" />
+<script src="index_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">tSNE-DBSCAN classification</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2016-12-28</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This analysis performs sample classification using high-dimension data. It includes two main steps:</p>
+<p><strong>The first step</strong> uses the <strong>t-SNE</strong> (t-Distributed Stochastic Neighbor Embedding) to create a 2D or 3D-map from high dimensional data. The Barnes-Hut version of t-SNE is used to reduce computing time, so it can be run for multiple times. The result of t-SNE run having the lowest Kullback–Leibler (KL) divergence will be used for the next step.</p>
+<p><strong>The second step</strong> uses the <strong>DBSCAN</strong> method to cluster samples using the t-SNE result from the last step. The two key parameters of DBSCAN, <em>epsilon neighborhood</em> and <em>minimum cluster size</em> are adjusted based on silhouette score to obtain optimal classification.</p>
+<p>Additionally, the result of unsupervised clustering is compared to any known sample features to evaluate their association.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Comparison between cell lines from 9 different cancer tissues (NCI-60); <strong><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949">GSE5949</a></strong></p>
+</div>
+<div id="pubmed" class="section level2">
+<h2><span class="header-section-number">1.2</span> PubMed</h2>
+<p>Reinhold WC, Reimers MA, Lorenzi P, Ho J et al. <strong>Multifactorial regulation of E-cadherin expression: an integrative study.</strong> Mol Cancer Ther 2010 Jan;9(1):1-16. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20053763">20053763</a>.</p>
+</div>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">1.3</span> Experimental design</h2>
+<p>Comparison between cell lines from 9 different cancer tissue of origin types (Breast, Central Nervous System, Colon, Leukemia, Melanoma, Non-Small Cell Lung, Ovarian, Prostate, Renal) from NCI-60 panel</p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">2</span> Results</h1>
+<div id="t-sne" class="section level2">
+<h2><span class="header-section-number">2.1</span> t-SNE</h2>
+<p><strong>t-SNE</strong> (t-Distributed Stochas- tic Neighbor Embedding) is a method of feature reduction that maps high-dimentional data to a 2- or 3-dimensional space. This analysis utilizes the Barnes-Hut version on a data matrix with <strong>60</strong> samples and <strong>17647</strong> features. The method is implemented by the <em>Rtsne {Rtsne}</em> R function.</p>
+<p>On a t-SNE space, the similarities between samples is measured by their overall KL (Kullback–Leibler) divergence. An optimal t-SNE run should have relatively lower KL divergence. Each t-SNE run of this analysis involves the following sub-steps:</p>
+<ul>
+<li>Run an initial PCA to reduce the number of features to <strong>50</strong>;</li>
+<li>Calculate the euclidean distance between any two samples to get a similarity score;</li>
+<li>The distance of each sample to <strong>2</strong> nearest neighbors is fit to a <em>Cauchy</em> distribution, on a <strong>2</strong>-dimensional space;</li>
+<li>The <em>Barnes-Hut</em> approximation is used to reduce computational complexity, with <strong>theta = 0.5</strong>;</li>
+<li>The position of samples on the low dimensional space is adjusted for up to <strong>1000</strong> iterations to lower overall KL divergence.</li>
+</ul>
+<p>The steps above are re-run for <strong>200</strong> times, and output from the run with the lowest KL divergence is the final result of t-SNE.</p>
+<div align="center">
+<div id="htmlwidget-8ed7e0ea6950edd0885b" style="width:600px;height:400px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8ed7e0ea6950edd0885b">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"KL divergence"},"yaxis":{"domain":[0,1],"title":"Number of runs"}},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[1.24151972821181,0.939637434718068,1.15053875397666,1.11394103875869,0.720080686333779,0.731862824526117,1.35357123268496,1.92307955521735,1.23580774568964,0.710014181969529,1.00286438615013,1.34717619978452,1.21924228042515,1.86906634499044,0.926552191761744,0.714840252713594,0.844386926389645,1.23926373883566,1.13059196029993,0.923949931951285,1.17269036612833,0.902810035435686,0.946395554487827,1.67412959851655,1.10165401399286,1.4509241984388,0.705315117063262,1.45429583229778,1.08692770301947,0.939026957383647,0.989250957513564,1.43391458187898,1.3606659081321,1.01412803072036,1.09014057870541,0.720266374586029,0.70221797241619,0.711835092634455,1.44364289394345,0.708458866150835,1.49632521481435,1.08125015063233,0.718621965621763,0.710692685801454,1.76523044623836,0.738082952302511,1.41049736493717,1.90624028857315,0.708354232591042,1.51255888788016,1.29961154377141,0.69800750701578,0.974983983781195,0.880025964504876,0.71228649709952,2.0141265706374,1.72881141118541,0.714133410873261,0.7083257020358,1.25620868361221,1.23303061971641,0.912814179334307,0.926926025385689,1.10285682987617,0.713552260924129,1.19357679292603,0.846663584165121,1.21640461231015,0.712248914488141,0.709461411762455,0.91992210519268,2.00536182363854,1.59256584997229,0.96756549146547,0.724649288283269,1.3892416576711,0.921134240747255,1.17295880856919,1.06666870633326,0.715975684534971,1.01762911374635,0.949897604777119,1.02175468708236,1.60940713339709,1.22895978145597,0.730020288070167,1.81662943268075,0.999266185791861,0.703501274667808,0.702259139586919,1.15900158831886,0.859857427663415,1.18800851830496,1.1278861177613,1.27151953606694,0.883761209477137,1.1044116890169,0.716576209344293,1.37782826733345,0.902852615211343,1.2167057934029,0.840854334277072,1.28843813312289,1.64546837662663,1.49990007610294,0.7184536148291,1.59303381776685,1.54361246892049,0.928419819557331,0.853354392940241,1.7183189124676,1.28820826948836,0.743562684883334,1.14151476651548,1.34916195654629,1.49144809182697,0.996515673798578,0.917157995588487,0.719104693690729,0.721871656382156,1.79060776096316,2.09140261038328,0.741730851898541,0.99832908605869,1.27466249448855,1.04776587890775,1.56513397046993,1.18800969024516,1.0107728288633,0.714238937884801,0.968161574431939,1.4085209046328,0.978138305230954,1.44503534813074,0.693701863624129,1.15783875698258,1.44163386690984,1.47228295270046,1.19555035797755,1.34620453990543,1.04459114356805,1.6072039876086,0.869591694857998,1.80481599555951,0.726705913405438,0.862313974346974,0.856874509506123,1.45209771799788,0.929151048986249,0.985135768757469,1.04759342757106,0.799697976406335,0.82157639509231,1.32585021472639,0.917417624630925,1.46721302360515,0.790706048378533,1.58578305963028,1.02154401073108,1.43012840887723,0.716762979735159,1.19004457100835,0.856532072945385,0.9546698402312,1.08872742165072,0.702474897135448,2.00430506374205,1.46524993992741,0.716733484073198,1.48508358143491,1.21930836774414,1.692345670684,0.731906154597218,0.972279299279109,0.948011073593657,1.45547876502312,1.19675027005661,0.900136074017259,1.22361202379153,1.24116822086963,0.694011767834031,1.6422306712547,0.718344056045212,1.36159047065516,1.14581895121402,0.909734590921159,1.64032557772751,1.22685276651921,0.70390336990353,1.7102475003243,1.19084080517869,0.81882808739739,0.944464420634355,0.698479004284085,1.15230433610871,0.708745895613947,1.21764284648498,0.779865727937781,1.1776292129608,1.02914275311676],"type":"histogram","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<strong>Figure 1.</strong> The t-SNE program is run repeatedly for 200 times, and the final <em>Kullback-Leibler</em> divergence, or total cost, of the map generated by all runs is summarized in this figure. Click <a href="table/kl_divergence.txt">here</a> to download the full table of KL divergence.
+</div>
+<div align="center">
+<div id="htmlwidget-e1f20077b8a378afce6a" style="width:600px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e1f20077b8a378afce6a">{"x":{"layout":{"margin":{"b":40,"l":60,"t":40,"r":10},"xaxis":{"domain":[0,1],"title":"ts_1","zeroline":false,"showgrid":true,"showline":true},"yaxis":{"domain":[0,1],"title":"ts_2","zeroline":false,"showgrid":true,"showline":true},"title":"Highest KL divergence: 2.0914; Run 122","hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[111.173928287016,100.533864837958,75.870528912394,118.441191728996,117.445379986171,106.852319282827],"y":[49.4659851750314,69.2848024030492,73.6513536605791,58.4329945220421,82.4453265494798,30.996029785596],"mode":"marker+markers","text":["Blood_GSM134085","Blood_GSM134090","Blood_GSM134095","Blood_GSM134100","Blood_GSM134105","Blood_GSM134110"],"marker":{"fillcolor":"rgba(102,194,165,0.5)","color":"rgba(102,194,165,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Blood","xaxis":"x","yaxis":"y"},{"x":[143.193629029336,-55.7656264598525,-196.633293627417,-24.9847236285756,153.491529429107],"y":[-33.8850849595459,-123.815332628736,32.1165558426145,-57.2399202103459,-27.637626748406],"mode":"marker+markers","text":["Breast_GSM133995","Breast_GSM134000","Breast_GSM134005","Breast_GSM134010","Breast_GSM134015"],"marker":{"fillcolor":"rgba(239,150,106,0.5)","color":"rgba(239,150,106,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Breast","xaxis":"x","yaxis":"y"},{"x":[-106.645381995942,-72.6016913756337,-189.359551546462,-91.4325075066112,-203.568047383831,-89.1504721813522],"y":[-31.9322756027926,-30.9669613139992,41.158609757938,-13.6895848552878,49.3644147385994,-25.5250174998858],"mode":"marker+markers","text":["CNS_GSM134020","CNS_GSM134025","CNS_GSM134030","CNS_GSM134035","CNS_GSM134040","CNS_GSM134045"],"marker":{"fillcolor":"rgba(178,156,177,0.5)","color":"rgba(178,156,177,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"CNS","xaxis":"x","yaxis":"y"},{"x":[-38.3681721296794,-20.3093094806122,-5.52930795254429,-10.4830915568185,-11.6523854754721,-43.2879685780855,-27.6802971701627],"y":[108.651502611132,100.925578227369,68.0074499401363,80.4319091552676,116.739878381881,80.0472317415586,60.4081220711178],"mode":"marker+markers","text":["Colon_GSM134050","Colon_GSM134055","Colon_GSM134060","Colon_GSM134065","Colon_GSM134070","Colon_GSM134075","Colon_GSM134080"],"marker":{"fillcolor":"rgba(201,148,198,0.5)","color":"rgba(201,148,198,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Colon","xaxis":"x","yaxis":"y"},{"x":[-6.40210336433161,-1.20057604776369,504.360601368582,-142.388456774669,-20.6487055762859,25.2739875585656,1.25411167425523,-571.633792356762],"y":[-70.5102082905877,-53.6039262879242,-409.436316545081,20.8976120124821,-77.7684350144125,-103.326612242014,-79.8988135243931,117.059525990518],"mode":"marker+markers","text":["Kidney_GSM134259","Kidney_GSM134264","Kidney_GSM134269","Kidney_GSM134274","Kidney_GSM134279","Kidney_GSM134284","Kidney_GSM134289","Kidney_GSM134294"],"marker":{"fillcolor":"rgba(205,181,144,0.5)","color":"rgba(205,181,144,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Kidney","xaxis":"x","yaxis":"y"},{"x":[28.4677109235495,43.7502498129885,-42.8195338811154,-46.3808688549817,-108.027717771093,19.5720093536843,-17.6429493160704,29.9125677247107,-89.2341518864695],"y":[-28.0112000985491,-35.6390195468121,-113.189751450754,-72.481853301629,-134.438780569683,90.1342259263469,18.9418389001673,-10.6587146209672,11.0488629198455],"mode":"marker+markers","text":["Lung_GSM134165","Lung_GSM134170","Lung_GSM134175","Lung_GSM134180","Lung_GSM134185","Lung_GSM134190","Lung_GSM134195","Lung_GSM134200","Lung_GSM134209"],"marker":{"fillcolor":"rgba(202,217,72,0.5)","color":"rgba(202,217,72,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Lung","xaxis":"x","yaxis":"y"},{"x":[-6.14136831869978,6.40729369874361,-86.8907977021654,13.8346275378842,67.5861008717155,22.8441819154913,78.4266931389224],"y":[49.705437826319,-152.285932534655,122.280887385613,66.4287340316909,-123.692571514433,-69.332241907544,-126.296210669607],"mode":"marker+markers","text":["Ovary_GSM134214","Ovary_GSM134219","Ovary_GSM134224","Ovary_GSM134229","Ovary_GSM134234","Ovary_GSM134239","Ovary_GSM134244"],"marker":{"fillcolor":"rgba(250,212,80,0.5)","color":"rgba(250,212,80,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Ovary","xaxis":"x","yaxis":"y"},{"x":[19.8006687002707,-4.77584743615083],"y":[39.9680817762509,-24.2070327955559],"mode":"marker+markers","text":["Prostate_GSM134249","Prostate_GSM134254"],"marker":{"fillcolor":"rgba(223,194,152,0.5)","color":"rgba(223,194,152,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Prostate","xaxis":"x","yaxis":"y"},{"x":[-13.948858670987,60.9602421327624,212.511299571111,128.697840628593,79.4464295186988,85.0324295894597,77.035033984717,176.063039060235,881.753673580795,-1144.40560783294],"y":[-108.939267783721,149.678093274847,99.3969272600398,231.019061832456,131.577799003319,158.461773514652,143.290495920542,195.322198159857,-1165.12834011281,556.19773233179],"mode":"marker+markers","text":["Skin_GSM134115","Skin_GSM134120","Skin_GSM134125","Skin_GSM134130","Skin_GSM134135","Skin_GSM134140","Skin_GSM134145","Skin_GSM134150","Skin_GSM134155","Skin_GSM134160"],"marker":{"fillcolor":"rgba(179,179,179,0.5)","color":"rgba(179,179,179,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Skin","xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-f420db6eb5c59105f0f3" style="width:600px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f420db6eb5c59105f0f3">{"x":{"layout":{"margin":{"b":40,"l":60,"t":40,"r":10},"xaxis":{"domain":[0,1],"title":"ts_1","zeroline":false,"showgrid":true,"showline":true},"yaxis":{"domain":[0,1],"title":"ts_2","zeroline":false,"showgrid":true,"showline":true},"title":"Lowest KL divergence: 0.6937; Run 135","hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[-43.6566131408224,-44.8797183567255,-41.0579722044878,-46.3835219202629,-50.2183528789764,-40.3885780220467],"y":[38.2348362806468,43.902802896373,47.6380612941605,38.8660464902003,44.177570954866,34.500540916848],"mode":"marker+markers","text":["Blood_GSM134085","Blood_GSM134090","Blood_GSM134095","Blood_GSM134100","Blood_GSM134105","Blood_GSM134110"],"marker":{"fillcolor":"rgba(102,194,165,0.5)","color":"rgba(102,194,165,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Blood","xaxis":"x","yaxis":"y"},{"x":[24.9674434393529,29.4246386839918,68.5300341900493,46.9496976908093,27.912169673394],"y":[-45.937697077194,-16.0520814915393,-65.0620283501343,-1.59064993765176,-45.7144360457185],"mode":"marker+markers","text":["Breast_GSM133995","Breast_GSM134000","Breast_GSM134005","Breast_GSM134010","Breast_GSM134015"],"marker":{"fillcolor":"rgba(239,150,106,0.5)","color":"rgba(239,150,106,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Breast","xaxis":"x","yaxis":"y"},{"x":[4.85305421994001,11.2062505682028,66.2867001278408,11.8024472901408,69.4606116764628,10.0722745347229],"y":[-43.2473873476021,-38.7731571642458,-66.7355908783148,-46.0005645321164,-69.5657681689433,-43.4061919292506],"mode":"marker+markers","text":["CNS_GSM134020","CNS_GSM134025","CNS_GSM134030","CNS_GSM134035","CNS_GSM134040","CNS_GSM134045"],"marker":{"fillcolor":"rgba(178,156,177,0.5)","color":"rgba(178,156,177,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"CNS","xaxis":"x","yaxis":"y"},{"x":[-9.28702019929306,-7.55369151904109,-0.409213052384859,-3.32004252721406,-11.8010153275301,-1.88733115352665,-5.59587042165388],"y":[46.1264011901855,41.138560092258,37.3060861245794,38.5174874679705,39.4414551844628,45.226227793192,32.2313673224978],"mode":"marker+markers","text":["Colon_GSM134050","Colon_GSM134055","Colon_GSM134060","Colon_GSM134065","Colon_GSM134070","Colon_GSM134075","Colon_GSM134080"],"marker":{"fillcolor":"rgba(201,148,198,0.5)","color":"rgba(201,148,198,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Colon","xaxis":"x","yaxis":"y"},{"x":[38.701109218445,36.202772405884,58.661263689322,60.2180641912569,41.8496160053411,45.8454681371707,40.3240382044277,59.2788193098302],"y":[-0.835398309543395,3.30943436930271,3.88644593527237,-0.199741640821912,2.52601668006468,-10.0113353129557,-3.27393941097164,6.70572545652133],"mode":"marker+markers","text":["Kidney_GSM134259","Kidney_GSM134264","Kidney_GSM134269","Kidney_GSM134274","Kidney_GSM134279","Kidney_GSM134284","Kidney_GSM134289","Kidney_GSM134294"],"marker":{"fillcolor":"rgba(205,181,144,0.5)","color":"rgba(205,181,144,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Kidney","xaxis":"x","yaxis":"y"},{"x":[23.3593742569217,19.9012446220228,31.5747091519248,32.9195676445179,60.9708273379968,2.27104568365988,11.2752454322212,24.2225973677822,12.8672478360323],"y":[11.0178051342648,8.72808226715729,-12.6310999840443,-2.39954333130461,11.0295544089202,33.2123328122573,32.9861006499255,15.2628491165146,-50.6841587413318],"mode":"marker+markers","text":["Lung_GSM134165","Lung_GSM134170","Lung_GSM134175","Lung_GSM134180","Lung_GSM134185","Lung_GSM134190","Lung_GSM134195","Lung_GSM134200","Lung_GSM134209"],"marker":{"fillcolor":"rgba(202,217,72,0.5)","color":"rgba(202,217,72,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Lung","xaxis":"x","yaxis":"y"},{"x":[3.95183622360959,5.62069709970073,7.04039230152373,1.03651653360724,-2.26238663818488,41.55626166747,-4.93763278995125],"y":[39.1901876170315,79.6487469638615,81.9944142763134,25.931638981121,-12.0553988431202,9.94740419108178,-11.8917065187733],"mode":"marker+markers","text":["Ovary_GSM134214","Ovary_GSM134219","Ovary_GSM134224","Ovary_GSM134229","Ovary_GSM134234","Ovary_GSM134239","Ovary_GSM134244"],"marker":{"fillcolor":"rgba(250,212,80,0.5)","color":"rgba(250,212,80,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Ovary","xaxis":"x","yaxis":"y"},{"x":[6.87413048578625,29.4276116414515],"y":[45.7417502926058,6.44069005461569],"mode":"marker+markers","text":["Prostate_GSM134249","Prostate_GSM134254"],"marker":{"fillcolor":"rgba(223,194,152,0.5)","color":"rgba(223,194,152,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Prostate","xaxis":"x","yaxis":"y"},{"x":[37.4415331569036,-73.2769571223266,-100.60725010487,-94.495113860834,-78.9631120361081,-79.7303005490307,-78.0738191737014,-92.377993008704,-97.4412390194379,-96.2525666726031],"y":[-9.37653134157819,-45.5724797441649,-38.1626447242695,-29.1336941484586,-46.9648376935513,-39.7170548829266,-44.1699522417391,-37.4573267807139,-32.8803172986531,-35.3639093434388],"mode":"marker+markers","text":["Skin_GSM134115","Skin_GSM134120","Skin_GSM134125","Skin_GSM134130","Skin_GSM134135","Skin_GSM134140","Skin_GSM134145","Skin_GSM134150","Skin_GSM134155","Skin_GSM134160"],"marker":{"fillcolor":"rgba(179,179,179,0.5)","color":"rgba(179,179,179,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Skin","xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<strong>Figure 2.</strong> t-SNE runs with the highest and the lowest KL divergence. The run with the lowest KL divergence is picked as the final t-SNE results and input to DBSCAN classification.
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="dbscan" class="section level2">
+<h2><span class="header-section-number">2.2</span> DBSCAN</h2>
+<p><strong>DBSCAN</strong> (Density-based spatial clustering of applications with noise) is a sample clustering method based on the density of sample on a multi-dimensional space. This analysis uses the <em>dbscan {dbscan}</em> R implementation of this method. Its input is the result of t-SNE run with the lowest KL divergence and its output is evaluated by the silhouette score of clustered samples. Each DBSCAN run requires the following parameters:</p>
+<ul>
+<li><strong>eps</strong> (required): size of the epsilon neighborhood. This analysis uses a iterative procedure to identify the <strong>eps</strong> value maximizing the silhouette score of clustered samples.</li>
+<li><strong>minPts</strong> (required): minimal number of core points (samples) to form a cluster. This analysis tests the <strong>minPts</strong> value from <strong>2</strong> to <strong>12</strong> to identify the optimal <strong>eps/minPts</strong> combination with the highest silhouette score.</li>
+<li><strong>search</strong>: nearest neighbor search strategy = “<strong>kdtree</strong>”.</li>
+<li><strong>bucketSize</strong>: max size of the kd-tree leafs = <strong>10</strong>.</li>
+<li><strong>splitRule</strong> rule to split the kd-tree = “<strong>suggest</strong>”.</li>
+<li><strong>approx</strong>: relative error bound for approximate nearest neighbor searching = <strong>0</strong>.</li>
+</ul>
+<div align="center">
+<div id="htmlwidget-437b5756f6c9099d0a01" style="width:600px;height:400px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-437b5756f6c9099d0a01">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"Minimum cluster size","tickvals":[1,2,3,4,5,6,7,8,9,10,11],"ticktext":["2","3","4","5","6","7","8","9","10","11","12"]},"yaxis":{"domain":[0,1],"title":"Silhouette score"}},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[1,2,3,4,5,6,7,8,9,10,11],"y":[0.708387144297586,0.64730491594057,0.572631757561694,0.572631757561694,0.572631757561694,0.550401791052288,0.550401791052288,0.550401791052288,0.550401791052288,0.550401791052288,0.550401791052288],"marker":{"fillcolor":"rgba(31,119,180,1)","color":["rgb(189,0,0)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)","rgb(49,130,189)"],"line":{"color":"transparent"}},"type":"bar","xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<strong>Figure 3.</strong> The average of silhouette scores corresponding to each value of minimal cluster size. The minimal cluster size having the highest score is highlighted in red.
+</div>
+<p>The optimal value of <strong>minPts</strong> (minimal number of samples in a cluster) is <strong>2</strong>. The corresponding clustering result of DBSCAN will be used for the rest of this analysis.</p>
+<div style="color:darkblue; padding:0 1cm">
+<strong>Table 1</strong> Summarization of clusters identified by DBSCAN using t-SNE output. Click <a href="table/dbscan_classification.txt">here</a> to download the full table of classification results.
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th align="right">Cluster_ID</th>
+<th align="right">N</th>
+<th align="right">Neighbors</th>
+<th align="right">Width_Mean</th>
+<th align="right">Width_Median</th>
+<th align="right">Width_Min</th>
+<th align="right">Width_1stQu</th>
+<th align="right">Width_3rdQu</th>
+<th align="right">Width_Max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Cluster_0</td>
+<td align="right">0</td>
+<td align="right"></td>
+<td align="right">NaN</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">Cluster_1</td>
+<td align="right">7</td>
+<td align="right">3;8</td>
+<td align="right">0.69</td>
+<td align="right">0.70</td>
+<td align="right">0.61</td>
+<td align="right">0.65</td>
+<td align="right">0.74</td>
+<td align="right">0.77</td>
+</tr>
+<tr class="odd">
+<td align="right">Cluster_2</td>
+<td align="right">19</td>
+<td align="right">1;4;8</td>
+<td align="right">0.55</td>
+<td align="right">0.61</td>
+<td align="right">0.21</td>
+<td align="right">0.47</td>
+<td align="right">0.66</td>
+<td align="right">0.70</td>
+</tr>
+<tr class="even">
+<td align="right">Cluster_3</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">0.93</td>
+<td align="right">0.94</td>
+<td align="right">0.93</td>
+<td align="right">0.93</td>
+<td align="right">0.94</td>
+<td align="right">0.94</td>
+</tr>
+<tr class="odd">
+<td align="right">Cluster_4</td>
+<td align="right">12</td>
+<td align="right">2;5;7;8</td>
+<td align="right">0.69</td>
+<td align="right">0.71</td>
+<td align="right">0.59</td>
+<td align="right">0.61</td>
+<td align="right">0.76</td>
+<td align="right">0.80</td>
+</tr>
+<tr class="even">
+<td align="right">Cluster_5</td>
+<td align="right">6</td>
+<td align="right">4</td>
+<td align="right">0.82</td>
+<td align="right">0.84</td>
+<td align="right">0.75</td>
+<td align="right">0.78</td>
+<td align="right">0.85</td>
+<td align="right">0.86</td>
+</tr>
+<tr class="odd">
+<td align="right">Cluster_6</td>
+<td align="right">9</td>
+<td align="right">5;8</td>
+<td align="right">0.83</td>
+<td align="right">0.83</td>
+<td align="right">0.76</td>
+<td align="right">0.82</td>
+<td align="right">0.85</td>
+<td align="right">0.87</td>
+</tr>
+<tr class="even">
+<td align="right">Cluster_7</td>
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">0.94</td>
+<td align="right">0.94</td>
+<td align="right">0.94</td>
+<td align="right">0.94</td>
+<td align="right">0.94</td>
+<td align="right">0.94</td>
+</tr>
+<tr class="odd">
+<td align="right">Cluster_8</td>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.93</td>
+<td align="right">0.93</td>
+<td align="right">0.93</td>
+<td align="right">0.93</td>
+<td align="right">0.93</td>
+<td align="right">0.93</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="center">
+<div id="htmlwidget-d3e828c7cf42d8164c44" style="width:600px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d3e828c7cf42d8164c44">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"ts_1","zeroline":false,"showgrid":true,"showline":true},"yaxis":{"domain":[0,1],"title":"ts_2","zeroline":false,"showgrid":true,"showline":true},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[24.9674434393529,27.912169673394,4.85305421994001,11.2062505682028,11.8024472901408,10.0722745347229,12.8672478360323],"y":[-45.937697077194,-45.7144360457185,-43.2473873476021,-38.7731571642458,-46.0005645321164,-43.4061919292506,-50.6841587413318],"mode":"marker+markers","text":["Breast_GSM133995","Breast_GSM134015","CNS_GSM134020","CNS_GSM134025","CNS_GSM134035","CNS_GSM134045","Lung_GSM134209"],"marker":{"fillcolor":"rgba(102,194,165,0.5)","color":"rgba(102,194,165,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_1","xaxis":"x","yaxis":"y"},{"x":[29.4246386839918,46.9496976908093,37.4415331569036,23.3593742569217,19.9012446220228,31.5747091519248,32.9195676445179,60.9708273379968,24.2225973677822,41.55626166747,29.4276116414515,38.701109218445,36.202772405884,58.661263689322,60.2180641912569,41.8496160053411,45.8454681371707,40.3240382044277,59.2788193098302],"y":[-16.0520814915393,-1.59064993765176,-9.37653134157819,11.0178051342648,8.72808226715729,-12.6310999840443,-2.39954333130461,11.0295544089202,15.2628491165146,9.94740419108178,6.44069005461569,-0.835398309543395,3.30943436930271,3.88644593527237,-0.199741640821912,2.52601668006468,-10.0113353129557,-3.27393941097164,6.70572545652133],"mode":"marker+markers","text":["Breast_GSM134000","Breast_GSM134010","Skin_GSM134115","Lung_GSM134165","Lung_GSM134170","Lung_GSM134175","Lung_GSM134180","Lung_GSM134185","Lung_GSM134200","Ovary_GSM134239","Prostate_GSM134254","Kidney_GSM134259","Kidney_GSM134264","Kidney_GSM134269","Kidney_GSM134274","Kidney_GSM134279","Kidney_GSM134284","Kidney_GSM134289","Kidney_GSM134294"],"marker":{"fillcolor":"rgba(252,141,98,0.5)","color":"rgba(252,141,98,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_2","xaxis":"x","yaxis":"y"},{"x":[68.5300341900493,66.2867001278408,69.4606116764628],"y":[-65.0620283501343,-66.7355908783148,-69.5657681689433],"mode":"marker+markers","text":["Breast_GSM134005","CNS_GSM134030","CNS_GSM134040"],"marker":{"fillcolor":"rgba(141,160,203,0.5)","color":"rgba(141,160,203,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_3","xaxis":"x","yaxis":"y"},{"x":[-9.28702019929306,-7.55369151904109,-0.409213052384859,-3.32004252721406,-11.8010153275301,-1.88733115352665,-5.59587042165388,2.27104568365988,11.2752454322212,3.95183622360959,1.03651653360724,6.87413048578625],"y":[46.1264011901855,41.138560092258,37.3060861245794,38.5174874679705,39.4414551844628,45.226227793192,32.2313673224978,33.2123328122573,32.9861006499255,39.1901876170315,25.931638981121,45.7417502926058],"mode":"marker+markers","text":["Colon_GSM134050","Colon_GSM134055","Colon_GSM134060","Colon_GSM134065","Colon_GSM134070","Colon_GSM134075","Colon_GSM134080","Lung_GSM134190","Lung_GSM134195","Ovary_GSM134214","Ovary_GSM134229","Prostate_GSM134249"],"marker":{"fillcolor":"rgba(231,138,195,0.5)","color":"rgba(231,138,195,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_4","xaxis":"x","yaxis":"y"},{"x":[-43.6566131408224,-44.8797183567255,-41.0579722044878,-46.3835219202629,-50.2183528789764,-40.3885780220467],"y":[38.2348362806468,43.902802896373,47.6380612941605,38.8660464902003,44.177570954866,34.500540916848],"mode":"marker+markers","text":["Blood_GSM134085","Blood_GSM134090","Blood_GSM134095","Blood_GSM134100","Blood_GSM134105","Blood_GSM134110"],"marker":{"fillcolor":"rgba(166,216,84,0.5)","color":"rgba(166,216,84,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_5","xaxis":"x","yaxis":"y"},{"x":[-73.2769571223266,-100.60725010487,-94.495113860834,-78.9631120361081,-79.7303005490307,-78.0738191737014,-92.377993008704,-97.4412390194379,-96.2525666726031],"y":[-45.5724797441649,-38.1626447242695,-29.1336941484586,-46.9648376935513,-39.7170548829266,-44.1699522417391,-37.4573267807139,-32.8803172986531,-35.3639093434388],"mode":"marker+markers","text":["Skin_GSM134120","Skin_GSM134125","Skin_GSM134130","Skin_GSM134135","Skin_GSM134140","Skin_GSM134145","Skin_GSM134150","Skin_GSM134155","Skin_GSM134160"],"marker":{"fillcolor":"rgba(255,217,47,0.5)","color":"rgba(255,217,47,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_6","xaxis":"x","yaxis":"y"},{"x":[5.62069709970073,7.04039230152373],"y":[79.6487469638615,81.9944142763134],"mode":"marker+markers","text":["Ovary_GSM134219","Ovary_GSM134224"],"marker":{"fillcolor":"rgba(229,196,148,0.5)","color":"rgba(229,196,148,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_7","xaxis":"x","yaxis":"y"},{"x":[-2.26238663818488,-4.93763278995125],"y":[-12.0553988431202,-11.8917065187733],"mode":"marker+markers","text":["Ovary_GSM134234","Ovary_GSM134244"],"marker":{"fillcolor":"rgba(179,179,179,0.5)","color":"rgba(179,179,179,1)","symbol":16,"size":6,"line":{"color":"transparent"}},"type":"scatter","name":"Cluster_8","xaxis":"x","yaxis":"y"},{"x":[24.9674434393529,27.912169673394,4.85305421994001,11.2062505682028,11.8024472901408,10.0722745347229,12.8672478360323],"y":[-45.937697077194,-45.7144360457185,-43.2473873476021,-38.7731571642458,-46.0005645321164,-43.4061919292506,-50.6841587413318],"mode":"marker","text":["Breast_GSM133995","Breast_GSM134015","CNS_GSM134020","CNS_GSM134025","CNS_GSM134035","CNS_GSM134045","Lung_GSM134209"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_1","line":{"fillcolor":"rgba(102,194,165,0.5)","color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y"},{"x":[29.4246386839918,46.9496976908093,37.4415331569036,23.3593742569217,19.9012446220228,31.5747091519248,32.9195676445179,60.9708273379968,24.2225973677822,41.55626166747,29.4276116414515,38.701109218445,36.202772405884,58.661263689322,60.2180641912569,41.8496160053411,45.8454681371707,40.3240382044277,59.2788193098302],"y":[-16.0520814915393,-1.59064993765176,-9.37653134157819,11.0178051342648,8.72808226715729,-12.6310999840443,-2.39954333130461,11.0295544089202,15.2628491165146,9.94740419108178,6.44069005461569,-0.835398309543395,3.30943436930271,3.88644593527237,-0.199741640821912,2.52601668006468,-10.0113353129557,-3.27393941097164,6.70572545652133],"mode":"marker","text":["Breast_GSM134000","Breast_GSM134010","Skin_GSM134115","Lung_GSM134165","Lung_GSM134170","Lung_GSM134175","Lung_GSM134180","Lung_GSM134185","Lung_GSM134200","Ovary_GSM134239","Prostate_GSM134254","Kidney_GSM134259","Kidney_GSM134264","Kidney_GSM134269","Kidney_GSM134274","Kidney_GSM134279","Kidney_GSM134284","Kidney_GSM134289","Kidney_GSM134294"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_2","line":{"fillcolor":"rgba(252,141,98,0.5)","color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y"},{"x":[68.5300341900493,66.2867001278408,69.4606116764628],"y":[-65.0620283501343,-66.7355908783148,-69.5657681689433],"mode":"marker","text":["Breast_GSM134005","CNS_GSM134030","CNS_GSM134040"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_3","line":{"fillcolor":"rgba(141,160,203,0.5)","color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y"},{"x":[-9.28702019929306,-7.55369151904109,-0.409213052384859,-3.32004252721406,-11.8010153275301,-1.88733115352665,-5.59587042165388,2.27104568365988,11.2752454322212,3.95183622360959,1.03651653360724,6.87413048578625],"y":[46.1264011901855,41.138560092258,37.3060861245794,38.5174874679705,39.4414551844628,45.226227793192,32.2313673224978,33.2123328122573,32.9861006499255,39.1901876170315,25.931638981121,45.7417502926058],"mode":"marker","text":["Colon_GSM134050","Colon_GSM134055","Colon_GSM134060","Colon_GSM134065","Colon_GSM134070","Colon_GSM134075","Colon_GSM134080","Lung_GSM134190","Lung_GSM134195","Ovary_GSM134214","Ovary_GSM134229","Prostate_GSM134249"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_4","line":{"fillcolor":"rgba(231,138,195,0.5)","color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y"},{"x":[-43.6566131408224,-44.8797183567255,-41.0579722044878,-46.3835219202629,-50.2183528789764,-40.3885780220467],"y":[38.2348362806468,43.902802896373,47.6380612941605,38.8660464902003,44.177570954866,34.500540916848],"mode":"marker","text":["Blood_GSM134085","Blood_GSM134090","Blood_GSM134095","Blood_GSM134100","Blood_GSM134105","Blood_GSM134110"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_5","line":{"fillcolor":"rgba(166,216,84,0.5)","color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y"},{"x":[-73.2769571223266,-100.60725010487,-94.495113860834,-78.9631120361081,-79.7303005490307,-78.0738191737014,-92.377993008704,-97.4412390194379,-96.2525666726031],"y":[-45.5724797441649,-38.1626447242695,-29.1336941484586,-46.9648376935513,-39.7170548829266,-44.1699522417391,-37.4573267807139,-32.8803172986531,-35.3639093434388],"mode":"marker","text":["Skin_GSM134120","Skin_GSM134125","Skin_GSM134130","Skin_GSM134135","Skin_GSM134140","Skin_GSM134145","Skin_GSM134150","Skin_GSM134155","Skin_GSM134160"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_6","line":{"fillcolor":"rgba(255,217,47,0.5)","color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y"},{"x":[5.62069709970073,7.04039230152373],"y":[79.6487469638615,81.9944142763134],"mode":"marker","text":["Ovary_GSM134219","Ovary_GSM134224"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_7","line":{"fillcolor":"rgba(229,196,148,0.5)","color":"rgba(229,196,148,1)"},"xaxis":"x","yaxis":"y"},{"x":[-2.26238663818488,-4.93763278995125],"y":[-12.0553988431202,-11.8917065187733],"mode":"marker","text":["Ovary_GSM134234","Ovary_GSM134244"],"marker":{"symbol":16,"size":6},"type":"histogram2dcontour","colorscale":"Greys","showscale":false,"reversescale":true,"contours":{"showlines":false},"name":"Cluster_8","line":{"fillcolor":"rgba(179,179,179,0.5)","color":"rgba(179,179,179,1)"},"xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<strong>Figure 4.</strong> Samples are clustered via DBSCAN using the results from t-SNE run with the lowest KL divergence. Samples in the same clusters have the same colors. <strong>Cluster_0</strong> is made of samples cannot be clustered.
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="cluster-feature-association" class="section level2">
+<h2><span class="header-section-number">2.3</span> Cluster-feature association</h2>
+<p>If the samples have been previously labeled with their known features, such as genotype, treatment and disease state, the agreement between these features and DBSCAN classification can be evaluated to discover potential feature-classification association.</p>
+<div style="color:darkblue; padding:0 0.5cm">
+<p><strong>Table 2</strong> Summary of cluster-feature association.</p>
+<ul>
+<li><em>Num_Group</em>: Number of sample groups according to the feature;</li>
+<li><em>Rand</em>: Rand index; <em>C_Rand</em>: corrected RAND index;</li>
+<li><em>ChiSq</em>: Chi-squared test statistics;</li>
+<li><em>P_ChiSq</em>: p value of Chi-square test;</li>
+<li><em>Count_Expected</em>: table with expected counts within each cell of the contingency table;</li>
+<li><em>Count_Observed</em>: table with observed counts within each cell of the contingency table;</li>
+<li><em>Obs/Exp</em>: table with expected vs. observed counts.</li>
+</ul>
+</div>
+<div align="center" ,="" style="padding:0 0.5cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Feature</th>
+<th align="right">Num_Group</th>
+<th align="right">Rand</th>
+<th align="right">C_Rand</th>
+<th align="right">ChiSq</th>
+<th align="right">P_ChiSq</th>
+<th align="right">Count_Expected</th>
+<th align="right">Count_Observed</th>
+<th align="right">Obs/Exp</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Organ</td>
+<td align="right">9</td>
+<td align="right">0.86</td>
+<td align="right">0.4300</td>
+<td align="right">221.6320</td>
+<td align="right">0.0001</td>
+<td align="right"><a href="table/expected_cluster2Organ.html">Table</a></td>
+<td align="right"><a href="table/observed_cluster2Organ.html">Table</a></td>
+<td align="right"><a href="table/ratio_cluster2Organ.html">Table</a></td>
+</tr>
+<tr class="even">
+<td align="left">Sex</td>
+<td align="right">3</td>
+<td align="right">0.59</td>
+<td align="right">0.0810</td>
+<td align="right">28.5367</td>
+<td align="right">0.0140</td>
+<td align="right"><a href="table/expected_cluster2Sex.html">Table</a></td>
+<td align="right"><a href="table/observed_cluster2Sex.html">Table</a></td>
+<td align="right"><a href="table/ratio_cluster2Sex.html">Table</a></td>
+</tr>
+<tr class="odd">
+<td align="left">p53_Status</td>
+<td align="right">3</td>
+<td align="right">0.52</td>
+<td align="right">-0.0046</td>
+<td align="right">14.7393</td>
+<td align="right">0.4100</td>
+<td align="right"><a href="table/expected_cluster2p53_Status.html">Table</a></td>
+<td align="right"><a href="table/observed_cluster2p53_Status.html">Table</a></td>
+<td align="right"><a href="table/ratio_cluster2p53_Status.html">Table</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="center">
+<div id="htmlwidget-bb807dc844410b551538" style="width:600px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bb807dc844410b551538">{"x":{"layout":{"margin":{"b":77.5,"l":74,"t":40,"r":10},"annotations":[{"x":0,"y":0,"text":1,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":1,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":2,"text":1,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":3,"text":8,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":4,"text":6,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":5,"text":2,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":6,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":7,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":0,"y":8,"text":1,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":0,"text":2,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":1,"text":7,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":2,"text":1,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":3,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":4,"text":2,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":5,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":6,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":7,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":1,"y":8,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":0,"text":2,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":1,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":2,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":3,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":4,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":5,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":6,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":7,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":2,"y":8,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":0,"text":2,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":1,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":2,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":3,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":4,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":5,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":6,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":7,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":3,"y":8,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":0,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":1,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":2,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":3,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":4,"text":1,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":5,"text":2,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":6,"text":4,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":7,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":4,"y":8,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":0,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":1,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":2,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":3,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":4,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":5,"text":1,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":6,"text":2,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":7,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":5,"y":8,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":0,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":1,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":2,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":3,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":4,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":5,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":6,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":7,"text":6,"xref":"x","yref":"y","showarrow":false},{"x":6,"y":8,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":0,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":1,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":2,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":3,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":4,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":5,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":6,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":7,"text":0,"xref":"x","yref":"y","showarrow":false},{"x":7,"y":8,"text":9,"xref":"x","yref":"y","showarrow":false}],"xaxis":{"domain":[0,1],"title":"","tickangle":-45,"tickmode":"array","tickvals":[0,1,2,3,4,5,6,7],"ticktext":["Cluster_2","Cluster_4","Cluster_7","Cluster_8","Cluster_1","Cluster_3","Cluster_5","Cluster_6"]},"yaxis":{"domain":[0,1],"title":"","tickangle":0,"tickmode":"array","tickvals":[0,1,2,3,4,5,6,7,8],"ticktext":["Ovary","Colon","Prostate","Kidney","Lung","Breast","CNS","Blood","Skin"]},"title":"Cluster vs. Organ","showlegend":false},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"colorbar":{"title":"","ticklen":2},"colorscale":[["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0","rgba(68,136,255,1)"],["0.0349624060150376","rgba(74,134,249,1)"],["0.114278752436647","rgba(90,128,233,1)"],["0.166666666666667","rgba(99,125,224,1)"],["0.319172932330827","rgba(128,114,195,1)"],["0.505952380952381","rgba(163,102,160,1)"],["0.674603174603173","rgba(194,90,129,1)"],["1","rgba(255,68,68,1)"]],"showscale":true,"z":[[0.451127819548872,1.42857142857143,8.57142857142857,8.57142857142857,0,0,0,0],[0,5,0,0,0,0,0,0],[1.57894736842105,2.5,0,0,0,0,0,0],[3.15789473684211,0,0,0,0,0,0,0],[2.10526315789474,1.11111111111111,0,0,0.952380952380952,0,0,0],[1.26315789473684,0,0,0,3.42857142857143,4,0,0],[0,0,0,0,5.71428571428571,6.66666666666667,0,0],[0,0,0,0,0,0,10,0],[0.315789473684211,0,0,0,0,0,0,6]],"type":"heatmap","xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<strong>Figure 5.</strong> The contingency table of the clusters and the known sample feature has the most significant association based on Chi-square test. The numbers are the counts of samples at each intersect. The colors indicate the ratios of observed over expected sample counts.
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<!-- Keep this section unchanged for all RoCA templates -->
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">3</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">3.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">3.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats4    grid      stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] flexclust_1.3-4     modeltools_0.2-21   lattice_0.20-33    
+##  [4] cluster_2.0.4       e1071_1.6-7         gplots_3.0.1       
+##  [7] dbscan_0.9-8        Rtsne_0.11          webshot_0.3.2      
+## [10] plotly_4.5.2        ggplot2_2.1.0       htmlwidgets_0.7    
+## [13] DT_0.2              awsomics_0.0.0.9000 yaml_2.1.13        
+## [16] rmarkdown_1.0       knitr_1.14          RoCA_0.0.0.9000    
+## [19] RCurl_1.95-4.8      bitops_1.0-6        devtools_1.12.0    
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.6        highr_0.6          RColorBrewer_1.1-2
+##  [4] formatR_1.4        plyr_1.8.4         class_7.3-14      
+##  [7] base64enc_0.1-3    tools_3.2.2        digest_0.6.10     
+## [10] jsonlite_1.0       evaluate_0.9       memoise_1.0.0     
+## [13] tibble_1.1         gtable_0.2.0       viridisLite_0.1.3 
+## [16] DBI_0.4-1          parallel_3.2.2     withr_1.0.2       
+## [19] stringr_1.0.0      dplyr_0.5.0        httr_1.2.1        
+## [22] caTools_1.17.1     gtools_3.5.0       R6_2.1.2          
+## [25] gdata_2.17.0       purrr_0.2.2        tidyr_0.5.1       
+## [28] magrittr_1.5       scales_0.4.0       htmltools_0.3.5   
+## [31] assertthat_0.1     colorspace_1.2-6   KernSmooth_2.23-15
+## [34] stringi_1.1.1      lazyeval_0.2.0     munsell_0.4.3</code></pre>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
