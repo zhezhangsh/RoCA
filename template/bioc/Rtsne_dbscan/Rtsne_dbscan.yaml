@@ -41,7 +41,7 @@ input:    # These are examples of different types of data saved in different typ
 # Parameters to run this analysis
 parameter:  # These are examples of different types of parameters. They will not be used for the skeleton.Rmd template for act analysis.
   Optimization:     # Parameters to run the algorithms to get the best fit results.
-    tsne: 10        # How many times to run t-SNE to get the lowest Kullback–Leibler divergence
+    tsne: 200        # How many times to run t-SNE to get the lowest Kullback–Leibler divergence
     dbscan:         # Values of the minPts parameter when runing dbscan
       min: 2
       max: 12

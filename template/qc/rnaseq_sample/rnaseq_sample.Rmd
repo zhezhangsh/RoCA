@@ -400,10 +400,10 @@ There are many ways to normalize RNA-seq data to remove systematic bias between 
 Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
 
 <div align='center'>
-```{r normalization_boxplot, fig.width=12, fig.heigth=8, out.width='900px'}
+```{r normalization_boxplot, fig.width=9, fig.heigth=8, out.width='900px'}
 col <- gray.colors(length(unique(smpl[, 1]))+1)[-1]; 
 col <- col[as.integer(factor(smpl[, 1]))]; 
-par(mfrow=c(3, 4), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
+par(mfrow=c(5, 3), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
 for (i in 1:length(norm)) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
                         axes=FALSE, col=col, lwd=.5, main=names(norm)[i], cex.main=1.5);
 title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1); 
@@ -595,13 +595,13 @@ Principal components analysis
 pca <- prcomp(t(e)); 
 fns <- sapply(colnames(smpl), function(nm) { 
   fn <- paste(path.fig, paste('pca_', nm, '.png', sep=''), sep='/');
-  png(fn, w=800, h=600); 
-  cex <- min(4, max(0.5, 64/ncol(e))); 
+  png(fn, w=1200, h=900); 
+  cex <- min(5, max(0.5, 256/ncol(e))); 
   col <- rainbow(length(unique(smpl[, nm]))); 
   col[col=='#FFFF00FF'] <- '#EEEE00FF'; 
   col <- sub('FF$', 'DD', col); 
   names(col) <- unique(smpl[, nm]); 
-  col <- col[smpl[, nm]]; 
+  col <- col[as.character(smpl[, nm])]; 
   PlotPCA(pca, groups=rownames(smpl), new.window = FALSE, cex=cex, col=col, label=1:nrow(smpl), legend=TRUE, legend.single = TRUE); 
   if (dev.cur()!=1) dev.off(); 
   fn; 

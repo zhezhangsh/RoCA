@@ -1,0 +1,429 @@
+---
+title: "tSNE-DBSCAN classification"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+This analysis performs sample classification using high-dimension data. It includes two main steps: 
+
+**The first step** uses the **t-SNE** (t-Distributed Stochastic Neighbor Embedding) to create a 2D or 3D-map from  high dimensional data. The Barnes-Hut version of t-SNE is used to reduce computing time, so it can be run for multiple times. The result of t-SNE run having the lowest Kullback–Leibler (KL) divergence will be used for the next step. 
+
+**The second step** uses the **DBSCAN** method to cluster samples using the t-SNE result from the last step. The two key parameters of DBSCAN, _epsilon neighborhood_ and _minimum cluster size_ are adjusted based on silhouette score to obtain optimal classification.
+
+Additionally, the result of unsupervised clustering is compared to any known sample features to evaluate their association.
+
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'Rtsne_dbscan.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'plotly', 'RoCA', 'awsomics', 'webshot', 
+                   'Rtsne', 'dbscan', 'gplots', 'e1071'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 'path.tsne'='tsne'); 
+
+knitr::opts_chunk$set(dpi=300, dev=c('png'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+		yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## URL to project home
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+```{r load_data, include=FALSE}
+d <- as.matrix(ImportTable(DownloadFile(yml$input$matrix, path.input))); 
+g <- ImportTable(DownloadFile(yml$input$group, path.input)); 
+saveRDS(list(data=d, group=g), paste(path.input, 'input.rds', sep='/')); 
+```
+
+`r home.url`
+
+# Results
+
+## t-SNE
+
+```{r tsne_desc, include=FALSE}
+if (!prms$Rtsne$pca) ln1 <- 'No initial PCA is run to reduce dimension;' else
+  ln1 <- paste("Run an initial PCA to reduce the number of features to **",  prms$Rtsne$initial_dims, '**;', sep='');
+```
+
+**t-SNE** (t-Distributed Stochas- tic Neighbor Embedding) is a method of feature reduction that maps high-dimentional data to a 2- or 3-dimensional space. This analysis utilizes the Barnes-Hut version on a data matrix with **`r nrow(d)`** samples and **`r ncol(d)`** features. The method is implemented by the _Rtsne {Rtsne}_ R function. 
+
+On a t-SNE space, the similarities between samples is measured by their overall KL (Kullback–Leibler) divergence. An optimal t-SNE run should have relatively lower KL divergence. Each t-SNE run of this analysis involves the following sub-steps:
+
+  - `r ln1`
+  - Calculate the euclidean distance between any two samples to get a similarity score;
+  - The distance of each sample to **`r prms$Rtsne$perplexity`** nearest neighbors is fit to a _Cauchy_ distribution, on a **`r prms$Rtsne$dims`**-dimensional space;
+  - The _Barnes-Hut_ approximation is used to reduce computational complexity, with **theta = `r prms$Rtsne$theta`**;
+  - The position of samples on the low dimensional space is adjusted for up to **`r prms$Rtsne$max_iter`** iterations to lower overall KL divergence. 
+  
+The steps above are re-run for **`r prms$Optimization$tsne`** times, and output from the run with the lowest KL divergence is the final result of t-SNE.
+
+```{r run_tsne, include=FALSE}
+n <- yml$parameter$Optimization$tsne; # Number of repeated runs to obtain best KL distance
+p <- yml$parameter$Rtsne;     # Function parameters
+m <- max(1, min(floor(nrow(d)/3), p$perplexity));            # Number of neighbors
+e <- max(2, min(3, p$dims));    # Output dimensionality (2 or 3)
+s <- max(2, min(ncol(d), p$initial_dims)); # number of dimensions in the initial PCA step (default: 50)
+h <- max(0, min(1, p$theta)); # Speed/accuracy trade-off (higher=less accuracy, 0 for exact TSNE) (default: 0.5)
+
+# Run tSNE multiple times and save results
+fns <- paste(path.tsne, '/ts_', 1:n, '.rds', sep='');
+ts <- lapply(1:n, function(i) Rtsne(d, dims = e, initial_dims = s, perplexity = m, theta = h, pca = p$pca, max_iter = p$max_iter)); 
+saveRDS(ts, paste(path.r, 'tsne_runs.rds', sep='/')); 
+```
+
+```{r kl_divergence, include=FALSE}
+kl <- sapply(ts, function(x) x$itercosts); 
+i0 <- which(kl[nrow(kl), ]==min(kl[nrow(kl), ])); 
+i1 <- which(kl[nrow(kl), ]==max(kl[nrow(kl), ])); 
+
+t0 <- ts[[i0]]$Y; 
+t1 <- ts[[i1]]$Y; 
+
+colnames(kl) <- paste('Run', 1:ncol(kl)); 
+write.table(round(t(kl), 4), paste(path.tbl, 'kl_divergence.txt', sep='/'), quote = FALSE, col.names = FALSE, sep='\t'); 
+```
+
+```{r plot_parameter, include=FALSE}
+sz <- ceiling(max(50/ceiling(log(nrow(d))), 2)); 
+mk <- list(symbol=16, size=sz); 
+xa <- list(title='ts_1', zeroline=FALSE, showgrid=TRUE, showline=TRUE);
+ya <- list(title='ts_2', zeroline=FALSE, showgrid=TRUE, showline=TRUE);
+za <- list(title='ts_3', zeroline=FALSE, showgrid=TRUE, showline=TRUE);
+mr <- list(t=40);
+if (ncol(g)>0) {
+  cl <- g[[1]];
+  w1 <- 6;
+  w2 <- '600px';
+} else {
+  cl <- NULL;
+  w1 <- 4.8;
+  w2 <- '480px';
+} 
+```
+
+<div align='center'> 
+```{r kl_hist, include=TRUE, fig.width=6, fig.height=4, out.width='600px', out.height='400px'}
+plot_ly(x=kl[nrow(kl), ], type='histogram') %>%
+  layout(xaxis=list(title='KL divergence'), yaxis=list(title='Number of runs'))
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 1.** The t-SNE program is run repeatedly for `r n` times, and the final _Kullback-Leibler_ divergence, or total cost, of the map generated by all runs is summarized in this figure. Click [here](table/kl_divergence.txt) to download the full table of KL divergence.
+</div>
+
+<div align='center'> 
+```{r kl_highest, include=TRUE, fig.width=w1, fig.height=4.8, out.width=w2, out.height='480px'}
+ttl <- paste(paste("Highest KL divergence:", round(kl[nrow(kl), i1], 4)), paste('Run', i1), sep='; ');
+if (ncol(t0) == 2) {
+  plot_ly(x=t1[, 1], y=t1[, 2], type='scatter', mode='marker', text=rownames(d), marker=mk, color=cl) %>%
+    layout(xaxis=xa, yaxis=ya, margin=mr, title=ttl);
+} else {
+  plot_ly(x = t1[, 1], y = t1[, 2], z = t1[, 3], text=rownames(d), marker=mk, color=cl) %>%
+    layout(scene = list(xaxis=xa, yaxis=ya, zaxis=za), margin=mr, title=ttl);
+}
+```
+
+```{r kl_lowest, include=TRUE, fig.width=w1, fig.height=4.8, out.width=w2, out.height='480px'}
+ttl <- paste(paste("Lowest KL divergence:", round(kl[nrow(kl), i0], 4)), paste('Run', i0), sep='; ');
+if (ncol(t0) == 2) {
+  plot_ly(x=t0[, 1], y=t0[, 2], type='scatter', mode='marker', text=rownames(d), marker=mk, color=cl) %>%
+    layout(xaxis=xa, yaxis=ya, margin=mr, title=ttl);
+} else {
+  plot_ly(x = t0[, 1], y = t0[, 2], z = t0[, 3], text=rownames(d), marker=mk, color=cl) %>%
+    layout(scene = list(xaxis=xa, yaxis=ya, zaxis=za), margin=mr, title=ttl);
+}
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 2.** t-SNE runs with the highest and the lowest KL divergence. The run with the lowest KL divergence is picked as the final t-SNE results and input to DBSCAN classification.
+</div>
+
+`r home.url`
+
+## DBSCAN
+
+**DBSCAN** (Density-based spatial clustering of applications with noise) is a sample clustering method based on the density of sample on a multi-dimensional space. This analysis uses the _dbscan {dbscan}_ R implementation of this method. Its input is the result of t-SNE run with the lowest KL divergence and its output is evaluated by the silhouette score of clustered samples. Each DBSCAN run requires the following parameters:
+
+  - **eps** (required): size of the epsilon neighborhood. This analysis uses a iterative procedure to identify the **eps** value maximizing the silhouette score of clustered samples. 
+  - **minPts** (required): minimal number of core points (samples) to form a cluster. This analysis tests the **minPts** value from **`r prms$Optimization$dbscan$min`** to **`r prms$Optimization$dbscan$max`** to identify the optimal **eps/minPts** combination with the highest silhouette score.
+  - **search**: nearest neighbor search strategy = "**`r prms$dbscan$search`**".
+  - **bucketSize**: max size of the kd-tree leafs = **`r prms$dbscan$bucketSize`**.
+  - **splitRule** rule to split the kd-tree = "**`r prms$dbscan$splitRule`**".
+  - **approx**: relative error bound for approximate nearest neighbor searching = **`r prms$dbscan$approx`**.
+
+```{r dbscan, include=FALSE}
+ts <- ts[[i0]]$Y; 
+p  <- yml$parameter$dbscan; 
+
+mn <- yml$parameter$Optimization$dbscan$min;
+mx <- yml$parameter$Optimization$dbscan$max;
+pt <- mn:mx;
+
+db <- lapply(pt, function(i) OptimizeDBSCAN(ts, minPts = i, search = p$search, bucketSize = p$bucketSize,
+                                            splitRule = p$splitRule, approx = p$approx));
+names(db) <- pt; 
+saveRDS(db, paste(path.r, 'dbscan.rds', sep='/')); 
+
+sc <- sapply(db, function(db) {
+  s <- silhouette(db$cluster, dist(ts)); 
+  if (identical(NA, s)) 0 else mean(s[, 3]); 
+}); 
+db <- db[sc==max(sc)][[1]]; 
+cl <- db$cluster;
+c0 <- paste('Cluster', sort(unique(cl)), sep='_'); 
+
+sil <- silhouette(cl, dist(ts)); 
+sil <- cbind(cluster=sil[, 1], neighbor=sil[, 2], score=sil[, 3]);
+
+rownames(sil) <- rownames(d); 
+colnames(ts)  <- paste('ts', 1:ncol(ts), sep='_'); 
+res <- cbind(sil, ts); 
+write.table(data.frame(id=rownames(res), res, stringsAsFactors = FALSE), row.names = FALSE,
+            paste(path.tbl, 'dbscan_classification.txt', sep='/'), quote = FALSE, sep = '\t');
+
+c <- sil[, 1]; 
+x <- max(res[, 1]); 
+n <- sapply(0:x, function(i) length(c[c==i])); 
+s <- sapply(0:x, function(i) res[c==i, 3]); 
+b <- sapply(0:x, function(i) paste(sort(unique(res[res[, 1]==i, 2])), collapse=';')); 
+
+smm <- sapply(s, summary); 
+smm <- t(smm); 
+colnames(smm) <- paste('Width', colnames(smm), sep='_'); 
+colnames(smm) <- gsub('[ \\.]', '', colnames(smm)); 
+tbl <- data.frame(Cluster_ID=paste('Cluster', 0:max(res[, 1]), sep='_'), N = n, Neighbors = b,
+                  smm[, c(4, 3, 1, 2, 5, 6)], stringsAsFactors = FALSE); 
+tbl <- FormatNumeric(tbl); 
+```
+
+<div align='center'> 
+```{r silhouette, echo=FALSE, include=TRUE, fig.width=6, fig.height=4, out.width='600px', out.height='400px'}
+cl <- rep("rgb(49,130,189)", length(pt)); 
+cl[sc==max(sc)] <- "rgb(189,0,0)";
+
+plot_ly(x=1:length(sc), y=sc, type='bar', marker=list(color=cl)) %>% 
+  layout(xaxis=list(title='Minimum cluster size', tickvals = 1:length(sc), ticktext = as.character(pt)), 
+         yaxis=list(title='Silhouette score'));
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 3.** The average of silhouette scores corresponding to each value of minimal cluster size. The minimal cluster size having the highest score is highlighted in red. 
+</div>
+
+The optimal value of **minPts** (minimal number of samples in a cluster) is **`r db$minPts`**. The corresponding clustering result of DBSCAN will be used for the rest of this analysis. 
+
+<div style="color:darkblue; padding:0 1cm">
+**Table 1** Summarization of clusters identified by DBSCAN using t-SNE output. Click [here](table/dbscan_classification.txt) to download the full table of classification results.
+</div>
+
+<div align='center', style="padding:0 1cm"> 
+`r kable(tbl, row.names=FALSE, align=rep('r', ncol(tbl)))`
+</div>
+
+<div align='center'> 
+```{r tsne_classified, include=TRUE, fig.width=6, fig.height=4.8, out.width='600px', out.height='480px'}
+cl <- paste('Cluster', res[, 1], sep='_'); 
+if (ncol(ts) == 2) {
+  plot_ly(x=ts[, 1], y=ts[, 2], type='scatter', mode='marker', text=rownames(d), marker=mk, color=cl) %>%
+    add_trace(x=ts[, 1], y=ts[, 2], type='histogram2dcontour', colorscale='Greys', showscale=FALSE, 
+              reversescale=TRUE, contours=list(showlines=FALSE)) %>%
+    layout(xaxis=xa, yaxis=ya);
+} else {
+  plot_ly(x = ts[, 1], y = ts[, 2], z = ts[, 3], text=rownames(d), marker=mk, color=cl) %>%
+    layout(scene = list(xaxis=xa, yaxis=ya, zaxis=za));
+}
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 4.** Samples are clustered via DBSCAN using the results from t-SNE run with the lowest KL divergence. Samples in the same clusters have the same colors. **Cluster_0** is made of samples cannot be clustered. 
+</div>
+
+`r home.url`
+
+## Cluster-feature association
+
+If the samples have been previously labeled with their known features, such as genotype, treatment and disease state, the agreement between these features and DBSCAN classification can be evaluated to discover potential feature-classification association. 
+
+```{r association, include=FALSE}
+if (!identical(NA, g) & !identical(NULL, g) & ncol(g)>0) {
+  asso <- lapply(colnames(g), function(nm) CrossClass(cl, g[, nm]));
+  names(asso) <- colnames(g); 
+  exp <- lapply(asso, function(x) x$expected[, c0]); 
+  obs <- lapply(asso, function(x) x$observed[, c0]); 
+  rat <- lapply(asso, function(x) (x$observed/x$expected)[, c0]); 
+  
+  fn1 <- sapply(names(exp), function(nm) {
+    f <- paste('expected_cluster2', nm, '.html', sep=''); 
+    CreateDatatable(FormatNumeric(exp[[nm]]), paste(path.tbl, f, sep='/'), caption=paste('Cluster', nm, sep=' vs. '));
+    paste('[Table](', paste('table', f, sep='/'), ')', sep='');
+  }); 
+  fn2 <- sapply(names(obs), function(nm) {
+    f <- paste('observed_cluster2', nm, '.html', sep=''); 
+    CreateDatatable(FormatNumeric(obs[[nm]]), paste(path.tbl, f, sep='/'), caption=paste('Cluster', nm, sep=' vs. '));
+    paste('[Table](', paste('table', f, sep='/'), ')', sep='');
+  }); 
+  fn3 <- sapply(names(rat), function(nm) {
+    f <- paste('ratio_cluster2', nm, '.html', sep=''); 
+    CreateDatatable(FormatNumeric(rat[[nm]]), paste(path.tbl, f, sep='/'), caption=paste('Cluster', nm, sep=' vs. '));
+    paste('[Table](', paste('table', f, sep='/'), ')', sep='');
+  }); 
+  
+  tbl <- cbind(sapply(obs, nrow), sapply(asso, function(x) x$stats$rand), sapply(asso, function(x) x$stats$crand), 
+               sapply(asso, function(x) x$chisq$statistic), sapply(asso, function(x) x$chisq$p.value));
+  tbl <- FormatNumeric(data.frame(names(asso), tbl, stringsAsFactors = FALSE)); 
+  tbl <- cbind(tbl, fn1, fn2, fn3); 
+  colnames(tbl) <- c('Feature', 'Num_Group', 'Rand', 'C_Rand', 'ChiSq', 'P_ChiSq', 
+                     'Count_Expected', 'Count_Observed', 'Obs/Exp'); 
+  
+  ps <- lapply(1:nrow(tbl), function(i) { 
+    b <- rat[[i]]; 
+    c <- obs[[i]]; 
+    n <- rowSums(c); 
+    b <- b[n>=(0.1*sum(c)/nrow(c)), , drop=FALSE]; 
+    c <- c[n>=(0.1*sum(c)/nrow(c)), , drop=FALSE]; 
+   
+    r1 <- cor(b); 
+    r2 <- cor(t(b)); 
+    r1[is.na(r1)] <- 0;
+    r2[is.na(r2)] <- 0; 
+    j <- hclust(as.dist(1-r1))$order;
+    k <- hclust(as.dist(1-r2))$order; 
+    b <- b[k, j];
+    c <- c[k, j]; 
+    x <- rep(1:ncol(c), each=nrow(c))-1;
+    y <- rep(1:nrow(c), ncol(c))-1;
+    a <- list(x=x, y=y, text=as.vector(c), xref='x', yref='y', showarrow=FALSE); 
+    
+    xa <- list(title='', tickangle = -45, tickmode = 'array', tickvals = (1:ncol(c))-1, ticktext = colnames(c));
+    ya <- list(title='', tickangle = 0,   tickmode = 'array', tickvals = (1:nrow(c))-1, ticktext = rownames(c));
+    mr <- list(t = 40, l = 10+8*max(nchar(rownames(c))), b = 10+7.5*max(nchar(colnames(c))));
+    tt <- paste('Cluster', rownames(tbl)[i], sep=' vs. ');
+    
+    p <- plot_ly(z=b, colors=colorpanel(128, '#4488FF', '#FF4444')) %>% 
+      layout(annotations=a, xaxis=xa, yaxis=ya, margin=mr, title=tt); 
+  });
+  names(ps) <- rownames(tbl); 
+
+  res <- list(expected=exp, observed=obs, ratio=rat, plot=ps); 
+  saveRDS(res, paste(path.fig, 'result_association.rds', sep='/'));
+  
+  ln <- '';
+} else {
+  ln <- '**No known sample feature is available. Ignore the rest of this section.**';
+  ps <- list();
+  tbl <- NULL; 
+}
+```
+
+`r ln`
+
+<div style="color:darkblue; padding:0 0.5cm">
+**Table 2** Summary of cluster-feature association.
+
+ - _Num_Group_: Number of sample groups according to the feature; 
+ - _Rand_: Rand index; _C_Rand_: corrected RAND index; 
+ - _ChiSq_: Chi-squared test statistics; 
+ - _P_ChiSq_: p value of Chi-square test; 
+ - _Count_Expected_: table with expected counts within each cell of the contingency table;
+ - _Count_Observed_: table with observed counts within each cell of the contingency table; 
+ - _Obs/Exp_: table with expected vs. observed counts.
+</div>
+
+<div align='center', style="padding:0 0.5cm"> 
+`r if (!identical(NULL, tbl)) knitr::kable(tbl, row.names=FALSE, align=c('l', rep('r', ncol(tbl)-1)))`
+</div>
+
+<div align='center'>
+```{r plot_heatmap, echo=FALSE, include=TRUE, width=6, height=4.8, out.width='600px', out.height='480px'}
+if (length(ps)>0) ps[tbl$P_ChiSq==min(tbl$P_ChiSq)][[1]] else plotly_empty();
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 5.** The contingency table of the clusters and the known sample feature has the most significant association based on Chi-square test. The numbers are the counts of samples at each intersect. The colors indicate the ratios of observed over expected sample counts.
+</div>
+
+`r home.url`
+
+***
+
+<!-- Keep this section unchanged for all RoCA templates -->
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_
