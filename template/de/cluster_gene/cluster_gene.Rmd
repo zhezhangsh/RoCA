@@ -312,7 +312,7 @@ while(flag) {
 
 # Sort clusters
 m<-sapply(cl, function(cl) colMeans(expr[cl,  , drop=FALSE])); 
-ind<-apply(m, 2, function(x) which(x==max(x)));  
+ind<-apply(m, 2, function(x) which(x==max(x))[1]);  
 cl<-cl[order(ind)]; 
 names(cl)<-paste('Cluster', 1:length(cl), sep='_'); 
 
