@@ -472,6 +472,7 @@ write.csv(ora.tbl, paste(path.tbl, 'ora_stat.csv', sep='/'));
 
 gset.src<-sort(unique(gset[[1]][, 'Source'])); 
 ora.s<-c(ora.stat[[1]], ora.stat[[2]]); 
+names(ora.s) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep=', '); 
 fn.tbl<-lapply(names(ora.s), function(nm) {
   s<-ora.s[[nm]]; 
   lapply(gset.src, function(src) {
@@ -491,7 +492,7 @@ lnk<-sapply(fn.tbl, function(fn) {
   f<-sapply(fn, names); 
   paste('[', c, '](', f, ')', sep='');
 });
-colnames(lnk) <- paste(rep(comp, each=2), paste('Higher_in_', unlist(grp), sep=''), sep=', '); 
+colnames(lnk) <- names(ora.s);  
 rownames(lnk) <- gset.src;
 ```
 
