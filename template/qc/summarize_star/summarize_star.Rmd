@@ -163,7 +163,7 @@ nms<-rownames(stat);
 ```
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click here to see the summary statistics of individual libraries.
+**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click [here](`paste(path.tbl, 'percent_mapped.html', sep='/')`) to see the summary statistics of individual libraries.
 </div>
 
 <div align='center', style="padding:0 2cm">
