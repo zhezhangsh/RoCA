@@ -162,8 +162,10 @@ if (length(na[na]) > 0) {
 smm <- lapply(out, function(x) x$summary); 
 
 wth <- lapply(1:length(out), function(i) rep(!na[i], nrow(out[[i]][[1]]))); 
-grp<-rep(names(smm), sapply(smm, nrow)); 
-smm<-data.frame(Group=grp, do.call('rbind', smm), Within=unlist(wth, use.names=FALSE), stringsAsFactors = FALSE); 
+grp <- rep(names(smm), sapply(smm, nrow)); 
+rnm <- lapply(smm, function(smm) smm[[1]]); 
+smm <- data.frame(Group=grp, do.call('rbind', smm), Within=unlist(wth, use.names=FALSE), stringsAsFactors = FALSE); 
+rownames(smm) <- unlist(rnm, use.names=FALSE);
 fn.stat<-CreateDatatable(smm, paste(yml$output, 'stat_table.html', sep='/'), rownames = FALSE); 
 
 outliers<-smm[smm$Outlier, , drop=FALSE]; 
