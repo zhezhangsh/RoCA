@@ -302,6 +302,7 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
     dff<-d1[[i]]-rowMeans(d0[[i]]);
     nsd<-dff/apply(d0[[i]], 1, sd);
     deg<-dff[abs(nsd)>=abs(prms$difference$nsd)];
+    deg <- deg[!is.na(deg)];
     deg<-list(hi=deg[deg>0], lo=deg[deg<0]);
     deg<-lapply(deg, function(d) d[rev(order(abs(d)))]);
     deg<-lapply(deg, function(d) {
