@@ -21,7 +21,7 @@ output:
 
 ```{r global_setup, include=FALSE}
 name.yaml <- 'summarize_star.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets'); 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'pander'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
 ## Default knitr parameters
@@ -63,24 +63,19 @@ home.url <- Link2Home(yml$home);
 
 # STAR options
 
-```{r star_options, include=FALSE}
-prms <- yml$parameter;
-lns <- sapply(names(prms), function(nm) {
-  x <- prms[[nm]];
-  if (class(x) != 'list') paste('  - **', nm, '**: ', as.vector(x), sep='') else {
-    l0 <- paste('  - **', nm, '**:', sep='');
-    y <- prms[[nm]];
-    l <- sapply(names(y), function(nm) paste('    - **', nm, '**: ', as.vector(y[[nm]]), sep=''));
-    l <- paste(l, collapse='\n');
-    paste(l0, l, sep='\n');
-  }
-})
-lns <- paste(lns, collapse='\n'); 
+```{r star_options, included=FALSE}
+pr <- function(lst) {
+  lapply(names(lst), function(nm) {
+    v <- lst[[nm]]; 
+    if (class(v)=='list') pr(v) else paste('**', nm, '**: ', v, sep='');
+  });
+}
+prms.print <- pr(prms); 
 ```
 
 STAR was run using the following options:
 
-`r lns`
+`r pandoc.list.return(prms.print)`
 
 `r home.url`
 
@@ -168,7 +163,7 @@ nms<-rownames(stat);
 ```
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click here to see the summary statistics of individual libraries.
+**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click [here](`paste(path.tbl, 'percent_mapped.html', sep='/')`) to see the summary statistics of individual libraries.
 </div>
 
 <div align='center', style="padding:0 2cm">

@@ -11,25 +11,24 @@
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2016-06-07" />
+<meta name="date" content="2017-03-09" />
 
 <title>Summary of STAR alignment</title>
 
 <script src="index_files/jquery-1.11.3/jquery.min.js"></script>
-<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="index_files/highlight/default.css"
-      type="text/css" />
-<script src="index_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -100,10 +99,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="index_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -129,7 +128,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
@@ -153,6 +152,7 @@ $(document).ready(function ()  {
   width: 100%;
 }
 }
+
 
 .toc-content {
   padding-left: 30px;
@@ -187,8 +187,9 @@ div.tocify {
 }
 
 .tocify-subheader .tocify-item {
-  font-size: 0.9em;
-  padding-left: 5px;
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -200,7 +201,6 @@ div.tocify {
 }
 .tocify-subheader .tocify-item {
   font-size: 0.95em;
-  padding-left: 10px;
 }
 
 </style>
@@ -223,7 +223,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Summary of STAR alignment</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2016-06-07</em></h4>
+<h4 class="date"><em>2017-03-09</em></h4>
 
 </div>
 
@@ -256,8 +256,7 @@ div.tocify {
 <li><strong>program</strong>: STAR-STAR_2.4.1c/bin/Linux_x86_64_static/STAR</li>
 <li><strong>output</strong>: star/pass_2</li>
 <li><strong>genome</strong>: refs/hg38/star</li>
-<li><strong>transcriptome</strong>: refs/hg38/genes.gtf</li>
-<li><strong>star</strong>:
+<li><strong>transcriptome</strong>: refs/hg38/genes.gtf
 <ul>
 <li><strong>runThreadN</strong>: 8</li>
 <li><strong>readFilesCommand</strong>: zcat</li>
@@ -274,6 +273,7 @@ div.tocify {
 <li><strong>alignMatesGapMax</strong>: 1000000</li>
 </ul></li>
 </ul>
+<!-- end of list -->
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -281,13 +281,13 @@ div.tocify {
 <div id="summary-statistics" class="section level1">
 <h1><span class="header-section-number">3</span> Summary statistics</h1>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Table 1.</strong> Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click here to see the summary statistics of individual libraries.
+<p><strong>Table 1.</strong> Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click <a href="%60paste(path.tbl,%20&#39;percent_mapped.html&#39;,%20sep=&#39;/&#39;)%60">here</a> to see the summary statistics of individual libraries.</p>
 </div>
 <div align="center" ,="" style="padding:0 2cm">
 <table>
 <thead>
 <tr class="header">
-<th align="left"></th>
+<th></th>
 <th align="right">Min.</th>
 <th align="right">1st Qu.</th>
 <th align="right">Median</th>
@@ -298,7 +298,7 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Total input, million reads</td>
+<td>Total input, million reads</td>
 <td align="right">30.74</td>
 <td align="right">32.7000</td>
 <td align="right">34.480</td>
@@ -307,7 +307,7 @@ div.tocify {
 <td align="right">44.52</td>
 </tr>
 <tr class="even">
-<td align="left">Alignment rate (%), unique mapping</td>
+<td>Alignment rate (%), unique mapping</td>
 <td align="right">80.45</td>
 <td align="right">82.9800</td>
 <td align="right">83.600</td>
@@ -316,7 +316,7 @@ div.tocify {
 <td align="right">88.79</td>
 </tr>
 <tr class="odd">
-<td align="left">Alignment rate (%), unique + multiple</td>
+<td>Alignment rate (%), unique + multiple</td>
 <td align="right">92.64</td>
 <td align="right">93.3500</td>
 <td align="right">93.640</td>
@@ -325,7 +325,7 @@ div.tocify {
 <td align="right">94.52</td>
 </tr>
 <tr class="even">
-<td align="left">Mismatch rate (%)</td>
+<td>Mismatch rate (%)</td>
 <td align="right">0.27</td>
 <td align="right">0.2800</td>
 <td align="right">0.295</td>
@@ -334,7 +334,7 @@ div.tocify {
 <td align="right">0.33</td>
 </tr>
 <tr class="odd">
-<td align="left">Deletion rate (%)</td>
+<td>Deletion rate (%)</td>
 <td align="right">0.02</td>
 <td align="right">0.0200</td>
 <td align="right">0.020</td>
@@ -343,7 +343,7 @@ div.tocify {
 <td align="right">0.02</td>
 </tr>
 <tr class="even">
-<td align="left">Insertion rate (%)</td>
+<td>Insertion rate (%)</td>
 <td align="right">0.01</td>
 <td align="right">0.0100</td>
 <td align="right">0.010</td>
@@ -352,7 +352,7 @@ div.tocify {
 <td align="right">0.01</td>
 </tr>
 <tr class="odd">
-<td align="left">Too many loci (%)</td>
+<td>Too many loci (%)</td>
 <td align="right">0.05</td>
 <td align="right">0.0675</td>
 <td align="right">0.110</td>
@@ -361,7 +361,7 @@ div.tocify {
 <td align="right">0.15</td>
 </tr>
 <tr class="even">
-<td align="left">Too many mismatch (%)</td>
+<td>Too many mismatch (%)</td>
 <td align="right">0.09</td>
 <td align="right">0.1000</td>
 <td align="right">0.110</td>
@@ -370,7 +370,7 @@ div.tocify {
 <td align="right">0.14</td>
 </tr>
 <tr class="odd">
-<td align="left">Too short (%)</td>
+<td>Too short (%)</td>
 <td align="right">5.23</td>
 <td align="right">5.7850</td>
 <td align="right">6.055</td>
@@ -386,40 +386,40 @@ div.tocify {
 <p>In most RNA-seq data sets, the percentage of total input reads that can be aligned to reference genome/transcriptome could range between 50% and 90%. Alignment rate is an important quality index of RNA-seq library and high throughput sequencing. However, it also highly depends on the experimental material and protocol, so it is hard to have a predefined cutoff of “high” alignment rate for all data sets. On the other hand, the consistence of alignment rates between samples of the same data set is at least equally important. Inconsistency of alignment rates is usually the consequence of systematic bias during the whole experimental procedure. It adds unwanted between-sample variance into data and might have profound impact on statistic analysis, such as differential gene expression. Therefore, the focus of this analysis is whether there are libraries having much lower alignment rates than the others.</p>
 <p>The rate of unique vs. multiple alignment is a similar index of data quality. High percent of multiple alignment might indicate low complexity of sequence reads, higher sequencing error rate, and other issues. This analysis also evaluates the consistency of unique vs. multiple alignment between samples.</p>
 <div align="center">
-<img src="figure/alignment_rate-1.png" title="plot of chunk alignment_rate" alt="plot of chunk alignment_rate" width="800px" />
+<p><img src="index_files/figure-html/alignment_rate-1.png" width="800px" /></p>
 </div>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Figure 1.</strong> The global alignment rate (left) and the rate of unique vs. multiple alignment (right). Each spot represents a RNA-seq library and is colored based on number of sigma. For each library, a linear model is built with all the other libraries and the value of sigma (variance of random error) is obtained from the model. The number of sigma is then calculated by dividing the observed-predicted difference of that library with the sigma value.
+<p><strong>Figure 1.</strong> The global alignment rate (left) and the rate of unique vs. multiple alignment (right). Each spot represents a RNA-seq library and is colored based on number of sigma. For each library, a linear model is built with all the other libraries and the value of sigma (variance of random error) is obtained from the model. The number of sigma is then calculated by dividing the observed-predicted difference of that library with the sigma value.</p>
 </div>
 </div>
 <div id="non-canonical-splice-sites" class="section level2">
 <h2><span class="header-section-number">3.2</span> Non-canonical splice sites</h2>
 <p>An important aspect of processing RNA-seq data is to alignment sequence reads to splicing sites, called gap alignment. Most commonly, STAR performs gap alignment first by using the known splicing sites based on the reference transcriptome and then by detecting novel splicing sites based on the reference genome. Most splicing sites have canonical donor/acceptor bases, such as GT/AG. While non-canonical splicing sites have been observed, they are relatively rare and often suggestive of false positives.</p>
 <div align="center">
-<img src="figure/splice_site-1.png" title="plot of chunk splice_site" alt="plot of chunk splice_site" width="400px" />
+<p><img src="index_files/figure-html/splice_site-1.png" width="400px" /></p>
 </div>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Figure 2.</strong> The total number of reads gap-aligned reads and the number of gap-aligned with non-canonical splicing sites are fitted to linear models as in <strong>Figure 1</strong>. On average of all samples in this data set, 1.128% of all gap-aligned reads have non-canonical splicing sites.
+<p><strong>Figure 2.</strong> The total number of reads gap-aligned reads and the number of gap-aligned with non-canonical splicing sites are fitted to linear models as in <strong>Figure 1</strong>. On average of all samples in this data set, 1.128% of all gap-aligned reads have non-canonical splicing sites.</p>
 </div>
 </div>
 <div id="mismatches-and-indels" class="section level2">
 <h2><span class="header-section-number">3.3</span> Mismatches and INDELs</h2>
 <p>STAR alignment reports the frequency of mismatch, deletion, and insertion bases. The consistency of these statistics should also be evaluated.</p>
 <div align="center">
-<img src="figure/mismatch_indel-1.png" title="plot of chunk mismatch_indel" alt="plot of chunk mismatch_indel" width="600px" />
+<p><img src="index_files/figure-html/mismatch_indel-1.png" width="600px" /></p>
 </div>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Figure 3.</strong> Distribution of insertion/deletion/mismatch frequency in all samples.
+<p><strong>Figure 3.</strong> Distribution of insertion/deletion/mismatch frequency in all samples.</p>
 </div>
 </div>
 <div id="unmapped-reads" class="section level2">
 <h2><span class="header-section-number">3.4</span> Unmapped reads</h2>
 <p>STAR alignment also reports the percent of unmapped reads due to different reasons, including too many mismatches, too short, and other. Additionally, it reports to percent of reads that were mapped, but to too many loci. Again, the focus here is the consistency of these percents between samples.</p>
 <div align="center">
-<img src="figure/unmapped-1.png" title="plot of chunk unmapped" alt="plot of chunk unmapped" width="800px" />
+<p><img src="index_files/figure-html/unmapped-1.png" width="800px" /></p>
 </div>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Figure 4.</strong> Distribution of the frequency of poorly aligned reads due to different reasons. The frequency is relative to all mapped reads in the first plot, and relative to all unmapped reads in the others.
+<p><strong>Figure 4.</strong> Distribution of the frequency of poorly aligned reads due to different reasons. The frequency is relative to all mapped reads in the first plot, and relative to all unmapped reads in the others.</p>
 </div>
 </div>
 <div id="alerts" class="section level2">
@@ -495,24 +495,37 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## [1] stats4    grid      stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] htmlwidgets_0.5      DT_0.1               GtUtility_0.0.0.9000
-##  [4] gplots_3.0.1         awsomics_0.0.0.9000  yaml_2.1.13         
-##  [7] rmarkdown_0.9.6      knitr_1.12.3         RoCA_0.0.0.9000     
-## [10] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.11.1     
+##  [1] pander_0.6.0        htmlwidgets_0.7     DT_0.2             
+##  [4] RoCA_0.0.0.9000     yaml_2.1.13         rmarkdown_1.3      
+##  [7] knitr_1.14          flexclust_1.3-4     modeltools_0.2-21  
+## [10] lattice_0.20-33     clusterSim_0.45-1   MASS_7.3-45        
+## [13] clValid_0.6-6       som_0.3-5.1         cluster_2.0.4      
+## [16] gplots_3.0.1        awsomics_0.0.0.9000 RCurl_1.95-4.8     
+## [19] bitops_1.0-6        devtools_1.12.0     plotly_4.5.2       
+## [22] ggplot2_2.1.0      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.4          AnnotationDbi_1.32.3 magrittr_1.5        
-##  [4] IRanges_2.4.8        BiocGenerics_0.16.1  highr_0.5.1         
-##  [7] stringr_1.0.0        GenomeInfoDb_1.6.3   caTools_1.17.1      
-## [10] tools_3.2.2          parallel_3.2.2       Biobase_2.28.0      
-## [13] KernSmooth_2.23-15   DBI_0.3.1            withr_1.0.1         
-## [16] htmltools_0.3.5      gtools_3.5.0         digest_0.6.9        
-## [19] formatR_1.3          S4Vectors_0.8.11     RSQLite_1.0.0       
-## [22] memoise_1.0.0        evaluate_0.9         gdata_2.17.0        
-## [25] stringi_1.0-1        stats4_3.2.2         jsonlite_0.9.20</code></pre>
+##  [1] rgl_0.96.0         Rcpp_0.12.6        tidyr_0.5.1       
+##  [4] class_7.3-14       gtools_3.5.0       assertthat_0.1    
+##  [7] rprojroot_1.2      digest_0.6.10      mime_0.5          
+## [10] R6_2.1.2           plyr_1.8.4         backports_1.0.3   
+## [13] evaluate_0.9       e1071_1.6-7        highr_0.6         
+## [16] httr_1.2.1         lazyeval_0.2.0     curl_1.2          
+## [19] gdata_2.17.0       webshot_0.3.2      stringr_1.0.0     
+## [22] munsell_0.4.3      shiny_0.13.2       httpuv_1.3.3      
+## [25] base64enc_0.1-3    htmltools_0.3.5    tibble_1.1        
+## [28] viridisLite_0.1.3  dplyr_0.5.0        withr_1.0.2       
+## [31] jsonlite_1.0       xtable_1.8-2       gtable_0.2.0      
+## [34] DBI_0.4-1          git2r_0.15.0       magrittr_1.5      
+## [37] formatR_1.4        scales_0.4.0       KernSmooth_2.23-15
+## [40] stringi_1.1.1      dbscan_0.9-8       modeest_2.1       
+## [43] tools_3.2.2        ade4_1.7-4         purrr_0.2.2       
+## [46] parallel_3.2.2     colorspace_1.2-6   caTools_1.17.1    
+## [49] R2HTML_2.3.2       memoise_1.0.0</code></pre>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -531,9 +544,13 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

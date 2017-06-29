@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Zhe Zhang" />
+
+<meta name="date" content="2017-06-29" />
+
+<title>Analysis of techinal replicates</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-1.1/highlight.js"></script>
+<script src="index_files/htmlwidgets-0.8/htmlwidgets.js"></script>
+<script src="index_files/d3-4.5.0/d3.min.js"></script>
+<script src="index_files/radialNetwork-binding-0.4/radialNetwork.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Analysis of techinal replicates</h1>
+<h4 class="author"><em>Zhe Zhang</em></h4>
+<h4 class="date"><em>2017-06-29</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong> This procedure uses high-dimentional data (transcriptome, proteome, …) to evaluate how similar techinal replicates are to each other comparing to biological replicates. Technical replicates can be defined by the experiment design at different stages, from multiple cell culture colonies from the same donor to the same RNA-seq library sequenced by multiple flowcells. The inputs of this procedure include a data matrix and a matching table of sample manifest.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>RNA-seq libraries sequenced on different flowcells.</p>
+</div>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">1.2</span> Experimental design</h2>
+<p>A total of 24 RNA-seq libraries were created in 6 tissue/treatment groups and each library was sequenced on 3 flowcells/lanes.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>Similarity between technical replicates was compared to similarity between biological and techincal replicates.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="summary-statistics" class="section level1">
+<h1><span class="header-section-number">2</span> Summary statistics</h1>
+<ul>
+<li>Total number of variables: <em>33583</em></li>
+<li>Total number of technical replicates: <em>72</em></li>
+<li>Total number of biological replicates: <em>24</em></li>
+<li>Total number of sample groups: <em>6</em></li>
+<li>Technical replicates were run in batches? <em>TRUE</em></li>
+</ul>
+<p>Click <a href="table/sample.html">here</a> to view full sample manifest.</p>
+<div align="center">
+<div id="htmlwidget-cd7fca94c2a1c6caad0c" style="width:600px;height:600px;" class="radialNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cd7fca94c2a1c6caad0c">{"x":{"root":{"name":"AllSamples","children":[{"name":"Group_1","children":[{"name":"47999","children":[{"name":"FGC1562_1_CGATGT","Batch":"FGC1562_1","Group":"Group_1","Sample":"47999"},{"name":"FGC1583_1_CGATGT","Batch":"FGC1583_1","Group":"Group_1","Sample":"47999"},{"name":"FGC1583_2_CGATGT","Batch":"FGC1583_2","Group":"Group_1","Sample":"47999"}]},{"name":"48000","children":[{"name":"FGC1562_1_TGACCA","Batch":"FGC1562_1","Group":"Group_1","Sample":"48000"},{"name":"FGC1583_1_TGACCA","Batch":"FGC1583_1","Group":"Group_1","Sample":"48000"},{"name":"FGC1583_2_TGACCA","Batch":"FGC1583_2","Group":"Group_1","Sample":"48000"}]},{"name":"48001","children":[{"name":"FGC1562_1_ACAGTG","Batch":"FGC1562_1","Group":"Group_1","Sample":"48001"},{"name":"FGC1583_1_ACAGTG","Batch":"FGC1583_1","Group":"Group_1","Sample":"48001"},{"name":"FGC1583_2_ACAGTG","Batch":"FGC1583_2","Group":"Group_1","Sample":"48001"}]},{"name":"48002","children":[{"name":"FGC1562_1_GCCAAT","Batch":"FGC1562_1","Group":"Group_1","Sample":"48002"},{"name":"FGC1583_1_GCCAAT","Batch":"FGC1583_1","Group":"Group_1","Sample":"48002"},{"name":"FGC1583_2_GCCAAT","Batch":"FGC1583_2","Group":"Group_1","Sample":"48002"}]}]},{"name":"Group_2","children":[{"name":"48003","children":[{"name":"FGC1562_1_CAGATC","Batch":"FGC1562_1","Group":"Group_2","Sample":"48003"},{"name":"FGC1583_1_CAGATC","Batch":"FGC1583_1","Group":"Group_2","Sample":"48003"},{"name":"FGC1583_2_CAGATC","Batch":"FGC1583_2","Group":"Group_2","Sample":"48003"}]},{"name":"48004","children":[{"name":"FGC1562_1_CTTGTA","Batch":"FGC1562_1","Group":"Group_2","Sample":"48004"},{"name":"FGC1583_1_CTTGTA","Batch":"FGC1583_1","Group":"Group_2","Sample":"48004"},{"name":"FGC1583_2_CTTGTA","Batch":"FGC1583_2","Group":"Group_2","Sample":"48004"}]},{"name":"48005","children":[{"name":"FGC1562_1_AGTCAA","Batch":"FGC1562_1","Group":"Group_2","Sample":"48005"},{"name":"FGC1583_1_AGTCAA","Batch":"FGC1583_1","Group":"Group_2","Sample":"48005"},{"name":"FGC1583_2_AGTCAA","Batch":"FGC1583_2","Group":"Group_2","Sample":"48005"}]},{"name":"48006","children":[{"name":"FGC1562_1_AGTTCC","Batch":"FGC1562_1","Group":"Group_2","Sample":"48006"},{"name":"FGC1583_1_AGTTCC","Batch":"FGC1583_1","Group":"Group_2","Sample":"48006"},{"name":"FGC1583_2_AGTTCC","Batch":"FGC1583_2","Group":"Group_2","Sample":"48006"}]}]},{"name":"Group_3","children":[{"name":"48007","children":[{"name":"FGC1562_1_ATGTCA","Batch":"FGC1562_1","Group":"Group_3","Sample":"48007"},{"name":"FGC1583_1_ATGTCA","Batch":"FGC1583_1","Group":"Group_3","Sample":"48007"},{"name":"FGC1583_2_ATGTCA","Batch":"FGC1583_2","Group":"Group_3","Sample":"48007"}]},{"name":"48008","children":[{"name":"FGC1562_1_CCGTCC","Batch":"FGC1562_1","Group":"Group_3","Sample":"48008"},{"name":"FGC1583_1_CCGTCC","Batch":"FGC1583_1","Group":"Group_3","Sample":"48008"},{"name":"FGC1583_2_CCGTCC","Batch":"FGC1583_2","Group":"Group_3","Sample":"48008"}]},{"name":"48009","children":[{"name":"FGC1562_1_GTCCGC","Batch":"FGC1562_1","Group":"Group_3","Sample":"48009"},{"name":"FGC1583_1_GTCCGC","Batch":"FGC1583_1","Group":"Group_3","Sample":"48009"},{"name":"FGC1583_2_GTCCGC","Batch":"FGC1583_2","Group":"Group_3","Sample":"48009"}]},{"name":"48010","children":[{"name":"FGC1562_1_GTGAAA","Batch":"FGC1562_1","Group":"Group_3","Sample":"48010"},{"name":"FGC1583_1_GTGAAA","Batch":"FGC1583_1","Group":"Group_3","Sample":"48010"},{"name":"FGC1583_2_GTGAAA","Batch":"FGC1583_2","Group":"Group_3","Sample":"48010"}]}]},{"name":"Group_4","children":[{"name":"48011","children":[{"name":"FGC1562_2_CGATGT","Batch":"FGC1562_2","Group":"Group_4","Sample":"48011"},{"name":"FGC1583_3_CGATGT","Batch":"FGC1583_3","Group":"Group_4","Sample":"48011"},{"name":"FGC1583_4_CGATGT","Batch":"FGC1583_4","Group":"Group_4","Sample":"48011"}]},{"name":"48012","children":[{"name":"FGC1562_2_TGACCA","Batch":"FGC1562_2","Group":"Group_4","Sample":"48012"},{"name":"FGC1583_3_TGACCA","Batch":"FGC1583_3","Group":"Group_4","Sample":"48012"},{"name":"FGC1583_4_TGACCA","Batch":"FGC1583_4","Group":"Group_4","Sample":"48012"}]},{"name":"48013","children":[{"name":"FGC1562_2_ACAGTG","Batch":"FGC1562_2","Group":"Group_4","Sample":"48013"},{"name":"FGC1583_3_ACAGTG","Batch":"FGC1583_3","Group":"Group_4","Sample":"48013"},{"name":"FGC1583_4_ACAGTG","Batch":"FGC1583_4","Group":"Group_4","Sample":"48013"}]},{"name":"48014","children":[{"name":"FGC1562_2_GCCAAT","Batch":"FGC1562_2","Group":"Group_4","Sample":"48014"},{"name":"FGC1583_3_GCCAAT","Batch":"FGC1583_3","Group":"Group_4","Sample":"48014"},{"name":"FGC1583_4_GCCAAT","Batch":"FGC1583_4","Group":"Group_4","Sample":"48014"}]}]},{"name":"Group_5","children":[{"name":"48015","children":[{"name":"FGC1562_2_CAGATC","Batch":"FGC1562_2","Group":"Group_5","Sample":"48015"},{"name":"FGC1583_3_CAGATC","Batch":"FGC1583_3","Group":"Group_5","Sample":"48015"},{"name":"FGC1583_4_CAGATC","Batch":"FGC1583_4","Group":"Group_5","Sample":"48015"}]},{"name":"48016","children":[{"name":"FGC1562_2_CTTGTA","Batch":"FGC1562_2","Group":"Group_5","Sample":"48016"},{"name":"FGC1583_3_CTTGTA","Batch":"FGC1583_3","Group":"Group_5","Sample":"48016"},{"name":"FGC1583_4_CTTGTA","Batch":"FGC1583_4","Group":"Group_5","Sample":"48016"}]},{"name":"48017","children":[{"name":"FGC1562_2_AGTCAA","Batch":"FGC1562_2","Group":"Group_5","Sample":"48017"},{"name":"FGC1583_3_AGTCAA","Batch":"FGC1583_3","Group":"Group_5","Sample":"48017"},{"name":"FGC1583_4_AGTCAA","Batch":"FGC1583_4","Group":"Group_5","Sample":"48017"}]},{"name":"48018","children":[{"name":"FGC1562_2_AGTTCC","Batch":"FGC1562_2","Group":"Group_5","Sample":"48018"},{"name":"FGC1583_3_AGTTCC","Batch":"FGC1583_3","Group":"Group_5","Sample":"48018"},{"name":"FGC1583_4_AGTTCC","Batch":"FGC1583_4","Group":"Group_5","Sample":"48018"}]}]},{"name":"Group_6","children":[{"name":"48019","children":[{"name":"FGC1562_2_ATGTCA","Batch":"FGC1562_2","Group":"Group_6","Sample":"48019"},{"name":"FGC1583_3_ATGTCA","Batch":"FGC1583_3","Group":"Group_6","Sample":"48019"},{"name":"FGC1583_4_ATGTCA","Batch":"FGC1583_4","Group":"Group_6","Sample":"48019"}]},{"name":"48020","children":[{"name":"FGC1562_2_CCGTCC","Batch":"FGC1562_2","Group":"Group_6","Sample":"48020"},{"name":"FGC1583_3_CCGTCC","Batch":"FGC1583_3","Group":"Group_6","Sample":"48020"},{"name":"FGC1583_4_CCGTCC","Batch":"FGC1583_4","Group":"Group_6","Sample":"48020"}]},{"name":"48021","children":[{"name":"FGC1562_2_GTCCGC","Batch":"FGC1562_2","Group":"Group_6","Sample":"48021"},{"name":"FGC1583_3_GTCCGC","Batch":"FGC1583_3","Group":"Group_6","Sample":"48021"},{"name":"FGC1583_4_GTCCGC","Batch":"FGC1583_4","Group":"Group_6","Sample":"48021"}]},{"name":"48022","children":[{"name":"FGC1562_2_GTGAAA","Batch":"FGC1562_2","Group":"Group_6","Sample":"48022"},{"name":"FGC1583_3_GTGAAA","Batch":"FGC1583_3","Group":"Group_6","Sample":"48022"},{"name":"FGC1583_4_GTGAAA","Batch":"FGC1583_4","Group":"Group_6","Sample":"48022"}]}]}]},"options":{"height":600,"width":600,"fontSize":10,"fontFamily":"serif","linkColour":"#ccc","nodeColour":"#f88","nodeStroke":"steelblue","textColour":"#44f","margin":{"top":null,"right":null,"bottom":null,"left":null},"opacity":0.9}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<p><strong>Figure 1.</strong> Hierarchical structure of sample groups, biological replicates, and technical replications.</p>
+</div>
+</div>
+<div id="analysis-1" class="section level1">
+<h1><span class="header-section-number">3</span> Analysis</h1>
+<div id="principal-components-analysis" class="section level2">
+<h2><span class="header-section-number">3.1</span> Principal components analysis</h2>
+<p>Principal Components Analysis (PCA) is an unsupervised analysis that converts a large number of correlated variables into a smaller set of uncorrelated variables called principal components (PCs). Each principal component accounts for certain percentage of total variability of a data set so the PCs can be ordered by their percentages. In general, samples closer to each other within the PCA space are more similar to each other.</p>
+<div align="center">
+<p><img src="index_files/figure-html/plot_pca-1.png" width="800px" /></p>
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Figure 2.</strong> This figure plots the top two PCs that account for 69.98% of the total variance of the data matrix. Techincal replicates of the same biological sample have the same border color and biological replicates of the same sample group have the same filled color.</p>
+</div>
+</div>
+<div id="hierarchical-clustering" class="section level2">
+<h2><span class="header-section-number">3.2</span> Hierarchical clustering</h2>
+<p>Another way to measure sample similarity is calculate the pairwise correlation between any 2 samples. Unsupervised clustering of all samples can be performed using the pairwise correlation coefficients. More similar samples have the higher correlation coefficient and share the lower node on the clustering tree.</p>
+<div align="center">
+<p><img src="index_files/figure-html/plot_heatmap-1.png" width="800px" /></p>
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<p><strong>Figure 3.</strong> This figure color-coded the correlation between all pairs of samples. Redder blocks represent higher correlation coefficients. Samples are clustered and ordered in rows and columns. Technical replicates of the same biological samples have the same row/column sidebar color. Click <a href="table/correlation.html">here</a> to view correlation coefficients between all pairs of samples.</p>
+</div>
+</div>
+<div id="technical-vs.biological-replicates" class="section level2">
+<h2><span class="header-section-number">3.3</span> Technical vs. biological replicates</h2>
+<p>We usually expect that technical replicates of the same biological sample have more similarity to each other than biological replicates to each other. Pairwise correlation coefficients between different types of replications are compared in this analysis.</p>
+<p><img src="index_files/figure-html/correlation_analysis-1.png" width="800px" /></p>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Figure 4.</strong> For each technical replicate, this figure compares its correlation to the other technical replicates of the sample and the other biological replicates in the same sample group (batch effect removed) on a vertical line. The purple diamonds are correlation coefficients between pairwises of technical replications and the yellow circles are correlation coefficients between pairwises of biological replications. Usually, it is expected that the later have lower values.</p>
+</div>
+</div>
+<div id="scatter-plots" class="section level2">
+<h2><span class="header-section-number">3.4</span> Scatter plots</h2>
+<div align="center">
+<p><img src="index_files/figure-html/scatter_plot-1.png" width="800px" /></p>
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Figure 5.</strong> Pairs of technical or biological replicates having the highest or lowest correlation.</p>
+</div>
+</div>
+</div>
+<div id="session-information" class="section level1">
+<h1><span class="header-section-number">4</span> Session information</h1>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] networkD3_0.4       data.tree_0.7.0     gplots_3.0.1       
+##  [4] awsomics_0.0.0.9000 htmlwidgets_0.8     DT_0.2             
+##  [7] yaml_2.1.13         knitr_1.14          rmarkdown_1.3      
+## [10] RoCA_0.0.0.9000     RCurl_1.95-4.8      bitops_1.0-6       
+## [13] devtools_1.12.0    
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.10       highr_0.6          influenceR_0.1.0  
+##  [4] formatR_1.4        RColorBrewer_1.1-2 plyr_1.8.4        
+##  [7] viridis_0.4.0      tools_3.2.2        digest_0.6.12     
+## [10] jsonlite_1.0       tibble_1.3.3       evaluate_0.9      
+## [13] memoise_1.1.0      gtable_0.2.0       viridisLite_0.2.0 
+## [16] rgexf_0.15.3       rlang_0.1.1        igraph_1.0.1      
+## [19] rstudioapi_0.6     DBI_0.6-1          gridExtra_2.2.1   
+## [22] withr_1.0.2        DiagrammeR_0.9.0   stringr_1.2.0     
+## [25] dplyr_0.5.0        gtools_3.5.0       caTools_1.17.1    
+## [28] rprojroot_1.2      grid_3.2.2         R6_2.1.2          
+## [31] Rook_1.1-1         XML_3.98-1.4       gdata_2.17.0      
+## [34] ggplot2_2.1.0      magrittr_1.5       backports_1.1.0   
+## [37] scales_0.4.1       htmltools_0.3.5    rsconnect_0.4.3   
+## [40] assertthat_0.1     colorspace_1.2-6   brew_1.0-6        
+## [43] KernSmooth_2.23-15 stringi_1.1.1      visNetwork_2.0.0  
+## [46] munsell_0.4.3</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
