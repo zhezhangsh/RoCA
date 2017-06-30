@@ -347,7 +347,7 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
 ```
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 1.** The numbers of top genes (click to view full gene list) selected from each outlier.
+**Table 1.** The numbers of top genes selected from each outlier.
 </div>
 
 <div align='center', style="padding:0 2cm"> 
