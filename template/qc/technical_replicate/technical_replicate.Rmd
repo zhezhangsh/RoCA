@@ -90,7 +90,7 @@ Click [here](table/sample.html) to view full sample manifest.
 
 <div align='center'>
 ```{r sample_structure, include=TRUE, out.width='600px'}
-smpl$pathString <- paste('AllSamples', smpl$Group, smpl$Sample, rownames(smpl), sep='|');
+smpl$pathString <- paste('AllSamples', smpl[[2]], smpl[[1]], rownames(smpl), sep='|');
 smpl.tree <- as.Node(smpl, pathDelimiter = "|");
 smpl.list <- ToListExplicit(smpl.tree, unname = TRUE);
 radialNetwork(smpl.list, height = 600, width = 600, nodeColour = '#f88', textColour = '#44f');
