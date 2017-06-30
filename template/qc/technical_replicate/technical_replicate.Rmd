@@ -70,7 +70,7 @@ for (i in 1:ncol(smpl)) smpl[[i]] <- as.vector(smpl[[i]]);
 smpl <- smpl[rownames(smpl) %in% colnames(mtrx), , drop=FALSE];
 mtrx <- mtrx[, rownames(smpl), drop=FALSE];
 grps <- split(smpl, as.vector(smpl[[2]]))[unique(as.vector(smpl[[2]]))];
-grps <- lapply(grps, function(g) split(g, g$Sample)[unique(as.vector(g[[1]]))]);
+grps <- lapply(grps, function(g) split(g, g[[1]])[unique(as.vector(g[[1]]))]);
 smpl <- lapply(grps, function(g) do.call('rbind', g)); 
 smpl <- do.call('rbind', smpl); 
 rownames(smpl) <- unlist(lapply(grps, function(g) lapply(g, rownames))); 
