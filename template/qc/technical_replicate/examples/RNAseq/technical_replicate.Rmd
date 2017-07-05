@@ -70,7 +70,7 @@ for (i in 1:ncol(smpl)) smpl[[i]] <- as.vector(smpl[[i]]);
 smpl <- smpl[rownames(smpl) %in% colnames(mtrx), , drop=FALSE];
 mtrx <- mtrx[, rownames(smpl), drop=FALSE];
 grps <- split(smpl, as.vector(smpl[[2]]))[unique(as.vector(smpl[[2]]))];
-grps <- lapply(grps, function(g) split(g, g$Sample)[unique(as.vector(g[[1]]))]);
+grps <- lapply(grps, function(g) split(g, g[[1]])[unique(as.vector(g[[1]]))]);
 smpl <- lapply(grps, function(g) do.call('rbind', g)); 
 smpl <- do.call('rbind', smpl); 
 rownames(smpl) <- unlist(lapply(grps, function(g) lapply(g, rownames))); 
@@ -90,7 +90,7 @@ Click [here](table/sample.html) to view full sample manifest.
 
 <div align='center'>
 ```{r sample_structure, include=TRUE, out.width='600px'}
-smpl$pathString <- paste('AllSamples', smpl$Group, smpl$Sample, rownames(smpl), sep='|');
+smpl$pathString <- paste('AllSamples', smpl[[2]], smpl[[1]], rownames(smpl), sep='|');
 smpl.tree <- as.Node(smpl, pathDelimiter = "|");
 smpl.list <- ToListExplicit(smpl.tree, unname = TRUE);
 radialNetwork(smpl.list, height = 600, width = 600, nodeColour = '#f88', textColour = '#44f');
@@ -100,6 +100,8 @@ radialNetwork(smpl.list, height = 600, width = 600, nodeColour = '#f88', textCol
 <div style="color:darkblue; padding:0 2cm">
 **Figure 1.** Hierarchical structure of sample groups, biological replicates, and technical replications. 
 </div>
+
+`r home.url` 
 
 # Analysis
 
@@ -151,6 +153,8 @@ text(rep(5, length(labels)), 100-(1:length(X))*4.0*cex, labels=1:length(X), col=
 **Figure 2.** This figure plots the top two PCs that account for `r sum(per[1:2])`% of the total variance of the data matrix. Techincal replicates of the same biological sample have the same border color and biological replicates of the same sample group have the same filled color.
 </div>
 
+`r home.url` 
+
 ## Hierarchical clustering
 
 Another way to measure sample similarity is calculate the pairwise correlation between any 2 samples. Unsupervised clustering of all samples can be performed using the pairwise correlation coefficients. More similar samples have the higher correlation coefficient and share the lower node on the clustering tree. 
@@ -165,6 +169,8 @@ heatmap(-corr, ColSideColors = cl1, RowSideColors = cl1);
 <div style="color:darkblue; padding:0 2cm">
 **Figure 3.** This figure color-coded the correlation between all pairs of samples. Redder blocks represent higher correlation coefficients. Samples are clustered and ordered in rows and columns. Technical replicates of the same biological samples have the same row/column sidebar color. Click [here](table/correlation.html) to view correlation coefficients between all pairs of samples.
 </div>
+
+`r home.url` 
 
 ## Technical vs. biological replicates
 
@@ -224,6 +230,8 @@ for (i in 1:length(crr)) {
 **Figure 4.** For each technical replicate, this figure compares its correlation to the other technical replicates of the sample and the other biological replicates in the same sample group (batch effect removed) on a vertical line. The purple diamonds are correlation coefficients between pairwises of technical replications and the yellow circles are correlation coefficients between pairwises of biological replications. Usually, it is expected that the later have lower values. 
 </div>
 
+`r home.url` 
+
 ## Scatter plots
 
 <div align='center'>
@@ -271,6 +279,8 @@ CreateDatatable(corr, paste(path.tbl, 'correlation.html', sep='/'))
 saveRDS(corr, paste(path.r, 'correlation_all.rds', sep='/')); 
 saveRDS(crr, paste(path.r, 'correlation_pair.rds', sep='/')); 
 ```
+
+`r home.url` 
 
 # Session information
 

@@ -22,7 +22,7 @@ template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/t
 output: examples/RNAseq                    # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA     # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                         # Name of the analyst
-zip: no                                    # Whether to zip all output files
+zip: yes                                    # Whether to zip all output files
 
 #################
 ##### ABOUT #####
