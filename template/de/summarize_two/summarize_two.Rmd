@@ -171,7 +171,13 @@ rownames(l2r) <- rownames(pvl) <- rownames(fdr) <- rownames(rnk) <- gid;
 corr <- round(cor(l2r[, 1], l2r[, 2]), 3);
 p0 <- prms$gene$pvalue;
 
-tbl <- lapply(stat, function(s) s[gid, c(1,2,4,5,6)]); 
+tbl <- lapply(stat, function(s) s[, c(1,2,4,5,6)]); 
+tbl  <- lapply(tbl, function(s) {
+  x <- matrix(0, nr=length(gid), nc=5, dimnames = list(gid, colnames(s))); 
+  x[rownames(s), ] <- s; 
+  x[, 4:5] <- 1;
+  x; 
+}); 
 cnm <- lapply(tbl, colnames); 
 tbl <- do.call('cbind', tbl);
 rownames(tbl) <- gid; 
