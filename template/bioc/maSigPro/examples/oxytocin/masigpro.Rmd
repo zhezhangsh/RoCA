@@ -63,8 +63,8 @@ home.url <- Link2Home(yml$home);
 `r home.url`
 
 ```{r load_data, include=FALSE}
-mtrx <- ImportTable(yml$input$mtrx);
-dsgn <- ImportTable(yml$input$dsgn);
+mtrx <- ImportTable(DownloadFile(yml$input$mtrx));
+dsgn <- ImportTable(DownloadFile(yml$input$dsgn));
 
 dsgn <- dsgn[rownames(dsgn) %in% colnames(mtrx), , drop=FALSE];
 mtrx <- mtrx[, rownames(dsgn)]; 
@@ -74,12 +74,12 @@ rcol <- prms$repl.col;
 dsgn <- dsgn[, c(tcol, rcol, setdiff(1:ncol(dsgn), c(tcol, rcol)))]; 
 
 if (is.null(yml$input$anno)) anno <- NULL else {
-  anno <- ImportTable(yml$input$anno); 
+  anno <- ImportTable(DownloadFile(yml$input$anno)); 
   anno <- anno[rownames(mtrx), , drop=FALSE];
   rownames(anno) <- rownames(mtrx); 
 };
 
-if (is.null(yml$input$geneset)) gset <- NULL else gset <- ImportList(yml$input$geneset); 
+if (is.null(yml$input$geneset)) gset <- NULL else gset <- ImportList(DownloadFile(yml$input$geneset)); 
 
 if (!is.numeric(dsgn[, 1])) {
   u <- 1:length(unique(as.vector(dsgn[, 1])));
