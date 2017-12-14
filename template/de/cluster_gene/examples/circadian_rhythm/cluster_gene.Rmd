@@ -74,7 +74,7 @@ anno<-anno[rownames(anno) %in% rownames(expr), , drop=FALSE];
 smpl<-smpl[rownames(smpl) %in% colnames(expr), , drop=FALSE];
 if (nrow(anno) <= 1) stop("Not enough genes to perform clustering.\n");
 if (nrow(smpl) <= 1) stop("Not enough samples to perform clustering.\n");
-expr0<-expr[rownames(anno), rownames(smpl)];  # Original matrix
+expr0<-expr<-expr[rownames(anno), rownames(smpl)];  # Original matrix
 
 phen <- setdiff(prms$term, names(smpl));
 if (length(phen) > 0) stop("Sample phenotype(s): ", paste(phen, collapse=';'), ' not available.\n');
@@ -176,7 +176,7 @@ if (length(prms$term) == 1) {
 } else {
   par(mfrow=c(length(prms$term), 1), mar=c(5,5,3,2)); 
   sapply(1:length(prms$term), function(i) hist(pvs[, i], br=100, xlab='ANOVA p value', ylab='Number of genes', 
-                                               cex.lab=1.5, main=prms$term[i]), cex.main=2) -> x;
+                                               cex.lab=1.5, main=prms$term[i], cex.main=2)) -> x;
   n <- apply(pvs[, 1:length(prms$term)], 2, function(p) length(p[p<=prms$selection$p])); 
   ln <- paste(min(n), 'to', max(n), 'genes have p values less than', prms$selection$p);
 }
@@ -231,6 +231,7 @@ select.gene <- function(expr, stat, prms) {
 if (length(prms$term) == 1) e <- select.gene(expr, stat, prms) else {
   es <- lapply(1:ncol(pvs), function(i) {
     ss <- cbind(Range=stat[, 'Range'], pANOVA=pvs[, i], FDR=qvs[, i]); 
+    rownames(ss) <- rownames(stat); 
     select.gene(expr, ss, prms); 
   });
   ids <- Reduce('union', lapply(es, rownames)); 
@@ -243,8 +244,8 @@ A total of **`r nrow(e)`** genes were selected. These genes would be used as see
 <div align='center'>
 ```{r hierarchical_clustering, include=TRUE, fig.width=8, fig.height=4*min(2, ceiling(nrow(smpl)/32)), out.width='800px'}
 if (nrow(smpl)>32) par(mfrow=c(2, 1), mar=c(2,2,2,2)) else par(mfrow=c(1, 2), mar=c(2,2,2,2)); 
-plot(hclust(as.dist(1-cor(expr0))), main='All genes', xlab='', sub='', ylab='');
-plot(hclust(as.dist(1-cor(expr0[rownames(e), , drop=FALSE]))), main='Selected DEGs', xlab='', sub='', ylab='');
+plot(hclust(as.dist(1-cor(expr0[, colSums(abs(expr0))>0, drop=FALSE]))), main='All genes', xlab='', sub='', ylab='');
+plot(hclust(as.dist(1-cor(expr0[rownames(e), colSums(abs(expr0))>0, drop=FALSE]))), main='Selected DEGs', xlab='', sub='', ylab='');
 ```
 </div>
 
@@ -311,7 +312,7 @@ while(flag) {
 
 # Sort clusters
 m<-sapply(cl, function(cl) colMeans(expr[cl,  , drop=FALSE])); 
-ind<-apply(m, 2, function(x) which(x==max(x)));  
+ind<-apply(m, 2, function(x) which(x==max(x))[1]);  
 cl<-cl[order(ind)]; 
 names(cl)<-paste('Cluster', 1:length(cl), sep='_'); 
 
@@ -426,8 +427,11 @@ PlotColoredBlock(x, min=-1*max(abs(x), na.rm=TRUE), max=max(abs(x), na.rm=TRUE),
 ids<-as.vector(unlist(cl)); 
 c<-rep(names(cl), sapply(cl, length)); 
 
-tbl1<-data.frame(anno[ids, ], Cluster=c, FormatNumeric(expr[ids, ])); 
-tbl2<-data.frame(anno[ids, ], Cluster=c, FormatNumeric(stat[ids, ])); 
+a <- anno[ids, , drop=FALSE];
+for (i in 1:ncol(a)) a[[i]] <- CleanHtmlTags(a[[i]], FALSE); 
+
+tbl1<-data.frame(a, Cluster=c, FormatNumeric(expr[ids, ])); 
+tbl2<-data.frame(a, Cluster=c, FormatNumeric(stat[ids, ])); 
 
 write.csv2(tbl1, paste(path.tbl, 'clustered_data.csv', sep='/')); 
 write.csv2(tbl2, paste(path.tbl, 'clustered_stat.csv', sep='/')); 
@@ -470,7 +474,7 @@ ms<-sapply(names(cl), function(nm) {
   
   # Hierarchical clustering 
   par(mar=c(2, 5, 5, 2)); 
-  plot(hclust(as.dist(1-cor(mtrx))), main='Hierarchical sample clustering', xlab='', sub=''); 
+  plot(hclust(as.dist(1-cor(mtrx[, colSums(abs(mtrx))>0, drop=FALSE]))), main='Hierarchical sample clustering', xlab='', sub=''); 
   
   # Heatmap
   rownames(mtrx)<-paste(rownames(mtrx), CleanHtmlTags(anno[rownames(mtrx), 1]), sep='_'); 

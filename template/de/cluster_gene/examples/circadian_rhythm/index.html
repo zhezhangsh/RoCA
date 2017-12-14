@@ -11,25 +11,24 @@
 
 <meta name="author" content="Zhe Zhang" />
 
-<meta name="date" content="2016-07-12" />
+<meta name="date" content="2017-08-09" />
 
 <title>Cluster genes across multiple sample groups</title>
 
 <script src="index_files/jquery-1.11.3/jquery.min.js"></script>
-<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-1.1/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="index_files/highlight/default.css"
-      type="text/css" />
-<script src="index_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
@@ -100,10 +99,10 @@ button.code-folding-btn:focus {
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="index_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -129,7 +128,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
@@ -153,6 +152,7 @@ $(document).ready(function ()  {
   width: 100%;
 }
 }
+
 
 .toc-content {
   padding-left: 30px;
@@ -187,8 +187,9 @@ div.tocify {
 }
 
 .tocify-subheader .tocify-item {
-  font-size: 0.9em;
-  padding-left: 5px;
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -200,7 +201,6 @@ div.tocify {
 }
 .tocify-subheader .tocify-item {
   font-size: 0.95em;
-  padding-left: 10px;
 }
 
 </style>
@@ -223,7 +223,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Cluster genes across multiple sample groups</h1>
 <h4 class="author"><em>Zhe Zhang</em></h4>
-<h4 class="date"><em>2016-07-12</em></h4>
+<h4 class="date"><em>2017-08-09</em></h4>
 
 </div>
 
@@ -233,7 +233,8 @@ div.tocify {
 <ul>
 <li><strong>Selection of differentially expressed gene:</strong> ANOVA is used to get each gene a p value for its differential expression across sample groups and false discovery rates are calculated using the p values. Afterwards, genes are filtered sequentially by their FDR, p value, and range until the number of remaining genes is smaller than a given minimal number.</li>
 <li><strong>Gene clustering analysis:</strong> Remaining genes from the last step are used as seeds for the <em>hclust{stat}</em> function to generate a hierchical clustering tree; the tree is cut at a given height to get initial clusters; the cutting height will be lowered if the number of clusters is less than the number of sample groups; the initial clusters are filtered to remove small clusters, and refined to remove outlier genes; initial clusters close to each other are merged; and finally, the clusters are refined through multiple rounds of re-clustering while including genes with less significant ANOVA p values.</li>
-<li><strong>Gene set enrichment analysis:</strong> Hypergeometric test is used to find predefined gene sets over-represented in each gene cluster. A collection of gene sets obtained from different sources are available for a few model species and can be found at<br /><a href="https://github.com/zhezhangsh/RoCA/tree/master/data" class="uri">https://github.com/zhezhangsh/RoCA/tree/master/data</a>.</li>
+<li><strong>Gene set enrichment analysis:</strong> Hypergeometric test is used to find predefined gene sets over-represented in each gene cluster. A collection of gene sets obtained from different sources are available for a few model species and can be found at<br />
+<a href="https://github.com/zhezhangsh/RoCA/tree/master/data" class="uri">https://github.com/zhezhangsh/RoCA/tree/master/data</a>.</li>
 </ul>
 </div>
 <p> </p>
@@ -270,10 +271,10 @@ div.tocify {
 </ul>
 <p>The input data matrix was normalized using sample group <em>WT_00Hr</em> as control, so, the data of each gene was substracted by control group mean and had SD equal to 1.0</p>
 <div align="center">
-<img src="figure/pca-1.png" title="plot of chunk pca" alt="plot of chunk pca" width="640px" />
+<p><img src="index_files/figure-html/pca-1.png" width="640px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 1.</strong> Principal components analysis (PCA) using all genes. Samples were colored by their groups.
+<p><strong>Figure 1.</strong> Principal components analysis (PCA) using all genes. Samples were colored by their groups.</p>
 </div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
@@ -289,10 +290,10 @@ div.tocify {
 <li><a href="table/anova.html">Summary statistics and ANOVA result.</a></li>
 </ul>
 <div align="center">
-<img src="figure/anova_pvalue-1.png" title="plot of chunk anova_pvalue" alt="plot of chunk anova_pvalue" width="640px" />
+<p><img src="index_files/figure-html/anova_pvalue-1.png" width="640px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 2.</strong> Distribution of ANOVA p values. 821 genes have p values less than 0.01.
+<p><strong>Figure 2.</strong> Distribution of ANOVA p values. 821 genes have p values less than 0.01.</p>
 </div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
@@ -311,10 +312,10 @@ div.tocify {
 </ul>
 <p>A total of <strong>232</strong> genes were selected. These genes would be used as seeds to generate gene clusters in the next step.</p>
 <div align="center">
-<img src="figure/hierarchical_clustering-1.png" title="plot of chunk hierarchical_clustering" alt="plot of chunk hierarchical_clustering" width="800px" />
+<p><img src="index_files/figure-html/hierarchical_clustering-1.png" width="800px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 3.</strong> Hierarchical clustering of samples using all genes (unsupervised) or selected DEGs (supervised).
+<p><strong>Figure 3.</strong> Hierarchical clustering of samples using all genes (unsupervised) or selected DEGs (supervised).</p>
 </div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
@@ -333,10 +334,10 @@ div.tocify {
 </ul>
 <p><strong>8</strong> gene clusters of <strong>221</strong> genes were identified from <strong>232</strong> seed DEGs.</p>
 <div align="center">
-<img src="figure/plot_cluster_mean-1.png" title="plot of chunk plot_cluster_mean" alt="plot of chunk plot_cluster_mean" width="600px" />
+<p><img src="index_files/figure-html/plot_cluster_mean-1.png" width="600px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 4.</strong> Color of each block corresponds to the average expression (normalized) of each initial gene cluster in each sample (red = higher).
+<p><strong>Figure 4.</strong> Color of each block corresponds to the average expression (normalized) of each initial gene cluster in each sample (red = higher).</p>
 </div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
@@ -357,10 +358,10 @@ div.tocify {
 <p>The reclustering didn’t converge after 20 cycles</p>
 <p>A total of <strong>554</strong> genes were clustered after refinement.</p>
 <div align="center">
-<img src="figure/plot_recluster_mean-1.png" title="plot of chunk plot_recluster_mean" alt="plot of chunk plot_recluster_mean" width="600px" />
+<p><img src="index_files/figure-html/plot_recluster_mean-1.png" width="600px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 5.</strong> Color of each block corresponds to the average expression (normalized) of each refined gene cluster in each sample (red = higher).
+<p><strong>Figure 5.</strong> Color of each block corresponds to the average expression (normalized) of each refined gene cluster in each sample (red = higher).</p>
 </div>
 <p>More info:</p>
 <ul>
@@ -377,7 +378,7 @@ div.tocify {
 <div id="summary-statistics-and-visualization-of-individual-clusters" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Summary statistics and visualization of individual clusters</h3>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Table 1</strong> Summary of individual clusters, with the average expression (normalized) of all genes of each cluster in all sample groups. Click on cluster name for visualization of each cluster: 1). the average and standard error of sample averages in each group; 2). hierarchical sample clustering using all genes of the cluster; and 3). heatmap of all genes and samples of the cluster.
+<p><strong>Table 1</strong> Summary of individual clusters, with the average expression (normalized) of all genes of each cluster in all sample groups. Click on cluster name for visualization of each cluster: 1). the average and standard error of sample averages in each group; 2). hierarchical sample clustering using all genes of the cluster; and 3). heatmap of all genes and samples of the cluster.</p>
 </div>
 <div align="center" ,="" style="padding:0 2cm">
 <table>
@@ -539,13 +540,13 @@ div.tocify {
 <h3><span class="header-section-number">2.3.2</span> Gene set enrichment analysis</h3>
 <p>Find predefined gene sets enriched in gene cluster comparing to the background.</p>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Table 2</strong> Numbers of predefined gene sets significantly enriched in each gene cluster. Gene sets were split based on their sources, such as the NCBI BioSystems and KEGG databases. Click on each number to see list of the gene sets.
+<p><strong>Table 2</strong> Numbers of predefined gene sets significantly enriched in each gene cluster. Gene sets were split based on their sources, such as the NCBI BioSystems and KEGG databases. Click on each number to see list of the gene sets.</p>
 </div>
 <div align="center" ,="" style="padding:0 2cm">
 <table>
 <thead>
 <tr class="header">
-<th align="left"></th>
+<th></th>
 <th align="center">BioSystems</th>
 <th align="center">KEGG</th>
 <th align="center">MSigDb</th>
@@ -554,56 +555,56 @@ div.tocify {
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">Cluster_1</td>
+<td>Cluster_1</td>
 <td align="center"><a href="cluster/Cluster_1/BioSystems.html">65</a></td>
 <td align="center"><a href="cluster/Cluster_1/KEGG.html">3</a></td>
 <td align="center"><a href="cluster/Cluster_1/MSigDb.html">129</a></td>
 <td align="center">0</td>
 </tr>
 <tr class="even">
-<td align="left">Cluster_2</td>
+<td>Cluster_2</td>
 <td align="center"><a href="cluster/Cluster_2/BioSystems.html">48</a></td>
 <td align="center">0</td>
 <td align="center"><a href="cluster/Cluster_2/MSigDb.html">152</a></td>
 <td align="center">0</td>
 </tr>
 <tr class="odd">
-<td align="left">Cluster_3</td>
+<td>Cluster_3</td>
 <td align="center"><a href="cluster/Cluster_3/BioSystems.html">92</a></td>
 <td align="center"><a href="cluster/Cluster_3/KEGG.html">9</a></td>
 <td align="center"><a href="cluster/Cluster_3/MSigDb.html">177</a></td>
 <td align="center">0</td>
 </tr>
 <tr class="even">
-<td align="left">Cluster_4</td>
+<td>Cluster_4</td>
 <td align="center"><a href="cluster/Cluster_4/BioSystems.html">155</a></td>
 <td align="center"><a href="cluster/Cluster_4/KEGG.html">11</a></td>
 <td align="center"><a href="cluster/Cluster_4/MSigDb.html">249</a></td>
 <td align="center">0</td>
 </tr>
 <tr class="odd">
-<td align="left">Cluster_5</td>
+<td>Cluster_5</td>
 <td align="center"><a href="cluster/Cluster_5/BioSystems.html">39</a></td>
 <td align="center"><a href="cluster/Cluster_5/KEGG.html">2</a></td>
 <td align="center"><a href="cluster/Cluster_5/MSigDb.html">137</a></td>
 <td align="center"><a href="cluster/Cluster_5/PubTator.html">1</a></td>
 </tr>
 <tr class="even">
-<td align="left">Cluster_6</td>
+<td>Cluster_6</td>
 <td align="center"><a href="cluster/Cluster_6/BioSystems.html">54</a></td>
 <td align="center"><a href="cluster/Cluster_6/KEGG.html">6</a></td>
 <td align="center"><a href="cluster/Cluster_6/MSigDb.html">186</a></td>
 <td align="center">0</td>
 </tr>
 <tr class="odd">
-<td align="left">Cluster_7</td>
+<td>Cluster_7</td>
 <td align="center"><a href="cluster/Cluster_7/BioSystems.html">77</a></td>
 <td align="center"><a href="cluster/Cluster_7/KEGG.html">2</a></td>
 <td align="center"><a href="cluster/Cluster_7/MSigDb.html">134</a></td>
 <td align="center">0</td>
 </tr>
 <tr class="even">
-<td align="left">Cluster_8</td>
+<td>Cluster_8</td>
 <td align="center"><a href="cluster/Cluster_8/BioSystems.html">105</a></td>
 <td align="center"><a href="cluster/Cluster_8/KEGG.html">10</a></td>
 <td align="center"><a href="cluster/Cluster_8/MSigDb.html">119</a></td>
@@ -620,38 +621,38 @@ div.tocify {
 <div id="more-plots" class="section level2">
 <h2><span class="header-section-number">2.4</span> More plots</h2>
 <div align="center">
-<img src="figure/plot_series-1.png" title="plot of chunk plot_series" alt="plot of chunk plot_series" width="750px" />
+<p><img src="index_files/figure-html/plot_series-1.png" width="750px" /></p>
 </div>
 <div style="color:darkblue; padding:0 2cm">
-<strong>Figure 6.</strong> Plot the patterns of all clusters using the mean and standard error of samples of each group.
+<p><strong>Figure 6.</strong> Plot the patterns of all clusters using the mean and standard error of samples of each group.</p>
 </div>
 <p> </p>
 <div align="center">
-<img src="figure/plot_means-1.png" title="plot of chunk plot_means" alt="plot of chunk plot_means" width="480px" />
+<p><img src="index_files/figure-html/plot_means-1.png" width="480px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 7.</strong> Color represents the average expression (normalized across samples) of all genes in the same cluster and all samples in the same group (red = higher).
+<p><strong>Figure 7.</strong> Color represents the average expression (normalized across samples) of all genes in the same cluster and all samples in the same group (red = higher).</p>
 </div>
 <p> </p>
 <div align="center">
-<img src="figure/plot_group_means-1.png" title="plot of chunk plot_group_means" alt="plot of chunk plot_group_means" width="480px" />
+<p><img src="index_files/figure-html/plot_group_means-1.png" width="480px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 8.</strong> Color represents the average expression (normalized across samples) of individual genes in all samples of the same group (red = higher).
+<p><strong>Figure 8.</strong> Color represents the average expression (normalized across samples) of individual genes in all samples of the same group (red = higher).</p>
 </div>
 <p> </p>
 <div align="center">
-<img src="figure/plot_heatmap-1.png" title="plot of chunk plot_heatmap" alt="plot of chunk plot_heatmap" width="600px" />
+<p><img src="index_files/figure-html/plot_heatmap-1.png" width="600px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 9.</strong> Color represents the expression level (normalized across samples) of each gene and each sample (red = higher).
+<p><strong>Figure 9.</strong> Color represents the expression level (normalized across samples) of each gene and each sample (red = higher).</p>
 </div>
 <p> </p>
 <div align="center">
-<img src="figure/plot_recluster_size-1.png" title="plot of chunk plot_recluster_size" alt="plot of chunk plot_recluster_size" width="480px" />
+<p><img src="index_files/figure-html/plot_recluster_size-1.png" width="480px" /></p>
 </div>
 <div style="color:darkblue; padding:0 3cm">
-<strong>Figure 10.</strong> Color represents the size of each cluster (number of genes) after a reclustering cycle.<br />
+<p><strong>Figure 10.</strong> Color represents the size of each cluster (number of genes) after a reclustering cycle.</p>
 </div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
@@ -695,25 +696,22 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
-## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
-## [8] methods   base     
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] awsomics_0.0.0.9000  rchive_0.0.0.9000    gplots_3.0.1        
-##  [4] htmlwidgets_0.6      DT_0.1               yaml_2.1.13         
-##  [7] knitr_1.13           rmarkdown_0.9.6      RoCA_0.0.0.9000     
-## [10] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.12.0     
-## [13] org.Hs.eg.db_3.2.3   RSQLite_1.0.0        DBI_0.4-1           
-## [16] AnnotationDbi_1.32.3 IRanges_2.4.8        S4Vectors_0.8.11    
-## [19] Biobase_2.30.0       BiocGenerics_0.16.1 
+##  [1] rchive_0.0.0.9000   gplots_3.0.1        htmlwidgets_0.8    
+##  [4] DT_0.2              RoCA_0.0.0.9000     awsomics_0.0.0.9000
+##  [7] RCurl_1.95-4.8      bitops_1.0-6        devtools_1.13.2    
+## [10] yaml_2.1.13         rmarkdown_1.3       knitr_1.14         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.5        magrittr_1.5       highr_0.6         
-##  [4] stringr_1.0.0      caTools_1.17.1     tools_3.2.2       
-##  [7] KernSmooth_2.23-15 withr_1.0.2        gtools_3.5.0      
-## [10] htmltools_0.3.5    digest_0.6.9       formatR_1.4       
-## [13] memoise_1.0.0      evaluate_0.9       gdata_2.17.0      
-## [16] stringi_1.1.1      jsonlite_1.0</code></pre>
+##  [1] Rcpp_0.12.12       magrittr_1.5       highr_0.6         
+##  [4] stringr_1.2.0      caTools_1.17.1     tools_3.2.2       
+##  [7] KernSmooth_2.23-15 withr_1.0.2        htmltools_0.3.5   
+## [10] gtools_3.5.0       rprojroot_1.2      digest_0.6.12     
+## [13] formatR_1.4        memoise_1.1.0      evaluate_0.9      
+## [16] gdata_2.17.0       stringi_1.1.1      backports_1.1.0   
+## [19] jsonlite_1.0</code></pre>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -732,9 +730,13 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 

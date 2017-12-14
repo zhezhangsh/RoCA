@@ -1,0 +1,90 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <data> a numeric matrix saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column, or row name, is unique variable ID
+#   - the first row, or column name, is unique sample names
+#   - it's preferred to have data normalized between samples and adjusted to the beginning time point
+# <dsgn> a design matrix saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - the first column, or row name, is unique sample names matching column names of <data>
+#   - the second column is the time point corresponding to each sample
+#     - if not numeric value, it will be converted to 1 to N by the order of first occurrence in the matrix
+#   - the third column is integers as group indicators from 1 to N, where N is the total number of groups
+#   - each of the other column corresponds to an experimental time serie/condition, with values 0 or 1
+# <anno> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - this input is optional
+#   - the first column, or row name, is unique variable ID matching the row names of <data>
+# <geneset> a list of 2 elements saved in a .rdata, .rda, or .rds file
+#   - this input is optional
+#   - see https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gene.set for examples
+#   - the first element of the list is a table of gene set annotation
+#   - the second element of this list is itself of a list of gene-gene set mapping
+#   - the element names of the second element must match the row names of the first element
+#############################################################################################################################
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+template: masigpro.Rmd
+output: /Users/zhangz/Google Drive/Projects/McCormack/2017-10_Proteomics/result/phase2_masigpro
+home: ../index.html  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+# Analyst describes the analysis to run, such as project title
+description:    
+  Project: Reporting of Custom Analysis
+  Analysis: Just a skeleton for developer to write their own Rmd templates
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+# Location (local or URL) of files with formatted input data
+input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
+  mtrx: data.rds
+  dsgn: design.rds
+  anno: anno.rds
+  geneset: geneset.rds
+  
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+# Parameters to run this analysis
+parameter: 
+  degree: 3               # the degree of the regression fit polynome
+  k: 16                   # maximal number of clusters
+  rsq: 0.1                # cut-off level at the R-squared value for the stepwise regression fit
+  Q: 0.20                 # level of FDR control; argument of p.vector
+  alfa: 0.05              # significance level used for variable selection in the stepwise regression; argument of T.fit
+  step.method: backward   # "backward", "forward", "two.ways.backward", or "two.ways.forward"; 
+  ##### Conserved parameters: don't change them unless there is strong reason
+  cluster.method: hclust  # "hclust", "kmeans", or "mfuzz"; clustering method for data partioning
+  time.col: 1             # column in edesign containing time values; default is first column
+  repl.col: 2             # column in edesign containing coding for replicates arrays; default is second column
+  ##### extra parameters
+  extra:
+    estimate.degree: yes
+    estimate.k: yes
+    estimate.rsq: yes
+    paired: yes
+    merge: 
+      r: 0.8
+      p: 0.01
+    plot:
+      color: 
+      - "#4444FF"
+      - "#4444FF"
+      - "#FF4444"
+      - "#FF4444"
+      line:
+      - 2
+      - 1
+      - 2
+      - 1
+      
+######################    END OF DOCUMENT    ######################
+
+

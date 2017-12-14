@@ -15,8 +15,8 @@
 # Required by the RoCA framework to generate a reproducible report
 template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/Rtsne_dbscan/Rtsne_dbscan.Rmd
 #template: Rtsne_dbscan.Rmd
-output: TSNE_DBSCAN # Where to save the output files
-home: ../../index.html                    # Location to project home (URL or local file)
+output: tSNE # Where to save the output files
+home: ../index.html                    # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
 zip: no                                   # Whether to zip the output folder
 
@@ -25,14 +25,15 @@ zip: no                                   # Whether to zip the output folder
 ###################################################################
 # Analyst describes the analysis to run, such as project title
 description:    
-  Project: iPS-derived neurocell from CdLS and control samples.
+  Project: Weight loss in obest adolescent
+  Analysis: Clustering subjects by metobolites
   
 ###################################################################
 ########################    INPUT DATA    #########################
 ###################################################################
 # Location (local or URL) of files with formatted input data
 input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
-  matrix: expr.rds
+  matrix: metabolite_m0.rds
   group: sample.rds
   
 ###################################################################

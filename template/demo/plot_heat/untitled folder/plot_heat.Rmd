@@ -1,0 +1,225 @@
+---
+title: "Plot a heatmap of gene clusters"
+author: "Zhe Zhang"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+**Introduction** This analysis identifies variables significantly different across sample groups to plot a heatmap.
+</div>
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'plot_heat.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'RoCA', 'awsomics'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table');
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+```{r load_data, include=FALSE}
+## Load input data
+mtr<-as.matrix(ImportTable(DownloadFile(yml$input$data, path.input))); # tab-delimited data matrix
+grp<-ImportVector(DownloadFile(yml$input$group, path.input));
+
+if (length(grp) != ncol(mtr)) stop('Error: column number of data matrix not equal to number of samples\n');
+if (length(unique(grp)) < 2) stop('Error: less than 2 sample groups, cannot run ANOVA\n');
+if (length(unique(grp)) == length(grp)) stop('Error: none of the sample groups has replicates, cannot run ANOVA\n'); 
+names(grp)<-colnames(mtr); 
+
+saveRDS(mtr, paste(path.r, 'data.rds', sep='/')); 
+saveRDS(grp, paste(path.r, 'group.rds', sep='/')); 
+
+# re-order matrix column, so samples of the same group are next to each other
+ind<-lapply(unique(grp), function(u) which(grp==u)); 
+mtr<-mtr[, unlist(ind)]; 
+grp<-grp[colnames(mtr)]; 
+```
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+# Summary statistics
+
+```{r summary_statistics, include=FALSE}
+stat<-cbind(Mean=rowMeans(mtr, na.rm=TRUE), 
+            SD=apply(mtr, 1, function(x) sd(x, na.rm=TRUE)), 
+            Range=apply(mtr, 1, function(x) diff(range(x, na.rm=TRUE))));
+summ<-apply(stat, 2, summary); 
+tbl1<-t(summ); 
+```
+
+<div style="color:darkblue; padding:0 3cm">
+**Table 1.** The mean, standard deviation, and range of all variables.
+</div>
+
+<div align='center', style="padding:0 3cm">
+`r kable(tbl1, row.names=TRUE, align=rep('c', ncol(tbl1)))`
+</div>
+
+`r home.url`
+
+# Variable selection
+
+## Run ANOVA
+
+```{r anova, include=FALSE}
+f<-as.factor(as.vector(grp)); 
+dat<-data.frame(t(mtr));
+dat$Group<-f;
+formula = as.formula(paste0("cbind(", paste(names(dat)[-length(dat)],collapse=","), ")~Group") ) 
+aov<-aov(formula, data=dat);
+p<-as.vector(sapply(summary(aov), function(x) x[1, 5])); 
+names(p)<-rownames(mtr);
+
+ms<-sapply(unique(grp), function(g) rowMeans(mtr[, grp==g, drop=FALSE], na.rm=TRUE)); 
+colnames(ms)<-paste('Mean', colnames(ms), sep='_'); 
+
+stat<-cbind(stat, pANOVA=p, ms); 
+saveRDS(stat, paste(path.r, 'stat.rds', sep='/')); 
+write.csv(stat, paste(path.tbl, 'stat.csv', sep='/')); 
+```
+
+Run 1-way ANOVA on each variable to identify those significantly different across all sample groups.
+
+<div align='center'>
+```{r hist_p, include=TRUE, fig.width=6, fig.height=4, out.width='480px'}
+# Plot histogram of p values
+par(mar=c(5,5,2,2));
+hist(p, br=100, xlab='ANOVA p value', ylab='Number of variables', main='', cex.lab=1.5); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 1.** Distribution of ANOVA p values. Number of variables with p values within each 0.01 interval.
+</div>
+
+## Select variables
+
+```{r selection, include=FALSE}
+p0<-sort(p); 
+mtr0<-mtr[names(p0), , drop=FALSE]; 
+len<-length(p0[p0<=prms$pvalue]); 
+if (len < prms$min) sel<-mtr0[1:min(nrow(mtr0), prms$min), , drop=FALSE] else sel<-mtr0[1:min(len, prms$max), , drop=FALSE];
+CreateDatatable(FormatNumeric(stat[rownames(sel), , drop=FALSE]), paste(path.tbl, 'selected.html', sep='/')); 
+```
+
+Significant variables were selected using the following criteria:
+
+  - Select variables with ANOVA p values less than **`r prms$pvalue`**
+  - Stop if the number of remaining variables is between **`r prms$min`** and **`r prms$max`**, else
+    * if the number remaining variable is less than `r prms$min`, select the top `r prms$min` variables with the smallest p values
+    * if the number remaining variable is greater than `r prms$max`, select the top `r prms$max` variables with the smallest p values
+
+As a result, **`r nrow(sel)`** variables were selected. Click [here](table/selected.html) to view these variables.
+
+`r home.url`
+
+# Heatmap
+
+```{r heatmap_prepare, include=FALSE}
+# function to sort columns
+sortColumn<-function(ms, g) {
+  corr<-as.vector(cor(rowMeans(ms[, g[[2]], drop=FALSE]), ms[, g[[1]], drop=FALSE]));
+  g[[1]]<-g[[1]][order(corr)];
+  for (i in 2:length(g)) {
+    corr<-as.vector(cor(rowMeans(ms[, g[[i-1]], drop=FALSE]), ms[, g[[i]], drop=FALSE]));
+    g[[i]]<-g[[i]][rev(order(corr))]; 
+  }
+  ms[, as.vector(unlist(g))]; 
+}
+
+# prepare for heatmap plotting
+if (prms$rescale) d<-t(scale(t(sel))) else d<-sel;
+d<-d[hclust(as.dist(1-cor(t(d))))$order, , drop=FALSE];
+g<-lapply(unique(grp), function(x) names(grp)[grp==x]);
+d<-sortColumn(d, g);
+
+w<-max(6, min(1.5+0.25*ncol(d), 10));
+h<-min(1.5+0.15*nrow(d), 1.25*w); 
+```
+
+<div align='center'>
+```{r heatmap, fig.width=w, fig.height=h, out.width='720px'}
+if (prms$rescale) PlotColoredBlock(d, -3, 3, key = 'Normalized value', num.breaks = 127, groups=g) else 
+  PlotColoredBlock(d, key = 'Value', num.breaks = 127, groups=g)
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2.** Color-coded data of selected variables different across sample groups (red = higher). Variables (rows) were clustered based on their correlation to each other and samples were arranged by groups.
+</div>
+
+`r home.url`
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

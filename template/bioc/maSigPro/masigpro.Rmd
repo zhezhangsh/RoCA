@@ -1,0 +1,447 @@
+---
+title: "Developer gives a name to the analysis to be implemented"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+**Introduction** 
+
+[maSigPro](https://www.ncbi.nlm.nih.gov/pubmed/?term=16481333) is a R package that initially was developed for the analysis of time series of multiple conditions. maSigPro follows a two steps regression strategy to find variable with significant temporal changes and significant differences between experimental conditions The method defines a general regression model for the data where the experimental conditions are identified by dummy variables. 
+
+  - The procedure first adjusts this global model by the least-squared technique to identify variables changing over time and selects significant ones applying false discovery rate control procedures. 
+
+  - Secondly, stepwise regression is applied as a variable selection strategy to study differences between experimental conditions and to find statistically significant different profiles. The coefficients obtained in this second regression model will be useful to cluster together significant variables with similar patterns over time.
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'masigpro.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'GenomicRanges', 
+                   'RoCA', 'awsomics', 'maSigPro'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure',
+                     'path.tbl'='table', 'path.cl'='cluster'); 
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml')) if (file.exists(name.yaml))	yml<-yaml.load_file(name.yaml);  
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) 
+  assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+```{r load_data, include=FALSE}
+mtrx <- ImportTable(yml$input$mtrx);
+dsgn <- ImportTable(yml$input$dsgn);
+
+dsgn <- dsgn[rownames(dsgn) %in% colnames(mtrx), , drop=FALSE];
+mtrx <- mtrx[, rownames(dsgn)]; 
+
+tcol <- prms$time.col;
+rcol <- prms$repl.col;
+dsgn <- dsgn[, c(tcol, rcol, setdiff(1:ncol(dsgn), c(tcol, rcol)))]; 
+
+if (is.null(yml$input$anno)) anno <- NULL else {
+  anno <- ImportTable(yml$input$anno); 
+  anno <- anno[rownames(mtrx), , drop=FALSE];
+  rownames(anno) <- rownames(mtrx); 
+};
+
+if (is.null(yml$input$geneset)) gset <- NULL else gset <- ImportList(yml$input$geneset); 
+
+if (!is.numeric(dsgn[, 1])) {
+  u <- 1:length(unique(as.vector(dsgn[, 1])));
+  names(u) <- unique(as.vector(dsgn[, 1]));
+  dsgn[, 1] <- u[as.vector(dsgn[, 1])]; 
+}
+tmpt <- u; 
+dsgn <- as.matrix(dsgn);
+
+grps <- lapply(1:max(dsgn[, 2]), function(i) dsgn[dsgn[, 2]==i, , drop=FALSE]); 
+ctgy <- sapply(grps, function(g) {
+  x <- g[1, 1];
+  y <- g[1, 3:ncol(g)];
+  z <- paste(names(tmpt)[tmpt==x], names(y)[y==1][1], sep='_');
+  c(z, names(y)[y==1][1]);
+});
+names(grps) <- ctgy[1, ];
+grps <- lapply(grps, rownames);
+grps <- split(grps, ctgy[2, ])[colnames(dsgn)[3:ncol(dsgn)]];
+
+snum <- sapply(1:max(dsgn[, 1]), function(i) nrow(dsgn[dsgn[, 1]==i, , drop=FALSE]));
+```
+
+```{r run_masigpro, include=FALSE}
+if (prms$extra$estimate.degree) gdr <- ceiling(sqrt(length(tmpt)-1)) else gdr <- prms$degree;
+if (prms$extra$estimate.k) ncl <- ceiling(sqrt(length(tmpt)) * (ncol(dsgn)-1)) else ncl <- prms$k; 
+if (prms$extra$estimate.rsq) rsq <- round(2/sqrt(ncol(mtrx)), 2) else rsq <- prms$rsq;
+ts <- maSigPro(mtrx, dsgn, degree = gdr, rsq =rsq, k = ncl, Q = prms$Q,
+               alfa = prms$alfa, cluster.method = prms$cluster.method,
+               step.method = prms$step.method, vars = 'all', pdf = FALSE);
+saveRDS(ts, paste(path.r, 'all_result.rds', sep='/'));
+saveRDS(ts$dis, paste(path.r, 'design.rds', sep='/'));
+# ts <- readRDS('/Users/zhangz/Google Drive/Projects/McCormack/2017-10_Proteomics/r/masigpro/all_result.rds');
+```
+
+# Result
+
+```{r cluster, include=FALSE}
+sigs <- ts$sig.genes;
+prof <- sigs$sig.profiles;
+
+cls <- split(rownames(prof), prof[, ncol(prof)]); 
+# merge similar clusters
+flag<-TRUE;
+while(flag) {
+  cat('Number of clusters ', length(cls), '\n'); 
+  ms <- sapply(cls, function(c) colMeans(mtrx[c,  , drop=FALSE])); 
+  tr <- cutree(hclust(as.dist(1-cor(ms))), k=length(cls)-1);
+  i  <- tr[duplicated(tr)];
+  c  <- ms[, tr==i]; 
+  r  <- cor(c[, 1], c[, 2]); 
+  p  <- cor.test(c[, 1], c[, 2])$p.value[[1]]; 
+  if (r > prms$extra$merge$r & p < prms$extra$merge$p) {
+    cls[tr==i][[1]]<-as.vector(unlist(cls[tr==i]));
+    cls <-cls[names(cls)!=names(i)]; 
+  } else flag<-FALSE;
+}; 
+mns <- sapply(cls, function(c) colMeans(mtrx[c, ]));
+cls <- cls[hclust(as.dist(1-cor(mns)))$order];
+names(cls) <- paste('Cluster', 1:length(cls), sep='_'); 
+mns <- sapply(cls, function(c) colMeans(mtrx[c, ]));
+mn <- lapply(1:length(cls), function(i) 
+  sapply(grps, function(g) sapply(g, function(g) mean(mns[g, i]))));
+se <- lapply(1:length(cls), function(i) 
+  sapply(grps, function(g) sapply(g, function(g) sd(mns[g, i])/length(g))));
+mn <- lapply(mn, t);
+se <- lapply(se, t);
+names(mn) <- names(se) <- names(cls); 
+for (i in 1:length(mn)) colnames(mn[[i]]) <- colnames(se[[i]]) <- names(tmpt);
+```
+
+## Clustering 
+
+***maSigPro*** identified **`r length(cls)`** clusters of **`r sum(sapply(cls, length))`** variables in total.
+
+<div align='center'>
+```{r, plot_heatmap, fig.with=8.0, fig.height=round(1.5+0.25*length(cls), 1), out.width='800px'}
+m <- lapply(grps, function(g) sapply(g, function(g) colMeans(mns[g, ])));
+g <- lapply(m, colnames);
+m <- do.call('cbind', m); 
+x <- ceiling(max(abs(m))); 
+rownames(m) <- paste(rownames(m), '(N=', sapply(cls, length), ')', sep=''); 
+PlotColoredBlock(m, min=-1*x, max=x, groups = g);
+
+saveRDS(m, paste(path.r, 'cluster_mean.rds', sep='/'));
+CreateDatatable(FormatNumeric(m), paste(path.tbl, 'cluster_mean.rds', sep='/')) -> x; 
+```
+</div>
+  
+<div style="color:darkblue; padding:0 0cm">
+**Figure 1.** Group averages of all genes in each cluster. Color corresponds to measurements (red = high). 
+
+> [Click](table/cluster_mean.rds) to view full table of group means.
+</div>
+
+<div align='center'>
+```{r plot_corr, include=TRUE, fig.width=6, fig.height=6, out.width='600px'}
+hcl <- hclust(as.dist(1-cor(mns)));
+crr <- cor(mns)[hcl$order, hcl$order]; 
+PlotColoredBlock(crr, -1, 1, key='Correlation coefficient'); 
+```
+</div>
+
+<div style="color:darkblue; padding:0 3cm">
+**Figure 2.** Inter-correlation between the means of all clusters. Similar clusters have higher correlation coefficient. 
+</div>
+
+<div align='center'>
+```{r plot_series, include=TRUE, fig.width=9.6, fig.height=3.6*ceiling(length(cls)/2), out.width='960px'}
+
+col <- prms$extra$plot$color;
+lty <- prms$extra$plot$line;
+if (length(col) != length(grps)) col <- c();
+if (length(lty) != length(grps)) lty <- c();
+
+par(mfrow=c(ceiling(length(cls)/2), 2));
+for (i in 1:length(cls)) {
+  PlotSeries(mn[[i]], se[[i]], col=col, lty=lty, title=names(cls)[i], draw.legend = i==1);
+}; 
+```
+</div>
+
+<div align='center', style="color:darkblue; padding:0 0cm">
+**Figure 3.** Cluster profiles. 
+</div>
+
+## Post-hoc analysis
+
+Post-hoc analysis of the clusters by comparing conditions. 
+
+  - The total deviation from the beginning points at each time point.
+  - The deviation between the conditions at each time point.
+
+```{r post_hoc, include=FALSE}
+prd <- as.logical(prms$extra$paired);
+
+# Deviation from beginning point
+dv1 <- sapply(mn, function(m) d <- apply(m, 2, function(x) sum(abs(x - m[, 1])))); 
+dv1 <- lapply(cls, function(c) {
+  ds <- sapply(grps, function(g) {
+    sapply(2:length(g), function(i) {
+      if (prd) abs(mean(mtrx[c, g[[i]]]) - mean(mtrx[c, g[[1]]])) else
+        abs(mean(mtrx[c, g[[i]]]) - mean(mtrx[c, g[[1]]]))
+    }); 
+  });
+  rownames(ds) <- names(tmpt)[-1];
+  ds <- cbind(ds, Combined=rowSums(ds));
+  ds[is.na(ds)] <- 0; 
+  ds;
+});
+pv1 <- lapply(cls, function(c) {
+  ps <- sapply(grps, function(g) {
+    sapply(2:length(g), function(i) 
+      t.test(colMeans(mtrx[c, g[[1]]]), colMeans(mtrx[c, g[[i]]]), paired=prd)$p.value); 
+  });
+  rownames(ps) <- names(tmpt)[-1];
+  p0 <- apply(ps, 1, function(p) 
+    pchisq(-2*sum(log(p)), df=2*ncol(ps), lower.tail = FALSE, log=TRUE)); 
+  ps <- cbind(ps, Combined=exp(p0));
+  ps[is.na(ps)] <- 1; 
+  ps
+});
+
+# Deviation from each other
+dv2 <- sapply(mn, function(m) d <- apply(m, 2, function(x) sd(x))); 
+pv2 <- sapply(cls, function(c) {
+  p0 <- sapply(1:length(tmpt), function(i) {
+    s <- lapply(grps, function(g) g[[i]]);
+    f <- as.factor(rep(1:length(s), sapply(s, length)));
+    m <- unlist(lapply(s, function(s) colMeans(mtrx[c, s, drop=FALSE])));
+    n <- sapply(s, length);
+    summary(aov(m ~ f))[[1]][1, 5];
+    # if (prd & max(n)==min(n)) {
+    #   x <- rep(1:length(s), each=n[1]); 
+    #   a <- summary(aov(m ~ f + Error(x))); 
+    #   a[[2]][[1]][1, 5]
+    # } else summary(aov(m ~ f))[[1]][1, 5];
+  })
+})
+rownames(pv2) <- names(tmpt);
+pv2[is.na(pv2)] <- 1;
+
+saveRDS(list(between=list(deviation=dv1, pvalue=pv1), within=list(deviation=dv2, pvalue=pv2)), 
+        paste(path.r, 'post_hoc.rds', sep='/'));
+
+pv0 <- sapply(pv1, function(p) p[, ncol(p)]);
+dv0 <- sapply(dv1, function(d) d[, ncol(d)]);
+tbl <- cbind(t(dv0), t(pv0)); 
+colnames(tbl) <- paste(rep(c('Dev', 'P'), each=ncol(tbl)/2), colnames(tbl), sep='_');
+tbl <- cbind(Size=sapply(cls, length), tbl); 
+CreateDatatable(tbl, paste(path.tbl, 'post_hoc_between.html', sep='/'));
+
+tbl <- cbind(t(dv2), t(pv2)); 
+colnames(tbl) <- paste(rep(c('Dev', 'P'), each=ncol(tbl)/2), colnames(tbl), sep='_');
+tbl <- cbind(Size=sapply(cls, length), tbl); 
+CreateDatatable(tbl, paste(path.tbl, 'post_hoc_within.html', sep='/'));
+```
+
+```{r clusters, include=FALSE}
+fns <- sapply(names(cls), function(nm) { 
+  fn<-paste(path.cl, '/', nm, '.pdf', sep=''); 
+  pdf(fn, w=6, h=12); 
+  par(mfrow=c(4, 1), omi=c(0.2, 0.2, 0.2, 0.2));
+
+  x <- mtrx[cls[[nm]], , drop=FALSE];
+  x <- lapply(grps, function(g) sapply(g, function(g) rowMeans(x[, g])));
+  y <- do.call('cbind', x); 
+  
+  tbl <- FormatNumeric(y); 
+  if (!is.null(anno)) tbl <- cbind(anno[rownames(tbl), , drop=FALSE], tbl); 
+  CreateDatatable(tbl, paste(path.cl, '/', nm, '.html', sep='')); 
+  
+  PlotColoredBlock(y, min=-max(abs(y)), max=max(abs(y)), groups = lapply(x, colnames));
+  
+  PlotSeries(mn[[nm]], se[[nm]], labs=c('', 'Group mean'), title=nm, 
+             draw.legend = TRUE, col = col, lty = lty); 
+  PlotSeries(t(dv1[[nm]]), labs=c('', 'Average deviation'), 
+             title='Deviation from beginning point', draw.legend = TRUE, 
+             col = c(col, 'black'), lty = c(lty, 1)); 
+  PlotSeries(t(dv2)[nm, , drop=FALSE], labs=c('', 'Average deviation'), 
+             title='Deviation of different conditions', draw.legend = FALSE, 
+             col = 'black', lty = 1); 
+  
+  points(1:length(tmpt), t(dv2)[nm, ], col=rainbow(length(tmpt)), pch=18, 
+         cex=pmax(2, pmin(10, abs(log10(pv2[, nm]))))); 
+  lines(1:length(tmpt), t(dv2)[nm, ], col='darkgrey'); 
+
+  dev.off();
+  
+  fn; 
+}); 
+
+d1 <- apply(dv0, 2, function(x) which(x==max(x)));
+x1 <- apply(dv0, 2, max);
+p1 <- sapply(1:ncol(dv0), function(i) pv0[d1[i], i]); 
+
+d2 <-apply(dv2, 2, function(x) which(x==max(x)));
+x2 <- apply(dv2, 2, max);
+p2 <- sapply(1:ncol(dv2), function(i) pv2[d2[i], i]); 
+
+tbl <- data.frame(
+  Cluster = paste('[', names(cls), '](cluster/', names(cls), '.pdf)', sep=''),
+  Size = paste('[', sapply(cls, length), '](cluster/', names(cls), '.html)', sep=''),
+  Between_When = names(tmpt)[d1], Between_Dev = format(x1, digit=4), 
+  Between_P = format(p1, scientific = TRUE, digit=3),
+  Within_When = names(tmpt)[d2], Within_Dev = format(x2, digit=4), 
+  Within_P = format(p2, scientific = TRUE, digit=3)
+);
+```
+
+<div style="color:darkblue; padding:0 1cm">
+**Table 1** The post-hoc analysis of clusters shown in **Figure 3**. The _between_ statistics represent the maximal deviation (when and how much) between a time point and the beginning time point, and the _within_ statistics represent the maximal deviation (when and how much) of the conditions from each other within the same time point.
+</div>
+
+<div align='center', style="padding:0 1cm">
+`r kable(tbl, row.names = FALSE)`
+</div>
+
+<div align='center'>
+```{r plot_dev, include=TRUE, fig.width=19.2, fig.height=7.2, out.width='960px'}
+par(mfrow=c(1, 2), mar=c(6,5,2,2)); 
+cl <- rainbow(length(cls)); 
+
+x <- t(dv0);
+x <- cbind(rep(0, nrow(x)), x);
+colnames(x) <- names(tmpt); 
+y <- apply(x, 1, function(x) which(x==max(x)));
+z <- apply(x, 1, max);
+plot(y, z, xlim=c(0, ncol(x)+1), ylim=c(0, 1.1*max(z)), axes=FALSE, 
+     ylab='Max deviation from beginning', cex.lab=1.5, yaxs='i', xaxs='i',
+     xlab='', main='Between', pch=17, cex=1.5, col=cl);
+box();
+axis(2);
+axis(1, at=1:ncol(x), tick=TRUE, label=names(tmpt), las=3); 
+text(y, z, pos=3, col='darkgrey', label=rownames(x), cex=1); 
+grid(nx=0, ny=NULL); 
+
+x <- t(dv2);
+y <- apply(x, 1, function(x) which(x==max(x)));
+z <- apply(x, 1, max);
+plot(y, z, xlim=c(0, ncol(x)+1), ylim=c(0, 1.1*max(z)), axes=FALSE, 
+     ylab='Max deviation from each other', cex.lab=1.5, yaxs='i', xaxs='i',
+     xlab='', main='Within', pch=17, cex=1.5, col=cl);
+box();
+axis(2);
+axis(1, at=1:ncol(x), tick=TRUE, label=names(tmpt), las=3); 
+text(y, z, pos=3, col='darkgrey', label=rownames(x), cex=1); 
+grid(nx=0, ny=NULL); 
+```
+</div>
+  
+<div style="color:darkblue; padding:0 0cm">
+**Figure 4.** The left panel shows when and how much the maximal deviation happens for each cluster between the beginning time point and all the other time points. The right panel shows when and how much the maximal deviation between conditions happens within each time point. 
+</div>
+
+## Over-representation analysis
+
+If the variables can be classified into pre-defined sets, such as genes into Gene Ontology categories, over-representation analysis can be run to test the enrichment of sets in each cluster. 
+
+```{r ora, include=FALSE}
+ora <- lapply(names(cls), function(nm) {
+  ora <- TestGSE(cls[[nm]], rownames(mtrx), gset[[2]])[[1]]; 
+  ora <- WrapGSE(ora, gset[[1]], paste(path.cl, nm, sep='/'), FALSE); 
+  fn  <- TruncatePathPrefix(ora[[3]], path);   
+  sapply(names(ora[[2]]), function(nm) paste('[', nrow(ora[[2]][[nm]]), '](', fn[nm], ')', sep='')); 
+});
+gs  <- sort(unique(unlist(lapply(ora, names), use.names=FALSE)));
+tbl <- t(sapply(ora, function(ora) ora[gs]));
+dimnames(tbl)<-list(names(cl), gs); 
+tbl[is.na(tbl)]<-'0';
+rownames(tbl) <- names(cls); 
+```
+
+<div style="color:darkblue; padding:0 1cm">
+**Table 2** Numbers of pre-defined variable sets significantly enriched in each cluster. Sets were split based on their sources. Click on each number to see list of the variable sets. 
+</div>
+
+<div align='center', style="padding:0 1cm">
+`r kable(tbl, align=rep('c', ncol(tbl)))`
+</div>
+
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

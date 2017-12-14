@@ -1,0 +1,64 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <pairs> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first two columns are IDs of node pairs sharing the the same edge
+#   - (optionally) a column named "weight" which provides the weight of edges
+# <background> a vector saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - (optionally) a vector of node IDs to be used as the background of node set enrichment analysis
+# <mapping> a named list saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - each element of the list is the node IDs matching the IDs in the first two columns of <pairs> table
+#   - element names must be unique set names matching the row names of the <annotation> table
+# <annotation> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - each row must have a unique ID matching the names of the <mapping> list
+#   - columns provide description of the node sets, such as name and source
+#   - if there is a column call "URL", it will be used to add an URL link to the node set ID
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+# template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/igraph/igraph.Rmd
+template: ../igraph.Rmd
+output: example/sle_immune_cells          # Where to save the output files
+home: ../index.html                       # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+# Analyst describes the analysis to run, such as project title
+description:    
+  Project: "Transcriptome in immune cells of control-SLE patient samples"
+  Data: "Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 SLE patients.
+        Differential gene expression was compared between control and patient groups. 
+        Protein-protein interaction information was downloaded from STRING (https://string-db.org) database."
+  Analysis: "Top 100 genes (lowest p values) having at least 2 fold increase or decrease of expression in SLE 
+        were selected from each cell types and combined for network analysis."
+  
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+# Location (local or URL) of files with formatted input data
+input:    
+  pairs: ppi_750.rds            # node pairs in the first two columns of a table; (optionally) a column named 'weight' for edge weight
+  background: background.rds    # (optionally) background for enrichment analysis
+  mapping: ../../../data/gene.set/human_slim_mapping.rds            # node-set mapping for enrichment analysis
+  annotation: ../../../data/gene.set/human_slim_annotation.rds      # set annotation for enrichment analysis
+  
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+# Parameters to run this analysis
+parameter:  # These are examples of different types of parameters. They will not be used for the skeleton.Rmd template for act analysis.
+  cluster:  # parameters of clustering analysis and plotting clusters
+    size: 20  # minimal size of a cluster
+    core: 30  # minimal number of neighbors for a core node to be labeled
+  enrichment: 
+    size.min: 10    # minimal size of a node set to be tested for enrichment
+    size.max: 500   # maximal size of a node set to be tested for enrichment
+
+######################    END OF DOCUMENT    ######################
+
+
