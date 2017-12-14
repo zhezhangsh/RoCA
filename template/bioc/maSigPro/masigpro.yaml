@@ -25,8 +25,8 @@
 #########################    REQUIRED    ##########################
 ###################################################################
 # Required by the RoCA framework to generate a reproducible report
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/maSigPro/masigpro.Rmd
-#template: masigpro.Rmd
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/maSigPro/masigpro.Rmd
+template: masigpro.Rmd
 output: examples/oxytocin
 home: http://zhezhangsh.github.io/RoCA    # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
