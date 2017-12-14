@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2017-12-14" />
+
+<title>Developer gives a name to the analysis to be implemented</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-1.1/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Developer gives a name to the analysis to be implemented</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2017-12-14</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong></p>
+<p><a href="https://www.ncbi.nlm.nih.gov/pubmed/?term=16481333">maSigPro</a> is a R package that initially was developed for the analysis of time series of multiple conditions. maSigPro follows a two steps regression strategy to find variable with significant temporal changes and significant differences between experimental conditions The method defines a general regression model for the data where the experimental conditions are identified by dummy variables.</p>
+<ul>
+<li><p>The procedure first adjusts this global model by the least-squared technique to identify variables changing over time and selects significant ones applying false discovery rate control procedures.</p></li>
+<li>Secondly, stepwise regression is applied as a variable selection strategy to study differences between experimental conditions and to find statistically significant different profiles. The coefficients obtained in this second regression model will be useful to cluster together significant variables with similar patterns over time.</li>
+</ul>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Oxytocin reduces caloric intake in proteomics analysis</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.2</span> Analysis</h2>
+<p>maSigPro analysis of 4 obesity + treatment conditions</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="result" class="section level1">
+<h1><span class="header-section-number">2</span> Result</h1>
+<div id="clustering" class="section level2">
+<h2><span class="header-section-number">2.1</span> Clustering</h2>
+<p><strong><em>maSigPro</em></strong> identified <strong>11</strong> clusters of <strong>283</strong> variables in total.</p>
+<div align="center">
+<p><img src="index_files/figure-html/plot_heatmap-1.png" width="800px" /></p>
+</div>
+<div style="color:darkblue; padding:0 0cm">
+<p><strong>Figure 1.</strong> Group averages of all genes in each cluster. Color corresponds to measurements (red = high).</p>
+<blockquote>
+<p><a href="table/cluster_mean.rds">Click</a> to view full table of group means.</p>
+</blockquote>
+</div>
+<div align="center">
+<p><img src="index_files/figure-html/plot_corr-1.png" width="600px" /></p>
+</div>
+<div style="color:darkblue; padding:0 3cm">
+<p><strong>Figure 2.</strong> Inter-correlation between the means of all clusters. Similar clusters have higher correlation coefficient.</p>
+</div>
+<div align="center">
+<p><img src="index_files/figure-html/plot_series-1.png" width="960px" /></p>
+</div>
+<div align="center" ,="" style="color:darkblue; padding:0 0cm">
+<p><strong>Figure 3.</strong> Cluster profiles.</p>
+</div>
+</div>
+<div id="post-hoc-analysis" class="section level2">
+<h2><span class="header-section-number">2.2</span> Post-hoc analysis</h2>
+<p>Post-hoc analysis of the clusters by comparing conditions.</p>
+<ul>
+<li>The total deviation from the beginning points at each time point.</li>
+<li>The deviation between the conditions at each time point.</li>
+</ul>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Table 1</strong> The post-hoc analysis of clusters shown in <strong>Figure 3</strong>. The <em>between</em> statistics represent the maximal deviation (when and how much) between a time point and the beginning time point, and the <em>within</em> statistics represent the maximal deviation (when and how much) of the conditions from each other within the same time point.</p>
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Cluster</th>
+<th align="left">Size</th>
+<th align="left">Between_When</th>
+<th align="left">Between_Dev</th>
+<th align="left">Between_P</th>
+<th align="left">Within_When</th>
+<th align="left">Within_Dev</th>
+<th align="left">Within_P</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="cluster/Cluster_1.pdf">Cluster_1</a></td>
+<td align="left"><a href="cluster/Cluster_1.html">15</a></td>
+<td align="left">T120</td>
+<td align="left">1.972</td>
+<td align="left">2.40e-03</td>
+<td align="left">T120</td>
+<td align="left">0.5566</td>
+<td align="left">1.02e-02</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="cluster/Cluster_2.pdf">Cluster_2</a></td>
+<td align="left"><a href="cluster/Cluster_2.html">70</a></td>
+<td align="left">T120</td>
+<td align="left">2.700</td>
+<td align="left">1.59e-02</td>
+<td align="left">T150</td>
+<td align="left">0.8227</td>
+<td align="left">1.24e-02</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="cluster/Cluster_3.pdf">Cluster_3</a></td>
+<td align="left"><a href="cluster/Cluster_3.html">19</a></td>
+<td align="left">T30</td>
+<td align="left">2.452</td>
+<td align="left">2.96e-04</td>
+<td align="left">T60</td>
+<td align="left">0.7509</td>
+<td align="left">9.23e-05</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="cluster/Cluster_4.pdf">Cluster_4</a></td>
+<td align="left"><a href="cluster/Cluster_4.html">20</a></td>
+<td align="left">T60</td>
+<td align="left">4.324</td>
+<td align="left">1.24e-10</td>
+<td align="left">T30</td>
+<td align="left">0.3483</td>
+<td align="left">5.33e-02</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="cluster/Cluster_5.pdf">Cluster_5</a></td>
+<td align="left"><a href="cluster/Cluster_5.html">9</a></td>
+<td align="left">T120</td>
+<td align="left">5.128</td>
+<td align="left">1.16e-10</td>
+<td align="left">T30</td>
+<td align="left">0.3888</td>
+<td align="left">7.58e-02</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="cluster/Cluster_6.pdf">Cluster_6</a></td>
+<td align="left"><a href="cluster/Cluster_6.html">7</a></td>
+<td align="left">T90</td>
+<td align="left">2.826</td>
+<td align="left">7.34e-06</td>
+<td align="left">T15</td>
+<td align="left">0.7261</td>
+<td align="left">7.06e-04</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="cluster/Cluster_7.pdf">Cluster_7</a></td>
+<td align="left"><a href="cluster/Cluster_7.html">68</a></td>
+<td align="left">T120</td>
+<td align="left">2.289</td>
+<td align="left">3.56e-02</td>
+<td align="left">T150</td>
+<td align="left">0.6380</td>
+<td align="left">4.43e-02</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="cluster/Cluster_8.pdf">Cluster_8</a></td>
+<td align="left"><a href="cluster/Cluster_8.html">19</a></td>
+<td align="left">T90</td>
+<td align="left">2.341</td>
+<td align="left">8.22e-03</td>
+<td align="left">T150</td>
+<td align="left">0.6411</td>
+<td align="left">1.34e-02</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="cluster/Cluster_9.pdf">Cluster_9</a></td>
+<td align="left"><a href="cluster/Cluster_9.html">21</a></td>
+<td align="left">T120</td>
+<td align="left">2.644</td>
+<td align="left">1.09e-02</td>
+<td align="left">T150</td>
+<td align="left">0.8561</td>
+<td align="left">9.10e-03</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="cluster/Cluster_10.pdf">Cluster_10</a></td>
+<td align="left"><a href="cluster/Cluster_10.html">23</a></td>
+<td align="left">T120</td>
+<td align="left">2.563</td>
+<td align="left">5.96e-03</td>
+<td align="left">T60</td>
+<td align="left">0.7415</td>
+<td align="left">8.62e-03</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="cluster/Cluster_11.pdf">Cluster_11</a></td>
+<td align="left"><a href="cluster/Cluster_11.html">12</a></td>
+<td align="left">T120</td>
+<td align="left">1.840</td>
+<td align="left">2.86e-02</td>
+<td align="left">T60</td>
+<td align="left">0.6601</td>
+<td align="left">2.04e-02</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="center">
+<p><img src="index_files/figure-html/plot_dev-1.png" width="960px" /></p>
+</div>
+<div style="color:darkblue; padding:0 0cm">
+<p><strong>Figure 4.</strong> The left panel shows when and how much the maximal deviation happens for each cluster between the beginning time point and all the other time points. The right panel shows when and how much the maximal deviation between conditions happens within each time point.</p>
+</div>
+</div>
+<div id="over-representation-analysis" class="section level2">
+<h2><span class="header-section-number">2.3</span> Over-representation analysis</h2>
+<p>If the variables can be classified into pre-defined sets, such as genes into Gene Ontology categories, over-representation analysis can be run to test the enrichment of sets in each cluster.</p>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Table 2</strong> Numbers of pre-defined variable sets significantly enriched in each cluster. Sets were split based on their sources. Click on each number to see list of the variable sets.</p>
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">BioSystems</th>
+<th align="center">KEGG</th>
+<th align="center">MSigDb</th>
+<th align="center">PubTator</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cluster_1</td>
+<td align="center"><a href="cluster/Cluster_1/BioSystems.html">76</a></td>
+<td align="center"><a href="cluster/Cluster_1/KEGG.html">10</a></td>
+<td align="center"><a href="cluster/Cluster_1/MSigDb.html">59</a></td>
+<td align="center"><a href="cluster/Cluster_1/PubTator.html">27</a></td>
+</tr>
+<tr class="even">
+<td>Cluster_2</td>
+<td align="center"><a href="cluster/Cluster_2/BioSystems.html">118</a></td>
+<td align="center"><a href="cluster/Cluster_2/KEGG.html">15</a></td>
+<td align="center"><a href="cluster/Cluster_2/MSigDb.html">102</a></td>
+<td align="center"><a href="cluster/Cluster_2/PubTator.html">5</a></td>
+</tr>
+<tr class="odd">
+<td>Cluster_3</td>
+<td align="center"><a href="cluster/Cluster_3/BioSystems.html">93</a></td>
+<td align="center"><a href="cluster/Cluster_3/KEGG.html">7</a></td>
+<td align="center"><a href="cluster/Cluster_3/MSigDb.html">96</a></td>
+<td align="center"><a href="cluster/Cluster_3/PubTator.html">34</a></td>
+</tr>
+<tr class="even">
+<td>Cluster_4</td>
+<td align="center"><a href="cluster/Cluster_4/BioSystems.html">145</a></td>
+<td align="center"><a href="cluster/Cluster_4/KEGG.html">7</a></td>
+<td align="center"><a href="cluster/Cluster_4/MSigDb.html">98</a></td>
+<td align="center"><a href="cluster/Cluster_4/PubTator.html">92</a></td>
+</tr>
+<tr class="odd">
+<td>Cluster_5</td>
+<td align="center"><a href="cluster/Cluster_5/BioSystems.html">66</a></td>
+<td align="center"><a href="cluster/Cluster_5/KEGG.html">1</a></td>
+<td align="center"><a href="cluster/Cluster_5/MSigDb.html">122</a></td>
+<td align="center"><a href="cluster/Cluster_5/PubTator.html">39</a></td>
+</tr>
+<tr class="even">
+<td>Cluster_6</td>
+<td align="center"><a href="cluster/Cluster_6/BioSystems.html">70</a></td>
+<td align="center">0</td>
+<td align="center"><a href="cluster/Cluster_6/MSigDb.html">44</a></td>
+<td align="center"><a href="cluster/Cluster_6/PubTator.html">12</a></td>
+</tr>
+<tr class="odd">
+<td>Cluster_7</td>
+<td align="center"><a href="cluster/Cluster_7/BioSystems.html">153</a></td>
+<td align="center"><a href="cluster/Cluster_7/KEGG.html">6</a></td>
+<td align="center"><a href="cluster/Cluster_7/MSigDb.html">193</a></td>
+<td align="center"><a href="cluster/Cluster_7/PubTator.html">17</a></td>
+</tr>
+<tr class="even">
+<td>Cluster_8</td>
+<td align="center"><a href="cluster/Cluster_8/BioSystems.html">34</a></td>
+<td align="center"><a href="cluster/Cluster_8/KEGG.html">6</a></td>
+<td align="center"><a href="cluster/Cluster_8/MSigDb.html">80</a></td>
+<td align="center"><a href="cluster/Cluster_8/PubTator.html">69</a></td>
+</tr>
+<tr class="odd">
+<td>Cluster_9</td>
+<td align="center"><a href="cluster/Cluster_9/BioSystems.html">88</a></td>
+<td align="center"><a href="cluster/Cluster_9/KEGG.html">3</a></td>
+<td align="center"><a href="cluster/Cluster_9/MSigDb.html">172</a></td>
+<td align="center"><a href="cluster/Cluster_9/PubTator.html">28</a></td>
+</tr>
+<tr class="even">
+<td>Cluster_10</td>
+<td align="center"><a href="cluster/Cluster_10/BioSystems.html">65</a></td>
+<td align="center"><a href="cluster/Cluster_10/KEGG.html">11</a></td>
+<td align="center"><a href="cluster/Cluster_10/MSigDb.html">123</a></td>
+<td align="center"><a href="cluster/Cluster_10/PubTator.html">72</a></td>
+</tr>
+<tr class="odd">
+<td>Cluster_11</td>
+<td align="center"><a href="cluster/Cluster_11/BioSystems.html">40</a></td>
+<td align="center"><a href="cluster/Cluster_11/KEGG.html">1</a></td>
+<td align="center"><a href="cluster/Cluster_11/MSigDb.html">45</a></td>
+<td align="center"><a href="cluster/Cluster_11/PubTator.html">26</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr />
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">3</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">3.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">3.2</span> Session information</h2>
+<pre><code>## R version 3.2.2 (2015-08-14)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X 10.10.5 (Yosemite)
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+##  [1] tcltk     stats4    parallel  stats     graphics  grDevices utils    
+##  [8] datasets  methods   base     
+## 
+## other attached packages:
+##  [1] gplots_3.0.1         maSigPro_1.42.0      DynDoc_1.48.0       
+##  [4] widgetTools_1.48.0   MASS_7.3-45          Biobase_2.30.0      
+##  [7] GenomicRanges_1.22.4 GenomeInfoDb_1.6.3   IRanges_2.4.8       
+## [10] S4Vectors_0.8.11     BiocGenerics_0.16.1  htmlwidgets_0.9     
+## [13] DT_0.2               yaml_2.1.13          rmarkdown_1.3       
+## [16] knitr_1.17           RoCA_0.0.0.9000      awsomics_0.0.0.9000 
+## [19] RCurl_1.95-4.8       bitops_1.0-6         devtools_1.13.4     
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.13       highr_0.6          XVector_0.10.0    
+##  [4] tkWidgets_1.48.0   tools_3.2.2        zlibbioc_1.16.0   
+##  [7] digest_0.6.12      jsonlite_1.0       evaluate_0.10.1   
+## [10] memoise_1.1.0      withr_2.1.0        stringr_1.2.0     
+## [13] gtools_3.5.0       caTools_1.17.1     rprojroot_1.2     
+## [16] limma_3.26.9       gdata_2.17.0       magrittr_1.5      
+## [19] backports_1.1.1    htmltools_0.3.6    KernSmooth_2.23-15
+## [22] stringi_1.1.1      Mfuzz_2.30.0</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
