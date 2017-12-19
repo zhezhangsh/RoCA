@@ -1,5 +1,5 @@
 ---
-title: "Developer gives a name to the analysis to be implemented"
+title: "Clustering of time series data in multiple conditions using _maSigPro_"
 author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
 date: "`r Sys.Date()`"
 output:
@@ -25,8 +25,8 @@ output:
 
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'masigpro.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'GenomicRanges', 
-                   'RoCA', 'awsomics', 'maSigPro'); 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 
+                   'GenomicRanges', 'RoCA', 'awsomics', 'maSigPro'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure',
                      'path.tbl'='table', 'path.cl'='cluster'); 
 
@@ -63,8 +63,8 @@ home.url <- Link2Home(yml$home);
 `r home.url`
 
 ```{r load_data, include=FALSE}
-mtrx <- ImportTable(DownloadFile(yml$input$mtrx, path.input));
-dsgn <- ImportTable(DownloadFile(yml$input$dsgn, path.input));
+mtrx <- ImportTable(yml$input$mtrx);
+dsgn <- ImportTable(yml$input$dsgn);
 
 dsgn <- dsgn[rownames(dsgn) %in% colnames(mtrx), , drop=FALSE];
 mtrx <- mtrx[, rownames(dsgn)]; 
@@ -74,12 +74,12 @@ rcol <- prms$repl.col;
 dsgn <- dsgn[, c(tcol, rcol, setdiff(1:ncol(dsgn), c(tcol, rcol)))]; 
 
 if (is.null(yml$input$anno)) anno <- NULL else {
-  anno <- ImportTable(DownloadFile(yml$input$anno, path.input)); 
+  anno <- ImportTable(yml$input$anno); 
   anno <- anno[rownames(mtrx), , drop=FALSE];
   rownames(anno) <- rownames(mtrx); 
 };
 
-if (is.null(yml$input$geneset)) gset <- NULL else gset <- ImportList(DownloadFile(yml$input$geneset, path.input)); 
+if (is.null(yml$input$geneset)) gset <- NULL else gset <- ImportList(yml$input$geneset); 
 
 if (!is.numeric(dsgn[, 1])) {
   u <- 1:length(unique(as.vector(dsgn[, 1])));
@@ -107,7 +107,7 @@ snum <- sapply(1:max(dsgn[, 1]), function(i) nrow(dsgn[dsgn[, 1]==i, , drop=FALS
 if (prms$extra$estimate.degree) gdr <- ceiling(sqrt(length(tmpt)-1)) else gdr <- prms$degree;
 if (prms$extra$estimate.k) ncl <- ceiling(sqrt(length(tmpt)) * (ncol(dsgn)-1)) else ncl <- prms$k; 
 if (prms$extra$estimate.rsq) rsq <- round(2/sqrt(ncol(mtrx)), 2) else rsq <- prms$rsq;
-ts <- maSigPro(mtrx, dsgn, degree = gdr, rsq =rsq, k = ncl, Q = prms$Q,
+ts <- maSigPro(mtrx, dsgn, degree = gdr, rsq = prms$rsq, k = ncl, Q = prms$Q,
                alfa = prms$alfa, cluster.method = prms$cluster.method,
                step.method = prms$step.method, vars = 'all', pdf = FALSE);
 saveRDS(ts, paste(path.r, 'all_result.rds', sep='/'));
@@ -120,6 +120,7 @@ saveRDS(ts$dis, paste(path.r, 'design.rds', sep='/'));
 ```{r cluster, include=FALSE}
 sigs <- ts$sig.genes;
 prof <- sigs$sig.profiles;
+# prof <- ts$sig.genes$Placebo$sig.profiles;
 
 cls <- split(rownames(prof), prof[, ncol(prof)]); 
 # merge similar clusters
@@ -157,7 +158,7 @@ for (i in 1:length(mn)) colnames(mn[[i]]) <- colnames(se[[i]]) <- names(tmpt);
 
 <div align='center'>
 ```{r, plot_heatmap, fig.with=8.0, fig.height=round(1.5+0.25*length(cls), 1), out.width='800px'}
-m <- lapply(grps, function(g) sapply(g, function(g) colMeans(mns[g, ])));
+m <- lapply(grps, function(g) sapply(g, function(g) colMeans(mns[g, , drop=FALSE])));
 g <- lapply(m, colnames);
 m <- do.call('cbind', m); 
 x <- ceiling(max(abs(m))); 
@@ -197,7 +198,9 @@ if (length(lty) != length(grps)) lty <- c();
 
 par(mfrow=c(ceiling(length(cls)/2), 2));
 for (i in 1:length(cls)) {
-  PlotSeries(mn[[i]], se[[i]], col=col, lty=lty, title=names(cls)[i], draw.legend = i==1);
+  v <- se[[i]]; 
+  v[is.na(v)] <- 0; 
+  PlotSeries(mn[[i]], v, col=col, lty=lty, title=names(cls)[i], draw.legend = i==1);
 }; 
 ```
 </div>
@@ -232,8 +235,14 @@ dv1 <- lapply(cls, function(c) {
 });
 pv1 <- lapply(cls, function(c) {
   ps <- sapply(grps, function(g) {
-    sapply(2:length(g), function(i) 
-      t.test(colMeans(mtrx[c, g[[1]]]), colMeans(mtrx[c, g[[i]]]), paired=prd)$p.value); 
+    sapply(2:length(g), function(i)
+      if (length(g[[1]])>1 & length(g[[i]])>1) {
+        t.test(colMeans(mtrx[c, g[[1]]]), colMeans(mtrx[c, g[[i]]]), paired=prd)$p.value; 
+      } else {
+        t.test(rowMeans(mtrx[c, g[[1]], drop=FALSE]), 
+               rowMeans(mtrx[c, g[[i]], drop=FALSE]), paired=TRUE)$p.value; 
+      }
+    )
   });
   rownames(ps) <- names(tmpt)[-1];
   p0 <- apply(ps, 1, function(p) 
@@ -248,15 +257,12 @@ dv2 <- sapply(mn, function(m) d <- apply(m, 2, function(x) sd(x)));
 pv2 <- sapply(cls, function(c) {
   p0 <- sapply(1:length(tmpt), function(i) {
     s <- lapply(grps, function(g) g[[i]]);
-    f <- as.factor(rep(1:length(s), sapply(s, length)));
-    m <- unlist(lapply(s, function(s) colMeans(mtrx[c, s, drop=FALSE])));
-    n <- sapply(s, length);
-    summary(aov(m ~ f))[[1]][1, 5];
-    # if (prd & max(n)==min(n)) {
-    #   x <- rep(1:length(s), each=n[1]); 
-    #   a <- summary(aov(m ~ f + Error(x))); 
-    #   a[[2]][[1]][1, 5]
-    # } else summary(aov(m ~ f))[[1]][1, 5];
+    if (max(sapply(s, length)) > 1) {
+      f <- as.factor(rep(1:length(s), sapply(s, length)));
+      m <- unlist(lapply(s, function(s) colMeans(mtrx[c, s, drop=FALSE])));
+      n <- sapply(s, length);
+      summary(aov(m ~ f))[[1]][1, 5];
+    } else 1;
   })
 })
 rownames(pv2) <- names(tmpt);
@@ -279,22 +285,25 @@ CreateDatatable(tbl, paste(path.tbl, 'post_hoc_within.html', sep='/'));
 ```
 
 ```{r clusters, include=FALSE}
-fns <- sapply(names(cls), function(nm) { 
+fns <- sapply(names(cls), function(nm) {  print(nm); 
   fn<-paste(path.cl, '/', nm, '.pdf', sep=''); 
   pdf(fn, w=6, h=12); 
   par(mfrow=c(4, 1), omi=c(0.2, 0.2, 0.2, 0.2));
 
   x <- mtrx[cls[[nm]], , drop=FALSE];
-  x <- lapply(grps, function(g) sapply(g, function(g) rowMeans(x[, g])));
+  x <- lapply(grps, function(g) sapply(g, function(g) rowMeans(x[, g, drop=FALSE])));
   y <- do.call('cbind', x); 
   
   tbl <- FormatNumeric(y); 
   if (!is.null(anno)) tbl <- cbind(anno[rownames(tbl), , drop=FALSE], tbl); 
   CreateDatatable(tbl, paste(path.cl, '/', nm, '.html', sep='')); 
   
+  v <- se[[nm]];
+  v[is.na(v)] <- 0;
+  
   PlotColoredBlock(y, min=-max(abs(y)), max=max(abs(y)), groups = lapply(x, colnames));
   
-  PlotSeries(mn[[nm]], se[[nm]], labs=c('', 'Group mean'), title=nm, 
+  PlotSeries(mn[[nm]], v, labs=c('', 'Group mean'), title=nm, 
              draw.legend = TRUE, col = col, lty = lty); 
   PlotSeries(t(dv1[[nm]]), labs=c('', 'Average deviation'), 
              title='Deviation from beginning point', draw.legend = TRUE, 
