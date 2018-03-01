@@ -1,0 +1,456 @@
+---
+title: "Identification and diagnosis of outlier samples"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+
+**Introduction** The goal of this procedure is to identify potential outlier samples that have lower inter-sample correlation than expected. It is based on the assumption that the outliers have poorer correlation to other samples in the same group. This procedure includes the following steps:
+
+This procedure requires the following inputs: 
+
+  - A data matrix with genes or other variables as rows and samples as columns
+  - Samples (column names of the data matrix) were split into one to any number of groups, there should be at least 4 samples in each group for the outlier identification to work properly
+  - Specify the cutoff values of _NMN_ (minimal number of samples in each group) and _NSD_ (Number of standard deviations). 
+  - Optionally, gene annotation and a collection of predefined gene sets for functional categorization of genes responsible for the outliers
+
+</div>
+
+&nbsp;
+
+```{r global_setup, include=FALSE}
+name.yaml <- 'identify_outlier.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'RoCA', 'awsomics', 'DEGandMore'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # 
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
+## But, the developer can also provide the option to load the YAML file on the fly.
+## So, the template can be run using the "Knit HTML" button in RStudio
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+		yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+```{r load_data, include=FALSE}
+expr <- ImportTable(DownloadFile(yml$input$data, path.input));
+anno <- ImportTable(DownloadFile(yml$input$annotation, path.input));
+grps <- ImportList(DownloadFile(yml$input$group, path.input));
+gset <- ImportList(DownloadFile(yml$input$geneset, path.input));
+
+anno <- anno[rownames(anno) %in% rownames(expr), , drop=FALSE];
+expr <- expr[rownames(anno), , drop=FALSE];
+grps <- lapply(grps, function(x) x[x %in% colnames(expr)]); 
+expr <- expr[, colnames(expr) %in% unlist(grps, use.names=FALSE), drop=FALSE];
+if (nrow(expr) < 4) stop('Error: less than 4 genes, cannot continue\n'); 
+if (ncol(expr) < 4) stop('Error: less than 4 samples, cannot continue\n'); 
+
+smp2grp<-rep(names(grps), sapply(grps, length)); 
+names(smp2grp)<-unlist(grps, use.names=FALSE); 
+
+gset.src<-sort(unique(gset[[1]]$Source)); 
+
+if (prms$min.n < 4) {
+  prms$min.n <- 4;
+  warning('Warning: minimal number of replicates per group cannot be less than 4; value is reset\n');
+}
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+
+```{r, functions, include=FALSE}
+IdentifyOutlierByCorr<-function(d, RMX=0.99, NMN=4, NSD=3) {
+  # d     Data matrix, rows are genes or other variables and columns are samples
+  # RMX   Maximal mean correlation coefficient for a sample to be an outlier
+  # NMN   Minimal number of samples
+  # NSD   Number of standard deviation
+
+  if (NMN < 3) NMN<-3;
+
+  if (ncol(d) < NMN) NA else {
+    corr<-lapply(1:ncol(d), function(i) cor(d[, i], d[, -i], use='pair')); 
+    names(corr)<-colnames(d); 
+    ms<-sapply(corr, mean);
+    nsd<-sapply(1:length(ms), function(i) (ms[i]-mean(ms[-i]))/sd(ms[-i])); 
+    names(nsd)<-colnames(d); 
+    
+    out<-list(outlier=nsd[nsd<=-1*abs(NSD) & ms<RMX], nsd=nsd, mean=ms, corr=corr, 
+              parameters=c(RMX=RMX, NMN=NMN, NSD=NSD)); 
+  }
+}
+
+# Run IdentifyOutlierByCorr() function recursively until no more outliers were identified or there are no enough samples
+IdentifyOutlierByCorr.2<-function(d, RMX=0.99, NMN=4, NSD=3) {
+  # d     Data matrix, rows are genes or other variables and columns are samples
+  # RMX   Maximal mean correlation coefficient for a sample to be an outlier
+  # NMN   Minimal number of samples
+  # NSD   Number of standard deviation
+
+  if (ncol(d) < NMN) NA else {
+    out <- list(IdentifyOutlierByCorr(d, RMX, NMN, NSD)); 
+    d <- d[, !(colnames(d) %in% names(out[[1]][[1]]))]; 
+    
+    while (length(out[[length(out)]][[1]])>0 & ncol(d)>=NMN) { # outlier identified, is there more
+      out[[length(out)+1]]<-IdentifyOutlierByCorr(d, RMX, NMN, NSD); 
+      d <- d[, !(colnames(d) %in% names(out[[length(out)]][[1]]))]; 
+    }
+    
+    names(out)<-paste('Round', 1:length(out), sep=''); 
+    nsd<-lapply(out, function(x) x$nsd); 
+    mns<-lapply(out, function(x) x$mean);
+    summ<-cbind(Round=rep(1:length(nsd), sapply(nsd, length)), NSD=as.vector(unlist(nsd)), Mean=as.vector(unlist(mns)));
+    summ<-data.frame(Sample=as.vector(unlist(lapply(nsd, names))), round(summ, 6), stringsAsFactors = FALSE); 
+    summ$Outlier<-summ$NSD< -1*abs(NSD) & summ$Mean<RMX
+  
+    list(summary=summ, all=out); 
+  }
+}
+```
+
+`r home.url`
+
+# Analyses and results
+
+The data set includes **`r nrow(expr)`** genes and **`r ncol(expr)`** samples in **`r length(grps)`** groups.
+
+## Outlier detection
+
+```{r find_outlier, include=FALSE}
+out <- lapply(grps, function(g) 
+  IdentifyOutlierByCorr.2(expr[, g, drop=FALSE], RMX=prms$max.corr, NMN=prms$min.n, NSD=prms$n.sd));
+na <- sapply(out, function(x) identical(NA, x)); 
+if (length(na[na]) > 0) {
+  out[na] <- lapply(grps[na], function(g) {
+    x <- IdentifyOutlierByCorr.2(expr, RMX=prms$max.corr, NMN=prms$min.n, NSD=prms$n.sd);
+    x[[1]] <- x[[1]][x[[1]][, 1] %in% g, , drop=FALSE];
+    x;
+  });
+};
+smm <- lapply(out, function(x) x$summary); 
+
+wth <- lapply(1:length(out), function(i) rep(!na[i], nrow(out[[i]][[1]]))); 
+grp <- rep(names(smm), sapply(smm, nrow)); 
+rnm <- lapply(smm, function(smm) smm[[1]]); 
+smm <- data.frame(Group=grp, do.call('rbind', smm), Within=unlist(wth, use.names=FALSE), stringsAsFactors = FALSE); 
+rownames(smm) <- unlist(rnm, use.names=FALSE);
+fn.stat<-CreateDatatable(smm, paste(yml$output, 'stat_table.html', sep='/'), rownames = FALSE); 
+
+outliers<-smm[smm$Outlier, , drop=FALSE]; 
+grps.filtered<-lapply(grps, function(g) g[!(g %in% outliers$Sample)]); 
+
+saveRDS(out, paste(path.r, 'outlier.rds', sep='/')); 
+```
+
+The following steps were applied to identify outlier samples: 
+
+  - Given a data matrix of genes and samples, split samples into predefined sample groups, so each group includes only biological or technical replicates.
+  - Calculate the Pearson's correlation coeffecients between each pair of samples in the same group, and then the average correlation coefficients of each sample to all the other samples in the same group, _Ms_. However, if a group has less than `r prms$min.n` samples, samples in this groups will be compared to samples in all groups.
+  - Calculate _NSDi_, or the number of standard deviations, for each sample _(Ms[i]-mean(Ms[-i]))/sd(Ms[-i])_, where _Ms[-i]_ is the vector of _Ms_ without the sample _i_.
+  - Identify outliers with mean correlation coefficient _Ms[i]_ less than **`r prms$max.corr`** and **`r prms$n.sd`** standard deviations below mean(Ms[-i]).
+
+As a result, **_`r nrow(outliers)`_** outliers were identified: **_`r paste(unique(outliers$Sample), collapse=', ')`_**. Click [here](stat_table.html) to view full result table.
+
+<div align='center'>
+```{r plot_nsd_mean, include=TRUE, fig.wid=8, fig.height=6, out.width='640px'}
+par(mar=c(5,5,2,2)); 
+col <- rep('#0000FF88', nrow(smm)); 
+col[smm[, 6] & smm[, 7]] <- '#FF000088';
+col[smm[, 6] & !smm[, 7]] <- '#FFBBBB88';
+plot(smm$Mean, smm$NSD, pch=19, col=col, cex=2, cex.lab=1.5, xlim=range(smm$Mean), xlab="Average correlation coefficient", ylab="Number of standard deviations"); 
+abline(v=prms$max.corr, h=-1*abs(prms$n.sd), lty=2, lwd=2, col='darkgrey');
+points(smm$Mean, smm$NSD, cex=.2);
+legend('topleft', pch=19, col=c('#0000FF88', '#FF000088', '#FFBBBB88'), bty='n',
+       legend=c('Non-outlier', 'Outlier (group)', 'Outlier (global)'))
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 1** Each dot represents a sample. The x-axis is the average correlation correlation between each sample and other samples of the same group (larger groups) or the whole data set (smaller groups). The y-axis is the number of standard deviations of each sample away from the averages of the other samples. Red indicates ouliter samples (in larger groups) identified as outliers by comparing them to all the other samples in the same group. Pink indicates outlier samples (in smaller groups) identified as outliers by comparing them to the other samples in the whole data set. The within gorup comparison generally provides stronger evidence of determing outliers. On the other hand, depending on how the samples are grouped in the data set, the evidence supporting global outliers varies, and should be evaluated further before determining they are indeed outliers. The remaining analyses of this report will only be applied to outliers identified by within group comparison.  
+</div>
+
+`r home.url`
+
+## Outliers vs. non-outliers
+
+```{r diff_outlier, include=FALSE}
+outliers.all <- outliers; 
+outliers <- outliers[outliers[, 7], , drop=FALSE];
+if (nrow(outliers) > 0) {
+  d0<-lapply(outliers$Sample, function(s) expr[, grps.filtered[[smp2grp[s]]], drop=FALSE]);
+  d1<-lapply(outliers$Sample, function(s) expr[, s]);
+  names(d0)<-names(d1)<-outliers$Sample; 
+  fn<-sapply(1:nrow(outliers), function(i) {
+    id<-outliers$Sample[i];
+    fn<-paste(path.fig, '/', id, '.png', sep=''); 
+    r<-sapply(1:ncol(d0[[i]]), function(j) cor(d0[[i]][, j], rowMeans(d0[[i]][, -j, drop=FALSE])));
+    ind<-which(r==max(r))[1]; 
+    x<-cbind(rowMeans(d0[[i]]), d1[[i]]); 
+    y<-cbind(rowMeans(d0[[i]][, -ind]), d0[[i]][, ind]);
+    
+    png(fn, w=800, h=400);
+    par(mar=c(5,5,2,2), mfrow=c(1, 2));
+    plot(x, pch=19, cex=0.5, col='#88888888', xlim=c(min(x), max(x)), ylim=c(min(x), max(x)), 
+         xlab='Others', ylab=id, cex.lab=1.5); 
+    abline(0, 1, col=4);
+    plot(y, pch=19, cex=0.5, col='#88888888', xlim=c(min(x), max(x)), ylim=c(min(x), max(x)), 
+         xlab='Others', ylab=colnames(d0[[i]])[ind], cex.lab=1.5); 
+    abline(0, 1, col=4);
+    if (dev.cur()!=1) dev.off();
+    
+    pdf(sub('.png$', '.pdf', fn), w=8, h=4);
+    par(mar=c(5,5,2,2), mfrow=c(1, 2));
+    plot(x, pch=19, cex=0.5, col='#88888888', xlim=c(min(x), max(x)), ylim=c(min(x), max(x)), xlab='Others', 
+         ylab=id, cex.lab=1.5); 
+    abline(0, 1, col=4);
+    plot(y, pch=19, cex=0.5, col='#88888888', xlim=c(min(x), max(x)), ylim=c(min(x), max(x)), 
+         xlab='Others', ylab=colnames(d0[[i]])[ind], cex.lab=1.5); 
+    abline(0, 1, col=4);
+    if (dev.cur()!=1) dev.off();
+    
+    fn; 
+  });
+  fn<-sub(yml$output, '', fn); 
+  fn<-sub('^/', '', fn);
+  lns<-paste('  - [', outliers$Sample, '](', fn, ')', sep=''); 
+  lns<-paste(lns, collapse='\n'); 
+} else {
+  lns<-'  - No outliers were identified'
+}
+```
+
+Each outlier was compared to the average of non-outlier samples in the same group through the scatterplot of all genes. Click sample ID below to view scatterplots of outlier vs. non-outliers (left panel) and one of the non-outliers vs. the other non-outliers (right panel). 
+
+`r lns`
+
+<div align='center'>
+```{r cluster_outlier, include=TRUE, fig.width=8, fig.height=c(1,6)[as.integer(nrow(outliers)>=3)+1], out.width='640px'}
+if (nrow(outliers) < 3) { 
+  if (nrow(outliers) == 0) lns<-'No outliers found' else lns<-'No enough outliers for clustering analysis'; 
+  par(mar=c(0,0,0,0)); 
+  plot(0, type='n', axes=FALSE, xlab='', ylab='');
+  text(1, 0, pos=1, label=lns, cex=1.5, col='darkgreen'); 
+} else {
+  dff<-sapply(1:nrow(outliers), function(i) d1[[i]]-rowMeans(d0[[i]]));
+  colnames(dff)<-outliers$Sample;
+  hc<-hclust(as.dist(1-cor(dff)));
+  plot(hc, main='Differential expression: outlier vs. non-outlier', xlab='Outlier', sub='');
+  abline(h=1-prms$cut.corr, lty=2, col='#0000FF88'); 
+  ct<-cutree(hc, h=1-prms$cut.corr);
+  g<-split(names(ct), ct);
+  g<-g[sapply(g, length)>1];
+  if (length(g) == 0) lns<-'No outliers can be grouped together.' else {
+    lns<-as.vector(sapply(g, function(g) paste(g, collapse='; ')));
+    lns<-paste('  -', lns);
+    lns<-paste(lns, collapse='\n'); 
+  }
+}
+```
+</div>
+
+<div style="color:darkblue; padding:0 2cm">
+**Figure 2** Clustering of outliers based on their difference with the non-outliers in the same group. If multiple outliers have similar global pattern of changes relative to their non-outliers, these outliers could be the consequence of the same systematic bias. With the cutoff of correlation coefficient equal to `r prms$cut.corr`, the following outliers are clustered together: 
+
+`r lns`
+</div>
+
+### Selection of top genes
+
+Top genes having the biggest difference between outlier and corresponding non-outliers can provide very valuable information about the cause of the outliers. The following criteria are used to select top genes with most changes in the outliers comparing to the average of their corresponding non-outliers:
+
+  - For each outlier, two lists of top genes are selected, corresponding to two opposite directions of change. 
+  - The changes in the outlier are greater than `r prms$difference$nsd` standard deviations of the non-outliers.
+  - From the remaining genes, pick the top `r prms$difference$max` with the largest changes in the outlier.
+  - From the remaining genes, pick those with changes greater than `r prms$difference$mean`, or the top `r prms$difference$min` genes having the largest changes, which ever gives more genes.
+
+```{r top_gene, include=FALSE}
+if (nrow(outliers) == 0) lns<-'No outliers found' else {
+  # select DEGs
+  tops<-lapply(1:nrow(outliers), function(i) {
+    dff<-d1[[i]]-rowMeans(d0[[i]]);
+    nsd<-dff/apply(d0[[i]], 1, sd);
+    deg<-dff[abs(nsd)>=abs(prms$difference$nsd)];
+    deg <- deg[!is.na(deg)];
+    deg<-list(hi=deg[deg>0], lo=deg[deg<0]);
+    deg<-lapply(deg, function(d) d[rev(order(abs(d)))]);
+    deg<-lapply(deg, function(d) {
+      if (length(d) > prms$difference$min) {
+        d<-d[1:min(prms$difference$max, length(d))]; 
+        if (abs(prms$difference$mean > abs(d[prms$difference$min]))) d[1:prms$difference$min] else 
+          d[abs(d) > abs(prms$difference$mean)]; 
+      } else d;
+    });
+  }); 
+  names(tops)<-outliers$Sample;
+  
+  # Prepare HTML tables
+  tbls<-lapply(1:length(tops), function(i) lapply(tops[[i]], function(d) {
+    x0<-d0[[i]][names(d), , drop=FALSE]; 
+    x1<-d1[[i]][names(d)];
+    dff<-x1-rowMeans(x0);
+    sd<-apply(x0, 1, sd);
+    stat<-round(cbind(x1, rowMeans(x0), dff, dff/sd), 4);
+    colnames(stat)<-c(outliers$Sample[i], 'Non_Outliers', 'Change', 'NSD');
+    cbind(anno[rownames(stat), ], stat); 
+  }));
+  names(tbls)<-names(tops)<-outliers$Sample;
+  
+  # Write tables to HTML
+  fn<-lapply(names(tbls), function(nm) {
+    f<-paste(path.tbl, paste(nm, '_', c('Higher', 'Lower'), '.html', sep=''), sep='/')
+    CreateDatatable(tbls[[nm]][[1]], f[1], caption = nm); 
+    CreateDatatable(tbls[[nm]][[2]], f[2], caption = nm); 
+    f;
+  });
+  
+  # Write summary table
+  fn<-t(sapply(fn, function(f) sub(paste(yml$output, '/', sep=''), '', f)));
+  n<-t(sapply(tops, function(x) sapply(x, length)));
+  rownames(n)<-rownames(fn)<-outliers$Sample;
+  colnames(n)<-colnames(fn)<-c('Higher in outlier', 'Low in outlier'); 
+  tbl<-t(sapply(rownames(n), function(nm) paste('[', n[nm, ], '](', fn[nm, ], ')', sep='')));
+  dimnames(tbl)<-dimnames(n);
+  lns<-kable(tbl, row.names=TRUE, align=c('c', 'c'));
+} 
+```
+
+<div style="color:darkblue; padding:0 2cm">
+**Table 1.** The numbers of top genes selected from each outlier.
+</div>
+
+<div align='center', style="padding:0 2cm"> 
+`r lns`
+</div>
+
+### Gene set enrichment analysis
+
+Top genes selected from each outliers by the last step were mapped to predefined genesets collected from: 
+
+`r paste(paste('  -', gset.src), collapse='\n')`
+
+The full gene set collection of a few model animals can be downloaded from [here](https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set).
+
+```{r gsea, include=FALSE}
+path.gsea<-paste(path.tbl, 'gsea', sep='/');
+if (!file.exists(path.gsea)) dir.create(path.gsea, recursive = TRUE);
+if (nrow(outliers) == 0) ln.hi<-ln.lo<-'No outliers found' else {
+  gses<-lapply(names(tops), function(nm) {
+    cat(nm, '\n'); 
+    gse<-lapply(tops[[nm]], function(gs) TestGSE(names(gs), rownames(anno), gset[[2]])[[1]]); 
+    hi<-WrapGSE(gse[[1]], gset[[1]], paste(path.gsea, paste(nm, 'Higher', sep='_'), sep='/')); 
+    lo<-WrapGSE(gse[[2]], gset[[1]], paste(path.gsea, paste(nm, 'Lower' , sep='_'), sep='/')); 
+    list(hi, lo); 
+  }); 
+  fn.hi<-sapply(gses, function(g) g[[1]]$file[gset.src]);
+  fn.lo<-sapply(gses, function(g) g[[2]]$file[gset.src]);
+  
+  fn.hi<-sub(paste(yml$output, '/', sep=''), '', fn.hi);
+  fn.lo<-sub(paste(yml$output, '/', sep=''), '', fn.lo);
+  
+  n.hi<-sapply(gses, function(g) sapply(g[[1]]$formatted[gset.src], nrow)); 
+  n.lo<-sapply(gses, function(g) sapply(g[[2]]$formatted[gset.src], nrow)); 
+  
+  tbl.hi<-t(matrix(paste('[', n.hi, '](', fn.hi, ')', sep=''), nc=nrow(outliers)));
+  tbl.lo<-t(matrix(paste('[', n.lo, '](', fn.lo, ')', sep=''), nc=nrow(outliers))); 
+  dimnames(tbl.hi)<-dimnames(tbl.lo)<-list(outliers$Sample, gset.src); 
+
+  ln.hi<-kable(tbl.hi, align = rep('c', ncol(tbl.hi))); 
+  ln.lo<-kable(tbl.lo, align = rep('c', ncol(tbl.lo))); 
+}
+```
+
+Enrichment of each gene set in top genes was tested by Hypergeometric test. 
+
+<div style="color:darkblue; padding:0 1cm">
+**Table 2A.** The number of gene sets significantly enriched in top increasing genes of each outlier.
+</div>
+
+<div align='center', style="padding:0 1cm"> 
+`r ln.hi`
+</div>
+
+<div style="color:darkblue; padding:0 1cm">
+**Table 2B.** The number of gene sets significantly enriched in top decreasing genes of each outlier.
+</div>
+
+<div align='center', style="padding:0 1cm"> 
+`r ln.lo`
+</div>
+
+`r home.url`
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

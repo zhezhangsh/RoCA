@@ -1,0 +1,60 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <data> a data matrixes in .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds files
+#   - the row names are the matching unique gene IDs or symbols
+#   - the column names are the matching unique sample IDs or symbols
+#   - impact of missing values not tested
+# <annotation> a table in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the row names are unique Entrez gene IDs matching the row names of <data>
+# <group> a list of character vectors in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - each vector includes the sample IDs of a sample group; IDs must match column names of <data>
+# <geneset> collection of gene sets as in https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set
+#############################################################################################################################
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/identify_outlier/identify_outlier.Rmd
+template: identify_outlier.Rmd
+output: examples/preterm_blood            # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+# Analyst describes the analysis to run, such as project title
+description:
+  Project: "Transcriptome of preterm human blood"
+  Experimental design: "RNA-seq experiments were done on preterm human blood. Samples include 4 groups of 32 samples: 2 gender X 2 age (less than 30 weeks and more than 39 weeks); 8 samples per group." 
+  Analysis: "Whether there are outliers in each organ group."
+  
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+# Location (local or URL) of files with formatted input data
+input:
+  data: input/normalized.rds          ## Data matrix to be analyzed. Genes are rows and samples are columns
+  annotation: input/anno.rds    ## Gene annotation, match rows of the data matrix
+  group: input/group.rds ## A list of group name to sample name matching. Sample names must match column names of data matrix
+  geneset: input/human.rds       ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
+
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+# Parameters to run this analysis                                                                                                              ## Whether the template file if local or remote
+parameter: 
+  min.n: 4.0        ## Minimal number of replicated samples in each group for outlier detection
+  max.corr: 0.96    ## Maximal mean correlation coefficient for a sample to be outlier
+  n.sd: 3.0         ## Number of standard deviations less than the mean of correlation coefficients of non-outlier samples
+  cut.corr: 0.5     ## Cutoff of correlation coefficent of outlier/non-outlier differential expression between a pair of outliers to determin they had similar quality issue
+  difference:       ## Criteria to select outlier/non-outlier top genes
+    mean: 2.0         ## Minimal difference between outlier and the mean of non-outliers
+    nsd: 2.0          ## Minimal number of standard deviations
+    min: 100.0        ## Minimal number of top genes to be selected (the nsd requirement must also be met, so the final number could be smaller)
+    max: 250.0        ## Maximal number of tog genes to be selected
+    
+######################    END OF DOCUMENT    ######################
+
