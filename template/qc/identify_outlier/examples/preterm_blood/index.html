@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2018-02-28" />
+<meta name="date" content="2018-03-02" />
 
 <title>Identification and diagnosis of outlier samples</title>
 
@@ -225,7 +225,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Identification and diagnosis of outlier samples</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2018-02-28</em></h4>
+<h4 class="date"><em>2018-03-02</em></h4>
 
 </div>
 
@@ -272,9 +272,9 @@ div.tocify {
 <li>Given a data matrix of genes and samples, split samples into predefined sample groups, so each group includes only biological or technical replicates.</li>
 <li>Calculate the Pearson’s correlation coeffecients between each pair of samples in the same group, and then the average correlation coefficients of each sample to all the other samples in the same group, <em>Ms</em>. However, if a group has less than 4 samples, samples in this groups will be compared to samples in all groups.</li>
 <li>Calculate <em>NSDi</em>, or the number of standard deviations, for each sample <em>(Ms[i]-mean(Ms[-i]))/sd(Ms[-i])</em>, where <em>Ms[-i]</em> is the vector of <em>Ms</em> without the sample <em>i</em>.</li>
-<li>Identify outliers with mean correlation coefficient <em>Ms[i]</em> less than <strong>0.96</strong> and <strong>3</strong> standard deviations below mean(Ms[-i]).</li>
+<li>Identify outliers with mean correlation coefficient <em>Ms[i]</em> less than <strong>0.975</strong> and <strong>1.5</strong> standard deviations below mean(Ms[-i]).</li>
 </ul>
-<p>As a result, <strong><em>0</em></strong> outliers were identified: **__**. Click <a href="stat_table.html">here</a> to view full result table.</p>
+<p>As a result, <strong><em>11</em></strong> outliers were identified: <strong><em>0174, 1003, 0112, 177, 0114, 265, 228, 263, 00131, 0107, 137</em></strong>. Click <a href="stat_table.html">here</a> to view full result table.</p>
 <div align="center">
 <p><img src="index_files/figure-html/plot_nsd_mean-1.png" width="640px" /></p>
 </div>
@@ -289,14 +289,24 @@ div.tocify {
 <h2><span class="header-section-number">2.2</span> Outliers vs. non-outliers</h2>
 <p>Each outlier was compared to the average of non-outlier samples in the same group through the scatterplot of all genes. Click sample ID below to view scatterplots of outlier vs. non-outliers (left panel) and one of the non-outliers vs. the other non-outliers (right panel).</p>
 <ul>
-<li>No outliers were identified</li>
+<li><a href="figure/0174.png">0174</a></li>
+<li><a href="figure/1003.png">1003</a></li>
+<li><a href="figure/0112.png">0112</a></li>
+<li><a href="figure/177.png">177</a></li>
+<li><a href="figure/0114.png">0114</a></li>
+<li><a href="figure/265.png">265</a></li>
+<li><a href="figure/228.png">228</a></li>
+<li><a href="figure/263.png">263</a></li>
+<li><a href="figure/00131.png">00131</a></li>
+<li><a href="figure/0107.png">0107</a></li>
+<li><a href="figure/137.png">137</a></li>
 </ul>
 <div align="center">
 <p><img src="index_files/figure-html/cluster_outlier-1.png" width="640px" /></p>
 </div>
 <div style="color:darkblue; padding:0 2cm">
-<p><strong>Figure 2</strong> Clustering of outliers based on their difference with the non-outliers in the same group. If multiple outliers have similar global pattern of changes relative to their non-outliers, these outliers could be the consequence of the same systematic bias. With the cutoff of correlation coefficient equal to 0.5, the following outliers are clustered together:</p>
-<p>No outliers found</p>
+<p><strong>Figure 2</strong> Clustering of outliers based on their difference with the non-outliers in the same group. If multiple outliers have similar global pattern of changes relative to their non-outliers, these outliers could be the consequence of the same systematic bias. With the cutoff of correlation coefficient equal to 0.6, the following outliers are clustered together:</p>
+<p>No outliers can be grouped together.</p>
 </div>
 <div id="selection-of-top-genes" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Selection of top genes</h3>
@@ -311,7 +321,72 @@ div.tocify {
 <p><strong>Table 1.</strong> The numbers of top genes selected from each outlier.</p>
 </div>
 <div align="center" ,="" style="padding:0 2cm">
-<p>No outliers found</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">Higher in outlier</th>
+<th align="center">Low in outlier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0174</td>
+<td align="center"><a href="table/0174_Higher.html">250</a></td>
+<td align="center"><a href="table/0174_Lower.html">250</a></td>
+</tr>
+<tr class="even">
+<td>1003</td>
+<td align="center"><a href="table/1003_Higher.html">250</a></td>
+<td align="center"><a href="table/1003_Lower.html">250</a></td>
+</tr>
+<tr class="odd">
+<td>0112</td>
+<td align="center"><a href="table/0112_Higher.html">206</a></td>
+<td align="center"><a href="table/0112_Lower.html">153</a></td>
+</tr>
+<tr class="even">
+<td>177</td>
+<td align="center"><a href="table/177_Higher.html">208</a></td>
+<td align="center"><a href="table/177_Lower.html">250</a></td>
+</tr>
+<tr class="odd">
+<td>0114</td>
+<td align="center"><a href="table/0114_Higher.html">215</a></td>
+<td align="center"><a href="table/0114_Lower.html">210</a></td>
+</tr>
+<tr class="even">
+<td>265</td>
+<td align="center"><a href="table/265_Higher.html">250</a></td>
+<td align="center"><a href="table/265_Lower.html">250</a></td>
+</tr>
+<tr class="odd">
+<td>228</td>
+<td align="center"><a href="table/228_Higher.html">250</a></td>
+<td align="center"><a href="table/228_Lower.html">250</a></td>
+</tr>
+<tr class="even">
+<td>263</td>
+<td align="center"><a href="table/263_Higher.html">250</a></td>
+<td align="center"><a href="table/263_Lower.html">250</a></td>
+</tr>
+<tr class="odd">
+<td>00131</td>
+<td align="center"><a href="table/00131_Higher.html">250</a></td>
+<td align="center"><a href="table/00131_Lower.html">250</a></td>
+</tr>
+<tr class="even">
+<td>0107</td>
+<td align="center"><a href="table/0107_Higher.html">250</a></td>
+<td align="center"><a href="table/0107_Lower.html">250</a></td>
+</tr>
+<tr class="odd">
+<td>137</td>
+<td align="center"><a href="table/137_Higher.html">182</a></td>
+<td align="center"><a href="table/137_Lower.html">245</a></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="gene-set-enrichment-analysis" class="section level3">
@@ -330,13 +405,215 @@ div.tocify {
 <p><strong>Table 2A.</strong> The number of gene sets significantly enriched in top increasing genes of each outlier.</p>
 </div>
 <div align="center" ,="" style="padding:0 1cm">
-<p>No outliers found</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">BioSystems</th>
+<th align="center">KEGG</th>
+<th align="center">MSigDb</th>
+<th align="center">OMIM</th>
+<th align="center">PubTator</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0174</td>
+<td align="center"><a href="table/gsea/0174_Higher/BioSystems.html">278</a></td>
+<td align="center"><a href="table/gsea/0174_Higher/KEGG.html">20</a></td>
+<td align="center"><a href="table/gsea/0174_Higher/MSigDb.html">291</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0174_Higher/PubTator.html">148</a></td>
+</tr>
+<tr class="even">
+<td>1003</td>
+<td align="center"><a href="table/gsea/1003_Higher/BioSystems.html">173</a></td>
+<td align="center"><a href="table/gsea/1003_Higher/KEGG.html">12</a></td>
+<td align="center"><a href="table/gsea/1003_Higher/MSigDb.html">226</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/1003_Higher/PubTator.html">196</a></td>
+</tr>
+<tr class="odd">
+<td>0112</td>
+<td align="center"><a href="table/gsea/0112_Higher/BioSystems.html">288</a></td>
+<td align="center"><a href="table/gsea/0112_Higher/KEGG.html">20</a></td>
+<td align="center"><a href="table/gsea/0112_Higher/MSigDb.html">317</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0112_Higher/PubTator.html">90</a></td>
+</tr>
+<tr class="even">
+<td>177</td>
+<td align="center"><a href="table/gsea/177_Higher/BioSystems.html">135</a></td>
+<td align="center"><a href="table/gsea/177_Higher/KEGG.html">3</a></td>
+<td align="center"><a href="table/gsea/177_Higher/MSigDb.html">89</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/177_Higher/PubTator.html">25</a></td>
+</tr>
+<tr class="odd">
+<td>0114</td>
+<td align="center"><a href="table/gsea/0114_Higher/BioSystems.html">121</a></td>
+<td align="center"><a href="table/gsea/0114_Higher/KEGG.html">13</a></td>
+<td align="center"><a href="table/gsea/0114_Higher/MSigDb.html">96</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0114_Higher/PubTator.html">28</a></td>
+</tr>
+<tr class="even">
+<td>265</td>
+<td align="center"><a href="table/gsea/265_Higher/BioSystems.html">449</a></td>
+<td align="center"><a href="table/gsea/265_Higher/KEGG.html">35</a></td>
+<td align="center"><a href="table/gsea/265_Higher/MSigDb.html">332</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/265_Higher/PubTator.html">173</a></td>
+</tr>
+<tr class="odd">
+<td>228</td>
+<td align="center"><a href="table/gsea/228_Higher/BioSystems.html">706</a></td>
+<td align="center"><a href="table/gsea/228_Higher/KEGG.html">63</a></td>
+<td align="center"><a href="table/gsea/228_Higher/MSigDb.html">393</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/228_Higher/PubTator.html">222</a></td>
+</tr>
+<tr class="even">
+<td>263</td>
+<td align="center"><a href="table/gsea/263_Higher/BioSystems.html">443</a></td>
+<td align="center"><a href="table/gsea/263_Higher/KEGG.html">38</a></td>
+<td align="center"><a href="table/gsea/263_Higher/MSigDb.html">339</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/263_Higher/PubTator.html">147</a></td>
+</tr>
+<tr class="odd">
+<td>00131</td>
+<td align="center"><a href="table/gsea/00131_Higher/BioSystems.html">125</a></td>
+<td align="center"><a href="table/gsea/00131_Higher/KEGG.html">14</a></td>
+<td align="center"><a href="table/gsea/00131_Higher/MSigDb.html">88</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/00131_Higher/PubTator.html">86</a></td>
+</tr>
+<tr class="even">
+<td>0107</td>
+<td align="center"><a href="table/gsea/0107_Higher/BioSystems.html">131</a></td>
+<td align="center"><a href="table/gsea/0107_Higher/KEGG.html">6</a></td>
+<td align="center"><a href="table/gsea/0107_Higher/MSigDb.html">132</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0107_Higher/PubTator.html">108</a></td>
+</tr>
+<tr class="odd">
+<td>137</td>
+<td align="center"><a href="table/gsea/137_Higher/BioSystems.html">170</a></td>
+<td align="center"><a href="table/gsea/137_Higher/KEGG.html">4</a></td>
+<td align="center"><a href="table/gsea/137_Higher/MSigDb.html">73</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/137_Higher/PubTator.html">23</a></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div style="color:darkblue; padding:0 1cm">
 <p><strong>Table 2B.</strong> The number of gene sets significantly enriched in top decreasing genes of each outlier.</p>
 </div>
 <div align="center" ,="" style="padding:0 1cm">
-<p>No outliers found</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">BioSystems</th>
+<th align="center">KEGG</th>
+<th align="center">MSigDb</th>
+<th align="center">OMIM</th>
+<th align="center">PubTator</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0174</td>
+<td align="center"><a href="table/gsea/0174_Lower/BioSystems.html">522</a></td>
+<td align="center"><a href="table/gsea/0174_Lower/KEGG.html">80</a></td>
+<td align="center"><a href="table/gsea/0174_Lower/MSigDb.html">973</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0174_Lower/PubTator.html">578</a></td>
+</tr>
+<tr class="even">
+<td>1003</td>
+<td align="center"><a href="table/gsea/1003_Lower/BioSystems.html">478</a></td>
+<td align="center"><a href="table/gsea/1003_Lower/KEGG.html">54</a></td>
+<td align="center"><a href="table/gsea/1003_Lower/MSigDb.html">1039</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/1003_Lower/PubTator.html">619</a></td>
+</tr>
+<tr class="odd">
+<td>0112</td>
+<td align="center"><a href="table/gsea/0112_Lower/BioSystems.html">92</a></td>
+<td align="center"><a href="table/gsea/0112_Lower/KEGG.html">15</a></td>
+<td align="center"><a href="table/gsea/0112_Lower/MSigDb.html">83</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0112_Lower/PubTator.html">27</a></td>
+</tr>
+<tr class="even">
+<td>177</td>
+<td align="center"><a href="table/gsea/177_Lower/BioSystems.html">437</a></td>
+<td align="center"><a href="table/gsea/177_Lower/KEGG.html">49</a></td>
+<td align="center"><a href="table/gsea/177_Lower/MSigDb.html">650</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/177_Lower/PubTator.html">323</a></td>
+</tr>
+<tr class="odd">
+<td>0114</td>
+<td align="center"><a href="table/gsea/0114_Lower/BioSystems.html">217</a></td>
+<td align="center"><a href="table/gsea/0114_Lower/KEGG.html">37</a></td>
+<td align="center"><a href="table/gsea/0114_Lower/MSigDb.html">233</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0114_Lower/PubTator.html">135</a></td>
+</tr>
+<tr class="even">
+<td>265</td>
+<td align="center"><a href="table/gsea/265_Lower/BioSystems.html">38</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/265_Lower/MSigDb.html">21</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/265_Lower/PubTator.html">12</a></td>
+</tr>
+<tr class="odd">
+<td>228</td>
+<td align="center"><a href="table/gsea/228_Lower/BioSystems.html">39</a></td>
+<td align="center"><a href="table/gsea/228_Lower/KEGG.html">4</a></td>
+<td align="center"><a href="table/gsea/228_Lower/MSigDb.html">26</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/228_Lower/PubTator.html">305</a></td>
+</tr>
+<tr class="even">
+<td>263</td>
+<td align="center"><a href="table/gsea/263_Lower/BioSystems.html">97</a></td>
+<td align="center"><a href="table/gsea/263_Lower/KEGG.html">37</a></td>
+<td align="center"><a href="table/gsea/263_Lower/MSigDb.html">55</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/263_Lower/PubTator.html">37</a></td>
+</tr>
+<tr class="odd">
+<td>00131</td>
+<td align="center"><a href="table/gsea/00131_Lower/BioSystems.html">521</a></td>
+<td align="center"><a href="table/gsea/00131_Lower/KEGG.html">112</a></td>
+<td align="center"><a href="table/gsea/00131_Lower/MSigDb.html">613</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/00131_Lower/PubTator.html">277</a></td>
+</tr>
+<tr class="even">
+<td>0107</td>
+<td align="center"><a href="table/gsea/0107_Lower/BioSystems.html">227</a></td>
+<td align="center"><a href="table/gsea/0107_Lower/KEGG.html">43</a></td>
+<td align="center"><a href="table/gsea/0107_Lower/MSigDb.html">284</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/0107_Lower/PubTator.html">133</a></td>
+</tr>
+<tr class="odd">
+<td>137</td>
+<td align="center"><a href="table/gsea/137_Lower/BioSystems.html">240</a></td>
+<td align="center"><a href="table/gsea/137_Lower/KEGG.html">35</a></td>
+<td align="center"><a href="table/gsea/137_Lower/MSigDb.html">497</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/137_Lower/PubTator.html">264</a></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div align="right">
 <em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
@@ -391,12 +668,12 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 ## [13] devtools_1.13.4      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.14       magrittr_1.5       stringr_1.2.0     
-##  [4] caTools_1.17.1     tools_3.3.3        KernSmooth_2.23-15
-##  [7] withr_2.1.1        htmltools_0.3.6    gtools_3.5.0      
-## [10] rprojroot_1.3-2    digest_0.6.13      memoise_1.1.0     
-## [13] evaluate_0.10.1    gdata_2.18.0       stringi_1.1.6     
-## [16] backports_1.1.2    jsonlite_1.5</code></pre>
+##  [1] Rcpp_0.12.14       magrittr_1.5       highr_0.6         
+##  [4] stringr_1.2.0      caTools_1.17.1     tools_3.3.3       
+##  [7] KernSmooth_2.23-15 withr_2.1.1        htmltools_0.3.6   
+## [10] gtools_3.5.0       rprojroot_1.3-2    digest_0.6.13     
+## [13] memoise_1.1.0      evaluate_0.10.1    gdata_2.18.0      
+## [16] stringi_1.1.6      backports_1.1.2    jsonlite_1.5</code></pre>
 <div align="right">
 <em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
 </div>

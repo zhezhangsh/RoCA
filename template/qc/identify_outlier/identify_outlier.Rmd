@@ -135,6 +135,16 @@ IdentifyOutlierByCorr.2<-function(d, RMX=0.99, NMN=4, NSD=3) {
     summ<-data.frame(Sample=as.vector(unlist(lapply(nsd, names))), round(summ, 6), stringsAsFactors = FALSE); 
     summ$Outlier<-summ$NSD< -1*abs(NSD) & summ$Mean<RMX
   
+    ind <- sapply(unique(summ$Sample), function(nm) {
+      i <- which(summ$Sample==nm);
+      if (length(i)==1) i else {
+        j <- summ$Round[i];
+        i[j==max(j)][1];
+      };
+    });
+    summ <- summ[ind, , drop=FALSE];
+    summ <- summ[order(summ$Round), , drop=FALSE]
+    
     list(summary=summ, all=out); 
   }
 }
@@ -368,7 +378,10 @@ if (!file.exists(path.gsea)) dir.create(path.gsea, recursive = TRUE);
 if (nrow(outliers) == 0) ln.hi<-ln.lo<-'No outliers found' else {
   gses<-lapply(names(tops), function(nm) {
     cat(nm, '\n'); 
-    gse<-lapply(tops[[nm]], function(gs) TestGSE(names(gs), rownames(anno), gset[[2]])[[1]]); 
+    gse<-lapply(tops[[nm]], function(gs) { print(1);
+      TestGSE(names(gs), rownames(anno), gset[[2]])[[1]]; 
+    });
+    
     hi<-WrapGSE(gse[[1]], gset[[1]], paste(path.gsea, paste(nm, 'Higher', sep='_'), sep='/')); 
     lo<-WrapGSE(gse[[2]], gset[[1]], paste(path.gsea, paste(nm, 'Lower' , sep='_'), sep='/')); 
     list(hi, lo); 

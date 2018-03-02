@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2018-03-02" />
+
+<title>Identification and diagnosis of outlier samples</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Identification and diagnosis of outlier samples</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2018-03-02</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong> The goal of this procedure is to identify potential outlier samples that have lower inter-sample correlation than expected. It is based on the assumption that the outliers have poorer correlation to other samples in the same group. This procedure includes the following steps:</p>
+<p>This procedure requires the following inputs:</p>
+<ul>
+<li>A data matrix with genes or other variables as rows and samples as columns</li>
+<li>Samples (column names of the data matrix) were split into one to any number of groups, there should be at least 4 samples in each group for the outlier identification to work properly</li>
+<li>Specify the cutoff values of <em>NMN</em> (minimal number of samples in each group) and <em>NSD</em> (Number of standard deviations).</li>
+<li>Optionally, gene annotation and a collection of predefined gene sets for functional categorization of genes responsible for the outliers</li>
+</ul>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Comparison between cell lines from 9 different cancer tissues (NCI-60); <strong><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949">GSE5949</a></strong></p>
+</div>
+<div id="pubmed" class="section level2">
+<h2><span class="header-section-number">1.2</span> PubMed</h2>
+<p>Reinhold WC, Reimers MA, Lorenzi P, Ho J et al. <strong>Multifactorial regulation of E-cadherin expression: an integrative study.</strong> Mol Cancer Ther 2010 Jan;9(1):1-16. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20053763">20053763</a>.</p>
+</div>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">1.3</span> Experimental design</h2>
+<p>Comparison between cell lines from 9 different cancer tissue of origin types (Breast, Central Nervous System, Colon, Leukemia, Melanoma, Non-Small Cell Lung, Ovarian, Prostate, Renal) from NCI-60 panel</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.4</span> Analysis</h2>
+<p>Whether there are outliers in each organ group</p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="analyses-and-results" class="section level1">
+<h1><span class="header-section-number">2</span> Analyses and results</h1>
+<p>The data set includes <strong>17647</strong> genes and <strong>60</strong> samples in <strong>9</strong> groups.</p>
+<div id="outlier-detection" class="section level2">
+<h2><span class="header-section-number">2.1</span> Outlier detection</h2>
+<p>The following steps were applied to identify outlier samples:</p>
+<ul>
+<li>Given a data matrix of genes and samples, split samples into predefined sample groups, so each group includes only biological or technical replicates.</li>
+<li>Calculate the Pearson’s correlation coeffecients between each pair of samples in the same group, and then the average correlation coefficients of each sample to all the other samples in the same group, <em>Ms</em>. However, if a group has less than 4 samples, samples in this groups will be compared to samples in all groups.</li>
+<li>Calculate <em>NSDi</em>, or the number of standard deviations, for each sample <em>(Ms[i]-mean(Ms[-i]))/sd(Ms[-i])</em>, where <em>Ms[-i]</em> is the vector of <em>Ms</em> without the sample <em>i</em>.</li>
+<li>Identify outliers with mean correlation coefficient <em>Ms[i]</em> less than <strong>0.96</strong> and <strong>3</strong> standard deviations below mean(Ms[-i]).</li>
+</ul>
+<p>As a result, <strong><em>3</em></strong> outliers were identified: <strong><em>Colon_GSM134050, Kidney_GSM134284, Skin_GSM134115</em></strong>. Click <a href="stat_table.html">here</a> to view full result table.</p>
+<div align="center">
+<p><img src="index_files/figure-html/plot_nsd_mean-1.png" width="640px" /></p>
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<p><strong>Figure 1</strong> Each dot represents a sample. The x-axis is the average correlation correlation between each sample and other samples of the same group (larger groups) or the whole data set (smaller groups). The y-axis is the number of standard deviations of each sample away from the averages of the other samples. Red indicates ouliter samples (in larger groups) identified as outliers by comparing them to all the other samples in the same group. Pink indicates outlier samples (in smaller groups) identified as outliers by comparing them to the other samples in the whole data set. The within gorup comparison generally provides stronger evidence of determing outliers. On the other hand, depending on how the samples are grouped in the data set, the evidence supporting global outliers varies, and should be evaluated further before determining they are indeed outliers. The remaining analyses of this report will only be applied to outliers identified by within group comparison.</p>
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="outliers-vs.non-outliers" class="section level2">
+<h2><span class="header-section-number">2.2</span> Outliers vs. non-outliers</h2>
+<p>Each outlier was compared to the average of non-outlier samples in the same group through the scatterplot of all genes. Click sample ID below to view scatterplots of outlier vs. non-outliers (left panel) and one of the non-outliers vs. the other non-outliers (right panel).</p>
+<ul>
+<li><a href="figure/Colon_GSM134050.png">Colon_GSM134050</a></li>
+<li><a href="figure/Kidney_GSM134284.png">Kidney_GSM134284</a></li>
+<li><a href="figure/Skin_GSM134115.png">Skin_GSM134115</a></li>
+</ul>
+<div align="center">
+<p><img src="index_files/figure-html/cluster_outlier-1.png" width="640px" /></p>
+</div>
+<div style="color:darkblue; padding:0 2cm">
+<p><strong>Figure 2</strong> Clustering of outliers based on their difference with the non-outliers in the same group. If multiple outliers have similar global pattern of changes relative to their non-outliers, these outliers could be the consequence of the same systematic bias. With the cutoff of correlation coefficient equal to 0.5, the following outliers are clustered together:</p>
+<p>No outliers can be grouped together.</p>
+</div>
+<div id="selection-of-top-genes" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Selection of top genes</h3>
+<p>Top genes having the biggest difference between outlier and corresponding non-outliers can provide very valuable information about the cause of the outliers. The following criteria are used to select top genes with most changes in the outliers comparing to the average of their corresponding non-outliers:</p>
+<ul>
+<li>For each outlier, two lists of top genes are selected, corresponding to two opposite directions of change.</li>
+<li>The changes in the outlier are greater than 2 standard deviations of the non-outliers.</li>
+<li>From the remaining genes, pick the top 250 with the largest changes in the outlier.</li>
+<li>From the remaining genes, pick those with changes greater than 2, or the top 100 genes having the largest changes, which ever gives more genes.</li>
+</ul>
+<div style="color:darkblue; padding:0 2cm">
+<p><strong>Table 1.</strong> The numbers of top genes selected from each outlier.</p>
+</div>
+<div align="center" ,="" style="padding:0 2cm">
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">Higher in outlier</th>
+<th align="center">Low in outlier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Colon_GSM134050</td>
+<td align="center"><a href="table/Colon_GSM134050_Higher.html">100</a></td>
+<td align="center"><a href="table/Colon_GSM134050_Lower.html">100</a></td>
+</tr>
+<tr class="even">
+<td>Kidney_GSM134284</td>
+<td align="center"><a href="table/Kidney_GSM134284_Higher.html">100</a></td>
+<td align="center"><a href="table/Kidney_GSM134284_Lower.html">100</a></td>
+</tr>
+<tr class="odd">
+<td>Skin_GSM134115</td>
+<td align="center"><a href="table/Skin_GSM134115_Higher.html">121</a></td>
+<td align="center"><a href="table/Skin_GSM134115_Lower.html">100</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="gene-set-enrichment-analysis" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Gene set enrichment analysis</h3>
+<p>Top genes selected from each outliers by the last step were mapped to predefined genesets collected from:</p>
+<ul>
+<li>BioSystems</li>
+<li>KEGG</li>
+<li>MSigDb</li>
+<li>OMIM</li>
+<li>PubTator</li>
+</ul>
+<p>The full gene set collection of a few model animals can be downloaded from <a href="https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set">here</a>.</p>
+<p>Enrichment of each gene set in top genes was tested by Hypergeometric test.</p>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Table 2A.</strong> The number of gene sets significantly enriched in top increasing genes of each outlier.</p>
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">BioSystems</th>
+<th align="center">KEGG</th>
+<th align="center">MSigDb</th>
+<th align="center">OMIM</th>
+<th align="center">PubTator</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Colon_GSM134050</td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Higher/BioSystems.html">273</a></td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Higher/KEGG.html">26</a></td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Higher/MSigDb.html">623</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Higher/PubTator.html">129</a></td>
+</tr>
+<tr class="even">
+<td>Kidney_GSM134284</td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Higher/BioSystems.html">268</a></td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Higher/KEGG.html">16</a></td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Higher/MSigDb.html">611</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Higher/PubTator.html">129</a></td>
+</tr>
+<tr class="odd">
+<td>Skin_GSM134115</td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Higher/BioSystems.html">689</a></td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Higher/KEGG.html">34</a></td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Higher/MSigDb.html">1359</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Higher/PubTator.html">2244</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div style="color:darkblue; padding:0 1cm">
+<p><strong>Table 2B.</strong> The number of gene sets significantly enriched in top decreasing genes of each outlier.</p>
+</div>
+<div align="center" ,="" style="padding:0 1cm">
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">BioSystems</th>
+<th align="center">KEGG</th>
+<th align="center">MSigDb</th>
+<th align="center">OMIM</th>
+<th align="center">PubTator</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Colon_GSM134050</td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Lower/BioSystems.html">207</a></td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Lower/KEGG.html">15</a></td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Lower/MSigDb.html">682</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/Colon_GSM134050_Lower/PubTator.html">102</a></td>
+</tr>
+<tr class="even">
+<td>Kidney_GSM134284</td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Lower/BioSystems.html">444</a></td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Lower/KEGG.html">20</a></td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Lower/MSigDb.html">1009</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/Kidney_GSM134284_Lower/PubTator.html">118</a></td>
+</tr>
+<tr class="odd">
+<td>Skin_GSM134115</td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Lower/BioSystems.html">280</a></td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Lower/KEGG.html">17</a></td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Lower/MSigDb.html">873</a></td>
+<td align="center"><a href="NA">NULL</a></td>
+<td align="center"><a href="table/gsea/Skin_GSM134115_Lower/PubTator.html">84</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+</div>
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">3</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">3.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">3.2</span> Session information</h2>
+<pre><code>## R version 3.3.3 (2017-03-06)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X Yosemite 10.10.5
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] DEGandMore_0.0.0.9000 snow_0.4-2            gplots_3.0.1         
+##  [4] htmlwidgets_0.9       DT_0.2                awsomics_0.0.0.9000  
+##  [7] yaml_2.1.16           rmarkdown_1.8         knitr_1.18           
+## [10] RoCA_0.0.0.9000       RCurl_1.95-4.9        bitops_1.0-6         
+## [13] devtools_1.13.4      
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.14       magrittr_1.5       highr_0.6         
+##  [4] stringr_1.2.0      caTools_1.17.1     tools_3.3.3       
+##  [7] KernSmooth_2.23-15 withr_2.1.1        htmltools_0.3.6   
+## [10] gtools_3.5.0       rprojroot_1.3-2    digest_0.6.13     
+## [13] memoise_1.1.0      evaluate_0.10.1    gdata_2.18.0      
+## [16] stringi_1.1.6      backports_1.1.2    jsonlite_1.5</code></pre>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
