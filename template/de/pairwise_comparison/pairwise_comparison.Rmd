@@ -926,7 +926,9 @@ gsea.lst.sig<-gsea.lst.sig[sapply(gsea.lst.sig, length)>1];
 gsea.gs<-split(gsea.lst.sig, gsea.tbl.sig[names(gsea.lst.sig), ncol(gsea.tbl.sig)]); 
 #gsea.gs<-rev(gsea.gs); 
 gsea.gs<-lapply(rev(gsea.gs), function(x) x[!duplicated(x)]); 
-names(gsea.gs)<-names(degs); 
+nms <- names(degs);
+names(nms) <- c('Yes', 'No'); 
+names(gsea.gs)<-nms[names(gsea.gs)];
 
 gsea.bic<-lapply(gsea.gs, function(g) BiclusterFromList(g[1:min(250, length(g))])); 
 gsea.bic2gs<-lapply(gsea.bic, function(bic) if (identical(NA, bic)) NA else lapply(bic[[2]], rownames));
@@ -954,6 +956,7 @@ GSEA is a similar gene set-level analysis applied. However, instead of using sel
   
 ```{r gsea_ex_enrichment, eval=TRUE, include=FALSE}
 gsea.ex <- gsea.tbl;
+gsea.ex <- gsea.ex[!is.na(gsea.ex$NES), , drop=FALSE];
 gsea.ex <- gsea.ex[abs(gsea.ex$NES)==max(abs(gsea.ex$NES)), ];
 ex.gsea <- dir(paste(path.gsea, gsea.ex$Collection, sep='/')); 
 ex.gsea <- ex.gsea[grep(gsea.ex$Gene_set[1], ex.gsea)];
