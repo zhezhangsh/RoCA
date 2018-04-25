@@ -369,10 +369,10 @@ div.tocify {
 <div style="color:darkblue; padding:0 1cm">
 <p><strong>Figure 2.</strong> Overlapping of DEGs. All combinations of differential expression towards opposite directions are plotted and Fisher’s exact test is performed to evaluate the significance of overlapping or lack of overlapping. Click links below to view overlapping DEGs:</p>
 <ul>
-<li><a href="DEG/gene_up-up.html">b_cell, Higher_in_SLE and t_cell, Higher_in_SLE</a></li>
-<li><a href="DEG/gene_up-down.html">b_cell, Higher_in_SLE and t_cell, Lower_in_SLE</a></li>
-<li><a href="DEG/gene_down-up.html">b_cell, Lower_in_SLE and t_cell, Higher_in_SLE</a></li>
-<li><a href="DEG/gene_down-down.html">b_cell, Lower_in_SLE and t_cell, Lower_in_SLE</a></li>
+<li><a href="deg/gene_up-up.html">b_cell, Higher_in_SLE and t_cell, Higher_in_SLE</a></li>
+<li><a href="deg/gene_up-down.html">b_cell, Higher_in_SLE and t_cell, Lower_in_SLE</a></li>
+<li><a href="deg/gene_down-up.html">b_cell, Lower_in_SLE and t_cell, Higher_in_SLE</a></li>
+<li><a href="deg/gene_down-down.html">b_cell, Lower_in_SLE and t_cell, Lower_in_SLE</a></li>
 </ul>
 </div>
 <div align="right">
@@ -649,99 +649,6 @@ div.tocify {
 <li><a href="GSEA/gsea_down-up.html">b_cell, Lower_in_SLE and t_cell, Higher_in_SLE</a></li>
 <li><a href="GSEA/gsea_down-down.html">b_cell, Lower_in_SLE and t_cell, Lower_in_SLE</a></li>
 </ul>
-</div>
-<div align="right">
-<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
-</div>
-</div>
-<div id="gene-clustering" class="section level2">
-<h2><span class="header-section-number">2.6</span> Gene clustering</h2>
-<p>The top 1000 genes with significant ANOVA p values (p &lt;= 0.01) were used as seeds to perform a gene-gene clustering analysis and 6 clusters were identified. ORA was performed on the clusters to identify their functional association (see table below);</p>
-<div style="color:darkblue; padding:0 2cm">
-<strong>Table 5.</strong> This table lists the number of genes in each cluster (click the numbers to see gene lists), the average expression of all genes in a cluster of all sample groups, and then the gene sets over-represented in each cluster (click the numbers to see gene set lists). The gene expression levels were normalized so the mean of the control groups equals to 0 and the mean of the treatment groups is the number of standard deviations.
-</div>
-<div style="padding:0 2cm">
-<table>
-<thead>
-<tr class="header">
-<th align="center">ID</th>
-<th align="center">Size</th>
-<th align="center">b_cell, Control</th>
-<th align="center">b_cell, SLE</th>
-<th align="center">t_cell, Control</th>
-<th align="center">t_cell, SLE</th>
-<th align="center">Gene_set</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center"><a href="CLUSTER/Heatmap_Cluster_1.pdf">Cluster_1</a></td>
-<td align="center"><a href="CLUSTER/Cluster_1.html">671</a></td>
-<td align="center">0</td>
-<td align="center">1.3368</td>
-<td align="center">0</td>
-<td align="center">-1.3933</td>
-<td align="center"><a href="CLUSTER/ORA_Cluster_1.html">974</a></td>
-</tr>
-<tr class="even">
-<td align="center"><a href="CLUSTER/Heatmap_Cluster_2.pdf">Cluster_2</a></td>
-<td align="center"><a href="CLUSTER/Cluster_2.html">118</a></td>
-<td align="center">0</td>
-<td align="center">1.3693</td>
-<td align="center">0</td>
-<td align="center">0.0033</td>
-<td align="center"><a href="CLUSTER/ORA_Cluster_2.html">2487</a></td>
-</tr>
-<tr class="odd">
-<td align="center"><a href="CLUSTER/Heatmap_Cluster_3.pdf">Cluster_3</a></td>
-<td align="center"><a href="CLUSTER/Cluster_3.html">1000</a></td>
-<td align="center">0</td>
-<td align="center">1.6649</td>
-<td align="center">0</td>
-<td align="center">1.5938</td>
-<td align="center"><a href="CLUSTER/ORA_Cluster_3.html">2514</a></td>
-</tr>
-<tr class="even">
-<td align="center"><a href="CLUSTER/Heatmap_Cluster_4.pdf">Cluster_4</a></td>
-<td align="center"><a href="CLUSTER/Cluster_4.html">535</a></td>
-<td align="center">0</td>
-<td align="center">-1.5190</td>
-<td align="center">0</td>
-<td align="center">-1.5478</td>
-<td align="center"><a href="CLUSTER/ORA_Cluster_4.html">2878</a></td>
-</tr>
-<tr class="odd">
-<td align="center"><a href="CLUSTER/Heatmap_Cluster_5.pdf">Cluster_5</a></td>
-<td align="center"><a href="CLUSTER/Cluster_5.html">446</a></td>
-<td align="center">0</td>
-<td align="center">-1.3751</td>
-<td align="center">0</td>
-<td align="center">1.3500</td>
-<td align="center"><a href="CLUSTER/ORA_Cluster_5.html">3785</a></td>
-</tr>
-<tr class="even">
-<td align="center"><a href="CLUSTER/Heatmap_Cluster_6.pdf">Cluster_6</a></td>
-<td align="center"><a href="CLUSTER/Cluster_6.html">603</a></td>
-<td align="center">0</td>
-<td align="center">-1.5017</td>
-<td align="center">0</td>
-<td align="center">-0.7758</td>
-<td align="center"><a href="CLUSTER/ORA_Cluster_6.html">10905</a></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div align="center">
-<p><img src="figure/clustering_heatmap-1.png" width="640px" /></p>
-</div>
-<div style="color:darkblue; padding:0 2cm">
-<p><strong>Figure 8.</strong> This plot shows below the average expression levels of each cluster. Data was normalized before the analysis, so the mean of the control groups was zero and the standard deviation of all samples of each gene was 1.0. Values indicate number of standard deviation from mean of relative control group.</p>
-</div>
-<div align="center">
-<p><img src="figure/clustering_mean-1.png" width="800px" /></p>
-</div>
-<div style="color:darkblue; padding:0 1cm">
-<p><strong>Figure 9.</strong> This plot summarizes the group means and standard errors of all clusters.</p>
 </div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
