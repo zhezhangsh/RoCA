@@ -281,7 +281,7 @@ apply(ind, 1, function(i)
 ol <- sapply(rownames(ind), function(nm) {
   i <- ind[nm, ];
   g <- intersect(deg1[[i[1]]], deg2[[i[2]]]); 
-  f <- paste('DEG/', 'gene_', nm, '.html', sep='');
+  f <- paste('deg/', 'gene_', nm, '.html', sep='');
   t <- tbl[g, , drop=FALSE];
   c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep=', '), collapse=' and ')
   fn <- CreateDatatable(t, paste(path, f, sep='/'), caption=c); 
