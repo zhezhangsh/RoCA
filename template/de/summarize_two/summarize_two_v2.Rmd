@@ -473,17 +473,17 @@ apply(ind, 1, function(i)
              paste(comp[2], names(ora.sets[[2]])[i[2]], sep=', ')), 
            u=ora.univ))->vnn;
 
-ol<-sapply(rownames(ind), function(nm) {
-  i<-ind[nm, ];
-  g<-intersect(ora.sets[[1]][[i[1]]], ora.sets[[2]][[i[2]]]); 
-  f<-paste('ORA/', 'ora_', nm, '.html', sep='');
+ol <- sapply(rownames(ind), function(nm) {
+  i <- ind[nm, ];
+  g <- intersect(ora.sets[[1]][[i[1]]], ora.sets[[2]][[i[2]]]); 
+  f <- paste('ORA/', 'ora_', nm, '.html', sep='');
   c <- paste(paste(comp, c(names(deg1)[i[1]], names(deg2)[i[2]]), sep=', '), collapse=' and ')
-  t<-gset[[1]][g, ]; 
-  t$Name<-AddHref(t$Name, t$URL); 
-  t<-t[, 1:3]; 
-  t<-cbind(t, ora.stat[[1]][[i[1]]][g, c(2, 4, 5, 6)], ora.stat[[2]][[i[2]]][g, c(2, 4, 5, 6)]); 
-  colnames(t)[4:11]<-paste(colnames(t)[4:11], rep(names(grp), each=4), sep='_'); 
-  fn<-CreateDatatable(t, paste(path, f, sep='/'), rownames = FALSE, caption=c); 
+  t <- gset[[1]][g, ]; 
+  t$Name <- AddHref(t$Name, t$URL); 
+  t <- t[, 1:3]; 
+  t <- cbind(t, ora.stat[[1]][[i[1]]][g, c(2, 4, 5, 6), drop=FALSE], ora.stat[[2]][[i[2]]][g, c(2, 4, 5, 6), drop=FALSE]); 
+  colnames(t)[4:11] <- paste(colnames(t)[4:11], rep(names(grp), each=4), sep='_'); 
+  fn <- CreateDatatable(t, paste(path, f, sep='/'), rownames = FALSE, caption=c); 
   list(c, f); 
 });
 
