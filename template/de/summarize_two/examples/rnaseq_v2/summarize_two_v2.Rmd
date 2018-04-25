@@ -458,7 +458,7 @@ Each 2-group comparison performs gene set over-representation analysis (ORA) tha
 **Table 3.** Gene sets were broken down into subgroups by their sources. Click on the numbers of over-represented gene sets to see a full list.
 </div>
 
-<div style="padding:0 3cm">
+<div style="padding:0 1cm">
 `r kable(lnk, align='c')`
 </div>
 
@@ -555,7 +555,7 @@ Each 2-group comparison performs gene set enrichment analysis (GSEA) on genes ra
 **Table 4.** Gene sets were broken down into subgroups by collections. Click on the numbers of enriched gene sets to see a full list. 
 </div>
 
-<div style="padding:0 3cm">
+<div style="padding:0 1cm">
 `r kable(lnk, align='c')`
 </div>
 
