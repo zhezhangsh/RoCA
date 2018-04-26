@@ -294,9 +294,9 @@ This report is generated based on the following inputs:
     - **Group1, `r g2.name`:** `r paste(colnames(e2), collapse='; ')` (n=`r ncol(e1)`)
     - **Paired:** `r prms$paired`
   - **Differential gene expression:** 
-    - **Statistical method:** `r prms$deg$method`
+    - **Statistical method:** `r sub('^De', '', prms$deg$method)`
     - **Rank gene:** `r l1`
-    - **Use reprocessed data:** `r prms$deg$reprocessed`
+    - **Use reprocessed matrix:** `r prms$deg$reprocessed`
   - **Select top genes:**
     - **P value cutoff:** `r prms$deg$cutoff.p`
     - **FDR cutoff:** `r prms$deg$cutoff.fdr`
