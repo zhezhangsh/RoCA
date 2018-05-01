@@ -17,8 +17,8 @@
 #########################    REQUIRED    ##########################
 ###################################################################
 # Required by the RoCA framework to generate a reproducible report
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/igraph/igraph.Rmd
-# template: igraph.Rmd
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/igraph/igraph.Rmd
+template: igraph.Rmd
 output: example/sle_immune_cells          # Where to save the output files
 home: http://zhezhangsh.github.io/RoCA    # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
@@ -53,6 +53,7 @@ input:
 # Parameters to run this analysis
 parameter:  # These are examples of different types of parameters. They will not be used for the skeleton.Rmd template for act analysis.
   cluster:  # parameters of clustering analysis and plotting clusters
+    hub: 0
     size: 20  # minimal size of a cluster
     core: 30  # minimal number of neighbors for a core node to be labeled
   enrichment: 

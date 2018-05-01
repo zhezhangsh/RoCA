@@ -21,7 +21,7 @@ This procedure will identify sub-networks from a given network, using three clus
 
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'igraph.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'GenomicRanges', 'RoCA', 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'RCurl', 'GenomicRanges', 'RoCA', 
                    'awsomics', 'igraph', 'DEGandMore'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table');
 
@@ -59,7 +59,7 @@ home.url <- Link2Home(yml$home);
 prs <- ImportTable(DownloadFile(yml$input$pairs, path = path.input));
 igrph <- graph_from_data_frame(prs[, 1:2], FALSE);
 
-if (file.exists(yml$input$background)) 
+if (file.exists(yml$input$background) | url.exists(yml$input$background)) 
   bgd <- ImportVector(DownloadFile(yml$input$background, path = path.input)) else 
     bgd <- NULL;
 set.mpp <- ImportList(DownloadFile(yml$input$mapping, path = path.input));
@@ -94,7 +94,9 @@ inc.node <- intersect(names(V(igrph)), set.all);
 
 ```{r functions, include=FALSE}
 label.hub <- function(label, cluster, count) {
-  top <- lapply(cluster, function(c) rev(sort(count[c])));
+  nhub <- prms$cluster$hub;
+  if (is.na(nhub) | nhub<1) nhub <- Inf;
+  top <- lapply(cluster, function(c) rev(sort(count[c]))[1:min(c(nhub, length(c)), na.rm=TRUE)]);
   top <- as.vector(unlist(lapply(top, function(x) names(x)[x==x[1]]))); 
   label[top] <- top; 
   label; 
