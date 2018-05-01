@@ -1,5 +1,5 @@
 ---
-title: 'Network analysis using the "igraph" package'
+title: 'Network analysis using the igraph package'
 author: "Jim Zhang"
 date: '`r Sys.Date()`'
 output:
@@ -56,12 +56,14 @@ home.url <- Link2Home(yml$home);
 ############################################################################################################
 #####################################  Loading packages and data   #########################################
 ############################################################################################################
-prs <- ImportTable(yml$input$pairs);
+prs <- ImportTable(DownloadFile(yml$input$pairs, path = path.input));
 igrph <- graph_from_data_frame(prs[, 1:2], FALSE);
 
-if (file.exists(yml$input$background)) bgd <- ImportVector(yml$input$background) else bgd <- NULL;
-set.mpp <- ImportList(yml$input$mapping);
-set.ann <- ImportTable(yml$input$annotation);
+if (file.exists(yml$input$background)) 
+  bgd <- ImportVector(DownloadFile(yml$input$background, path = path.input)) else 
+    bgd <- NULL;
+set.mpp <- ImportList(DownloadFile(yml$input$mapping, path = path.input));
+set.ann <- ImportTable(DownloadFile(yml$input$annotation, path = path.input));
 
 set.num <- sapply(set.mpp, length);
 set.mpp <- set.mpp[set.num>=prms$enrichment$size.min&set.num<=prms$enrichment$size.max];
@@ -121,12 +123,13 @@ run.ora <- function(cluster.list, mapping, background, annotation, method, dir) 
       o[[1]] <- AddHref(o[[1]], o[, ind]); 
       o[, -ind]; 
     })
-  };
+  }; 
   ora <- lapply(ora, function(o) o[o[, 'PValue']<0.05, ])
   fn <- sapply(1:length(cluster.list), function(i) {
-    fn <- paste(dir, '/ORA_', method, '_', names(ora)[i], '.html', sep=''); 
-    CreateDatatable(ora[[i]], fn, rownames = FALSE, caption = paste(method, '; Cluster_', i, sep='')); 
-    fn; 
+    fn <- paste('ORA_', method, '_', names(ora)[i], '.html', sep=''); 
+    CreateDatatable(ora[[i]], paste(dir, fn, sep='/'), rownames = FALSE, 
+                    caption = paste(method, '; Cluster_', i, sep='')); 
+    paste('table', fn, sep='/'); 
   });
   list(file=fn, top=lapply(ora, function(o) o[1, ])); 
 }; 
@@ -137,10 +140,26 @@ summarize.cluster <- function(cluster.list, ora, ll) {
   cr <- as.vector(sapply(cr, function(x) paste(x, collapse="; ")));
   cls <- paste('[Cluster_', 1:length(cluster.list), '](', ora[[1]], ')', sep='');
   tbl <- data.frame(Cluster=cls, Size=sapply(cluster.list, length), Core_Member=cr, Top_Set=tp[[1]],
-                    Top_OddsRatio=tp$OddsRatio, Top_PValue=tp$PValue, Top_FDR=tp$FDR, stringsAsFactors = FALSE);
+                    Top_OddsRatio=tp$OddsRatio, Top_PValue=tp$PValue, Top_FDR=tp$FDR, 
+                    stringsAsFactors = FALSE);
   ind <- which(tolower(colnames(tp))=='name');
   tbl; 
 };
+summarize.node <- function(cluster.list, pairs, ora, tbl) {
+  fn <- sapply(1:length(cluster.list), function(i) {
+    c  <- cluster.list[[i]];
+    pr <- pairs[pairs[, 1] %in% c & pairs[, 2] %in% c, , drop=FALSE];
+    nm <- table(c(pr[, 1], pr[, 2]));
+    nm <- rev(sort(nm));
+    fn <- sub('.html', '.txt', ora[[1]][i]);
+    write.table(cbind(Node=names(nm), Link=as.vector(nm)), paste(path, fn, sep='/'), sep='\t', 
+                row.names = FALSE, col.names = TRUE, quote = FALSE);
+    fn;
+  });
+  
+  tbl$Size <- paste('[', tbl$Size, '](', fn, ')', sep='');
+  tbl;
+}
 ```
 
 # Summary
@@ -154,7 +173,7 @@ hist(num, xlab='Number of edges per node', ylab='Count of nodes', cex.lab=2, mai
 ```
 </div>
 
-<div align='center', style="color:darkblue; padding:0 3cm">
+<div style="color:darkblue; padding:0 3cm">
 **Figure 1.** Number of edges per nodes.
 </div>
 
@@ -189,7 +208,7 @@ plot.full.graph(igrph, clusters[[1]], ll, 'Fast greedy');
 </div>
 
 
-<div align='center', style="color:darkblue; padding:0 1cm">
+<div style="color:darkblue; padding:0 1cm">
 **Figure 2A.** Clustering via the fast greedy modularity optimization algorithm.
 </div>
 
@@ -200,7 +219,7 @@ for (i in 1:length(cl)) plot.sub.graph(igrph, cl[[i]], paste('Cluster', i, sep='
 ```
 </div>
 
-<div align='center', style="color:darkblue; padding:0 1cm">
+<div style="color:darkblue; padding:0 1cm">
 **Figure 2B.** Individual clusters identified via the fast greedy modularity optimization algorithm.
 </div>
 
@@ -208,12 +227,13 @@ for (i in 1:length(cl)) plot.sub.graph(igrph, cl[[i]], paste('Cluster', i, sep='
 ```{r cluster_fast_greedy_ora, include=FALSE}
 ora <- run.ora(cl, set.mpp, bgd, set.ann, 'FastGreedy', path.tbl); 
 tbl <- summarize.cluster(cl, ora, ll); 
+tbl <- summarize.node(cl, prs, ora, tbl); 
 ```
 
 <div style="color:darkblue; padding:0 0.5cm">
 **Table 1.** Enrichment analysis of network clusters identified by the fast greedy algorithm.
 </div>
-<div align='center', style="padding:0 0.5cm">
+<div style="padding:0 0.5cm">
 `r kable(tbl, row.names=FALSE)`
 </div>
 
@@ -228,7 +248,7 @@ plot.full.graph(igrph, clusters[[2]], ll, 'Walktrap');
 ```
 </div>
 
-<div align='center', style="color:darkblue; padding:0 1cm">
+<div style="color:darkblue; padding:0 1cm">
 **Figure 3A.** Clustering via the Walktrap community finding algorithm.
 </div>
 
@@ -239,19 +259,20 @@ for (i in 1:length(cl)) plot.sub.graph(igrph, cl[[i]], paste('Cluster', i, sep='
 ```
 </div>
 
-<div align='center', style="color:darkblue; padding:0 1cm">
+<div style="color:darkblue; padding:0 1cm">
 **Figure 3B.** Individual clusters identified via the Walktrap community finding algorithm.
 </div>
 
 ```{r cluster_walktraps_ora, include=FALSE}
 ora <- run.ora(cl, set.mpp, bgd, set.ann, 'Walktrap', path.tbl); 
 tbl <- summarize.cluster(cl, ora, ll); 
+tbl <- summarize.node(cl, prs, ora, tbl); 
 ```
 
 <div style="color:darkblue; padding:0 0.5cm">
 **Table 2.** Enrichment analysis of network clusters identified by the walkgrap algorithm.
 </div>
-<div align='center', style="padding:0 0.5cm">
+<div style="padding:0 0.5cm">
 `r kable(tbl, row.names=FALSE)`
 </div>
 
@@ -266,7 +287,7 @@ plot.full.graph(igrph, clusters[[3]], ll, 'Edge Betweenness');
 ```
 </div>
 
-<div align='center', style="color:darkblue; padding:0 1cm">
+<div style="color:darkblue; padding:0 1cm">
 **Figure 4A.** Clustering via the edge betweenness algorithm.
 </div>
 
@@ -276,19 +297,20 @@ par(mfrow=c(ceiling(length(cl)/3), 3));
 for (i in 1:length(cl)) plot.sub.graph(igrph, cl[[i]], paste('Cluster', i, sep='_')); 
 ```
 </div>
-<div align='center', style="color:darkblue; padding:0 1cm">
+<div style="color:darkblue; padding:0 1cm">
 **Figure 4B.** Individual clusters identified via the edge betweenness algorithm.
 </div>
 
 ```{r cluster_edge_betweenness_ora, include=FALSE}
 ora <- run.ora(cl, set.mpp, bgd, set.ann, 'EdgeBetweenness', path.tbl); 
 tbl <- summarize.cluster(cl, ora, ll); 
+tbl <- summarize.node(cl, prs, ora, tbl); 
 ```
 
 <div style="color:darkblue; padding:0 0.5cm">
 **Table 3.** Enrichment analysis of network clusters identified by the edge betweenness algorithm.
 </div>
-<div align='center', style="padding:0 0.5cm">
+<div style="padding:0 0.5cm">
 `r kable(tbl, row.names=FALSE)`
 </div>
 
