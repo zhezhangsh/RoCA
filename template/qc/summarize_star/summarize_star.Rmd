@@ -51,6 +51,8 @@ for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.su
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
+
+if (exists('figure.count')) rm('figure.count');
 ```
 
 `r home.url`
