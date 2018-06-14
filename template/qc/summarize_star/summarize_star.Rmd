@@ -163,12 +163,15 @@ nms<-rownames(stat);
 ```
 
 <div style="color:darkblue; padding:0 2cm">
-**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click [here]('table/percent_mapped.html'`) to see the summary statistics of individual libraries.
+**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. 
 </div>
 
 <div style="padding:0 2cm">
 `r kable(t(smm))`
 </div>
+
+> [Summary statistics of individual libraries](table/percent_mapped.html).
+
 
 ## Alignment rate
 
