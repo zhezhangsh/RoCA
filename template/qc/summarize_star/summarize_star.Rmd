@@ -166,7 +166,7 @@ nms<-rownames(stat);
 **Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. Click [here](`paste(path.tbl, 'percent_mapped.html', sep='/')`) to see the summary statistics of individual libraries.
 </div>
 
-<div align='center', style="padding:0 2cm">
+<div style="padding:0 2cm">
 `r kable(t(smm))`
 </div>
 
@@ -176,7 +176,6 @@ In most RNA-seq data sets, the percentage of total input reads that can be align
 
 The rate of unique vs. multiple alignment is a similar index of data quality. High percent of multiple alignment might indicate low complexity of sequence reads, higher sequencing error rate, and other issues. This analysis also evaluates the consistency of unique vs. multiple alignment between samples.
 
-<div align='center'>
 ```{r alignment_rate, include=TRUE, fig.width=12, fig.height=6, out.width='800px'}
 par(mfrow=c(1, 2));
 # Total input vs. uniquely aligned
@@ -197,16 +196,15 @@ o <- nms[sigma2 > 3];
 if (length(o) == 0) alerts <- c(alerts, 'High multiple alignment rate: none') else
 alerts <- c(alerts, paste('High multiple alignment rate:', paste(o, collapse='; ')));
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 1.** The global alignment rate (left) and the rate of unique vs. multiple alignment (right). Each spot represents a RNA-seq library and is colored based on number of sigma. For each library, a linear model is built with all the other libraries and the value of sigma (variance of random error) is obtained from the model. The number of sigma is then calculated by dividing the observed-predicted difference of that library with the sigma value.
+<div style="color:darkblue">
+`r OrderFigure()` The global alignment rate (left) and the rate of unique vs. multiple alignment (right). Each spot represents a RNA-seq library and is colored based on number of sigma. For each library, a linear model is built with all the other libraries and the value of sigma (variance of random error) is obtained from the model. The number of sigma is then calculated by dividing the observed-predicted difference of that library with the sigma value.
 </div>
 
 ## Non-canonical splice sites
+
 An important aspect of processing RNA-seq data is to alignment sequence reads to splicing sites, called gap alignment. Most commonly, STAR performs gap alignment first by using the known splicing sites based on the reference transcriptome and then by detecting novel splicing sites based on the reference genome. Most splicing sites have canonical donor/acceptor bases, such as GT/AG. While non-canonical splicing sites have been observed, they are relatively rare and often suggestive of false positives.
 
-<div align='center'>
 ```{r splice_site, include=TRUE, fig.width=6, fig.height=6, out.width='400px'}
 ct0<-tbls[[2]][, 'Unique'];
 ct0<-as.numeric(gsub(',', '', ct0));
@@ -222,17 +220,15 @@ o <- nms[sigma3 > 3];
 if (length(o) == 0) alerts <- c(alerts, 'High rate of noncanonical splice: none') else
 alerts <- c(alerts, paste('High rate of noncanonical splice:', paste(o, collapse='; ')));
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 2.** The total number of reads gap-aligned reads and the number of gap-aligned with non-canonical splicing sites are fitted to linear models as in **Figure 1**. On average of all samples in this data set, 1.128% of all gap-aligned reads have non-canonical splicing sites.
+<div style="color:darkblue">
+`r OrderFigure()` The total number of reads gap-aligned reads and the number of gap-aligned with non-canonical splicing sites are fitted to linear models as in **Figure 1**. On average of all samples in this data set, 1.128% of all gap-aligned reads have non-canonical splicing sites.
 </div>
 
 ## Mismatches and INDELs
 
 STAR alignment reports the frequency of mismatch, deletion, and insertion bases. The consistency of these statistics should also be evaluated.
 
-<div align='center'>
 ```{r mismatch_indel, include=TRUE, fig.width=8, fig.height=6, out.width='600px'}
 x<-apply(tbls[[5]][, 3:1], 2, function(x) as.numeric(gsub('%', '', x)));
 
@@ -255,17 +251,15 @@ o <- o[[nm]];
 if (length(o) == 0) paste(nm, 'none') else paste(nm, paste(o, collapse='; '))
 }));
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 3.** Distribution of insertion/deletion/mismatch frequency in all samples.
+<div style="color:darkblue">
+`r OrderFigure()` Distribution of insertion/deletion/mismatch frequency in all samples.
 </div>
 
 ## Unmapped reads
 
 STAR alignment also reports the percent of unmapped reads due to different reasons, including too many mismatches, too short, and other. Additionally, it reports to percent of reads that were mapped, but to too many loci. Again, the focus here is the consistency of these percents between samples.
 
-<div align='center'>
 ```{r unmapped, include=TRUE, fig.width=12, fig.height=12, out.width='800px'}
 x<-apply(tbls[[6]], 2, function(x) as.numeric(gsub('%', '', x)));
 nm<-c('Too many loci', 'Too many mismatch', 'Too short', 'Other');
@@ -282,10 +276,9 @@ o <- o[[nm]];
 if (length(o) == 0) paste(nm, 'none') else paste(nm, paste(o, collapse='; '))
 }));
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 4.** Distribution of the frequency of poorly aligned reads due to different reasons. The frequency is relative to all mapped reads in the first plot, and relative to all unmapped reads in the others.
+<div style="color:darkblue">
+`r OrderFigure()` Distribution of the frequency of poorly aligned reads due to different reasons. The frequency is relative to all mapped reads in the first plot, and relative to all unmapped reads in the others.
 </div>
 
 ## Alerts
@@ -298,7 +291,7 @@ Listed below are samples with potentially quality problem, based on consistency 
 
 `r lns`
 
-## More details
+## Tables
 
 ```{r write_table, include=FALSE}
 CreateDatatable(tbls[[1]], paste(path.tbl, 'run_info.html', sep='/'));

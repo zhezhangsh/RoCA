@@ -1,13 +1,15 @@
 ---
 title: "Summarize & filter sequence reads"
 author: "Zhe Zhang"
-date: "2016-06-07"
+date: '2016-06-07'
 output:
-  html_document:
-    self_contained: no
-    number_sections: yes
+  pdf_document:
     toc: yes
-    toc_float: 
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
       collapsed: no
 ---
 

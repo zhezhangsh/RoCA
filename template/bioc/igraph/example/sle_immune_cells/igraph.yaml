@@ -53,7 +53,7 @@ input:
 # Parameters to run this analysis
 parameter:  # These are examples of different types of parameters. They will not be used for the skeleton.Rmd template for act analysis.
   cluster:  # parameters of clustering analysis and plotting clusters
-    hub: 0
+    hub: 5    # number of hub nodes to label on the main graph. 0 to label all nodes
     size: 20  # minimal size of a cluster
     core: 30  # minimal number of neighbors for a core node to be labeled
   enrichment: 
