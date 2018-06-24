@@ -200,9 +200,10 @@ if (deg.method == "DeRankP") { # Rank Product methods
   colnames(out[[3]])<-paste(colnames(out[[3]]), cnm, sep='_')
   out<-lapply(out, function(out) cbind(mn[rownames(out), , drop=FALSE], out));
   names(out)<-c(deg.sub, 'Single_rank');
-  degs<-lapply(out[1:2], function(x) {
-    deg<-x[x[, 'Pvalue']<=cutoff.p & x[, 'FDR']<=cutoff.fdr & abs(x[, 'LogFC'])>=cutoff.l2r, , drop=FALSE];
-    if (nrow(deg) < num.top) deg<-x[x[, 'Pvalue']<=cutoff.p & x[, 'Rank']<=num.top, , drop=FALSE]; 
+  degs <- lapply(out[1:2], function(x) {
+    deg <- x[x[, 'Pvalue']<=cutoff.p, , drop=FALSE];
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'FDR'])>=cutoff.fdr, , drop=FALSE]; 
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'LogFC'])>=cutoff.l2r, , drop=FALSE]; 
     deg;
   }); 
   degs<-lapply(degs, function(d) d[order(d[, 'Rank']), ]);
@@ -210,8 +211,10 @@ if (deg.method == "DeRankP") { # Rank Product methods
   out<-de$results$stat;
   degs<-lapply(c(1, -1), function(di) {
     x<-out[sign(out[, 'LogFC'])==di, , drop=FALSE];
-    deg<-x[x[, 'Pvalue']<=cutoff.p & x[, 'FDR']<=cutoff.fdr & abs(x[, 'LogFC'])>=cutoff.l2r, , drop=FALSE];
-    if (nrow(deg) < num.top) deg<-x[x[, 'Pvalue']<=cutoff.p & abs(x[, 'LogFC'])>=sort(abs(x[, 'LogFC']), decreasing = TRUE)[min(num.top, nrow(x))], , drop=FALSE]; 
+    deg<-x[x[, 'Pvalue']<=cutoff.p, , drop=FALSE];
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'FDR'])>=cutoff.fdr, , drop=FALSE]; 
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'LogFC'])>=cutoff.l2r, , drop=FALSE]; 
+    # if (nrow(deg) < num.top) deg<-x[x[, 'Pvalue']<=cutoff.p & abs(x[, 'LogFC'])>=sort(abs(x[, 'LogFC']), decreasing = TRUE)[min(num.top, nrow(x))], , drop=FALSE]; 
     deg;
   }); 
   degs<-lapply(degs, function(d) d[order(-1*abs(d[, 'LogFC'])), , drop=FALSE]);
@@ -273,7 +276,7 @@ Click links below to go directly to results or read the rest of this report for 
 # Data and methods
 
 ```{r data_methods, include=FALSE}
-rank <- tolower(prms$deg$method)[1];
+rank <- tolower(prms$deg$rank)[1];
 if (rank == 'p') l1 <- 'p value only' else if (rank == 'fc') l1 <- 'fold change only' else l1 <- 'both p value and fold change'
 ```
 
