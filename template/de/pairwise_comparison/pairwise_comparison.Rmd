@@ -202,8 +202,8 @@ if (deg.method == "DeRankP") { # Rank Product methods
   names(out)<-c(deg.sub, 'Single_rank');
   degs <- lapply(out[1:2], function(x) {
     deg <- x[x[, 'Pvalue']<=cutoff.p, , drop=FALSE];
-    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'FDR'])>=cutoff.fdr, , drop=FALSE]; 
-    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'LogFC'])>=cutoff.l2r, , drop=FALSE]; 
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'FDR']) <= cutoff.fdr, , drop=FALSE]; 
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'LogFC']) >= cutoff.l2r, , drop=FALSE]; 
     deg;
   }); 
   degs<-lapply(degs, function(d) d[order(d[, 'Rank']), ]);
@@ -212,8 +212,8 @@ if (deg.method == "DeRankP") { # Rank Product methods
   degs<-lapply(c(1, -1), function(di) {
     x<-out[sign(out[, 'LogFC'])==di, , drop=FALSE];
     deg<-x[x[, 'Pvalue']<=cutoff.p, , drop=FALSE];
-    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'FDR'])>=cutoff.fdr, , drop=FALSE]; 
-    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'LogFC'])>=cutoff.l2r, , drop=FALSE]; 
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'FDR']) <= cutoff.fdr, , drop=FALSE]; 
+    if (nrow(deg) >= num.top) deg <- deg[abs(deg[, 'LogFC']) >= cutoff.l2r, , drop=FALSE]; 
     # if (nrow(deg) < num.top) deg<-x[x[, 'Pvalue']<=cutoff.p & abs(x[, 'LogFC'])>=sort(abs(x[, 'LogFC']), decreasing = TRUE)[min(num.top, nrow(x))], , drop=FALSE]; 
     deg;
   }); 
