@@ -4,42 +4,44 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2016-06-24" />
+<meta name="date" content="2018-07-02" />
 
-<title>Analysis of RNA-seq samples using read counts</title>
+<title>Analysis of RNA-seq samples using read count matrix</title>
 
 <script src="index_files/jquery-1.11.3/jquery.min.js"></script>
-<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
-<link rel="stylesheet"
-      href="index_files/highlight/default.css"
-      type="text/css" />
-<script src="index_files/highlight/highlight.js"></script>
 <style type="text/css">
   pre:not([class]) {
     background-color: white;
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -94,16 +96,19 @@ img {
 .tabbed-pane {
   padding-top: 12px;
 }
+.html-widget {
+  margin-bottom: 20px;
+}
 button.code-folding-btn:focus {
   outline: none;
 }
 </style>
 
 
+
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
-<script src="index_files/navigation-1.0/tabsets.js"></script>
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
@@ -129,7 +134,7 @@ $(document).ready(function ()  {
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
-        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
       },
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
@@ -153,6 +158,7 @@ $(document).ready(function ()  {
   width: 100%;
 }
 }
+
 
 .toc-content {
   padding-left: 30px;
@@ -187,8 +193,9 @@ div.tocify {
 }
 
 .tocify-subheader .tocify-item {
-  font-size: 0.9em;
-  padding-left: 5px;
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -200,7 +207,6 @@ div.tocify {
 }
 .tocify-subheader .tocify-item {
   font-size: 0.95em;
-  padding-left: 10px;
 }
 
 </style>
@@ -221,9 +227,9 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Analysis of RNA-seq samples using read counts</h1>
+<h1 class="title toc-ignore">Analysis of RNA-seq samples using read count matrix</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2016-06-24</em></h4>
+<h4 class="date"><em>2018-07-02</em></h4>
 
 </div>
 
@@ -263,8 +269,8 @@ div.tocify {
 <ul>
 <li>Number of samples: <em>18</em></li>
 <li>Number of genes: <em>25,207</em></li>
-<li>Average number of reads per gene: <em>6,329</em></li>
-<li>Total number of reads per sample: <em>8,862,836</em></li>
+<li>Average number of total reads per gene: <em>6328.8</em></li>
+<li>Average number of total reads per sample: <em>8,862,836</em></li>
 </ul>
 <div id="read-count-by-sample" class="section level2">
 <h2><span class="header-section-number">2.1</span> Read count by sample</h2>
@@ -273,14 +279,10 @@ div.tocify {
 <li>Samples with extremly low read count: <strong><em>none</em></strong></li>
 <li>Samples with extremly high read count: <strong><em>none</em></strong></li>
 </ul>
-<div align="center">
-<img src="figure/read_count_sample_hist-1.png" title="plot of chunk read_count_sample_hist" alt="plot of chunk read_count_sample_hist" width="600px" />
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p><img src="figure/read_count_sample_hist-1.png" width="600px" /></p>
 <p><strong>Figure 1.</strong> Distribution of total read counts of all samples. Total read count per sample (millions):</p>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   6.446   7.491   8.600   8.863  10.050  12.370</code></pre>
-</div>
 </div>
 <div id="read-count-by-gene" class="section level2">
 <h2><span class="header-section-number">2.2</span> Read count by gene</h2>
@@ -290,23 +292,15 @@ div.tocify {
 <li>35.27% genes have less 1 read mapped to them per sample.</li>
 <li>48.29% genes have less 5 reads mapped to them per sample .</li>
 </ul>
-<div align="center">
-<img src="figure/read_count_gene_sorted-1.png" title="plot of chunk read_count_gene_sorted" alt="plot of chunk read_count_gene_sorted" width="720px" />
-</div>
-<div style="color:darkblue; padding:0 2cm">
-<strong>Figure 2.</strong> The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking.
-</div>
+<p><img src="figure/read_count_gene_sorted-1.png" width="720px" /></p>
+<p><strong>Figure 2.</strong> The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking.</p>
 <p> </p>
-<div align="center">
-<img src="figure/read_count_gene_top-1.png" title="plot of chunk read_count_gene_top" alt="plot of chunk read_count_gene_top" width="800px" />
-</div>
-<div style="color:darkblue; padding:0 1cm">
+<p><img src="figure/read_count_gene_top-1.png" width="800px" /></p>
 <p><strong>Figure 3.</strong> The cumulative read counts of <a href="table/top_gene_count.html">top 10 genes</a> and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples:</p>
 <ul>
 <li>Samples with extremely low percent of reads from top 10 genes: <strong><em>none</em></strong></li>
 <li>Samples with extremely high percent of reads from top 10 genes: <strong><em>none</em></strong></li>
 </ul>
-</div>
 </div>
 <div id="read-count-by-mapping-type" class="section level2">
 <h2><span class="header-section-number">2.3</span> Read count by mapping type</h2>
@@ -317,32 +311,20 @@ div.tocify {
 <li>Whether the read is mapped to the sense strand or antisense strand of a gene: <strong><em>sense vs. antisense</em></strong></li>
 </ul>
 <p>This analysis accepts multiple matching matrixes of read counts corresponding to different mapping types. By default, the first matrix corresponds to the most common mapping type and will be used for all the other analyses in this report. In this section, however, read counts of different mapping types are summarized and compared to each other when multiple matrixes are provided.</p>
-<div align="left">
-<img src="figure/read_count_type_pie-1.png" title="plot of chunk read_count_type_pie" alt="plot of chunk read_count_type_pie" width="800px" />
-</div>
-<div style="color:darkblue; padding:0 1cm">
+<p><img src="figure/read_count_type_pie-1.png" width="800px" /></p>
 <p><strong>Figure 4.</strong> Total mapped reads of all samples are split by mapping types, such as unique vs. multiple, paired vs. unpaired, and sense vs. antisense. Among the 8 mapping type(s),</p>
 <ul>
 <li>The most common mapping type is <em>Unique_Paired_As</em> (<em>48.4133%</em> of total mapped reads)</li>
 <li>The least common mapping type is <em>Multiple_Unpaired_As</em>, (<em>0.065%</em> of total mapped reads)</li>
 </ul>
-</div>
 <p> </p>
 <p>When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information.</p>
-<div align="left">
-<img src="figure/read_count_type_corr-1.png" title="plot of chunk read_count_type_corr" alt="plot of chunk read_count_type_corr" width="600px" />
-</div>
-<div style="color:darkblue; padding:0 1cm">
-<strong>Figure 5.</strong> The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman’s correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click <a href="table/corr_mapping_type.html">here</a> to view correlation coefficients between all pairs of mapping types.
-</div>
+<p><img src="figure/read_count_type_corr-1.png" width="600px" /></p>
+<p><strong>Figure 5.</strong> The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman’s correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click <a href="table/corr_mapping_type.html">here</a> to view correlation coefficients between all pairs of mapping types.</p>
 <p> </p>
 <p>By comparing read counts of different mapping types to each other, the ratios can be compared between samples for consistency. A sample might have quality issue if it has reads of a mapping type much less or more than the other samples.</p>
-<div align="center">
-<img src="figure/read_count_type_heatmap-1.png" title="plot of chunk read_count_type_heatmap" alt="plot of chunk read_count_type_heatmap" width="720px" />
-</div>
-<div style="color:darkblue; padding:0 1cm">
-<strong>Figure 6.</strong> The relative frequecy of mapping types are calculated for each sample, using the first read count matrix as reference. The frequency of each mapping type are normalized across all samples (Mean = 0 and SD = 1.0). This figure shows the normalized frequency of each mapping type in each sample (red = high). - Mapping type <em>Multiple_Unpaired_Sense</em> has the most “abnormally” high relative frequency (# of standard deviations = <em>0.42</em>) in sample <em>T_Patient_F, B_Control_C</em>. - Mapping type <em>Unique_Unpaired_As</em> has the most “abnormally” low relative frequency (# of standard deviations = <em>-1</em>) in sample <em>T_Patient_F</em>.
-</div>
+<p><img src="figure/read_count_type_heatmap-1.png" width="720px" /></p>
+<p><strong>Figure 6.</strong> The relative frequecy of mapping types are calculated for each sample, using the first read count matrix as reference. The frequency of each mapping type are normalized across all samples (Mean = 0 and SD = 1.0). This figure shows the normalized frequency of each mapping type in each sample (red = high). - Mapping type <em>Multiple_Unpaired_Sense</em> has the most “abnormally” high relative frequency (# of standard deviations = <em>0.42</em>) in sample <em>T_Patient_F, B_Control_C</em>. - Mapping type <em>Unique_Unpaired_As</em> has the most “abnormally” low relative frequency (# of standard deviations = <em>-1</em>) in sample <em>T_Patient_F</em>.</p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -351,12 +333,8 @@ div.tocify {
 <div id="dispersion-and-normalization" class="section level1">
 <h1><span class="header-section-number">3</span> Dispersion and normalization</h1>
 <p>Gene-specific dispersion of RNA-seq read counts is commonly used to evaluate between-sample variance of a data set. Here, the dispersion is estimated by the overall pattern of coefficient of variation (standard deviation devided by average read count) of all genes.</p>
-<div align="center">
-<img src="figure/dispersion-1.png" title="plot of chunk dispersion" alt="plot of chunk dispersion" width="800px" />
-</div>
-<div style="color:darkblue; padding:0 1cm">
-<strong>Figure 7.</strong> Left: the distribution of average gene expression level (read count divided by gene length). Right: the dispersion of gene expression level between samples, measured as the coefficient of variation. Usually, genes with lower expression will have larger dispersion on average.
-</div>
+<p><img src="figure/dispersion-1.png" width="800px" /></p>
+<p><strong>Figure 7.</strong> <strong>Left</strong>: the distribution of average gene expression level (read count divided by gene length). <strong>Right</strong>: the dispersion of gene expression level between samples, measured as the coefficient of variation. Usually, genes with lower expression will have larger dispersion on average.</p>
 <p>There are many ways to normalize RNA-seq data to remove systematic bias between samples, usually based on the assumption that all the samples have the same global distribution. The following analysis performs several different normalization methods and evaluate their impact on data dispersion:</p>
 <ul>
 <li><strong>Original</strong>: The un-normalized gene-level read counts.</li>
@@ -373,147 +351,855 @@ div.tocify {
 <li><strong>Cyclic_Loess</strong>: The “cyclic loess” method implemented by the <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> package.</li>
 </ul>
 <p>Check <a href="http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long">this</a> paper for detailed comparison of normalization methods, and <a href="https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R">this</a> function for R code of these normalization methods.</p>
-<div align="center">
-<img src="figure/normalization_boxplot-1.png" title="plot of chunk normalization_boxplot" alt="plot of chunk normalization_boxplot" width="800px" />
-</div>
-<div style="color:darkblue; padding:0 0.5cm">
+<p><img src="figure/normalization_boxplot-1.png" width="900px" /></p>
 <strong>Figure 8.</strong> Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their <strong>Group</strong>.
 </div>
-<div align="center">
-<img src="figure/average_cv-1.png" title="plot of chunk average_cv" alt="plot of chunk average_cv" width="600px" />
-</div>
-<div style="color:darkblue; padding:0 0.5cm">
-<strong>Figure 9.</strong> Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click <a href="table/Coeff_of_Var.html">here</a> to view the table of coefficients of variation of all genes.
-</div>
-<p> </p>
-<div style="color:darkblue; padding:0 2cm">
-<strong>Table 1</strong> Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes.
-</div>
-<div align="center" ,="" style="padding:0 2cm">
-<table>
+<img src="figure/average_cv-1.png" width="600px" />
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
-<tr class="header">
-<th align="left">Method</th>
-<th align="right">Mean</th>
-<th align="right">Change(%)</th>
-<th align="right">Corr2Original</th>
-<th align="right">Num_Decrease</th>
-<th align="right">Num_Increase</th>
-<th align="right">Decrease/Increase</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Method
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+Change(%)
+</th>
+<th style="text-align:right;">
+Corr2Original
+</th>
+<th style="text-align:right;">
+Num_Decrease
+</th>
+<th style="text-align:right;">
+Num_Increase
+</th>
+<th style="text-align:right;">
+Decrease/Increase
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">Original</td>
-<td align="right">1.1953</td>
-<td align="right">0.0000</td>
-<td align="right">1.00</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">NaN</td>
+<tr>
+<td style="text-align:left;">
+Original
+</td>
+<td style="text-align:left;">
+Original
+</td>
+<td style="text-align:right;">
+1.1953
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NaN
+</td>
 </tr>
-<tr class="even">
-<td align="left">Total_Count</td>
-<td align="right">1.2474</td>
-<td align="right">4.3598</td>
-<td align="right">1.00</td>
-<td align="right">5372</td>
-<td align="right">16591</td>
-<td align="right">0.32</td>
+<tr>
+<td style="text-align:left;">
+CL
+</td>
+<td style="text-align:left;">
+CL
+</td>
+<td style="text-align:right;">
+0.9093
+</td>
+<td style="text-align:right;">
+-23.9246
+</td>
+<td style="text-align:right;">
+0.9700
+</td>
+<td style="text-align:right;">
+20544
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+10.22
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Median</td>
-<td align="right">1.1731</td>
-<td align="right">-1.8580</td>
-<td align="right">0.99</td>
-<td align="right">13328</td>
-<td align="right">8561</td>
-<td align="right">1.56</td>
+<tr>
+<td style="text-align:left;">
+DESeq
+</td>
+<td style="text-align:left;">
+DESeq
+</td>
+<td style="text-align:right;">
+1.1670
+</td>
+<td style="text-align:right;">
+-2.3660
+</td>
+<td style="text-align:right;">
+0.9900
+</td>
+<td style="text-align:right;">
+14207
+</td>
+<td style="text-align:right;">
+8032
+</td>
+<td style="text-align:right;">
+1.77
+</td>
 </tr>
-<tr class="even">
-<td align="left">Quantile_Quantile</td>
-<td align="right">1.1588</td>
-<td align="right">-3.0535</td>
-<td align="right">0.90</td>
-<td align="right">13043</td>
-<td align="right">7571</td>
-<td align="right">1.72</td>
+<tr>
+<td style="text-align:left;">
+FPKM
+</td>
+<td style="text-align:left;">
+FPKM
+</td>
+<td style="text-align:right;">
+1.2474
+</td>
+<td style="text-align:right;">
+4.3598
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+5253
+</td>
+<td style="text-align:right;">
+16590
+</td>
+<td style="text-align:right;">
+0.32
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Upper_Quantile</td>
-<td align="right">1.1544</td>
-<td align="right">-3.4250</td>
-<td align="right">1.00</td>
-<td align="right">13455</td>
-<td align="right">7861</td>
-<td align="right">1.71</td>
+<tr>
+<td style="text-align:left;">
+Linear
+</td>
+<td style="text-align:left;">
+Linear
+</td>
+<td style="text-align:right;">
+0.9567
+</td>
+<td style="text-align:right;">
+-19.9642
+</td>
+<td style="text-align:right;">
+0.9800
+</td>
+<td style="text-align:right;">
+19647
+</td>
+<td style="text-align:right;">
+2907
+</td>
+<td style="text-align:right;">
+6.76
+</td>
 </tr>
-<tr class="even">
-<td align="left">Trimmed_Mean</td>
-<td align="right">1.1834</td>
-<td align="right">-0.9987</td>
-<td align="right">0.99</td>
-<td align="right">11259</td>
-<td align="right">10438</td>
-<td align="right">1.08</td>
+<tr>
+<td style="text-align:left;">
+Loess
+</td>
+<td style="text-align:left;">
+Loess
+</td>
+<td style="text-align:right;">
+0.9071
+</td>
+<td style="text-align:right;">
+-24.1097
+</td>
+<td style="text-align:right;">
+0.9800
+</td>
+<td style="text-align:right;">
+20680
+</td>
+<td style="text-align:right;">
+1874
+</td>
+<td style="text-align:right;">
+11.04
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Relative_Log</td>
-<td align="right">1.1834</td>
-<td align="right">-0.9987</td>
-<td align="right">0.99</td>
-<td align="right">11259</td>
-<td align="right">10438</td>
-<td align="right">1.08</td>
+<tr>
+<td style="text-align:left;">
+Median
+</td>
+<td style="text-align:left;">
+Median
+</td>
+<td style="text-align:right;">
+1.1731
+</td>
+<td style="text-align:right;">
+-1.8580
+</td>
+<td style="text-align:right;">
+0.9900
+</td>
+<td style="text-align:right;">
+13328
+</td>
+<td style="text-align:right;">
+8561
+</td>
+<td style="text-align:right;">
+1.56
+</td>
 </tr>
-<tr class="even">
-<td align="left">DESeq</td>
-<td align="right">1.1670</td>
-<td align="right">-2.3660</td>
-<td align="right">0.99</td>
-<td align="right">14207</td>
-<td align="right">8032</td>
-<td align="right">1.77</td>
+<tr>
+<td style="text-align:left;">
+QQ
+</td>
+<td style="text-align:left;">
+QQ
+</td>
+<td style="text-align:right;">
+1.1406
+</td>
+<td style="text-align:right;">
+-4.5780
+</td>
+<td style="text-align:right;">
+0.9900
+</td>
+<td style="text-align:right;">
+15837
+</td>
+<td style="text-align:right;">
+5982
+</td>
+<td style="text-align:right;">
+2.65
+</td>
 </tr>
-<tr class="odd">
-<td align="left">FPKM</td>
-<td align="right">1.2474</td>
-<td align="right">4.3598</td>
-<td align="right">1.00</td>
-<td align="right">5253</td>
-<td align="right">16590</td>
-<td align="right">0.32</td>
+<tr>
+<td style="text-align:left;">
+RLE
+</td>
+<td style="text-align:left;">
+RLE
+</td>
+<td style="text-align:right;">
+1.1418
+</td>
+<td style="text-align:right;">
+-4.4743
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+16415
+</td>
+<td style="text-align:right;">
+6139
+</td>
+<td style="text-align:right;">
+2.67
+</td>
 </tr>
-<tr class="even">
-<td align="left">TPM</td>
-<td align="right">1.2744</td>
-<td align="right">6.6166</td>
-<td align="right">1.00</td>
-<td align="right">4349</td>
-<td align="right">17477</td>
-<td align="right">0.25</td>
+<tr>
+<td style="text-align:left;">
+Rlog
+</td>
+<td style="text-align:left;">
+Rlog
+</td>
+<td style="text-align:right;">
+0.2918
+</td>
+<td style="text-align:right;">
+-75.5911
+</td>
+<td style="text-align:right;">
+-0.0034
+</td>
+<td style="text-align:right;">
+22084
+</td>
+<td style="text-align:right;">
+470
+</td>
+<td style="text-align:right;">
+46.99
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Loess</td>
-<td align="right">1.1054</td>
-<td align="right">-7.5214</td>
-<td align="right">0.99</td>
-<td align="right">17831</td>
-<td align="right">4723</td>
-<td align="right">3.78</td>
+<tr>
+<td style="text-align:left;">
+TMM
+</td>
+<td style="text-align:left;">
+TMM
+</td>
+<td style="text-align:right;">
+1.1421
+</td>
+<td style="text-align:right;">
+-4.4503
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+16538
+</td>
+<td style="text-align:right;">
+6016
+</td>
+<td style="text-align:right;">
+2.75
+</td>
 </tr>
-<tr class="even">
-<td align="left">Cyclic_Loess</td>
-<td align="right">1.1064</td>
-<td align="right">-7.4394</td>
-<td align="right">0.99</td>
-<td align="right">16524</td>
-<td align="right">6030</td>
-<td align="right">2.74</td>
+<tr>
+<td style="text-align:left;">
+TC
+</td>
+<td style="text-align:left;">
+TC
+</td>
+<td style="text-align:right;">
+1.2474
+</td>
+<td style="text-align:right;">
+4.3598
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+5372
+</td>
+<td style="text-align:right;">
+16591
+</td>
+<td style="text-align:right;">
+0.32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TPM
+</td>
+<td style="text-align:left;">
+TPM
+</td>
+<td style="text-align:right;">
+1.2744
+</td>
+<td style="text-align:right;">
+6.6166
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+4349
+</td>
+<td style="text-align:right;">
+17477
+</td>
+<td style="text-align:right;">
+0.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UQ
+</td>
+<td style="text-align:left;">
+UQ
+</td>
+<td style="text-align:right;">
+1.1544
+</td>
+<td style="text-align:right;">
+-3.4250
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+13455
+</td>
+<td style="text-align:right;">
+7861
+</td>
+<td style="text-align:right;">
+1.71
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VST
+</td>
+<td style="text-align:left;">
+VST
+</td>
+<td style="text-align:right;">
+0.1757
+</td>
+<td style="text-align:right;">
+-85.3030
+</td>
+<td style="text-align:right;">
+0.4800
+</td>
+<td style="text-align:right;">
+22551
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+7517.00
+</td>
 </tr>
 </tbody>
 </table>
-</div>
+<p><strong>Figure 9.</strong> Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click <a href="table/Coeff_of_Var.html">here</a> to view the table of coefficients of variation of all genes.</p>
+<p> </p>
+<p><strong>Table 1.</strong> Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes.</p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Method
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+Change(%)
+</th>
+<th style="text-align:right;">
+Corr2Original
+</th>
+<th style="text-align:right;">
+Num_Decrease
+</th>
+<th style="text-align:right;">
+Num_Increase
+</th>
+<th style="text-align:right;">
+Decrease/Increase
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Original
+</td>
+<td style="text-align:left;">
+Original
+</td>
+<td style="text-align:right;">
+1.1953
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CL
+</td>
+<td style="text-align:left;">
+CL
+</td>
+<td style="text-align:right;">
+0.9093
+</td>
+<td style="text-align:right;">
+-23.9246
+</td>
+<td style="text-align:right;">
+0.9700
+</td>
+<td style="text-align:right;">
+20544
+</td>
+<td style="text-align:right;">
+2010
+</td>
+<td style="text-align:right;">
+10.22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DESeq
+</td>
+<td style="text-align:left;">
+DESeq
+</td>
+<td style="text-align:right;">
+1.1670
+</td>
+<td style="text-align:right;">
+-2.3660
+</td>
+<td style="text-align:right;">
+0.9900
+</td>
+<td style="text-align:right;">
+14207
+</td>
+<td style="text-align:right;">
+8032
+</td>
+<td style="text-align:right;">
+1.77
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FPKM
+</td>
+<td style="text-align:left;">
+FPKM
+</td>
+<td style="text-align:right;">
+1.2474
+</td>
+<td style="text-align:right;">
+4.3598
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+5253
+</td>
+<td style="text-align:right;">
+16590
+</td>
+<td style="text-align:right;">
+0.32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Linear
+</td>
+<td style="text-align:left;">
+Linear
+</td>
+<td style="text-align:right;">
+0.9567
+</td>
+<td style="text-align:right;">
+-19.9642
+</td>
+<td style="text-align:right;">
+0.9800
+</td>
+<td style="text-align:right;">
+19647
+</td>
+<td style="text-align:right;">
+2907
+</td>
+<td style="text-align:right;">
+6.76
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Loess
+</td>
+<td style="text-align:left;">
+Loess
+</td>
+<td style="text-align:right;">
+0.9071
+</td>
+<td style="text-align:right;">
+-24.1097
+</td>
+<td style="text-align:right;">
+0.9800
+</td>
+<td style="text-align:right;">
+20680
+</td>
+<td style="text-align:right;">
+1874
+</td>
+<td style="text-align:right;">
+11.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Median
+</td>
+<td style="text-align:left;">
+Median
+</td>
+<td style="text-align:right;">
+1.1731
+</td>
+<td style="text-align:right;">
+-1.8580
+</td>
+<td style="text-align:right;">
+0.9900
+</td>
+<td style="text-align:right;">
+13328
+</td>
+<td style="text-align:right;">
+8561
+</td>
+<td style="text-align:right;">
+1.56
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+QQ
+</td>
+<td style="text-align:left;">
+QQ
+</td>
+<td style="text-align:right;">
+1.1406
+</td>
+<td style="text-align:right;">
+-4.5780
+</td>
+<td style="text-align:right;">
+0.9900
+</td>
+<td style="text-align:right;">
+15837
+</td>
+<td style="text-align:right;">
+5982
+</td>
+<td style="text-align:right;">
+2.65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RLE
+</td>
+<td style="text-align:left;">
+RLE
+</td>
+<td style="text-align:right;">
+1.1418
+</td>
+<td style="text-align:right;">
+-4.4743
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+16415
+</td>
+<td style="text-align:right;">
+6139
+</td>
+<td style="text-align:right;">
+2.67
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rlog
+</td>
+<td style="text-align:left;">
+Rlog
+</td>
+<td style="text-align:right;">
+0.2918
+</td>
+<td style="text-align:right;">
+-75.5911
+</td>
+<td style="text-align:right;">
+-0.0034
+</td>
+<td style="text-align:right;">
+22084
+</td>
+<td style="text-align:right;">
+470
+</td>
+<td style="text-align:right;">
+46.99
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TMM
+</td>
+<td style="text-align:left;">
+TMM
+</td>
+<td style="text-align:right;">
+1.1421
+</td>
+<td style="text-align:right;">
+-4.4503
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+16538
+</td>
+<td style="text-align:right;">
+6016
+</td>
+<td style="text-align:right;">
+2.75
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TC
+</td>
+<td style="text-align:left;">
+TC
+</td>
+<td style="text-align:right;">
+1.2474
+</td>
+<td style="text-align:right;">
+4.3598
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+5372
+</td>
+<td style="text-align:right;">
+16591
+</td>
+<td style="text-align:right;">
+0.32
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TPM
+</td>
+<td style="text-align:left;">
+TPM
+</td>
+<td style="text-align:right;">
+1.2744
+</td>
+<td style="text-align:right;">
+6.6166
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+4349
+</td>
+<td style="text-align:right;">
+17477
+</td>
+<td style="text-align:right;">
+0.25
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UQ
+</td>
+<td style="text-align:left;">
+UQ
+</td>
+<td style="text-align:right;">
+1.1544
+</td>
+<td style="text-align:right;">
+-3.4250
+</td>
+<td style="text-align:right;">
+1.0000
+</td>
+<td style="text-align:right;">
+13455
+</td>
+<td style="text-align:right;">
+7861
+</td>
+<td style="text-align:right;">
+1.71
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VST
+</td>
+<td style="text-align:left;">
+VST
+</td>
+<td style="text-align:right;">
+0.1757
+</td>
+<td style="text-align:right;">
+-85.3030
+</td>
+<td style="text-align:right;">
+0.4800
+</td>
+<td style="text-align:right;">
+22551
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+7517.00
+</td>
+</tr>
+</tbody>
+</table>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -524,12 +1210,8 @@ div.tocify {
 <div id="gender-prediction" class="section level2">
 <h2><span class="header-section-number">4.1</span> Gender prediction</h2>
 <p>When enough genes on X and Y chromosomes have detectable expression, these genes can be used to predict the gender of samples. In case the gender information is already available, the predicted gender can be used to identify potential mislabeling.</p>
-<div style="color:darkblue; padding:0 2cm">
-<img src="figure/gender_pred_plot-1.png" title="plot of chunk gender_pred_plot" alt="plot of chunk gender_pred_plot" width="640px" />
-</div>
-<div style="color:darkblue; padding:0 2cm">
-<strong>Figure 10.</strong> The average of Log2(Read Count+1) is calculated for X and Y chromosomes when there are at least 5 genes having detectable expression. The averages of each sample are plotted in this figure as X and Y axes. The averages of each chromosome are used separately to cluster samples using the pamk {fpc} function. If the optimal number of clusters is 2 for both chromosomes, gender prediction will be made, and the samples having predicted gender agreed byt the two chromosomes will be labeled with red (female) or blue (male). Click <a href="table/gender_prediction.html">here</a> to veiw the full table of gender prediction.
-</div>
+<p><img src="figure/gender_pred_plot-1.png" width="640px" /></p>
+<p><strong>Figure 10.</strong> The average of Log2(Read Count+1) is calculated for X and Y chromosomes when there are at least 5 genes having detectable expression. The averages of each sample are plotted in this figure as X and Y axes. The averages of each chromosome are used separately to cluster samples using the pamk {fpc} function. If the optimal number of clusters is 2 for both chromosomes, gender prediction will be made, and the samples having predicted gender agreed byt the two chromosomes will be labeled with red (female) or blue (male). Click <a href="table/gender_prediction.html">here</a> to veiw the full table of gender prediction.</p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -537,12 +1219,8 @@ div.tocify {
 <div id="hierarchical-clustering" class="section level2">
 <h2><span class="header-section-number">4.2</span> Hierarchical clustering</h2>
 <p>Hierarchical clustering groups samples based on their glabal correlation of all genes. It is a iterative procedure that merges two most similar samples/groups at each step.</p>
-<div style="color:darkblue; padding:0 2cm">
-<img src="figure/hierarchical_clustering-1.png" title="plot of chunk hierarchical_clustering" alt="plot of chunk hierarchical_clustering" width="640px" />
-</div>
-<div style="color:darkblue; padding:0 2cm">
-<strong>Figure 11.</strong> Hierarchical clustering of samples using all autosomal genes. Normalized read counts are log2-transformed before clustering. The vertical position of the common node of two samples indicates their similarity (lower = more similar).
-</div>
+<p><img src="figure/hierarchical_clustering-1.png" width="640px" /></p>
+<p><strong>Figure 11.</strong> Hierarchical clustering of samples using all autosomal genes. Normalized read counts are log2-transformed before clustering. The vertical position of the common node of two samples indicates their similarity (lower = more similar).</p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -552,30 +1230,20 @@ div.tocify {
 <p>Principal components analysis</p>
 <div id="group" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> Group</h3>
-<div class="figure">
-<img src="figure/pca_Group.png" />
-</div>
+<p><img src="figure/pca_Group.png" /></p>
 </div>
 <div id="cell" class="section level3">
 <h3><span class="header-section-number">4.3.2</span> Cell</h3>
-<div class="figure">
-<img src="figure/pca_Cell.png" />
-</div>
+<p><img src="figure/pca_Cell.png" /></p>
 </div>
 <div id="disease" class="section level3">
 <h3><span class="header-section-number">4.3.3</span> Disease</h3>
-<div class="figure">
-<img src="figure/pca_Disease.png" />
-</div>
+<p><img src="figure/pca_Disease.png" /></p>
 </div>
 <div id="donor" class="section level3">
 <h3><span class="header-section-number">4.3.4</span> Donor</h3>
-<div class="figure">
-<img src="figure/pca_Donor.png" />
-</div>
-<div style="color:darkblue; padding:0 1cm">
-<strong>Figure 12.</strong> PCA is performed using all autosomal genes after read counts are log2-transformed. The same plot is made in multiple tabs while samples are color-coded based on known sample features.
-</div>
+<p><img src="figure/pca_Donor.png" /></p>
+<p><strong>Figure 12.</strong> PCA is performed using all autosomal genes after read counts are log2-transformed. The same plot is made in multiple tabs while samples are color-coded based on known sample features.</p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -613,9 +1281,9 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 </div>
 <div id="session-information" class="section level2">
 <h2><span class="header-section-number">5.2</span> Session information</h2>
-<pre><code>## R version 3.2.2 (2015-08-14)
+<pre><code>## R version 3.3.3 (2017-03-06)
 ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X 10.10.5 (Yosemite)
+## Running under: OS X Yosemite 10.10.5
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -625,49 +1293,50 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 ## [8] methods   base     
 ## 
 ## other attached packages:
-##  [1] Rnaseq_0.0.0.9000       DEGandMore_0.0.0.9000  
-##  [3] samr_2.0                matrixStats_0.14.2     
-##  [5] impute_1.42.0           DESeq_1.20.0           
-##  [7] lattice_0.20-33         locfit_1.5-9.1         
-##  [9] Biobase_2.28.0          gplots_3.0.1           
-## [11] fpc_2.1-10              vioplot_0.2            
-## [13] sm_2.2-5.4              htmlwidgets_0.5        
-## [15] DT_0.1                  yaml_2.1.13            
-## [17] rmarkdown_0.9.6         knitr_1.13             
-## [19] edgeR_3.10.2            awsomics_0.0.0.9000    
-## [21] RoCA_0.0.0.9000         RCurl_1.95-4.8         
-## [23] bitops_1.0-6            RankProd_2.42.0        
-## [25] devtools_1.11.1         DESeq2_1.8.1           
-## [27] RcppArmadillo_0.5.300.4 Rcpp_0.12.4            
-## [29] GenomicRanges_1.22.4    GenomeInfoDb_1.6.3     
-## [31] IRanges_2.4.8           S4Vectors_0.8.11       
-## [33] BiocGenerics_0.16.1     limma_3.26.9           
-## [35] snow_0.4-1             
+##  [1] edgeR_3.16.5               DESeq2_1.14.1             
+##  [3] SummarizedExperiment_1.4.0 Biobase_2.34.0            
+##  [5] limma_3.30.13              gplots_3.0.1              
+##  [7] DEGandMore_0.0.0.9000      snow_0.4-2                
+##  [9] awsomics_0.0.0.9000        Rnaseq_0.0.0.9000         
+## [11] GenomicRanges_1.26.4       GenomeInfoDb_1.10.3       
+## [13] IRanges_2.8.2              S4Vectors_0.12.2          
+## [15] BiocGenerics_0.20.0        fpc_2.1-10                
+## [17] vioplot_0.2                sm_2.2-5.4                
+## [19] htmlwidgets_0.9            DT_0.2                    
+## [21] yaml_2.1.16                knitr_1.18                
+## [23] rmarkdown_1.10.3           RoCA_0.0.0.9000           
+## [25] RCurl_1.95-4.9             bitops_1.0-6              
+## [27] devtools_1.13.4            kableExtra_0.9.0          
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] RColorBrewer_1.1-2   httr_1.2.0           prabclus_2.2-6      
-##  [4] tools_3.2.2          R6_2.1.2             KernSmooth_2.23-15  
-##  [7] rpart_4.1-10         Hmisc_3.16-0         DBI_0.3.1           
-## [10] colorspace_1.2-6     trimcluster_0.1-2    nnet_7.3-10         
-## [13] withr_1.0.1          gridExtra_2.0.0      curl_0.9.7          
-## [16] git2r_0.15.0         formatR_1.3          caTools_1.17.1      
-## [19] diptest_0.75-7       scales_0.2.5         DEoptimR_1.0-3      
-## [22] mvtnorm_1.0-3        robustbase_0.92-5    genefilter_1.50.0   
-## [25] stringr_1.0.0        digest_0.6.9         foreign_0.8-66      
-## [28] XVector_0.10.0       htmltools_0.3.5      highr_0.5.1         
-## [31] RSQLite_1.0.0        jsonlite_0.9.22      mclust_5.0.2        
-## [34] BiocParallel_1.2.20  gtools_3.5.0         acepack_1.3-3.3     
-## [37] magrittr_1.5         modeltools_0.2-21    Formula_1.2-1       
-## [40] futile.logger_1.4.1  munsell_0.4.2        proto_0.3-10        
-## [43] stringi_1.0-1        MASS_7.3-43          zlibbioc_1.14.0     
-## [46] flexmix_2.3-13       plyr_1.8.3           grid_3.2.2          
-## [49] gdata_2.17.0         splines_3.2.2        annotate_1.46.1     
-## [52] geneplotter_1.46.0   reshape2_1.4.1       futile.options_1.0.0
-## [55] XML_3.98-1.3         evaluate_0.9         latticeExtra_0.6-26 
-## [58] lambda.r_1.1.7       gtable_0.1.2         kernlab_0.9-22      
-## [61] ggplot2_1.0.1        xtable_1.7-4         e1071_1.6-7         
-## [64] class_7.3-13         survival_2.38-3      AnnotationDbi_1.30.1
-## [67] memoise_1.0.0        cluster_2.0.3</code></pre>
+##  [1] bit64_0.9-7          RColorBrewer_1.1-2   httr_1.3.1          
+##  [4] rprojroot_1.3-2      prabclus_2.2-6       tools_3.3.3         
+##  [7] backports_1.1.2      R6_2.2.2             rpart_4.1-10        
+## [10] KernSmooth_2.23-15   DBI_0.7              Hmisc_4.1-0         
+## [13] lazyeval_0.2.1       colorspace_1.3-2     trimcluster_0.1-2   
+## [16] nnet_7.3-12          withr_2.1.1          gridExtra_2.3       
+## [19] bit_1.1-12           rvest_0.3.2          htmlTable_1.11.1    
+## [22] xml2_1.1.1           checkmate_1.8.5      diptest_0.75-7      
+## [25] caTools_1.17.1       scales_0.5.0         DEoptimR_1.0-8      
+## [28] mvtnorm_1.0-6        robustbase_0.92-8    genefilter_1.56.0   
+## [31] readr_1.1.1          stringr_1.2.0        digest_0.6.13       
+## [34] foreign_0.8-67       XVector_0.14.1       base64enc_0.1-3     
+## [37] pkgconfig_2.0.1      htmltools_0.3.6      highr_0.6           
+## [40] rlang_0.1.6          RSQLite_2.0          rstudioapi_0.7      
+## [43] jsonlite_1.5         mclust_5.4           BiocParallel_1.8.2  
+## [46] gtools_3.5.0         acepack_1.4.1        magrittr_1.5        
+## [49] modeltools_0.2-21    Formula_1.2-2        Matrix_1.2-8        
+## [52] Rcpp_0.12.14         munsell_0.4.3        stringi_1.1.6       
+## [55] MASS_7.3-45          zlibbioc_1.20.0      flexmix_2.3-14      
+## [58] plyr_1.8.4           blob_1.1.0           grid_3.3.3          
+## [61] gdata_2.18.0         lattice_0.20-34      splines_3.3.3       
+## [64] annotate_1.52.1      hms_0.4.0            locfit_1.5-9.1      
+## [67] pillar_1.1.0         geneplotter_1.52.0   XML_3.98-1.9        
+## [70] evaluate_0.10.1      latticeExtra_0.6-28  data.table_1.10.4-3 
+## [73] gtable_0.2.0         kernlab_0.9-25       ggplot2_2.2.1       
+## [76] xtable_1.8-2         class_7.3-14         survival_2.40-1     
+## [79] viridisLite_0.2.0    tibble_1.4.2         AnnotationDbi_1.36.2
+## [82] memoise_1.1.0        cluster_2.0.5</code></pre>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -686,9 +1355,13 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 <script>
 
 // add bootstrap table styles to pandoc tables
-$(document).ready(function () {
+function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
 });
+
 
 </script>
 
@@ -697,7 +1370,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
