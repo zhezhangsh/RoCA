@@ -96,8 +96,8 @@ names(gn.len) <- rownames(anno);
 
 - Number of samples: _`r nrow(smpl)`_
 - Number of genes: _`r format(nrow(ct), big.mark=',')`_
-- Average number of reads per gene: _`r format(mean(count.sum2[, 1]), big.mark=',', digit=0)`_
-- Total number of reads per sample: _`r format(mean(count.sum1[, 1]), big.mark=',')`_
+- Average number of total reads per gene: _`r round(mean(count.sum2[, 1]), 1)`_
+- Average number of total reads per sample: _`r format(mean(count.sum1[, 1]), big.mark=',')`_
 
 ## Read count by sample
 
@@ -247,23 +247,15 @@ When the gene-level read counts of two mapping types are strongly correlated to 
 ```{r read_count_type_corr, fig.width=6, fig.height=1+5*as.integer(length(mr)>1), out.width='600px'}
 if (length(count.all) > 1) {
   corr <- cor(count.sum2, use='pair', method='spearman'); 
-  saveRDS(corr, paste(path.r, 'corr_mapping_type.rds', sep='/')); 
-  fn <- CreateDatatable(round(corr, 4), paste(path.tbl, 'corr_mapping_type.html', sep='/'), 
-                        caption='Correlation of read counts between mapping types'); 
-  for (i in 2:ncol(count.sum2)) {
-    nm <- colnames(count.sum2)[c(1, i)]; 
-    fn <- paste('corr2', nm[2], '.pdf', sep='');
-    pdf(paste(path.fig, fn, sep='/'), w=8, h=8); 
-    PlotLogScatter(count.sum2[, 1], count.sum2[, i], xlab=nm[1], ylab=nm[2], 
-    main = paste('R =', round(corr[1, i], 4))); 
-    abline(0, 1, lwd=1, col='red'); 
-    dev.off();
-  }
   r <- corr[-1, 1];
   nm <- rownames(corr)[-1][r==max(r)];
   PlotLogScatter(count.sum2[, 1], count.sum2[, nm], xlab=colnames(count.sum2)[1], ylab=nm, 
                  main = paste('R =', round(corr[1, nm], 4))); 
   abline(0, 1, lwd=1, col='red'); 
+  
+  saveRDS(corr, paste(path.r, 'corr_mapping_type.rds', sep='/')); 
+  fn <- CreateDatatable(round(corr, 4), paste(path.tbl, 'corr_mapping_type.html', sep='/'), 
+                        caption='Correlation of read counts between mapping types'); 
 } else {
   corr <- matrix(nr=1, nc=1, dimnames = list(NA, 'No correlation results: only one mapping type')); 
   fn <- CreateDatatable(corr, paste(path.tbl, 'corr_mapping_type.html', sep='/'), rownames = FALSE); 
@@ -273,6 +265,20 @@ if (length(count.all) > 1) {
 }
 ```
 </div>
+
+```{r read_count_type_corr_plot, include=FALSE}
+if (length(count.all) > 1) {
+  for (i in 2:ncol(count.sum2)) {
+    nm <- colnames(count.sum2)[c(1, i)]; 
+    fn <- paste('corr2', nm[2], '.pdf', sep='');
+    pdf(paste(path.fig, fn, sep='/'), w=8, h=8); 
+    PlotLogScatter(count.sum2[, 1], count.sum2[, i], xlab=nm[1], ylab=nm[2], 
+    main = paste('R =', round(corr[1, i], 4))); 
+    abline(0, 1, lwd=1, col='red'); 
+    dev.off();
+  }
+}
+```
 
 <div style="color:darkblue; padding:0 1cm">
 **Figure 5.** The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman's correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click [here](table/corr_mapping_type.html) to view correlation coefficients between all pairs of mapping types.
@@ -394,10 +400,10 @@ There are many ways to normalize RNA-seq data to remove systematic bias between 
 Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
 
 <div align='center'>
-```{r normalization_boxplot, fig.width=10.5, fig.heigth=5.4, out.width='800px'}
+```{r normalization_boxplot, fig.width=9, fig.heigth=8, out.width='900px'}
 col <- gray.colors(length(unique(smpl[, 1]))+1)[-1]; 
 col <- col[as.integer(factor(smpl[, 1]))]; 
-par(mfrow=c(3, 4), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
+par(mfrow=c(5, 3), omi=c(0, 0.5, 0, 0), mai=c(0, 0, .5, 0)); 
 for (i in 1:length(norm)) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=FALSE, boxwex =1, staplewex=0, outwex=0, 
                         axes=FALSE, col=col, lwd=.5, main=names(norm)[i], cex.main=1.5);
 title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1); 
@@ -589,13 +595,13 @@ Principal components analysis
 pca <- prcomp(t(e)); 
 fns <- sapply(colnames(smpl), function(nm) { 
   fn <- paste(path.fig, paste('pca_', nm, '.png', sep=''), sep='/');
-  png(fn, w=800, h=600); 
-  cex <- min(4, max(0.5, 64/ncol(e))); 
+  png(fn, w=1200, h=900); 
+  cex <- min(5, max(0.5, 256/ncol(e))); 
   col <- rainbow(length(unique(smpl[, nm]))); 
   col[col=='#FFFF00FF'] <- '#EEEE00FF'; 
   col <- sub('FF$', 'DD', col); 
   names(col) <- unique(smpl[, nm]); 
-  col <- col[smpl[, nm]]; 
+  col <- col[as.character(smpl[, nm])]; 
   PlotPCA(pca, groups=rownames(smpl), new.window = FALSE, cex=cex, col=col, label=1:nrow(smpl), legend=TRUE, legend.single = TRUE); 
   if (dev.cur()!=1) dev.off(); 
   fn; 

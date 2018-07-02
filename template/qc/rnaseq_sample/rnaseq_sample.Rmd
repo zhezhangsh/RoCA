@@ -1,5 +1,5 @@
 ---
-title: "Analysis of RNA-seq samples using read counts"
+title: "Analysis of RNA-seq samples using read count matrix"
 author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
 date: "`r Sys.Date()`"
 output:
@@ -25,12 +25,12 @@ output:
 
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'rnaseq_sample.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'vioplot', 'fpc',
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'vioplot', 'fpc',
                    'GenomicRanges', 'RoCA', 'Rnaseq', 'awsomics', 'DEGandMore'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
 ## Default knitr parameters
-knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, fig.path = 'figure/');
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
@@ -53,6 +53,10 @@ f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
@@ -65,7 +69,7 @@ home.url <- Link2Home(yml$home);
 `r WriteDescription(yml$description)`
 
 ```{r load_data, include=FALSE}
-count.all <- lapply(yml$input$count, function(c) ImportTable(DownloadFile(c, path.input))); 
+count.all <- lapply(yml$input$count, function(c) as.matrix(ImportTable(DownloadFile(c, path.input))));
 anno <- ImportTable(DownloadFile(yml$input$annotation, path.input));
 smpl <- ImportTable(DownloadFile(yml$input$sample, path.input));
 
@@ -117,19 +121,16 @@ The total read count per sample is the sum of sequence reads of one sample mappe
 - Samples with extremly low read count: ***`r lo`***
 - Samples with extremly high read count: ***`r hi`***
 
-<div align='center'>
 ```{r, read_count_sample_hist, include=TRUE, fig.width=6, fig.height=3.6, out.width='600px'}
 par(mar=c(5,5,3,2));
 hist(ttl, xlab='Read count (millions)', ylab='Number of samples', main='Distribution of total read counts', cex.lab=1.5, cex.main=1.5, col='lightgrey');
 ```
-</div>
 
-<div style="color:darkblue; padding:0 3cm">
-**Figure 1.** Distribution of total read counts of all samples. Total read count per sample (millions):  
+`r OrderFigure()` Distribution of total read counts of all samples. Total read count per sample (millions):  
+
 ```{r summary_total_count, include=TRUE}
 summary(count.sum1[, 1]/10^6);
 ```
-</div>
 
 ## Read count by gene
 
@@ -146,7 +147,6 @@ Due to the variability of gene length and expression level, it is expected that 
 - `r pct1`% genes have less 1 read mapped to them per sample.
 - `r pct5`% genes have less 5 reads mapped to them per sample .
 
-<div align='center'>
 ```{r, read_count_gene_sorted, include=TRUE, fig.width=8, fig.height=6, out.width='720px'}
 gene.ct <- count.sum2[, 1]; 
 gene.ct <- sort(gene.ct, decreasing = TRUE); 
@@ -164,15 +164,11 @@ points(ind, cum.pct[ind], pch=20);
 legend('topleft', bty='n', pch=19, legend=paste(pct, '% total reads: ', ind, ' gene(s)', sep=''))
 box();
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 2.** The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking. 
-</div>
+`r OrderFigure()` The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking. 
 
 &nbsp;
 
-<div align='center'>
 ```{r read_count_gene_top, include=TRUE, fig.width=8, fig.height=6, out.width='800px'}
 top10 <- apply(ct, 2, function(x) {
 x <- rev(sort(x)); 
@@ -202,14 +198,12 @@ if (length(hi) == 0) hi <- 'none' else hi <- paste(hi, collapse='; ');
 lo <- colnames(top10)[nsd <=-3];
 if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; '); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 3.** The cumulative read counts of [top `r nrow(top10)` genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+`r OrderFigure()` The cumulative read counts of [top `r nrow(top10)` genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
 
 - Samples with extremely low percent of reads from top `r nrow(top10)` genes: ***`r lo`***
 - Samples with extremely high percent of reads from top `r nrow(top10)` genes: ***`r hi`***
-</div>
+
 
 ## Read count by mapping type
 
@@ -221,7 +215,6 @@ The read-to-gene mapping could be complicated by at least 3 conditions correspon
 
 This analysis accepts multiple matching matrixes of read counts corresponding to different mapping types. By default, the first matrix corresponds to the most common mapping type and will be used for all the other analyses in this report. In this section, however, read counts of different mapping types are summarized and compared to each other when multiple matrixes are provided. 
 
-<div align='left'>
 ```{r read_count_type_pie, fig.width=9.6, fig.height=6, out.width='800px'}
 mr<-rev(sort(colMeans(count.sum1)/10^6));
 lbl<-paste(names(mr), ' (', round(mr/sum(mr)*100, 3),  '%)', sep='');
@@ -230,20 +223,16 @@ legend('bottomleft', legend=lbl, fill=rainbow(length(mr)), bty='n');
 
 pct <- round(100*mr/sum(mr), 4); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 4.** Total mapped reads of all samples are split by mapping types, such as unique vs. multiple, paired vs. unpaired, and sense vs. antisense. Among the `r length(count.all)` mapping type(s), 
+`r OrderFigure()` Total mapped reads of all samples are split by mapping types, such as unique vs. multiple, paired vs. unpaired, and sense vs. antisense. Among the `r length(count.all)` mapping type(s), 
 
 - The most common mapping type is _`r names(pct)[pct==max(pct)]`_ (_`r max(pct)`%_ of total mapped reads)
 - The least common mapping type is _`r names(pct)[pct==min(pct)]`_, (_`r min(pct)`%_ of total mapped reads)
-</div>
 
 &nbsp;
 
 When the gene-level read counts of two mapping types are strongly correlated to each other, they can be combined to increase total read counts and hence statistical power of data analysis. Negative or lack of correlation between mapping types might also provide useful information. 
 
-<div align='left'>
 ```{r read_count_type_corr, fig.width=6, fig.height=1+5*as.integer(length(mr)>1), out.width='600px'}
 if (length(count.all) > 1) {
   corr <- cor(count.sum2, use='pair', method='spearman'); 
@@ -264,7 +253,6 @@ if (length(count.all) > 1) {
   text(1, 0, pos=1, label='There is no result for this analysis:\n input only includes one mapping type/read count matrix.', cex=1.5); 
 }
 ```
-</div>
 
 ```{r read_count_type_corr_plot, include=FALSE}
 if (length(count.all) > 1) {
@@ -280,15 +268,12 @@ if (length(count.all) > 1) {
 }
 ```
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 5.** The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman's correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click [here](table/corr_mapping_type.html) to view correlation coefficients between all pairs of mapping types.
-</div>
+`r OrderFigure()` The mapping type has the strongest correlation to the first and most common mapping type is identified based on Spearman's correlation coefficients. The gene-level read counts of both mapping types are plotted in this figure. Click [here](table/corr_mapping_type.html) to view correlation coefficients between all pairs of mapping types.
 
 &nbsp;
 
 By comparing read counts of different mapping types to each other, the ratios can be compared between samples for consistency. A sample might have quality issue if it has reads of a mapping type much less or more than the other samples.
 
-<div align='center'>
 ```{r read_count_type_heatmap, fig.width=min(1+0.5*ncol(ct), 8), fig.height=1+0.25*length(mr), out.width='720px'}
 if (length(count.all) > 1) {
   d<-count.sum1;
@@ -311,13 +296,10 @@ if (length(count.all) > 1) {
 }
 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 6.** The relative frequecy of mapping types are calculated for each sample, using the first read count matrix as reference. The frequency of each mapping type are normalized across all samples (Mean = 0 and SD = 1.0). This figure shows the normalized frequency of each mapping type in each sample (red = high). 
+`r OrderFigure()` The relative frequecy of mapping types are calculated for each sample, using the first read count matrix as reference. The frequency of each mapping type are normalized across all samples (Mean = 0 and SD = 1.0). This figure shows the normalized frequency of each mapping type in each sample (red = high). 
 - Mapping type _`r s[nrow(s), 3]`_ has the most "abnormally" high relative frequency (# of standard deviations = _`r round(s[nrow(s), 1], 2)`_) in sample _`r s[, 2]`_. 
 - Mapping type _`r s[1, 3]`_ has the most "abnormally" low relative frequency (# of standard deviations = _`r round(s[1, 1], 2)`_) in sample _`r s[1, 2]`_. 
-</div>
 
 `r home.url`
 
@@ -352,7 +334,6 @@ corr <- sapply(norm, function(x) calcCorr(x[ind, , drop=FALSE], grps));
 
 Gene-specific dispersion of RNA-seq read counts is commonly used to evaluate between-sample variance of a data set. Here, the dispersion is estimated by the overall pattern of coefficient of variation (standard deviation devided by average read count) of all genes. 
 
-<div align='center'>
 ```{r dispersion, include=TRUE, fig.width=12, fig.height=4, out.width='800px'}
 par(mfrow=c(1, 2), mar=c(5,5,2,2)); 
 
@@ -376,11 +357,8 @@ axis(1, at=0:ceiling(max(log10(mns[, 1]))), label=10^(0:ceiling(max(log10(mns[, 
 lines(lowess(cv[ids, 1]~x), col=4);
 abline(v = dens$x[dens.y==max(dens.y)], lty=3, col=3); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 7.** Left: the distribution of average gene expression level (read count divided by gene length). Right: the dispersion of gene expression level between samples, measured as the coefficient of variation. Usually, genes with lower expression will have larger dispersion on average. 
-</div>
+`r OrderFigure()` **Left**: the distribution of average gene expression level (read count divided by gene length). **Right**: the dispersion of gene expression level between samples, measured as the coefficient of variation. Usually, genes with lower expression will have larger dispersion on average. 
 
 There are many ways to normalize RNA-seq data to remove systematic bias between samples, usually based on the assumption that all the samples have the same global distribution. The following analysis performs several different normalization methods and evaluate their impact on data dispersion:
 
@@ -399,7 +377,6 @@ There are many ways to normalize RNA-seq data to remove systematic bias between 
 
 Check [this](http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long) paper for detailed comparison of normalization methods, and [this](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R) function for R code of these normalization methods. 
 
-<div align='center'>
 ```{r normalization_boxplot, fig.width=9, fig.heigth=8, out.width='900px'}
 col <- gray.colors(length(unique(smpl[, 1]))+1)[-1]; 
 col <- col[as.integer(factor(smpl[, 1]))]; 
@@ -408,13 +385,10 @@ for (i in 1:length(norm)) boxplot(data.frame(log2(norm[[i]][ind, ]+1)), outline=
                         axes=FALSE, col=col, lwd=.5, main=names(norm)[i], cex.main=1.5);
 title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1); 
 ```
+
+`r OrderFigure()` Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their **`r names(smpl)[1]`**.
 </div>
 
-<div style="color:darkblue; padding:0 0.5cm">
-**Figure 8.** Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their **`r names(smpl)[1]`**.
-</div>
-
-<div align='center'>
 ```{r average_cv, fig.width=8, fig.height=6, out.width='600px'}
 dff <- apply(cv, 2, function(x) x - cv[, 1]); 
 
@@ -437,22 +411,20 @@ tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), "Change(%)"=chg,
                   "Decrease/Increase" = round(c[, 1]/c[, 2], 2), stringsAsFactors = FALSE);  
 colnames(tbl)[3] <- 'Change(%)';
 colnames(tbl)[7] <- 'Decrease/Increase';
-```
-</div>
 
-<div style="color:darkblue; padding:0 0.5cm">
-**Figure 9.** Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click [here](table/Coeff_of_Var.html) to view the table of coefficients of variation of all genes. 
-</div>
+kable(FormatNumeric(tbl), row.naems=FALSE) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+
+```
+
+`r OrderFigure()` Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click [here](table/Coeff_of_Var.html) to view the table of coefficients of variation of all genes. 
 
 &nbsp;
 
-<div style="color:darkblue; padding:0 2cm">
-**Table 1** Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes. 
-</div>
+`r OrderTable()` Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes. 
 
-<div align='center', style="padding:0 2cm">
-`r kable(FormatNumeric(tbl), row.names=FALSE)`
-</div>
+`r kable(FormatNumeric(tbl), row.naems=FALSE) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 `r home.url`
 
@@ -500,7 +472,6 @@ if (nrow(ct.x)>=5 & nrow(ct.y)>=5) {
 
 When enough genes on X and Y chromosomes have detectable expression, these genes can be used to predict the gender of samples. In case the gender information is already available, the predicted gender can be used to identify potential mislabeling.  
 
-<div style="color:darkblue; padding:0 2cm">
 ```{r gender_pred_plot, fig.width=8, fig.height=fig.h, out.width='640px'}
 if (fig.h==8) {
   x <- cbind(colMeans(log2(ct.x+1)), colMeans(log2(ct.y+1)));
@@ -555,11 +526,8 @@ if (fig.h==8) {
 
 fn <- CreateDatatable(FormatNumeric(tbl), paste(path.tbl, 'gender_prediction.html', sep='/')); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 10.** The average of Log2(Read Count+1) is calculated for X and Y chromosomes when there are at least 5 genes having detectable expression. The averages of each sample are plotted in this figure as X and Y axes. The averages of each chromosome are used separately to cluster samples using the pamk {fpc} function. If the optimal number of clusters is 2 for both chromosomes, gender prediction will be made, and the samples having predicted gender agreed byt the two chromosomes will be labeled with red (female) or blue (male). Click [here](table/gender_prediction.html) to veiw the full table of gender prediction. 
-</div>
+`r OrderFigure()` The average of Log2(Read Count+1) is calculated for X and Y chromosomes when there are at least 5 genes having detectable expression. The averages of each sample are plotted in this figure as X and Y axes. The averages of each chromosome are used separately to cluster samples using the pamk {fpc} function. If the optimal number of clusters is 2 for both chromosomes, gender prediction will be made, and the samples having predicted gender agreed byt the two chromosomes will be labeled with red (female) or blue (male). Click [here](table/gender_prediction.html) to veiw the full table of gender prediction. 
 
 `r home.url`
 
@@ -567,7 +535,6 @@ fn <- CreateDatatable(FormatNumeric(tbl), paste(path.tbl, 'gender_prediction.htm
 
 Hierarchical clustering groups samples based on their glabal correlation of all genes. It is a iterative procedure that merges two most similar samples/groups at each step. 
 
-<div style="color:darkblue; padding:0 2cm">
 ```{r hierarchical_clustering, include=TRUE, fig.width=8, fig.height=6, out.width='640px'}
 atsm <- prms$chromosome$autosome; 
 atsm <- atsm[atsm %in% anno[, prms$annotation$chromosome]]; 
@@ -579,11 +546,8 @@ e <- log2(e[rowSums(e) > 0, , drop=FALSE]+1);
 plot(hclust(as.dist(1-cor(e))), xlab='', sub='', ylab='1 - correlation coefficient', 
      main='Hierarchical clustering using all autosomal genes', cex.lab=2);
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 11.** Hierarchical clustering of samples using all autosomal genes. Normalized read counts are log2-transformed before clustering. The vertical position of the common node of two samples indicates their similarity (lower = more similar).
-</div>
+`r OrderFigure()` Hierarchical clustering of samples using all autosomal genes. Normalized read counts are log2-transformed before clustering. The vertical position of the common node of two samples indicates their similarity (lower = more similar).
 
 `r home.url`
 
@@ -613,9 +577,7 @@ lns <- paste(paste('###', names(smpl)), '\n\n', paste('![](', fns, ')', sep=''),
 
 `r lns`
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 12.** PCA is performed using all autosomal genes after read counts are log2-transformed. The same plot is made in multiple tabs while samples are color-coded based on known sample features. 
-</div>
+`r OrderFigure()` PCA is performed using all autosomal genes after read counts are log2-transformed. The same plot is made in multiple tabs while samples are color-coded based on known sample features. 
 
 `r home.url`
 
