@@ -235,7 +235,7 @@ div.tocify {
 
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-<p><strong>Introduction</strong> This procedure analyzes the RNA-seq data of multiple samples for quality control purpose, using the gene-level read counts. The read counts can be provided as one or multiple integer data matrixes, corresponding to different mapping types, such as unique vs. multiple mapping and sense vs. antisense strands. The following steps will be applied to the read count data:</p>
+<p><strong>Introduction</strong> This procedure analyzes the RNA-seq data of multiple samples for quality control purpose. It uses inputs such as gene-level read counts provided in one or multiple integer matrixes using the gene-level read counts, corresponding to different types of read-gene mapping, such as unique vs. multiple mapping and mapping to sense vs. antisense strands. The following steps are included in this analysis:</p>
 <ul>
 <li><strong>Summary statistics</strong>: the read count data is summarized by sample, gene and mapping type.</li>
 <li><strong>Dispersion and normalization</strong>: different normalization methods are compared based on between-sample variance of all genes before and after normalization.</li>
@@ -267,14 +267,14 @@ div.tocify {
 <div id="summary-statistics" class="section level1">
 <h1><span class="header-section-number">2</span> Summary statistics</h1>
 <ul>
-<li>Number of samples: <em>18</em></li>
-<li>Number of genes: <em>25,207</em></li>
-<li>Average number of total reads per gene: <em>6328.8</em></li>
-<li>Average number of total reads per sample: <em>8,862,836</em></li>
+<li>Number of samples: <strong><em>18</em></strong></li>
+<li>Number of genes: <strong><em>25,207</em></strong></li>
+<li>Average number of total reads per gene: <strong><em>6328.8</em></strong></li>
+<li>Average number of total reads per sample: <strong><em>8,862,836</em></strong></li>
 </ul>
 <div id="read-count-by-sample" class="section level2">
 <h2><span class="header-section-number">2.1</span> Read count by sample</h2>
-<p>The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. <em>Shapiro-Wilk</em> normality test shows that the total read counts of this data set is normally distributed (p = 0.21). Samples with extreme total read counts comparing to the others:</p>
+<p>The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. <em>Shapiro-Wilk</em> normality test shows that the total read counts of this data set <strong>is normally distributed</strong> (p = 0.21). Samples with extreme total read counts comparing to the others are listed below:</p>
 <ul>
 <li>Samples with extremly low read count: <strong><em>none</em></strong></li>
 <li>Samples with extremly high read count: <strong><em>none</em></strong></li>
@@ -288,15 +288,15 @@ div.tocify {
 <h2><span class="header-section-number">2.2</span> Read count by gene</h2>
 <p>Due to the variability of gene length and expression level, it is expected that a large portion of the sequence reads are mapped to a small number of genes. At the same time, a large portion of the genes will have no or few reads mapped to them, making them unsuitable for statistical analysis. The distribution of read counts across genes and the consistency of such distribution between samples also provide information about RNA-seq data quality. In this data set,</p>
 <ul>
-<li>10.52% genes have no reads mapped to them in any sample.</li>
-<li>35.27% genes have less 1 read mapped to them per sample.</li>
-<li>48.29% genes have less 5 reads mapped to them per sample .</li>
+<li><strong>10.52%</strong> genes have no reads mapped to them in any sample.</li>
+<li><strong>35.27%</strong> genes have 1 or less read mapped to them per sample.</li>
+<li><strong>48.29%</strong> genes have 5 or less reads mapped to them per sample.</li>
 </ul>
 <p><img src="figure/read_count_gene_sorted-1.png" width="720px" /></p>
 <p><strong>Figure 2.</strong> The total read count of all samples mapped to each gene is used to sort genes from high to low. The cumulative percent of top genes is plotted along gene ranking.</p>
 <p> </p>
 <p><img src="figure/read_count_gene_top-1.png" width="800px" /></p>
-<p><strong>Figure 3.</strong> The cumulative read counts of <a href="table/top_gene_count.html">top 10 genes</a> and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples:</p>
+<p><strong>Figure 3.</strong> The cumulative read counts of <a href="table/top_gene_id.html">top 10 genes</a> and the <a href="table/top_gene_count.html">percent of total reads</a> by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples:</p>
 <ul>
 <li>Samples with extremely low percent of reads from top 10 genes: <strong><em>none</em></strong></li>
 <li>Samples with extremely high percent of reads from top 10 genes: <strong><em>none</em></strong></li>
@@ -352,430 +352,8 @@ div.tocify {
 </ul>
 <p>Check <a href="http://bib.oxfordjournals.org/content/early/2012/09/15/bib.bbs046.long">this</a> paper for detailed comparison of normalization methods, and <a href="https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/R/NormWrapper.R">this</a> function for R code of these normalization methods.</p>
 <p><img src="figure/normalization_boxplot-1.png" width="900px" /></p>
-<strong>Figure 8.</strong> Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their <strong>Group</strong>.
-</div>
-<img src="figure/average_cv-1.png" width="600px" />
-<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-Method
-</th>
-<th style="text-align:right;">
-Mean
-</th>
-<th style="text-align:right;">
-Change(%)
-</th>
-<th style="text-align:right;">
-Corr2Original
-</th>
-<th style="text-align:right;">
-Num_Decrease
-</th>
-<th style="text-align:right;">
-Num_Increase
-</th>
-<th style="text-align:right;">
-Decrease/Increase
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Original
-</td>
-<td style="text-align:left;">
-Original
-</td>
-<td style="text-align:right;">
-1.1953
-</td>
-<td style="text-align:right;">
-0.0000
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-NaN
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CL
-</td>
-<td style="text-align:left;">
-CL
-</td>
-<td style="text-align:right;">
-0.9093
-</td>
-<td style="text-align:right;">
--23.9246
-</td>
-<td style="text-align:right;">
-0.9700
-</td>
-<td style="text-align:right;">
-20544
-</td>
-<td style="text-align:right;">
-2010
-</td>
-<td style="text-align:right;">
-10.22
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-DESeq
-</td>
-<td style="text-align:left;">
-DESeq
-</td>
-<td style="text-align:right;">
-1.1670
-</td>
-<td style="text-align:right;">
--2.3660
-</td>
-<td style="text-align:right;">
-0.9900
-</td>
-<td style="text-align:right;">
-14207
-</td>
-<td style="text-align:right;">
-8032
-</td>
-<td style="text-align:right;">
-1.77
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-FPKM
-</td>
-<td style="text-align:left;">
-FPKM
-</td>
-<td style="text-align:right;">
-1.2474
-</td>
-<td style="text-align:right;">
-4.3598
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-5253
-</td>
-<td style="text-align:right;">
-16590
-</td>
-<td style="text-align:right;">
-0.32
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Linear
-</td>
-<td style="text-align:left;">
-Linear
-</td>
-<td style="text-align:right;">
-0.9567
-</td>
-<td style="text-align:right;">
--19.9642
-</td>
-<td style="text-align:right;">
-0.9800
-</td>
-<td style="text-align:right;">
-19647
-</td>
-<td style="text-align:right;">
-2907
-</td>
-<td style="text-align:right;">
-6.76
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Loess
-</td>
-<td style="text-align:left;">
-Loess
-</td>
-<td style="text-align:right;">
-0.9071
-</td>
-<td style="text-align:right;">
--24.1097
-</td>
-<td style="text-align:right;">
-0.9800
-</td>
-<td style="text-align:right;">
-20680
-</td>
-<td style="text-align:right;">
-1874
-</td>
-<td style="text-align:right;">
-11.04
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Median
-</td>
-<td style="text-align:left;">
-Median
-</td>
-<td style="text-align:right;">
-1.1731
-</td>
-<td style="text-align:right;">
--1.8580
-</td>
-<td style="text-align:right;">
-0.9900
-</td>
-<td style="text-align:right;">
-13328
-</td>
-<td style="text-align:right;">
-8561
-</td>
-<td style="text-align:right;">
-1.56
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-QQ
-</td>
-<td style="text-align:left;">
-QQ
-</td>
-<td style="text-align:right;">
-1.1406
-</td>
-<td style="text-align:right;">
--4.5780
-</td>
-<td style="text-align:right;">
-0.9900
-</td>
-<td style="text-align:right;">
-15837
-</td>
-<td style="text-align:right;">
-5982
-</td>
-<td style="text-align:right;">
-2.65
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-RLE
-</td>
-<td style="text-align:left;">
-RLE
-</td>
-<td style="text-align:right;">
-1.1418
-</td>
-<td style="text-align:right;">
--4.4743
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-16415
-</td>
-<td style="text-align:right;">
-6139
-</td>
-<td style="text-align:right;">
-2.67
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Rlog
-</td>
-<td style="text-align:left;">
-Rlog
-</td>
-<td style="text-align:right;">
-0.2918
-</td>
-<td style="text-align:right;">
--75.5911
-</td>
-<td style="text-align:right;">
--0.0034
-</td>
-<td style="text-align:right;">
-22084
-</td>
-<td style="text-align:right;">
-470
-</td>
-<td style="text-align:right;">
-46.99
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TMM
-</td>
-<td style="text-align:left;">
-TMM
-</td>
-<td style="text-align:right;">
-1.1421
-</td>
-<td style="text-align:right;">
--4.4503
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-16538
-</td>
-<td style="text-align:right;">
-6016
-</td>
-<td style="text-align:right;">
-2.75
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TC
-</td>
-<td style="text-align:left;">
-TC
-</td>
-<td style="text-align:right;">
-1.2474
-</td>
-<td style="text-align:right;">
-4.3598
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-5372
-</td>
-<td style="text-align:right;">
-16591
-</td>
-<td style="text-align:right;">
-0.32
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TPM
-</td>
-<td style="text-align:left;">
-TPM
-</td>
-<td style="text-align:right;">
-1.2744
-</td>
-<td style="text-align:right;">
-6.6166
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-4349
-</td>
-<td style="text-align:right;">
-17477
-</td>
-<td style="text-align:right;">
-0.25
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-UQ
-</td>
-<td style="text-align:left;">
-UQ
-</td>
-<td style="text-align:right;">
-1.1544
-</td>
-<td style="text-align:right;">
--3.4250
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-13455
-</td>
-<td style="text-align:right;">
-7861
-</td>
-<td style="text-align:right;">
-1.71
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-VST
-</td>
-<td style="text-align:left;">
-VST
-</td>
-<td style="text-align:right;">
-0.1757
-</td>
-<td style="text-align:right;">
--85.3030
-</td>
-<td style="text-align:right;">
-0.4800
-</td>
-<td style="text-align:right;">
-22551
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-7517.00
-</td>
-</tr>
-</tbody>
-</table>
+<p><strong>Figure 8.</strong> Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their <strong>Group</strong>.</p>
+<p><img src="figure/average_cv-1.png" width="600px" /></p>
 <p><strong>Figure 9.</strong> Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click <a href="table/Coeff_of_Var.html">here</a> to view the table of coefficients of variation of all genes.</p>
 <p> </p>
 <p><strong>Table 1.</strong> Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes.</p>
@@ -998,22 +576,22 @@ QQ
 QQ
 </td>
 <td style="text-align:right;">
-1.1406
+1.1405
 </td>
 <td style="text-align:right;">
--4.5780
+-4.5875
 </td>
 <td style="text-align:right;">
 0.9900
 </td>
 <td style="text-align:right;">
-15837
+15883
 </td>
 <td style="text-align:right;">
-5982
+5969
 </td>
 <td style="text-align:right;">
-2.65
+2.66
 </td>
 </tr>
 <tr>

@@ -116,7 +116,7 @@ lo <- names(ttl)[nsd <=-3];
 if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; '); 
 ```
 
-The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. _Shapiro-Wilk_ normality test shows that the total read counts of this data set `r if (p.shapiro>0.05) **'is' else 'is not'` normally distributed** (p = `r format(p.shapiro, digit=2)`). Samples with extreme total read counts comparing to the others are listed below:
+The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. _Shapiro-Wilk_ normality test shows that the total read counts of this data set **`r if (p.shapiro>0.05) 'is' else 'is not'` normally distributed** (p = `r format(p.shapiro, digit=2)`). Samples with extreme total read counts comparing to the others are listed below:
 
 - Samples with extremly low read count: ***`r lo`***
 - Samples with extremly high read count: ***`r hi`***
@@ -557,7 +557,7 @@ Principal components analysis
 pca <- prcomp(t(e)); 
 fns <- sapply(colnames(smpl), function(nm) { 
   fn <- paste(path.fig, paste('pca_', nm, '.png', sep=''), sep='/');
-  png(fn, w=1200, h=900); 
+  png(fn, w=800, h=600); 
   cex <- min(5, max(0.5, 256/ncol(e))); 
   col <- rainbow(length(unique(smpl[, nm]))); 
   col[col=='#FFFF00FF'] <- '#EEEE00FF'; 
