@@ -13,7 +13,7 @@ output:
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
 
-**Introduction** This procedure analyzes the RNA-seq data of multiple samples for quality control purpose, using the gene-level read counts. The read counts can be provided as one or multiple integer data matrixes, corresponding to different mapping types, such as unique vs. multiple mapping and sense vs. antisense strands. The following steps will be applied to the read count data:
+**Introduction** This procedure analyzes the RNA-seq data of multiple samples for quality control purpose. It uses inputs such as gene-level read counts provided in one or multiple integer matrixes using the gene-level read counts, corresponding to different types of read-gene mapping, such as unique vs. multiple mapping and mapping to sense vs. antisense strands. The following steps are included in this analysis:
 
   - **Summary statistics**: the read count data is summarized by sample, gene and mapping type.
   - **Dispersion and normalization**: different normalization methods are compared based on between-sample variance of all genes before and after normalization. 
@@ -98,10 +98,10 @@ names(gn.len) <- rownames(anno);
 
 # Summary statistics
 
-- Number of samples: _`r nrow(smpl)`_
-- Number of genes: _`r format(nrow(ct), big.mark=',')`_
-- Average number of total reads per gene: _`r round(mean(count.sum2[, 1]), 1)`_
-- Average number of total reads per sample: _`r format(mean(count.sum1[, 1]), big.mark=',')`_
+- Number of samples: ***`r nrow(smpl)`***
+- Number of genes: ***`r format(nrow(ct), big.mark=',')`***
+- Average number of total reads per gene: ***`r round(mean(count.sum2[, 1]), 1)`***
+- Average number of total reads per sample: ***`r format(mean(count.sum1[, 1]), big.mark=',')`***
 
 ## Read count by sample
 
@@ -116,7 +116,7 @@ lo <- names(ttl)[nsd <=-3];
 if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; '); 
 ```
 
-The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. _Shapiro-Wilk_ normality test shows that the total read counts of this data set `r if (p.shapiro>0.05) 'is' else 'is not'` normally distributed (p = `r format(p.shapiro, digit=2)`). Samples with extreme total read counts comparing to the others:
+The total read count per sample is the sum of sequence reads of one sample mapped to all genes. Inconsistency of total reads between samples might suggest data quality issues and affect downstream analysis. For example, low total read count could be caused by high level of RNA degradation or high rate of sequencing errors. _Shapiro-Wilk_ normality test shows that the total read counts of this data set `r if (p.shapiro>0.05) **'is' else 'is not'` normally distributed** (p = `r format(p.shapiro, digit=2)`). Samples with extreme total read counts comparing to the others are listed below:
 
 - Samples with extremly low read count: ***`r lo`***
 - Samples with extremly high read count: ***`r hi`***
@@ -143,9 +143,9 @@ pct5 <- round(length(ct.mean[ct.mean< 5])/length(ct.mean)*100, 2);
 
 Due to the variability of gene length and expression level, it is expected that a large portion of the sequence reads are mapped to a small number of genes. At the same time, a large portion of the genes will have no or few reads mapped to them, making them unsuitable for statistical analysis. The distribution of read counts across genes and the consistency of such distribution between samples also provide information about RNA-seq data quality. In this data set,
 
-- `r pct0`% genes have no reads mapped to them in any sample.
-- `r pct1`% genes have less 1 read mapped to them per sample.
-- `r pct5`% genes have less 5 reads mapped to them per sample .
+- **`r pct0`%** genes have no reads mapped to them in any sample.
+- **`r pct1`%** genes have 1 or less read mapped to them per sample.
+- **`r pct5`%** genes have 5 or less reads mapped to them per sample.
 
 ```{r, read_count_gene_sorted, include=TRUE, fig.width=8, fig.height=6, out.width='720px'}
 gene.ct <- count.sum2[, 1]; 
@@ -178,6 +178,9 @@ y/sum(x)*100;
 top10 <- top10[, order(top10[nrow(top10), , drop=FALSE])]; 
 CreateDatatable(top10, paste(path.tbl, 'top_gene_count.html', sep='/')) -> x; 
 
+ids10 <- apply(ct, 2, function(x) rownames(ct)[rev(order(x))][1:10]);
+CreateDatatable(ids10, paste(path.tbl, 'top_gene_id.html', sep='/')) -> x; 
+
 par(mar=c(8, 5, 3, 2)); 
 plot(0, type='n', ylim=c(min(top10), max(top10)), xlim=c(1, ncol(top10)), xaxs='i', xaxt='n', 
 xlab='Sample', ylab='Cumulative percent (%)', cex.lab=2, 
@@ -199,7 +202,7 @@ lo <- colnames(top10)[nsd <=-3];
 if (length(lo) == 0) lo <- 'none' else lo <- paste(lo, collapse='; '); 
 ```
 
-`r OrderFigure()` The cumulative read counts of [top `r nrow(top10)` genes](table/top_gene_count.html) and the percent of total reads by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
+`r OrderFigure()` The cumulative read counts of [top `r nrow(top10)` genes](table/top_gene_id.html) and the [percent of total reads](table/top_gene_count.html) by these genes are calculated for each sample. Samples are ordered by the percents from low to high on the x-axis in this figure. The 2 samples with the lowest and the highest cumulative percents are labeled. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples: 
 
 - Samples with extremely low percent of reads from top `r nrow(top10)` genes: ***`r lo`***
 - Samples with extremely high percent of reads from top `r nrow(top10)` genes: ***`r hi`***
@@ -387,7 +390,6 @@ title(ylab='Log2(read_count + 1)', cex.lab=2, outer=TRUE, line=1);
 ```
 
 `r OrderFigure()` Each panel corresponds to a normalization method, including the boxplots of all samples. Samples are colored by their **`r names(smpl)[1]`**.
-</div>
 
 ```{r average_cv, fig.width=8, fig.height=6, out.width='600px'}
 dff <- apply(cv, 2, function(x) x - cv[, 1]); 
@@ -411,10 +413,6 @@ tbl <- data.frame(Method=colnames(cv), Mean=colMeans(cv), "Change(%)"=chg,
                   "Decrease/Increase" = round(c[, 1]/c[, 2], 2), stringsAsFactors = FALSE);  
 colnames(tbl)[3] <- 'Change(%)';
 colnames(tbl)[7] <- 'Decrease/Increase';
-
-kable(FormatNumeric(tbl), row.naems=FALSE) %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
-
 ```
 
 `r OrderFigure()` Each boxplot corresponds to a normalization method and the overall distribution of change in coefficient of variation of all genes. The means of all genes are labeled as the read stars. Click [here](table/Coeff_of_Var.html) to view the table of coefficients of variation of all genes. 
