@@ -401,6 +401,7 @@ rownames(ms)<-paste(rownames(ms), ' (n=', sapply(cl, length),  ')', sep='');
 x<-sortColumn(ms, grp);
 PlotColoredBlock(x, min=-1*max(abs(x), na.rm=TRUE), max=max(abs(x), na.rm=TRUE), key='Average expression', groups=grp);
 ```
+
 `r OrderFigure()` Color of each block corresponds to the average expression (normalized) of each refined gene cluster in each sample (red = higher).
 
 ```{r summary_clusters, include=FALSE}
