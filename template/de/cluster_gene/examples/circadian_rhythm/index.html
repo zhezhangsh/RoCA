@@ -4,14 +4,14 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
 
 <meta name="author" content="Zhe Zhang" />
 
-<meta name="date" content="2017-08-09" />
+<meta name="date" content="2018-07-03" />
 
 <title>Cluster genes across multiple sample groups</title>
 
@@ -25,8 +25,9 @@
 <link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="index_files/navigation-1.1/tabsets.js"></script>
-<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="index_files/highlightjs-1.1/highlight.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -35,10 +36,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -92,6 +95,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -223,25 +229,24 @@ div.tocify {
 
 <h1 class="title toc-ignore">Cluster genes across multiple sample groups</h1>
 <h4 class="author"><em>Zhe Zhang</em></h4>
-<h4 class="date"><em>2017-08-09</em></h4>
+<h4 class="date"><em>2018-07-03</em></h4>
 
 </div>
 
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-<p><strong>Introduction: </strong> This analysis performs a gene-gene clustering procedure that will identify clusters of co-expressed genes across multiple sample groups. It first runs an ANOVA to find genes significantly changed across sample groups and uses these genes as seeds to initiate a number of gene clusters. These clusters will be further refined based on several user-specific paramters. Gene set enrichment analysis is then used to find pre-defined gene sets that are over-represented in each cluster.</p>
+<p><strong>Introduction: </strong> This analysis performs a gene-gene clustering procedure that will identify clusters of co-expressed genes across multiple sample groups. It first runs an ANOVA to find genes significantly different across sample groups and uses these genes as seeds to initiate a set of gene clusters. These clusters will be further refined based on several user-specific paramters. Gene set enrichment analysis is then used to associate each gene cluster to pre-defined gene sets, and then biological meanings.</p>
 <ul>
-<li><strong>Selection of differentially expressed gene:</strong> ANOVA is used to get each gene a p value for its differential expression across sample groups and false discovery rates are calculated using the p values. Afterwards, genes are filtered sequentially by their FDR, p value, and range until the number of remaining genes is smaller than a given minimal number.</li>
-<li><strong>Gene clustering analysis:</strong> Remaining genes from the last step are used as seeds for the <em>hclust{stat}</em> function to generate a hierchical clustering tree; the tree is cut at a given height to get initial clusters; the cutting height will be lowered if the number of clusters is less than the number of sample groups; the initial clusters are filtered to remove small clusters, and refined to remove outlier genes; initial clusters close to each other are merged; and finally, the clusters are refined through multiple rounds of re-clustering while including genes with less significant ANOVA p values.</li>
-<li><strong>Gene set enrichment analysis:</strong> Hypergeometric test is used to find predefined gene sets over-represented in each gene cluster. A collection of gene sets obtained from different sources are available for a few model species and can be found at<br />
-<a href="https://github.com/zhezhangsh/RoCA/tree/master/data" class="uri">https://github.com/zhezhangsh/RoCA/tree/master/data</a>.</li>
+<li><strong>Selection of seed genes:</strong> ANOVA is used to get each gene a p value for its difference across sample groups and corresponding false discovery rates are calculated using the p values. Afterwards, genes are filtered sequentially by their FDR, p value, and range until the number of seed genes is between the given upper and lower limits.</li>
+<li><strong>Gene clustering analysis:</strong> Seed genes from the last step are used by the <em>hclust{stat}</em> function to generate a hierchical clustering tree; the tree is cut at a given height to obtain initial clusters; the cutting height will be lowered if the number of clusters is smaller than the number of sample groups; the initial clusters are filtered to remove outlier genes and clusters smaller than a given number; initial clusters close to each other within a given distance are merged; and finally, the clusters are refined through multiple rounds of re-clustering, which allows the inclusion of genes with less significant ANOVA p values.</li>
+<li><strong>Gene set enrichment analysis:</strong> Hypergeometric test is used to find predefined gene sets over-represented in each gene cluster. A collection of gene sets obtained from different sources are available for a few model species, which can be downloaded <a href="https://github.com/zhezhangsh/RoCA/tree/master/data">here</a>.</li>
 </ul>
 </div>
 <p> </p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
-<div id="description" class="section level1">
+<div id="description" class="section level1 tabset">
 <h1><span class="header-section-number">1</span> Description</h1>
 <div id="project" class="section level2">
 <h2><span class="header-section-number">1.1</span> Project</h2>
@@ -249,7 +254,7 @@ div.tocify {
 </div>
 <div id="pubmed" class="section level2">
 <h2><span class="header-section-number">1.2</span> PubMed</h2>
-<p>Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. Sci Rep 2016 Apr 21;6:24631. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/27097688">27097688</a>.</p>
+<p>Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. Sci Rep 2016 Apr 21;6:24631. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/27097688">27097688</a>.</p>
 </div>
 <div id="experimental-design" class="section level2">
 <h2><span class="header-section-number">1.3</span> Experimental design</h2>
@@ -265,17 +270,13 @@ div.tocify {
 <div id="data-and-samples" class="section level2">
 <h2><span class="header-section-number">1.5</span> Data and samples</h2>
 <ul>
-<li>There are 2577 total genes</li>
-<li>There are 36 total <a href="table/sample.html">samples</a></li>
-<li>There are WT_00Hr, WT_02Hr, WT_04Hr, WT_06Hr, WT_08Hr, WT_10Hr, WT_12Hr, WT_14Hr, WT_16Hr, WT_18Hr, WT_20Hr, WT_22Hr sample groups</li>
+<li>There are <strong>2577</strong> total genes.</li>
+<li>There are <strong>36</strong> total <a href="table/sample.html">samples</a>.</li>
+<li>There are <strong>WT_00Hr, WT_02Hr, WT_04Hr, WT_06Hr, WT_08Hr, WT_10Hr, WT_12Hr, WT_14Hr, WT_16Hr, WT_18Hr, WT_20Hr, WT_22Hr</strong> sample groups.</li>
 </ul>
 <p>The input data matrix was normalized using sample group <em>WT_00Hr</em> as control, so, the data of each gene was substracted by control group mean and had SD equal to 1.0</p>
-<div align="center">
-<p><img src="index_files/figure-html/pca-1.png" width="640px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
-<p><strong>Figure 1.</strong> Principal components analysis (PCA) using all genes. Samples were colored by their groups.</p>
-</div>
+<p><img src="figure/pca-1.png" width="640px" /></p>
+<p><strong>Figure 1.</strong> Principal components analysis (PCA) using all genes. Samples were colored according to their groups.</p>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -285,84 +286,65 @@ div.tocify {
 <h1><span class="header-section-number">2</span> Analysis and results</h1>
 <div id="gene-level-summary-statistics-and-anova" class="section level2">
 <h2><span class="header-section-number">2.1</span> Gene-level summary statistics and ANOVA</h2>
-<p>Summary statistics and ANOVA p value across all sample groups were calculated for each gene.</p>
-<ul>
-<li><a href="table/anova.html">Summary statistics and ANOVA result.</a></li>
-</ul>
-<div align="center">
-<p><img src="index_files/figure-html/anova_pvalue-1.png" width="640px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p><a href="table/anova.html">Summary statistics and ANOVA p value</a> across all sample groups were calculated for each gene.</p>
+<p><img src="figure/anova_pvalue-1.png" width="640px" /></p>
 <p><strong>Figure 2.</strong> Distribution of ANOVA p values. 821 genes have p values less than 0.01.</p>
-</div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
 </div>
-<div id="identification-of-gene-clusters" class="section level2">
-<h2><span class="header-section-number">2.2</span> Identification of gene clusters</h2>
-<div id="selection-of-differentially-expressed-genes" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Selection of differentially expressed genes</h3>
-<p>Differentially expressed genes (DEGs) were selected as seeds for generating gene clusters, using the following criteria:</p>
+<div id="creation-of-gene-clusters" class="section level2">
+<h2><span class="header-section-number">2.2</span> Creation of gene clusters</h2>
+<div id="selection-of-seed-genes" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Selection of seed genes</h3>
+<p>Significant genes were selected from ANOVA results as seeds to generate gene clusters, using the following criteria:</p>
 <ul>
-<li>Select genes with FDR less than 0.1</li>
-<li>Stop if less than 100 genes were left; otherwise, select those with ANOVA p values less than 0.01</li>
-<li>Stop if less than 100 genes were left; otherwise, select those with range (<em>max-min</em>) greater than 1</li>
-<li>If there are still more than 1000 genes left, select the top 1000 with the biggest ranges</li>
+<li>Select genes with FDR less than 0.1.</li>
+<li>Stop if less than 100 genes were left; otherwise, select those with ANOVA p values less than 0.01.</li>
+<li>Stop if less than 100 genes were left; otherwise, select those with range (<em>max-min</em>) greater than 1.</li>
+<li>If there are still more than 1000 genes left, select the top 1000 with the biggest ranges.</li>
 </ul>
-<p>A total of <strong>232</strong> genes were selected. These genes would be used as seeds to generate gene clusters in the next step.</p>
-<div align="center">
-<p><img src="index_files/figure-html/hierarchical_clustering-1.png" width="800px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p>Finnally, a total of <strong>232</strong> genes were selected as seeds for gene clustering in the next step.</p>
+<p><img src="figure/hierarchical_clustering-1.png" width="800px" /></p>
 <p><strong>Figure 3.</strong> Hierarchical clustering of samples using all genes (unsupervised) or selected DEGs (supervised).</p>
-</div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
 </div>
-<div id="idetnfication-of-gene-clusters" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> Idetnfication of gene clusters</h3>
-<p>Gene clusters were identified from the DEG seeds with the following steps:</p>
+<div id="initiation-of-gene-clusters" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Initiation of gene clusters</h3>
+<p>Gene clusters were created using the seed genes with the following steps:</p>
 <ul>
-<li>Create a hierchical tree based on gene-gene correlation</li>
-<li>Cut the tree at height 1.2, which will classify genes into clusters. Then apply the following steps to refine the clusters</li>
-<li>Calculate correlation of each gene to the centroid (median) of its cluster. Remove the genes if the correlation is less than 0.6</li>
-<li>Remove clusters with size less than 20% of the expected size (the expected size is 50 if there are 500 genes and 10 clusters)</li>
-<li>If there are less than 12 (the number of sample groups) clusters left, reduce the height cutoff by 0.05 and repeat this step until there are enough clusters</li>
-<li>Merge the 2 most similar clusters if the correlation of their centroids is greater than or equal to 0.6. Repeat this step until no 2 clusters are that similar</li>
+<li>Create a hierchical tree based on gene-gene correlation.</li>
+<li>Cut the tree at height 1.2, and put genes of the same branch into the same cluster.</li>
+<li>Calculate correlation of each gene to the centroid (median) of its cluster. Remove the genes if the correlation is less than 0.6.</li>
+<li>Remove clusters with size less than 20% of the expected size (the expected size is M/N if there are M genes and N clusters).</li>
+<li>If there are less than 12 (the number of sample groups) clusters left, reduce the height cutoff by 0.05 and repeat the last 3 steps until there are enough clusters.</li>
+<li>Merge the 2 most similar clusters if the correlation of their centroids is greater than or equal to 0.6. Repeat this step until no 2 clusters are that similar.</li>
 </ul>
-<p><strong>8</strong> gene clusters of <strong>221</strong> genes were identified from <strong>232</strong> seed DEGs.</p>
-<div align="center">
-<p><img src="index_files/figure-html/plot_cluster_mean-1.png" width="600px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p>These steps clustered <strong>221</strong> of <strong>232</strong> seed genes into <strong>8</strong> initial clusters.</p>
+<p><img src="figure/plot_cluster_mean-1.png" width="600px" /></p>
 <p><strong>Figure 4.</strong> Color of each block corresponds to the average expression (normalized) of each initial gene cluster in each sample (red = higher).</p>
-</div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
 </div>
 <div id="refinement-of-gene-clusters" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Refinement of gene clusters</h3>
-<p>The gene clusters identified from the DEG seeds were further refined with the following steps:</p>
+<p>The gene clusters were further refined with the following steps:</p>
 <ul>
-<li>Select all 821 genes with p values less than 0.01 to continue</li>
-<li>Assign selected genes to clusters:</li>
-<li>Calculate centroid (median expression level of all genes in the cluster) of each cluster</li>
-<li>Calculate correlation coefficient of each gene to centroid of each cluster to get a 821 X 8 matrix</li>
-<li>Assign a gene to a cluster if its correlation coefficient to the cluster is greater than 0.6, and the correlation coefficient to any other cluster is at least 0.1 less</li>
-<li>Repeat this reclustering steps for 20 times unless the reclustering converged</li>
-<li>Finally, remove clusters with number of genes less than 5.525</li>
+<li>Select all 821 genes with p values less than 0.01, and assign each of them to existing clusters:
+<ul>
+<li>Calculate the centroid (median expression level of all genes in the cluster) of each cluster</li>
+<li>Calculate correlation coefficient of each gene to the centroid of each cluster to get a 821 X 8 matrix</li>
+<li>Assign each selected gene to a cluster if its correlation coefficient to the cluster centroid is greater than 0.6, and the correlation coefficient to the centroid of any other cluster is no more than 0.5.</li>
+</ul></li>
+<li>Repeat the last step for 20 times unless it will not change the clusters any more.</li>
+<li>Finally, remove clusters with number of genes less than 5.525.</li>
 </ul>
 <p>The reclustering didn’t converge after 20 cycles</p>
-<p>A total of <strong>554</strong> genes were clustered after refinement.</p>
-<div align="center">
-<p><img src="index_files/figure-html/plot_recluster_mean-1.png" width="600px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
-<p><strong>Figure 5.</strong> Color of each block corresponds to the average expression (normalized) of each refined gene cluster in each sample (red = higher).</p>
-</div>
+<p>These steps clustered <strong>168</strong> of <strong>821</strong> selected genes into <strong>21</strong> refined clusters.</p>
+<p><img src="figure/plot_recluster_mean-1.png" width="600px" /> <strong>Figure 5.</strong> Color of each block corresponds to the average expression (normalized) of each refined gene cluster in each sample (red = higher).</p>
 <p>More info:</p>
 <ul>
 <li><a href="table/clustered_data.html">Original data of clustered genes</a> (<a href="table/clustered_data.csv">download table</a>)</li>
@@ -373,246 +355,585 @@ div.tocify {
 </div>
 </div>
 </div>
-<div id="analysis-of-individual-clusters" class="section level2">
-<h2><span class="header-section-number">2.3</span> Analysis of individual clusters</h2>
+<div id="analysis-of-clusters" class="section level2">
+<h2><span class="header-section-number">2.3</span> Analysis of clusters</h2>
+<p>Clusters created by the last section were further analyzed.</p>
 <div id="summary-statistics-and-visualization-of-individual-clusters" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Summary statistics and visualization of individual clusters</h3>
-<div style="color:darkblue; padding:0 2cm">
-<p><strong>Table 1</strong> Summary of individual clusters, with the average expression (normalized) of all genes of each cluster in all sample groups. Click on cluster name for visualization of each cluster: 1). the average and standard error of sample averages in each group; 2). hierarchical sample clustering using all genes of the cluster; and 3). heatmap of all genes and samples of the cluster.</p>
-</div>
-<div align="center" ,="" style="padding:0 2cm">
-<table>
+<p><strong>Table 1.</strong> Summary of individual clusters, with the normalized averages of all genes in each cluster and sample group. Click the name of a cluster to view more details about it:</p>
+<ul>
+<li>the average and standard error of samples in each group;</li>
+<li>hierarchical sample clustering using all genes in the cluster;</li>
+<li>and heatmap of all genes and samples in the cluster.</li>
+</ul>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; ">
 <thead>
-<tr class="header">
-<th align="left">Cluster</th>
-<th align="right">Num_Gene</th>
-<th align="right">Mean_WT_00Hr</th>
-<th align="right">Mean_WT_02Hr</th>
-<th align="right">Mean_WT_04Hr</th>
-<th align="right">Mean_WT_06Hr</th>
-<th align="right">Mean_WT_08Hr</th>
-<th align="right">Mean_WT_10Hr</th>
-<th align="right">Mean_WT_12Hr</th>
-<th align="right">Mean_WT_14Hr</th>
-<th align="right">Mean_WT_16Hr</th>
-<th align="right">Mean_WT_18Hr</th>
-<th align="right">Mean_WT_20Hr</th>
-<th align="right">Mean_WT_22Hr</th>
+<tr>
+<th style="text-align:left;">
+Cluster
+</th>
+<th style="text-align:right;">
+Num_Gene
+</th>
+<th style="text-align:right;">
+Mean_WT_00Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_02Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_04Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_06Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_08Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_10Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_12Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_14Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_16Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_18Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_20Hr
+</th>
+<th style="text-align:right;">
+Mean_WT_22Hr
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left"><a href="cluster/Cluster_1.pdf">Cluster_1</a></td>
-<td align="right">74</td>
-<td align="right">0</td>
-<td align="right">0.320</td>
-<td align="right">0.4003</td>
-<td align="right">0.4754</td>
-<td align="right">-0.0674</td>
-<td align="right">-0.8074</td>
-<td align="right">-1.3232</td>
-<td align="right">-1.7725</td>
-<td align="right">-1.4775</td>
-<td align="right">-0.8675</td>
-<td align="right">-0.4452</td>
-<td align="right">0.038</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_1.pdf">Cluster_1</a>
+</td>
+<td style="text-align:right;">
+74
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.320
+</td>
+<td style="text-align:right;">
+0.4003
+</td>
+<td style="text-align:right;">
+0.4754
+</td>
+<td style="text-align:right;">
+-0.0674
+</td>
+<td style="text-align:right;">
+-0.8074
+</td>
+<td style="text-align:right;">
+-1.3232
+</td>
+<td style="text-align:right;">
+-1.7725
+</td>
+<td style="text-align:right;">
+-1.4775
+</td>
+<td style="text-align:right;">
+-0.8675
+</td>
+<td style="text-align:right;">
+-0.4452
+</td>
+<td style="text-align:right;">
+0.038
+</td>
 </tr>
-<tr class="even">
-<td align="left"><a href="cluster/Cluster_2.pdf">Cluster_2</a></td>
-<td align="right">92</td>
-<td align="right">0</td>
-<td align="right">0.220</td>
-<td align="right">0.6953</td>
-<td align="right">1.1131</td>
-<td align="right">1.3442</td>
-<td align="right">0.7731</td>
-<td align="right">0.5681</td>
-<td align="right">-0.5761</td>
-<td align="right">-1.1411</td>
-<td align="right">-0.8391</td>
-<td align="right">-0.4592</td>
-<td align="right">-0.140</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_2.pdf">Cluster_2</a>
+</td>
+<td style="text-align:right;">
+92
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.220
+</td>
+<td style="text-align:right;">
+0.6953
+</td>
+<td style="text-align:right;">
+1.1131
+</td>
+<td style="text-align:right;">
+1.3442
+</td>
+<td style="text-align:right;">
+0.7731
+</td>
+<td style="text-align:right;">
+0.5681
+</td>
+<td style="text-align:right;">
+-0.5761
+</td>
+<td style="text-align:right;">
+-1.1411
+</td>
+<td style="text-align:right;">
+-0.8391
+</td>
+<td style="text-align:right;">
+-0.4592
+</td>
+<td style="text-align:right;">
+-0.140
+</td>
 </tr>
-<tr class="odd">
-<td align="left"><a href="cluster/Cluster_3.pdf">Cluster_3</a></td>
-<td align="right">76</td>
-<td align="right">0</td>
-<td align="right">0.027</td>
-<td align="right">0.4720</td>
-<td align="right">0.9529</td>
-<td align="right">1.6852</td>
-<td align="right">1.7297</td>
-<td align="right">1.8217</td>
-<td align="right">1.0513</td>
-<td align="right">0.1103</td>
-<td align="right">-0.0200</td>
-<td align="right">-0.1501</td>
-<td align="right">-0.150</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_3.pdf">Cluster_3</a>
+</td>
+<td style="text-align:right;">
+76
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.027
+</td>
+<td style="text-align:right;">
+0.4720
+</td>
+<td style="text-align:right;">
+0.9529
+</td>
+<td style="text-align:right;">
+1.6852
+</td>
+<td style="text-align:right;">
+1.7297
+</td>
+<td style="text-align:right;">
+1.8217
+</td>
+<td style="text-align:right;">
+1.0513
+</td>
+<td style="text-align:right;">
+0.1103
+</td>
+<td style="text-align:right;">
+-0.0200
+</td>
+<td style="text-align:right;">
+-0.1501
+</td>
+<td style="text-align:right;">
+-0.150
+</td>
 </tr>
-<tr class="even">
-<td align="left"><a href="cluster/Cluster_4.pdf">Cluster_4</a></td>
-<td align="right">68</td>
-<td align="right">0</td>
-<td align="right">-0.110</td>
-<td align="right">-0.2174</td>
-<td align="right">0.0500</td>
-<td align="right">0.8026</td>
-<td align="right">1.5266</td>
-<td align="right">1.9326</td>
-<td align="right">1.9415</td>
-<td align="right">1.4404</td>
-<td align="right">1.0700</td>
-<td align="right">0.7313</td>
-<td align="right">0.170</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_4.pdf">Cluster_4</a>
+</td>
+<td style="text-align:right;">
+68
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-0.110
+</td>
+<td style="text-align:right;">
+-0.2174
+</td>
+<td style="text-align:right;">
+0.0500
+</td>
+<td style="text-align:right;">
+0.8026
+</td>
+<td style="text-align:right;">
+1.5266
+</td>
+<td style="text-align:right;">
+1.9326
+</td>
+<td style="text-align:right;">
+1.9415
+</td>
+<td style="text-align:right;">
+1.4404
+</td>
+<td style="text-align:right;">
+1.0700
+</td>
+<td style="text-align:right;">
+0.7313
+</td>
+<td style="text-align:right;">
+0.170
+</td>
 </tr>
-<tr class="odd">
-<td align="left"><a href="cluster/Cluster_5.pdf">Cluster_5</a></td>
-<td align="right">22</td>
-<td align="right">0</td>
-<td align="right">-0.910</td>
-<td align="right">-1.3292</td>
-<td align="right">-1.3408</td>
-<td align="right">-1.3086</td>
-<td align="right">-0.8028</td>
-<td align="right">-0.5605</td>
-<td align="right">1.1441</td>
-<td align="right">-0.4487</td>
-<td align="right">-0.9260</td>
-<td align="right">-1.4410</td>
-<td align="right">-0.760</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_5.pdf">Cluster_5</a>
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-0.910
+</td>
+<td style="text-align:right;">
+-1.3292
+</td>
+<td style="text-align:right;">
+-1.3408
+</td>
+<td style="text-align:right;">
+-1.3086
+</td>
+<td style="text-align:right;">
+-0.8028
+</td>
+<td style="text-align:right;">
+-0.5605
+</td>
+<td style="text-align:right;">
+1.1441
+</td>
+<td style="text-align:right;">
+-0.4487
+</td>
+<td style="text-align:right;">
+-0.9260
+</td>
+<td style="text-align:right;">
+-1.4410
+</td>
+<td style="text-align:right;">
+-0.760
+</td>
 </tr>
-<tr class="even">
-<td align="left"><a href="cluster/Cluster_6.pdf">Cluster_6</a></td>
-<td align="right">41</td>
-<td align="right">0</td>
-<td align="right">0.120</td>
-<td align="right">-0.3093</td>
-<td align="right">-1.0027</td>
-<td align="right">-1.6774</td>
-<td align="right">-1.6972</td>
-<td align="right">-1.4500</td>
-<td align="right">-0.3144</td>
-<td align="right">0.4795</td>
-<td align="right">0.2814</td>
-<td align="right">-0.7223</td>
-<td align="right">-0.760</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_6.pdf">Cluster_6</a>
+</td>
+<td style="text-align:right;">
+41
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.120
+</td>
+<td style="text-align:right;">
+-0.3093
+</td>
+<td style="text-align:right;">
+-1.0027
+</td>
+<td style="text-align:right;">
+-1.6774
+</td>
+<td style="text-align:right;">
+-1.6972
+</td>
+<td style="text-align:right;">
+-1.4500
+</td>
+<td style="text-align:right;">
+-0.3144
+</td>
+<td style="text-align:right;">
+0.4795
+</td>
+<td style="text-align:right;">
+0.2814
+</td>
+<td style="text-align:right;">
+-0.7223
+</td>
+<td style="text-align:right;">
+-0.760
+</td>
 </tr>
-<tr class="odd">
-<td align="left"><a href="cluster/Cluster_7.pdf">Cluster_7</a></td>
-<td align="right">81</td>
-<td align="right">0</td>
-<td align="right">-0.360</td>
-<td align="right">-0.7090</td>
-<td align="right">-0.8816</td>
-<td align="right">-1.0076</td>
-<td align="right">-0.4168</td>
-<td align="right">-0.1783</td>
-<td align="right">0.7138</td>
-<td align="right">1.1981</td>
-<td align="right">1.1456</td>
-<td align="right">0.8200</td>
-<td align="right">0.290</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_7.pdf">Cluster_7</a>
+</td>
+<td style="text-align:right;">
+81
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-0.360
+</td>
+<td style="text-align:right;">
+-0.7090
+</td>
+<td style="text-align:right;">
+-0.8816
+</td>
+<td style="text-align:right;">
+-1.0076
+</td>
+<td style="text-align:right;">
+-0.4168
+</td>
+<td style="text-align:right;">
+-0.1783
+</td>
+<td style="text-align:right;">
+0.7138
+</td>
+<td style="text-align:right;">
+1.1981
+</td>
+<td style="text-align:right;">
+1.1456
+</td>
+<td style="text-align:right;">
+0.8200
+</td>
+<td style="text-align:right;">
+0.290
+</td>
 </tr>
-<tr class="even">
-<td align="left"><a href="cluster/Cluster_8.pdf">Cluster_8</a></td>
-<td align="right">100</td>
-<td align="right">0</td>
-<td align="right">-0.110</td>
-<td align="right">-0.3746</td>
-<td align="right">-0.7491</td>
-<td align="right">-1.5633</td>
-<td align="right">-1.8686</td>
-<td align="right">-1.9389</td>
-<td align="right">-1.6773</td>
-<td align="right">-0.7202</td>
-<td align="right">-0.1745</td>
-<td align="right">0.1049</td>
-<td align="right">0.150</td>
+<tr>
+<td style="text-align:left;">
+<a href="cluster/Cluster_8.pdf">Cluster_8</a>
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-0.110
+</td>
+<td style="text-align:right;">
+-0.3746
+</td>
+<td style="text-align:right;">
+-0.7491
+</td>
+<td style="text-align:right;">
+-1.5633
+</td>
+<td style="text-align:right;">
+-1.8686
+</td>
+<td style="text-align:right;">
+-1.9389
+</td>
+<td style="text-align:right;">
+-1.6773
+</td>
+<td style="text-align:right;">
+-0.7202
+</td>
+<td style="text-align:right;">
+-0.1745
+</td>
+<td style="text-align:right;">
+0.1049
+</td>
+<td style="text-align:right;">
+0.150
+</td>
 </tr>
 </tbody>
 </table>
-</div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
 </div>
-<div id="gene-set-enrichment-analysis" class="section level3">
-<h3><span class="header-section-number">2.3.2</span> Gene set enrichment analysis</h3>
-<p>Find predefined gene sets enriched in gene cluster comparing to the background.</p>
-<div style="color:darkblue; padding:0 2cm">
-<p><strong>Table 2</strong> Numbers of predefined gene sets significantly enriched in each gene cluster. Gene sets were split based on their sources, such as the NCBI BioSystems and KEGG databases. Click on each number to see list of the gene sets.</p>
-</div>
-<div align="center" ,="" style="padding:0 2cm">
-<table>
+<div id="gene-set-analysis" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Gene set analysis</h3>
+<p>Test over-representation of predefined gene sets in each cluster, while using all input genes as background.</p>
+<p><strong>Table 2.</strong> Numbers of predefined gene sets significantly enriched in each gene cluster. Gene sets were split based on their sources, such as the NCBI BioSystems and KEGG databases. Click on each number to see full list of the gene sets.</p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; ">
 <thead>
-<tr class="header">
-<th></th>
-<th align="center">BioSystems</th>
-<th align="center">KEGG</th>
-<th align="center">MSigDb</th>
-<th align="center">PubTator</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+BioSystems
+</th>
+<th style="text-align:center;">
+KEGG
+</th>
+<th style="text-align:center;">
+MSigDb
+</th>
+<th style="text-align:center;">
+PubTator
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>Cluster_1</td>
-<td align="center"><a href="cluster/Cluster_1/BioSystems.html">65</a></td>
-<td align="center"><a href="cluster/Cluster_1/KEGG.html">3</a></td>
-<td align="center"><a href="cluster/Cluster_1/MSigDb.html">129</a></td>
-<td align="center">0</td>
+<tr>
+<td style="text-align:left;">
+Cluster_1
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_1/BioSystems.html">65</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_1/KEGG.html">3</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_1/MSigDb.html">129</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
-<tr class="even">
-<td>Cluster_2</td>
-<td align="center"><a href="cluster/Cluster_2/BioSystems.html">48</a></td>
-<td align="center">0</td>
-<td align="center"><a href="cluster/Cluster_2/MSigDb.html">152</a></td>
-<td align="center">0</td>
+<tr>
+<td style="text-align:left;">
+Cluster_2
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_2/BioSystems.html">48</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_2/MSigDb.html">152</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td>Cluster_3</td>
-<td align="center"><a href="cluster/Cluster_3/BioSystems.html">92</a></td>
-<td align="center"><a href="cluster/Cluster_3/KEGG.html">9</a></td>
-<td align="center"><a href="cluster/Cluster_3/MSigDb.html">177</a></td>
-<td align="center">0</td>
+<tr>
+<td style="text-align:left;">
+Cluster_3
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_3/BioSystems.html">92</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_3/KEGG.html">9</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_3/MSigDb.html">177</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
-<tr class="even">
-<td>Cluster_4</td>
-<td align="center"><a href="cluster/Cluster_4/BioSystems.html">155</a></td>
-<td align="center"><a href="cluster/Cluster_4/KEGG.html">11</a></td>
-<td align="center"><a href="cluster/Cluster_4/MSigDb.html">249</a></td>
-<td align="center">0</td>
+<tr>
+<td style="text-align:left;">
+Cluster_4
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_4/BioSystems.html">155</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_4/KEGG.html">11</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_4/MSigDb.html">249</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td>Cluster_5</td>
-<td align="center"><a href="cluster/Cluster_5/BioSystems.html">39</a></td>
-<td align="center"><a href="cluster/Cluster_5/KEGG.html">2</a></td>
-<td align="center"><a href="cluster/Cluster_5/MSigDb.html">137</a></td>
-<td align="center"><a href="cluster/Cluster_5/PubTator.html">1</a></td>
+<tr>
+<td style="text-align:left;">
+Cluster_5
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_5/BioSystems.html">39</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_5/KEGG.html">2</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_5/MSigDb.html">137</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_5/PubTator.html">1</a>
+</td>
 </tr>
-<tr class="even">
-<td>Cluster_6</td>
-<td align="center"><a href="cluster/Cluster_6/BioSystems.html">54</a></td>
-<td align="center"><a href="cluster/Cluster_6/KEGG.html">6</a></td>
-<td align="center"><a href="cluster/Cluster_6/MSigDb.html">186</a></td>
-<td align="center">0</td>
+<tr>
+<td style="text-align:left;">
+Cluster_6
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_6/BioSystems.html">54</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_6/KEGG.html">6</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_6/MSigDb.html">186</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
-<tr class="odd">
-<td>Cluster_7</td>
-<td align="center"><a href="cluster/Cluster_7/BioSystems.html">77</a></td>
-<td align="center"><a href="cluster/Cluster_7/KEGG.html">2</a></td>
-<td align="center"><a href="cluster/Cluster_7/MSigDb.html">134</a></td>
-<td align="center">0</td>
+<tr>
+<td style="text-align:left;">
+Cluster_7
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_7/BioSystems.html">77</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_7/KEGG.html">2</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_7/MSigDb.html">134</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
-<tr class="even">
-<td>Cluster_8</td>
-<td align="center"><a href="cluster/Cluster_8/BioSystems.html">105</a></td>
-<td align="center"><a href="cluster/Cluster_8/KEGG.html">10</a></td>
-<td align="center"><a href="cluster/Cluster_8/MSigDb.html">119</a></td>
-<td align="center">0</td>
+<tr>
+<td style="text-align:left;">
+Cluster_8
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_8/BioSystems.html">105</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_8/KEGG.html">10</a>
+</td>
+<td style="text-align:center;">
+<a href="cluster/Cluster_8/MSigDb.html">119</a>
+</td>
+<td style="text-align:center;">
+0
+</td>
 </tr>
 </tbody>
 </table>
-</div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -620,40 +941,20 @@ div.tocify {
 </div>
 <div id="more-plots" class="section level2">
 <h2><span class="header-section-number">2.4</span> More plots</h2>
-<div align="center">
-<p><img src="index_files/figure-html/plot_series-1.png" width="750px" /></p>
-</div>
-<div style="color:darkblue; padding:0 2cm">
+<p><img src="figure/plot_series-1.png" width="750px" /></p>
 <p><strong>Figure 6.</strong> Plot the patterns of all clusters using the mean and standard error of samples of each group.</p>
-</div>
 <p> </p>
-<div align="center">
-<p><img src="index_files/figure-html/plot_means-1.png" width="480px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p><img src="figure/plot_means-1.png" width="480px" /></p>
 <p><strong>Figure 7.</strong> Color represents the average expression (normalized across samples) of all genes in the same cluster and all samples in the same group (red = higher).</p>
-</div>
 <p> </p>
-<div align="center">
-<p><img src="index_files/figure-html/plot_group_means-1.png" width="480px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p><img src="figure/plot_group_means-1.png" width="480px" /></p>
 <p><strong>Figure 8.</strong> Color represents the average expression (normalized across samples) of individual genes in all samples of the same group (red = higher).</p>
-</div>
 <p> </p>
-<div align="center">
-<p><img src="index_files/figure-html/plot_heatmap-1.png" width="600px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p><img src="figure/plot_heatmap-1.png" width="600px" /></p>
 <p><strong>Figure 9.</strong> Color represents the expression level (normalized across samples) of each gene and each sample (red = higher).</p>
-</div>
 <p> </p>
-<div align="center">
-<p><img src="index_files/figure-html/plot_recluster_size-1.png" width="480px" /></p>
-</div>
-<div style="color:darkblue; padding:0 3cm">
+<p><img src="figure/plot_recluster_size-1.png" width="480px" /></p>
 <p><strong>Figure 10.</strong> Color represents the size of each cluster (number of genes) after a reclustering cycle.</p>
-</div>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -668,16 +969,20 @@ div.tocify {
 <p>To reproduce this report:</p>
 <ol style="list-style-type: decimal">
 <li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
-<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
 <ul>
-<li><em>output</em> : where you want to put the output files</li>
+<li><em>output</em> : where you want to put the output files
+<ul>
 <li><em>home</em> : the URL if you have a home page for your project</li>
 <li><em>analyst</em> : your name</li>
 <li><em>description</em> : background information about your project, analysis, etc.</li>
 <li><em>input</em> : where are your input data, read instruction for preparing them</li>
 <li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
 </ul></li>
-<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
 </ol>
 <pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
 if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
@@ -688,9 +993,9 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 </div>
 <div id="session-information" class="section level2">
 <h2><span class="header-section-number">3.2</span> Session information</h2>
-<pre><code>## R version 3.2.2 (2015-08-14)
+<pre><code>## R version 3.3.3 (2017-03-06)
 ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X 10.10.5 (Yosemite)
+## Running under: OS X Yosemite 10.10.5
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -699,19 +1004,25 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] rchive_0.0.0.9000   gplots_3.0.1        htmlwidgets_0.8    
-##  [4] DT_0.2              RoCA_0.0.0.9000     awsomics_0.0.0.9000
-##  [7] RCurl_1.95-4.8      bitops_1.0-6        devtools_1.13.2    
-## [10] yaml_2.1.13         rmarkdown_1.3       knitr_1.14         
+##  [1] rchive_0.0.0.9000   gplots_3.0.1        htmlwidgets_0.9    
+##  [4] DT_0.2              kableExtra_0.9.0    RoCA_0.0.0.9000    
+##  [7] awsomics_0.0.0.9000 RCurl_1.95-4.9      bitops_1.0-6       
+## [10] devtools_1.13.4     yaml_2.1.16         rmarkdown_1.10.3   
+## [13] knitr_1.18         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.12       magrittr_1.5       highr_0.6         
-##  [4] stringr_1.2.0      caTools_1.17.1     tools_3.2.2       
-##  [7] KernSmooth_2.23-15 withr_1.0.2        htmltools_0.3.5   
-## [10] gtools_3.5.0       rprojroot_1.2      digest_0.6.12     
-## [13] formatR_1.4        memoise_1.1.0      evaluate_0.9      
-## [16] gdata_2.17.0       stringi_1.1.1      backports_1.1.0   
-## [19] jsonlite_1.0</code></pre>
+##  [1] Rcpp_0.12.14       highr_0.6          pillar_1.1.0      
+##  [4] plyr_1.8.4         tools_3.3.3        digest_0.6.13     
+##  [7] jsonlite_1.5       evaluate_0.10.1    memoise_1.1.0     
+## [10] tibble_1.4.2       viridisLite_0.2.0  pkgconfig_2.0.1   
+## [13] rlang_0.1.6        rstudioapi_0.7     withr_2.1.1       
+## [16] stringr_1.2.0      httr_1.3.1         xml2_1.1.1        
+## [19] caTools_1.17.1     gtools_3.5.0       hms_0.4.0         
+## [22] rprojroot_1.3-2    R6_2.2.2           gdata_2.18.0      
+## [25] readr_1.1.1        magrittr_1.5       backports_1.1.2   
+## [28] scales_0.5.0       htmltools_0.3.6    rvest_0.3.2       
+## [31] colorspace_1.3-2   KernSmooth_2.23-15 stringi_1.1.6     
+## [34] munsell_0.4.3</code></pre>
 <div align="right">
 <em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
 </div>
@@ -745,7 +1056,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

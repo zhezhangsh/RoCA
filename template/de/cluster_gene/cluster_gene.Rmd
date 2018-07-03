@@ -389,7 +389,7 @@ The gene clusters were further refined with the following steps:
   
 `r ln`
 
-These steps clustered **`r sum(sapply(cls, length))`** of **`r nrow(d)`** selected genes into **`r length(cls)`** refined clusters.
+These steps clustered **`r sum(n)`** of **`r nrow(d)`** selected genes into **`r length(cl)`** refined clusters.
 
 ```{r plot_recluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms, 1, 6)[1], fig.height=CalculateColoredBlockSize(ms, 1, 6)[2], out.width='600px'}
 
@@ -482,8 +482,7 @@ rownames(tbl) <- NULL;
   - and heatmap of all genes and samples in the cluster.
 
 `r kable(tbl) %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
-    position="left", full_width=FALSE)`
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 `r home.url`
 
@@ -508,9 +507,8 @@ tbl[is.na(tbl)]<-'0';
 
 `r OrderTable()` Numbers of predefined gene sets significantly enriched in each gene cluster. Gene sets were split based on their sources, such as the NCBI BioSystems and KEGG databases. Click on each number to see full list of the gene sets. 
 
-`r kable(tbl, align=rep('c', ncol(tbl)))  %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
-    position='left', full_width=FALSE)`
+`r kable(tbl, align=rep('c', ncol(tbl))) %>% kable_styling(
+bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 `r home.url`
 
