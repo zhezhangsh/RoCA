@@ -459,7 +459,7 @@ ms<-sapply(names(cl), function(nm) {
   par(mar=c(2, 5, 5, 2)); 
   # plot(hclust(as.dist(1-cor(mtrx[, colSums(abs(mtrx))>0, drop=FALSE]))), 
   #      main='Hierarchical sample clustering', xlab='', sub=''); 
-  plot(hclust(as.dist(mtrx[, colSums(abs(mtrx))>0, drop=FALSE])), 
+  plot(hclust(dist(t(mtrx[, colSums(abs(mtrx))>0, drop=FALSE]))), 
        main='Hierarchical sample clustering', xlab='', sub=''); 
   # Heatmap
   rownames(mtrx)<-paste(rownames(mtrx), CleanHtmlTags(anno[rownames(mtrx), 1]), sep='_'); 
