@@ -389,7 +389,7 @@ The gene clusters were further refined with the following steps:
   
 `r ln`
 
-These steps clustered **`r sum(n)`** of **`r nrow(d)`** selected genes into **`r length(cl)`** refined clusters.
+These steps clustered **`r sum(sapply(cl, length))`** of **`r nrow(d)`** selected genes into **`r length(cl)`** refined clusters.
 
 ```{r plot_recluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms, 1, 6)[1], fig.height=CalculateColoredBlockSize(ms, 1, 6)[2], out.width='600px'}
 
