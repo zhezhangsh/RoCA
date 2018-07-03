@@ -423,7 +423,8 @@ rownames(tbl) <- NULL;
 `r OrderTable()` Summary of coefficient of variation (CV) from each normalization method. The columns are 1) average CV of all genes; 2) correlation of CV between the original read counts and normalized read counts of all genes; 3) the number of gene with decreased CV; 4) the number of genes with increased CV; and 5) the ratio of decreased to increased genes. 
 
 `r kable(FormatNumeric(tbl)) %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+    position='left', full_width=FALSE)`
 
 `r home.url`
 
