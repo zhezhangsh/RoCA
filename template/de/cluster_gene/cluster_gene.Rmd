@@ -435,7 +435,7 @@ More info:
 
 Clusters created by the last section were further analyzed.
 
-### Summary statistics and visualization of individual clusters
+### Summary of individual clusters
 
 ```{r cluster_stats, include=FALSE}
 ms<-sapply(names(cl), function(nm) { 
