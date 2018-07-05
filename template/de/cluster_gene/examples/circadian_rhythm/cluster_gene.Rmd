@@ -457,8 +457,10 @@ ms<-sapply(names(cl), function(nm) {
   
   # Hierarchical clustering 
   par(mar=c(2, 5, 5, 2)); 
-  plot(hclust(as.dist(1-cor(mtrx[, colSums(abs(mtrx))>0, drop=FALSE]))), main='Hierarchical sample clustering', xlab='', sub=''); 
-  
+  # plot(hclust(as.dist(1-cor(mtrx[, colSums(abs(mtrx))>0, drop=FALSE]))), 
+  #      main='Hierarchical sample clustering', xlab='', sub=''); 
+  plot(hclust(dist(t(mtrx[, colSums(abs(mtrx))>0, drop=FALSE]))), 
+       main='Hierarchical sample clustering', xlab='', sub=''); 
   # Heatmap
   rownames(mtrx)<-paste(rownames(mtrx), CleanHtmlTags(anno[rownames(mtrx), 1]), sep='_'); 
   PlotColoredBlock(mtrx, min=-1*max(abs(mtrx), na.rm=TRUE), max=max(abs(mtrx), na.rm=TRUE), num.breaks = 127, 

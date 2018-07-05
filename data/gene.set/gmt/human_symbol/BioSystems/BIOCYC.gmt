@@ -1,0 +1,129 @@
+142200_HUMAN_MANNOSYL-CHITO-DOLICHOL-BIOSYNTHESIS:_dolichyl-diphosphooligosaccharide_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142200	DPAGT1	DPM2	ALG3	ALG5	ALG6	DPM3	ALG1	ALG8	ALG13
+142202_HUMAN_PWY-5067:_glycogen_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142202	GBE1	GYG1	GYS1	GYS2	UGP2	GYG2	PGM2
+142205_HUMAN_PWY-5514:_UDP-N-acetyl-D-galactosamine_biosynthesis_II	http://www.ncbi.nlm.nih.gov/biosystems/142205	GALE	GCK	UAP1	GNPDA1	GNPNAT1	HKDC1	UAP1L1	GNPDA2
+142207_HUMAN_PWY-922:_mevalonate_pathway	http://www.ncbi.nlm.nih.gov/biosystems/142207	ACAT1	ACAT2	HMGCR	HMGCS1	HMGCS2	IDI1	MVD	MVK	PMVK	IDI2
+142215_HUMAN_NADSYN-PWY:_NAD_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142215	IDO1	TDO2	KMO	KYNU	NMNAT2	QPRT	HAAO	NADSYN1	NMNAT1	AFMID	IDO2	NMNAT3
+142217_HUMAN_PWY-5653:_NAD_biosynthesis_from_2-amino-3-carboxymuconate_semialdehyde	http://www.ncbi.nlm.nih.gov/biosystems/142217	NMNAT2	QPRT	NADSYN1	NMNAT1	NMNAT3
+142227_HUMAN_PWY-4081:_glutathione_redox_reactions_I	http://www.ncbi.nlm.nih.gov/biosystems/142227	GPX1	GPX2	GPX3	GPX4	GPX7	GSR
+142236_HUMAN_PWY-2201:_folate_transformations_I	http://www.ncbi.nlm.nih.gov/biosystems/142236	MTHFD1	MTR	SHMT1	SHMT2	MTHFD2	ALDH1L1	ALDH1L2	ST20
+142237_HUMAN_PLPSAL-PWY:_pyridoxal_5'-phosphate_salvage	http://www.ncbi.nlm.nih.gov/biosystems/142237	ALPP	PDXK	PNPO	PDXP	KLHL23
+142242_HUMAN_TRIGLSYN-PWY:_triacylglycerol_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142242	PLPP1	PLPP2	PLPP3	DGAT1	PLPPR4	LPCAT3	AGPAT1	AGPAT2	ABHD5	AGPAT5	AGPAT3	AGPAT4	GPAM	PLPPR2	PLPPR3	DGAT2	GPAT3	MOGAT1	MBOAT2	GPAT4	GPAT2	PLPP4	LCLAT1	LPCAT4	MOGAT3
+142255_HUMAN_PWY-5667:_CDP-diacylglycerol_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142255	CDS1	GK	GK2	CDS2	LPCAT3	AGPAT1	AGPAT2	ABHD5	AGPAT5	AGPAT3	AGPAT4	GPAM	GPAT3	MBOAT2	GPAT4	GPAT2	LCLAT1	LPCAT4	GK5
+142257_HUMAN_PWY3O-450:_phosphatidylcholine_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142257	CHKA	CPT1B	PCYT1A	PCYT1B	CEPT1	CHPT1
+142262_HUMAN_PWY4FS-6:_phosphatidylethanolamine_biosynthesis_II	http://www.ncbi.nlm.nih.gov/biosystems/142262	CPT1B	PCYT2	CEPT1	ETNK2	ETNK1	SELENOI
+142266_HUMAN_PWY66-3:_cholesterol_biosynthesis_II_(via_24,25-dihydrolanosterol)	http://www.ncbi.nlm.nih.gov/biosystems/142266	CYP51A1	DHCR7	DHCR24	FDFT1	LBR	LSS	MSMO1	SC5D	SQLE	TM7SF2	EBP	NSDHL	HSD17B7
+142267_HUMAN_PWY66-341:_cholesterol_biosynthesis_I	http://www.ncbi.nlm.nih.gov/biosystems/142267	CYP51A1	DHCR7	DHCR24	FDFT1	LBR	LSS	MSMO1	SC5D	SQLE	TM7SF2	EBP	NSDHL	HSD17B7
+142268_HUMAN_PWY66-4:_cholesterol_biosynthesis_III_(via_desmosterol)	http://www.ncbi.nlm.nih.gov/biosystems/142268	CYP51A1	DHCR7	DHCR24	FDFT1	LBR	LSS	MSMO1	SC5D	SQLE	TM7SF2	EBP	NSDHL	HSD17B7
+142269_HUMAN_PWY66-5:_superpathway_of_cholesterol_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142269	ACAT1	ACAT2	CYP51A1	DHCR7	DHCR24	FDFT1	FDPS	HMGCR	HMGCS1	HMGCS2	IDI1	LBR	LSS	MVD	MVK	MSMO1	SC5D	SQLE	TM7SF2	GGPS1	PMVK	EBP	NSDHL	HSD17B7	IDI2
+142277_HUMAN_PWY-841:_purine_nucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142277	ADSS	AK1	AK2	AK4	ATIC	ATP5A1	ATP5B	ATP5C1	ATP5D	ATP5I	GART	GUK1	IMPDH1	IMPDH2	ATP6	ATP8	NME1	NME2	NME3	PFAS	PPAT	RRM1	RRM2	NME5	GMPS	ATP5J2	NME6	ATP5H	PAICS	ATP5L	AK5	ATP5S	NME7	RRM2B	AK7	ADSSL1	AK8	ATP5L2	NME2P1	ATP5EP2	NME1-NME2
+142279_HUMAN_SALVADEHYPOX-PWY:_adenosine_nucleotides_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142279	ADA	PNP	NT5E	XDH	NT5C2	NT5C3A	RDH14	NT5C1A
+142283_HUMAN_PWY0-162:_superpathway_of_pyrimidine_ribonucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/142283	CAD	CTPS1	NME1	NME2	NME3	UMPS	NME5	NME6	NME7	CMPK1	CTPS2	CMPK2	NME2P1	NME1-NME2
+142304_HUMAN_UDPNACETYLGALSYN-PWY:_UDP-N-acetyl-D-glucosamine_biosynthesis_II	http://www.ncbi.nlm.nih.gov/biosystems/142304	GFPT1	UAP1	GFPT2	GNPNAT1	UAP1L1
+142307_HUMAN_PWY66-161:_oxidative_ethanol_degradation_III	http://www.ncbi.nlm.nih.gov/biosystems/142307	ALDH2	ALDH3A2	CYP2E1	CYP2G1P	ACSS2	ACSS3
+142308_HUMAN_PWY66-162:_ethanol_degradation_IV	http://www.ncbi.nlm.nih.gov/biosystems/142308	ALDH2	ALDH3A2	CAT	ACSS2	ACSS3
+142309_HUMAN_PWY66-21:_ethanol_degradation_II	http://www.ncbi.nlm.nih.gov/biosystems/142309	ADH1B	ALDH2	ALDH3A2	ACSS2	ACSS3
+142356_HUMAN_PWY-5030:_histidine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142356	HAL	MTHFD1	FTCD	UROC1	AMDHD1
+142358_HUMAN_ILEUDEG-PWY:_isoleucine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142358	ACADSB	ACAT1	ACAT2	BCAT1	BCAT2	BCKDHA	BCKDHB	DBT	DLD	ECHS1	HSD17B10	HADHA
+142359_HUMAN_LEU-DEG2-PWY:_leucine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142359	AUH	BCAT1	BCAT2	BCKDHA	BCKDHB	DBT	DLD	IVD	HMGCLL1	MCCC1	MCCC2
+142373_HUMAN_PWY-5328:_superpathway_of_methionine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142373	BCKDHA	BCKDHB	CBS	CDO1	DBT	DLD	GOT1	MAT1A	MAT2A	MUT	PCCA	SUOX	MAT2B	MCEE
+142383_HUMAN_PWY-5651:_tryptophan_degradation_to_2-amino-3-carboxymuconate_semialdehyde	http://www.ncbi.nlm.nih.gov/biosystems/142383	IDO1	TDO2	KMO	KYNU	HAAO	AFMID	IDO2
+142385_HUMAN_TRYPTOPHAN-DEGRADATION-1:_tryptophan_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142385	IDO1	TDO2	KMO	KYNU	HAAO	AFMID	ACMSD	IDO2
+142386_HUMAN_TYRFUMCAT-PWY:_tyrosine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142386	FAH	GSTZ1	HGD	HPD	TAT
+142387_HUMAN_VALDEG-PWY:_valine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142387	ABAT	BCAT1	BCAT2	BCKDHA	BCKDHB	DBT	DLD	ECHS1	HADHA	ALDH6A1	HIBCH	ACAD8
+142412_HUMAN_PYRUVDEHYD-PWY:_pyruvate_decarboxylation_to_acetyl_CoA	http://www.ncbi.nlm.nih.gov/biosystems/142412	DLAT	DLD	PDHA1	PDHA2	PDHB
+142413_HUMAN_PWY-5130:_2-oxobutanoate_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142413	BCKDHA	BCKDHB	DBT	DLD	MUT	PCCA	MCEE
+142418_HUMAN_LIPAS-PWY:_triacylglycerol_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142418	LIPC	LIPE	PNLIP	PNLIPRP2	PNPLA4	LIPG	MGLL	ABHD12	PNPLA2	ABHD6	PNLIPRP3
+142419_HUMAN_LIPASYN-PWY:_phospholipases	http://www.ncbi.nlm.nih.gov/biosystems/142419	PLA2G1B	PLA2G2A	PLCB2	PLCB3	PLCD1	PLCG1	PLCG2	PLD1	PLD2	PLA2G10	PLA2G4C	PLA2G16	PLCH1	PLCB1	PLD3	PLA2G2E	PLA2G3	PNPLA8	PLCE1	TMEM216	PLA2G12A	PLCD4	PLCZ1	PLCD3	PLD4	PLA2G4E	PLB1	PLD6	PLA2G4F	PLA2G4D
+142421_HUMAN_FAO-PWY:_fatty_acid_beta-oxidation	http://www.ncbi.nlm.nih.gov/biosystems/142421	ACADL	ECI1	ECHS1	ACSL1	ACSL3	HSD17B10	HADHB	HADH	SCP2	ACAA2	SLC27A2	ACSBG1	ACSL6	ACSL5	ACSBG2
+142435_HUMAN_PWY-4061:_glutathione-mediated_detoxification	http://www.ncbi.nlm.nih.gov/biosystems/142435	ANPEP	KYAT1	GSTA1	GSTA4	GSTM1	GSTM3	GSTM4	GSTM5	GSTP1	GSTT1	GSTZ1	MGST1	MGST2	MGST3	GGH	GSTTP1	KYAT3	GSTA5	GSTK1
+142436_HUMAN_PWY66-241:_bupropion_degradation	http://www.ncbi.nlm.nih.gov/biosystems/142436	CYP2A6	CYP2B6	CYP2S1	CYP2U1	CYP4X1
+142437_HUMAN_PWY66-201:_nicotine_degradation_IV	http://www.ncbi.nlm.nih.gov/biosystems/142437	AOX1	CYP2A6	FMO3	FMO5	INMT	CYP2G1P	CYP2S1	UGT1A4	CYP2U1	CYP4X1
+142438_HUMAN_PWY66-221:_nicotine_degradation_III	http://www.ncbi.nlm.nih.gov/biosystems/142438	AOX1	CYP2A6	CYP2G1P	CYP2S1	UGT1A4	CYP2U1	CYP4X1
+142460_HUMAN_PENTOSE-P-PWY:_pentose_phosphate_pathway	http://www.ncbi.nlm.nih.gov/biosystems/142460	G6PD	PGD	RPE	TKT	RPIA	PGLS
+545264_HUMAN_PWY-5143:_fatty_acid_activation	http://www.ncbi.nlm.nih.gov/biosystems/545264	ACSL1	ACSL3	SLC27A2	ACSBG1	ACSL5	ACSBG2
+545273_HUMAN_PWY-6557:_glycoaminoglycan-protein_linkage_region_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545273	B4GALT7	B3GAT3	B3GAT1	XYLT1	XYLT2	B3GAT2
+545274_HUMAN_PWY-6558:_heparan_sulfate_biosynthesis_(late_stages)	http://www.ncbi.nlm.nih.gov/biosystems/545274	EXT1	EXT2	EXTL1	EXTL2	EXTL3	NDST1	NDST2	NDST3	HS6ST1	HS3ST4	HS3ST3B1	HS3ST3A1	HS3ST2	HS3ST1	GLCE	A4GNT	NDST4	HS6ST2	HS3ST5	HS6ST3
+545275_HUMAN_PWY-6566:_chondroitin_and_dermatan_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545275	CHSY1	CHPF2	CSGALNACT2	CSGALNACT1	CHPF	CHSY3
+545276_HUMAN_PWY-6567:_chondroitin_sulfate_biosynthesis_(late_stages)	http://www.ncbi.nlm.nih.gov/biosystems/545276	CHST2	CHST3	UST	CHSY1	CHST11	CHST15	CSGALNACT2	CHST12	CSGALNACT1	CHST7	CHPF	CHST13	CHSY3
+545278_HUMAN_PWY-6564:_heparan_sulfate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545278	EXT1	EXT2	EXTL1	EXTL2	EXTL3	NDST1	NDST2	NDST3	HS6ST1	HS3ST4	HS3ST3B1	HS3ST3A1	HS3ST2	HS3ST1	B4GALT7	GLCE	B3GAT3	B3GAT1	A4GNT	XYLT1	XYLT2	NDST4	HS6ST2	B3GAT2	HS3ST5	HS6ST3
+545279_HUMAN_PWY-6569:_chondroitin_sulfate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545279	CHST2	CHST3	UST	B4GALT7	CHSY1	B3GAT3	B3GAT1	CHST11	CHST15	CHPF2	CSGALNACT2	CHST12	CSGALNACT1	CHST7	XYLT1	XYLT2	CHPF	B3GAT2	CHST13	CHSY3
+545280_HUMAN_PWY-6571:_dermatan_sulfate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545280	UST	B4GALT7	CHSY1	B3GAT3	B3GAT1	DSE	CHST15	CHPF2	CSGALNACT2	CSGALNACT1	XYLT1	XYLT2	CHPF	CHST14	B3GAT2	CHSY3
+545288_HUMAN_PWY-5910:_superpathway_of_geranylgeranyldiphosphate_biosynthesis_I_(via_mevalonate)	http://www.ncbi.nlm.nih.gov/biosystems/545288	ACAT1	ACAT2	FDPS	HMGCR	HMGCS1	HMGCS2	IDI1	MVD	MVK	GGPS1	PMVK	IDI2
+545289_HUMAN_PWY-5920:_heme_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545289	ALAD	ALAS1	ALAS2	CPOX	FECH	HMBS	PPOX
+545293_HUMAN_PWY-6857:_retinol_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545293	CES1	LIPC	PNLIP	RBP1	RBP2	RBP4	CES2	LRAT	DHRS3	DHRS9	DHRS4	RDH8	RDH11	RBP5	RDH10	CES5A	CES4A
+545294_HUMAN_PWY-6861:_the_visual_cycle_I_(vertebrates)	http://www.ncbi.nlm.nih.gov/biosystems/545294	RBP1	RBP2	RBP3	RBP4	RDH5	RLBP1	RPE65	LRAT	DHRS3	DHRS9	DHRS4	RDH8	RDH11	RBP5	RDH10
+545295_HUMAN_PWY-6872:_retinoate_biosynthesis_I	http://www.ncbi.nlm.nih.gov/biosystems/545295	ALDH1A1	ALDH1A3	RBP1	RBP4	RDH16	ALDH1A2	RBP5	SDR16C5
+545297_HUMAN_PWY-6030:_serotonin_and_melatonin_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545297	AANAT	ASMT	DDC	TPH1	TPH2
+545299_HUMAN_PWY66-374:_C20_prostanoid_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545299	PTGDS	PTGS1	PTGS2	TBXAS1	PTGES3	HPGDS	PTGES2
+545300_HUMAN_PWY66-375:_leukotriene_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545300	ALOX5	DPEP1	LTA4H	LTC4S	DPEP2
+545302_HUMAN_PWY66-378:_androgen_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545302	CYP17A1	HSD3B1	HSD17B3	SRD5A1	SRD5A2	AKR1C3
+545303_HUMAN_PWY66-380:_estradiol_biosynthesis_I	http://www.ncbi.nlm.nih.gov/biosystems/545303	CYP2A6	CYP19A1	HSD17B1	HSD17B11	HSD17B7
+545307_HUMAN_PWY3DJ-11281:_sphingomyelin_metabolism/ceramide_salvage	http://www.ncbi.nlm.nih.gov/biosystems/545307	SMPD1	SMPD2	SMPD3	SMPD4	SAMD8	SGMS2	SGMS1	ENPP7
+545308_HUMAN_PWY3DJ-12:_ceramide_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545308	KDSR	SPTLC2	SPTLC1	CERS1	DEGS2	SPTSSA
+545309_HUMAN_PWY-6000:_gamma-linolenate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545309	ACSL1	ACSL3	ACSM3	FADS2	SLC27A2	ACSBG1	ACSL5	ACSM5	ACSBG2	ACSM1	ACSM6	ACSM4
+545310_HUMAN_PWY-5996:_oleate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545310	SCD	FADS2	ACOT2	SCD5	ACOT4	FADS6	ACOT1
+545311_HUMAN_PWY-5994:_palmitate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545311	FASN	NDUFAB1	ACOT2	OXSM	ACOT4	LOC344967	ACOT1
+545313_HUMAN_PWY-5972:_stearate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545313	ACSL1	ACSL3	ACOT2	SLC27A2	ACSBG1	ACSL5	ELOVL1	ELOVL6	ACSBG2	ACOT4	ACOT1
+545314_HUMAN_PWY-6352:_3-phosphoinositide_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545314	PIK3C2A	PIK3C2B	PIK3C2G	PIK3C3	PIK3CA	PIK3CB	PIK3CD	PIK3CG	PIK3R1	PIK3R2	PI4KA	PI4KB	PIP5K1A	PIP5K1B	PIP4K2B	PIK3R3	FIG4	CDIPT	SACM1L	PIP5K1C	PIK3R5	PIK3R4	PI4K2B	PI4K2A	PIP5KL1	PIK3R6	PIKFYVE
+545315_HUMAN_PWY-6367:_D-myo-inositol-5-phosphate_metabolism	http://www.ncbi.nlm.nih.gov/biosystems/545315	PIP4K2A	PLCB2	PLCB3	PLCD1	PLCG1	PLCG2	MTMR3	PLCH1	PLCB1	PLCE1	TMEM216	TMEM55A	MTMR14	PIP4K2C	PLCD4	PLCZ1	TMEM55B	PLCD3
+545316_HUMAN_PWY-6061:_bile_acid_biosynthesis,_neutral_pathway	http://www.ncbi.nlm.nih.gov/biosystems/545316	BAAT	CYP7A1	CYP8B1	CYP27A1	HSD17B4	POR	SCP2	AKR1D1	ACOX2	ACAA2	SLC27A5	SLC27A2	HSD3B7
+545317_HUMAN_PWY-6074:_zymosterol_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545317	CYP51A1	LBR	MSMO1	TM7SF2	NSDHL	HSD17B7
+545323_HUMAN_PWY-5695:_urate_biosynthesis/inosine_5'-phosphate_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545323	IMPDH1	IMPDH2	PNP	NT5E	XDH	NT5C2
+545325_HUMAN_PWY-6358:_superpathway_of_D-myo-inositol_(1,4,5)-trisphosphate_metabolism	http://www.ncbi.nlm.nih.gov/biosystems/545325	IMPA1	IMPA2	INPP1	INPP5A	INPP5B	INPP5D	INPPL1	ITPKA	ITPKB	OCRL	PTEN	SYNJ1	SYNJ2	MINPP1	INPP5F	INPP5J	INPP5K	IMPAD1	ITPKC	IPMK
+545326_HUMAN_PWY-6351:_D-myo-inositol_(1,4,5)-trisphosphate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545326	PI4KA	PI4KB	PIP4K2A	PLCB2	PLCB3	PLCD1	PLCG1	PLCG2	PIP5K1A	PIP5K1B	PIP4K2B	CDIPT	PLCH1	PLCB1	PIP5K1C	PLCE1	TMEM216	PI4K2B	PI4K2A	PIP4K2C	PLCD4	PLCZ1	PLCD3	PIP5KL1
+545327_HUMAN_PWY-6363:_D-myo-inositol_(1,4,5)-trisphosphate_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545327	IMPA1	IMPA2	INPP1	INPP5A	INPP5B	INPPL1	OCRL	SYNJ1	SYNJ2	INPP5F	INPP5J	INPP5K	IMPAD1
+545328_HUMAN_PWY-6364:_D-myo-inositol_(1,3,4)-trisphosphate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545328	INPP5A	INPP5B	INPP5D	INPPL1	ITPKA	ITPKB	OCRL	PTEN	SYNJ1	SYNJ2	MINPP1	INPP5J	INPP5K	ITPKC	IPMK
+545331_HUMAN_PWY-6369:_inositol_pyrophosphates_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/545331	PPIP5K1	IP6K1	PPIP5K2	IP6K2	IPPK	IP6K3	IPMK
+545332_HUMAN_PWY-6362:_1D-myo-inositol_hexakisphosphate_biosynthesis_II_(mammalian)	http://www.ncbi.nlm.nih.gov/biosystems/545332	INPP5A	INPP5B	INPP5D	INPPL1	ITPK1	ITPKA	ITPKB	OCRL	SYNJ1	SYNJ2	INPP5J	INPP5K	IPPK	ITPKC	IPMK
+545337_HUMAN_PWY-0:_putrescine_degradation_III	http://www.ncbi.nlm.nih.gov/biosystems/545337	ALDH2	ALDH3A1	ALDH3B1	ALDH3B2	ALDH3A2	MAOA	MAOB	SAT1	SAT2
+545347_HUMAN_PWY66-373:_sucrose_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545347	ALDOA	ALDOB	ALDOC	KHK	SI	TKFC	GALM
+545348_HUMAN_PWY-6111:_mitochondrial_L-carnitine_shuttle	http://www.ncbi.nlm.nih.gov/biosystems/545348	CPT1A	CPT1B	CPT2	CRAT	CPT1C
+545349_HUMAN_PWY-6368:_3-phosphoinositide_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545349	INPP4A	INPP5B	INPP5D	INPPL1	OCRL	PTEN	INPP4B	SYNJ1	SYNJ2	MTMR3	INPP5F	SACM1L	PMPCA	INPP5J	INPP5K	TMEM55A	INPP5E	MTMR14	TMEM55B	TPTE2
+545351_HUMAN_PWY3DJ-11470:_sphingosine_and_sphingosine-1-phosphate_metabolism	http://www.ncbi.nlm.nih.gov/biosystems/545351	ASAH1	SPHK1	PTGR1	ASAH2	SPHK2	SGPP1	ACER1	SGPP2	ACER2
+545352_HUMAN_PWY-5451:_acetone_degradation_I_(to_methylglyoxal)	http://www.ncbi.nlm.nih.gov/biosystems/545352	ADH1B	AKR1B1	CYP2A6	CYP2E1	CYP2S1	AKR1B10	CYP2U1	CYP4X1
+545353_HUMAN_PWY-6313:_serotonin_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545353	ADH1B	ADH6	ALDH2	ALDH3A2	MAOA	SULT1A2	SULT1A1
+545354_HUMAN_PWY-6342:_noradrenaline_and_adrenaline_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545354	ADH1B	ADH4	ADH6	ALDH2	ALDH3A2	COMT	MAOA	MAOB	PNMT	RNLS	LRTOMT
+545356_HUMAN_PWY-6398:_melatonin_degradation_I	http://www.ncbi.nlm.nih.gov/biosystems/545356	CYP1A2	CYP1B1	CYP2A6	CYP2C19	POR	SULT1A2	SULT1A1	CYP2S1	CYP2U1	CYP4X1
+545359_HUMAN_PWY-6402:_superpathway_of_melatonin_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545359	CYP1A2	CYP1B1	CYP2A6	CYP2C19	MAOA	POR	SULT1A2	SULT1A1	CYP2S1	CYP2U1	CYP4X1
+545362_HUMAN_PWY-6353:_purine_nucleotides_degradation	http://www.ncbi.nlm.nih.gov/biosystems/545362	ADA	IMPDH1	IMPDH2	PNP	NT5E	XDH	GDA	NT5C2	NT5C3A	RDH14	NT5C1A
+547492_HUMAN_PWY-6371:_superpathway_of_inositol_phosphate_compounds	http://www.ncbi.nlm.nih.gov/biosystems/547492	INPP5A	INPP5B	INPP5D	INPPL1	ITPK1	ITPKA	ITPKB	OCRL	PIK3C2A	PIK3C2B	PIK3C2G	PIK3C3	PIK3CA	PIK3CB	PIK3CD	PIK3CG	PIK3R1	PIK3R2	PI4KA	PI4KB	PIP4K2A	PLCB2	PLCB3	PLCD1	PLCG1	PLCG2	PTEN	PIP5K1A	PIP5K1B	PIP4K2B	PIK3R3	SYNJ1	SYNJ2	MTMR3	MINPP1	PPIP5K1	IP6K1	FIG4	CDIPT	SACM1L	PLCH1	PLCB1	PPIP5K2	PIP5K1C	PIK3R5	INPP5J	PIK3R4	PLCE1	TMEM216	IP6K2	INPP5K	PI4K2B	PI4K2A	TMEM55A	MTMR14	IPPK	PIP4K2C	ITPKC	PLCD4	PLCZ1	TMEM55B	PLCD3	IP6K3	PIP5KL1	PIK3R6	PIKFYVE	IPMK
+672815_HUMAN_PWY-7049:_eicosapentaenoate_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/672815	ACSL1	ACSL3	ACSM3	FADS2	ACSL5	ACSM5	ACSM1	ACSM6	ACSM4	ACOT1
+703092_HUMAN_PWY-4983:_citrulline-nitric_oxide_cycle	http://www.ncbi.nlm.nih.gov/biosystems/703092	ASL	ASS1	NOS1	NOS2	NOS3
+703094_HUMAN_PWY66-387:_fatty_acid_alpha-oxidation	http://www.ncbi.nlm.nih.gov/biosystems/703094	ALDH3A2	ACSL1	PHYH	SLC27A2	HACL1
+782379_HUMAN_PWY-7197:_pyrimidine_deoxyribonucleotide_phosphorylation	http://www.ncbi.nlm.nih.gov/biosystems/782379	DTYMK	NME1	NME2	NME3	NME5	NME6	NME7	CMPK1	CMPK2	NME2P1	NME1-NME2
+782380_HUMAN_PWY-7184:_pyrimidine_deoxyribonucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/782380	DTYMK	DUT	NME1	NME2	NME3	RRM1	RRM2	TYMS	NME5	NME6	NME7	RRM2B	NTPCR	NME2P1	NME1-NME2
+782381_HUMAN_PWY-7210:_pyrimidine_deoxyribonucleotides_biosynthesis_from_CTP	http://www.ncbi.nlm.nih.gov/biosystems/782381	DCTD	DTYMK	NME1	NME2	NME3	RRM1	RRM2	TYMS	NME5	NME6	NME7	RRM2B	NTPCR	NME2P1	NME1-NME2
+782382_HUMAN_PWY66-399:_gluconeogenesis	http://www.ncbi.nlm.nih.gov/biosystems/782382	ALDOA	ALDOB	ALDOC	BPGM	ENO2	FBP1	MDH1	MDH2	PC	PGAM2	PGK1	FBP2	GAPDHS	G6PC2	G6PC3	PGAM4
+782388_HUMAN_PWY-7176:_UTP_and_CTP_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/782388	CTPS1	NME1	NME2	NME3	NME5	NME6	NME7	CMPK1	CTPS2	CMPK2	NME2P1	NME1-NME2
+782390_HUMAN_PWY-7211:_superpathway_of_pyrimidine_deoxyribonucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/782390	CAD	CTPS1	DTYMK	DUT	NME1	NME2	NME3	RRM1	RRM2	TYMS	UMPS	NME5	NME6	NME7	RRM2B	CMPK1	CTPS2	NTPCR	CMPK2	NME2P1	NME1-NME2
+782391_HUMAN_PWY-7200:_superpathway_of_pyrimidine_deoxyribonucleoside_salvage	http://www.ncbi.nlm.nih.gov/biosystems/782391	CDA	DCK	DTYMK	NME1	NME2	NME3	TK1	TK2	TYMS	NME5	NME6	NME7	CMPK1	CMPK2	NME2P1	NME1-NME2
+782392_HUMAN_PWY-7199:_pyrimidine_deoxyribonucleosides_salvage	http://www.ncbi.nlm.nih.gov/biosystems/782392	CDA	DCK	TK1	TK2	TYMS
+782393_HUMAN_PWY-7205:_CMP_phosphorylation	http://www.ncbi.nlm.nih.gov/biosystems/782393	NME1	NME2	NME3	NME5	NME6	NME7	CMPK1	CMPK2	NME2P1	NME1-NME2
+782395_HUMAN_PWY-7224:_purine_deoxyribonucleosides_salvage	http://www.ncbi.nlm.nih.gov/biosystems/782395	DCK	DGUOK	GUK1	NME1	NME2	NME3	NME5	NME6	AK5	NME7	NME2P1	NME1-NME2
+782396_HUMAN_PWY66-400:_glycolysis	http://www.ncbi.nlm.nih.gov/biosystems/782396	ALDOA	ALDOB	ALDOC	BPGM	ENO2	GCK	HK1	HK3	PFKL	PFKM	PFKP	PGAM2	PGK1	PKLR	PKM	GAPDHS	PGAM4
+782397_HUMAN_PWY66-398:_TCA_cycle	http://www.ncbi.nlm.nih.gov/biosystems/782397	ACO2	CS	DLD	DLST	FH	IDH3A	IDH3G	MDH1	MDH2	OGDH	SDHA	SDHB	SDHC	SDHD	SUCLG2	SUCLG1	SUCLA2
+782398_HUMAN_PWY-7209:_pyrimidine_ribonucleosides_degradation	http://www.ncbi.nlm.nih.gov/biosystems/782398	CDA	DPYD	DPYS	UPP1	UPB1	UPP2
+782401_HUMAN_PWY-7181:_pyrimidine_deoxyribonucleosides_degradation	http://www.ncbi.nlm.nih.gov/biosystems/782401	CDA	TYMP	UPP1	SCO2	UPP2
+782404_HUMAN_PWY66-391:_fatty_acid_beta-oxidation_(peroxisome)	http://www.ncbi.nlm.nih.gov/biosystems/782404	ACAA1	ACOX1	EHHADH	ACSL1	ACSL3	HADH	HSD17B4	SCP2	ACOX2	SLC27A2	ACSBG1	ACSL6	ACSL5	ACSBG2
+835387_HUMAN_PWY-7226:_guanosine_deoxyribonucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/835387	NME1	NME2	NME3	RRM1	RRM2	NME5	NME6	NME7	RRM2B	NME2P1	NME1-NME2
+835388_HUMAN_PWY-7227:_adenosine_deoxyribonucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/835388	NME1	NME2	NME3	RRM1	RRM2	NME5	NME6	NME7	RRM2B	NME2P1	NME1-NME2
+835389_HUMAN_PWY-7219:_adenosine_ribonucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/835389	ADSS	AK1	AK2	AK4	ATP5A1	ATP5B	ATP5C1	ATP5D	ATP5I	ATP6	ATP8	ATP5J2	ATP5H	ATP5L	AK5	ATP5S	AK7	ADSSL1	AK8	ATP5L2	ATP5EP2
+835390_HUMAN_PWY-7221:_guanosine_ribonucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/835390	GUK1	IMPDH1	IMPDH2	NME1	NME2	NME3	NME5	GMPS	NME6	NME7	NME2P1	NME1-NME2
+835392_HUMAN_PWY66-401:_superpathway_of_tryptophan_utilization	http://www.ncbi.nlm.nih.gov/biosystems/835392	AANAT	ADH1B	ADH6	ALDH2	ALDH3A2	ASMT	CYP1A2	CYP1B1	CYP2A6	CYP2C19	DDC	IDO1	MAOA	MAOB	POR	SULT1A2	SULT1A1	TDO2	TPH1	KMO	KYNU	AKR1A1	NMNAT2	QPRT	HAAO	CYP2S1	NADSYN1	NMNAT1	CYP2U1	TPH2	AFMID	ACMSD	IDO2	CYP4X1	NMNAT3
+835393_HUMAN_PWY66-407:_superpathway_of_conversion_of_glucose_to_acetyl_CoA_and_entry_into_the_TCA_cycle	http://www.ncbi.nlm.nih.gov/biosystems/835393	ACO2	ALDOA	ALDOB	ALDOC	BPGM	CS	DLAT	DLD	DLST	ENO2	FH	GCK	HK1	HK3	IDH3A	IDH3G	MDH1	MDH2	OGDH	PDHA1	PDHA2	PDHB	PFKL	PFKM	PFKP	PGAM2	PGK1	PKLR	PKM	SDHA	SDHB	SDHC	SDHD	SUCLG2	SUCLG1	SUCLA2	GAPDHS	PGAM4
+907939_HUMAN_PWY-6309:_L-kynurenine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/907939	KYAT1	GOT2	IDO1	TDO2	KMO	KYNU	HAAO	KYAT3	AFMID	ACMSD	IDO2
+907941_HUMAN_PWY-7228:_guanosine_nucleotides_de_novo_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/907941	GUK1	IMPDH1	IMPDH2	NME1	NME2	NME3	RRM1	RRM2	NME5	GMPS	NME6	NME7	RRM2B	NME2P1	NME1-NME2
+907942_HUMAN_PWY66-409:_superpathway_of_purine_nucleotide_salvage	http://www.ncbi.nlm.nih.gov/biosystems/907942	ADA	ADK	ADSS	AK1	AK2	AK4	APRT	ATP5A1	ATP5B	ATP5C1	ATP5D	ATP5I	GUK1	HPRT1	IMPDH1	IMPDH2	ATP6	ATP8	NME1	NME2	NME3	PNP	RRM1	RRM2	NME5	GMPS	ATP5J2	NME6	ATP5H	ATP5L	AK5	ATP5S	NME7	RRM2B	AK7	ADSSL1	AK8	ATP5L2	NME2P1	ATP5EP2	NME1-NME2
+907943_HUMAN_PWY-7305:_superpathway_of_steroid_hormone_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/907943	CYP2A6	CYP11B1	CYP11B2	CYP17A1	CYP19A1	HSD3B1	HSD17B1	HSD17B3	SRD5A1	SRD5A2	AKR1C3	HSD17B11	HSD17B7
+1108762_HUMAN_PWY-7527:_methionine_salvage_cycle_III	http://www.ncbi.nlm.nih.gov/biosystems/1108762	MAT1A	MAT2A	MTAP	SRM	MAT2B	APIP	ADI1	ENOPH1	MRI1
+1108766_HUMAN_COA-PWY-1:_coenzyme_A_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/1108766	PANK1	PPCDC	PANK3	PPCS	COASY
+1108768_HUMAN_PWY-5966-1:_fatty_acid_biosynthesis_initiation	http://www.ncbi.nlm.nih.gov/biosystems/1108768	ACACA	ACACB	FASN	NDUFAB1	MCAT
+1108771_HUMAN_PWY-7455:_allopregnanolone_biosynthesis	http://www.ncbi.nlm.nih.gov/biosystems/1108771	AKR1C4	AKR1C1	AKR1C2	SRD5A1	SRD5A2	AKR1C3
+1108777_HUMAN_PWY66-414:_superpathway_of_choline_degradation_to_L-serine	http://www.ncbi.nlm.nih.gov/biosystems/1108777	ALDH7A1	BHMT	SARDH	SHMT1	SHMT2	DMGDH	CHDH
+1108778_HUMAN_PWY-3661-1:_glycine_betaine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/1108778	BHMT	SARDH	SHMT1	SHMT2	DMGDH
+1108780_HUMAN_PWY66-428:_threonine_degradation	http://www.ncbi.nlm.nih.gov/biosystems/1108780	BCKDHA	BCKDHB	DBT	DLD	SDS	SDSL
+1108781_HUMAN_PWY-7180:_2'-deoxy-alpha-D-ribose_1-phosphate_degradation	http://www.ncbi.nlm.nih.gov/biosystems/1108781	ALDH3A1	ALDH3B1	ALDH3B2	DERA	PGM2
+1108782_HUMAN_PWY66-422:_D-galactose_degradation_V_(Leloir_pathway)	http://www.ncbi.nlm.nih.gov/biosystems/1108782	GALE	GALK1	GALT	PGM2	GALM
+1108784_HUMAN_DETOX1-PWY-1:_reactive_oxygen_species_degradation	http://www.ncbi.nlm.nih.gov/biosystems/1108784	CAT	GPX1	GPX2	GPX3	GPX7	SOD1	SOD2	SOD3	GPX6	GPX8
+1108786_HUMAN_PWY-7433:_mucin_core_1_and_core_2_O-glycosylation	http://www.ncbi.nlm.nih.gov/biosystems/1108786	GALNT1	GALNT2	GALNT3	GCNT1	ST3GAL1	ST3GAL2	ST3GAL4	GALNT4	GCNT3	B3GNT3	GALNT6	GALNT5	GALNT8	GALNT9	GCNT4	GALNT7	GALNT10	C1GALT1	GALNT16	GALNT11	GALNT12	GALNT13	GALNT15	GALNT18	GALNTL6
+1108788_HUMAN_PWY-7434:_terminal_O-glycans_residues_modification	http://www.ncbi.nlm.nih.gov/biosystems/1108788	GCNT2	ST3GAL3	ST8SIA2	B4GALT3	B4GALT2	GCNT3	FUT9	B4GAT1	ST6GAL2

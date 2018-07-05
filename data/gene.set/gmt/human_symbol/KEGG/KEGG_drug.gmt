@@ -1,0 +1,912 @@
+D00058_gamma-Aminobutyric_acid_(JAN);_Gammalon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00058	GABBR1	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ	GABBR2
+D00059_Levodopa_(JP16/USP/INN);_Dopar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00059	DRD1	DRD2	DRD3	DRD4	DRD5
+D00075_Testosterone_(JAN/USP);_Androderm_(TN);_Androgel_(TN);_Axiron_(TN);_Striant_(TN);_Testim_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00075	CYP3A7	CYP3A4	CYP3A5	AR	SLC22A2
+D00076_Noradrenaline_(JP16);_Norepinephrine_(INN);_Nor_adrenalin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00076	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3	MAOA
+D00095_Adrenaline_(JP16);_Epinephrine_(USP/INN);_Adrenalin_(TN);_Auvi-q_(TN);_Epipen_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00095	COMT	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3	MAOA	MAOB
+D00105_Estradiol_(JAN/USP/INN);_Climara_(TN);_Divigel_(TN);_Estrace_(TN);_Estraderm_(TN);_Estrasorb_(TN);_Estring_(TN);_Estrogel_(TN);_Innofem_(TN);_Vagifem_(TN);_Vivelle_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00105	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D00107_Tacrolimus_hydrate_(JP16);_Tacrolimus_(USAN/INN);_Prograf_(TN);_Protopic_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00107	CHP1	CYP3A4	FKBP1A	FKBP1B	PPP3CA	PPP3CB	PPP3CC	PPP3R1	PPP3R2	CHP2
+D00110_Cocaine_(USP);_Cocaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00110	CYP2D6	KCNH2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN9A	SCN10A	SLC6A2	SLC6A3	SLC6A4
+D00112_G-Strophanthin_(JAN);_Ouabain;_Ouabain_octahydrate	http://www.genome.jp/dbget-bin/www_bget?drug+D00112	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3	SLCO1A2
+D00113_Atropine_(USP);_Atropen_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00113	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00124_Ephedrine_(USP);_Ephedrine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00124	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D00131_Disulfiram_(JP16/USP/INN);_Antabuse_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00131	CYP1A2	CYP2E1	ALDH2	ALDH1B1	ALDH3A2
+D00136_Haloperidol_(JP16/USP/INN);_Haldol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00136	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	DRD2
+D00138_Scopolamine_(INN);_Transderm_scop_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00138	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00140_Erythromycin_(JP16/USP/INN);_EM;_Akne-mycin_(TN);_Eryc_(TN);_Erygel_(TN);_Pce_(TN);_Staticin_(TN);_T-stat_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00140	SLCO1B1	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D00142_Methotrexate_(JP16/USP/INN);_Otrexup_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00142	ABCC4	ABCC2	DHFR	DHFR2	SLCO1A2	ABCC3	SLC22A6	SLC22A8	ABCG2
+D00146_Corticotropin_(USP/INN);_ACTH_(TN);_Acthar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00146	MC1R	MC2R	MC3R	MC4R	MC5R
+D00147_Hyoscyamine_(USP)	http://www.genome.jp/dbget-bin/www_bget?drug+D00147	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00169_Meclofenamate_sodium_(USP);_Meclofenamate_sodium_monohydrate;_Meclomen_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00169	PLA2G2D	PLA2G2E	PLA2G2C	PLA2G3	PLA2G1B	PLA2G2A	PLA2G5	PTGS1	PTGS2	PLA2G2F	PLA2G12A	PLA2G10	PLA2G12B
+D00184_Ciclosporin_(JP16);_Cyclosporine_(USP);_Gengraf_(TN);_Neoral_(TN);_Restasis_(TN);_Sandimmune_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00184	SLCO1B1	CHP1	SLCO2B1	ABCC2	CYP3A7	CYP3A4	CYP3A5	SLCO1B3	ABCB1	ABCB4	PPP3CA	PPP3CB	PPP3CC	PPP3R1	PPP3R2	CHP2	ABCB11	ABCG2
+D00186_Ciprofloxacin_(JAN/USP/INN);_CPFX;_Cipro_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00186	CYP1A2	CYP3A7	CYP3A4	CYP3A5	SLC22A6	SLC22A8
+D00199_Ajmaline_(JP16);_Ajimalin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00199	CYP2D6	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D00211_Rifampicin_(JP16/INN);_Rifampin_(USP);_Rifadin_(TN);_Rimactane_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00211	SLCO1B1	SLCO2B1	ABCC2	CYP3A7	CYP2B6	CYP2C19	CYP2C8	CYP2C9	CYP2D6	CYP3A4	CYP3A5	SLCO1B3	SLCO1A2	ABCB11
+D00216_Acarbose_(JAN/USAN/INN);_Precose_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00216	GAA	GANC	AMY2A	AMY2B	MGAM
+D00217_Acetaminophen_(JP16/USP);_Paracetamol_(INN);_Tylenol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00217	CYP1A2	CYP2A6	CYP2D6	CYP2E1	CYP3A4
+D00218_Acetazolamide_(JP16/USP/INN);_Diamox_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00218	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D00225_Alprazolam_(JP16/USP/INN);_Xanax_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00225	CYP3A7	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00227_Aminophylline_(USP/INN);_Somophyllin_(TN);_Theophylline_ethylenediamine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00227	PDE10A	ADORA1	ADORA2A	CYP1A2	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D00228_Amoxapine_(JP16/USP/INN);_Asendin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00228	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D00232_Methyloctatropine_bromide_(JAN);_Anisotropine_methylbromide_(USAN);_Octatropine_methylbromide_(INN);_Valpin_(TN);_Valpin_50_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00232	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00251_Captopril_(JP16/USP/INN);_Apopril_(TN);_Capoten_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00251	ACE	ABCB1	SLC15A1	SLC15A2	SLC22A6
+D00252_Carbamazepine_(JP16/USP/INN);_Equetro_(TN);_Tegretol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00252	CYP3A7	CYP2B6	CYP2C19	CYP2C8	CYP3A4	CYP3A5	HLA-A	HLA-B	ABCB1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D00255_Carvedilol_(JAN/USAN/INN);_Artist_(TN);_Coreg_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00255	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	CYP1A2	ADRB3	CYP2C9	CYP2D6	CYP2E1	CYP3A4	ABCB1
+D00267_Chlordiazepoxide_(JP16/USP/INN);_Libritabs_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00267	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00270_Chlorpromazine_(USP/INN);_Thorazine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00270	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HRH1	HTR2A	HTR2B	HTR2C
+D00280_Clonazepam_(JP16/USP/INN);_Clonazepam_fine_granules_(JP16);_Clonazepam_tablets_(JP16);_Klonopin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00280	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00283_Clozapine_(JAN/USP/INN);_Clozaril_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00283	ADRA1D	ADRA1B	ADRA1A	CYP1A2	CYP2D6	CYP3A4	DRD2	DRD4	HTR1A	HTR2A	HTR2C	HTR7
+D00284_Cosyntropin_(USAN);_Tetracosactide_(INN);_Cortrosyn_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00284	MC1R	MC2R	MC3R	MC4R	MC5R
+D00287_Cyclophosphamide_hydrate_(JP16);_Cyclophosphamide_(USP);_Cyclophosphamide_tablets_(JP16);_Cytoxan_(TN);_Neosar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00287	CYP2A6	CYP2B6	CYP2C8	CYP2C9	CYP3A4
+D00292_Dexamethasone_(JP16/USP/INN);_Decadron_(TN);_Maxidex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00292	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D00293_Diazepam_(JP16/USP/INN);_Diastat_(TN);_Valium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00293	CYP2C19	CYP2C18	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00295_Cimetidine_(JP16/USP/INN);_Tagamet_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00295	SLC47A2	CYP1A2	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5	HRH2	SLC47A1	SLC22A3	SLC22A2
+D00297_Digitoxin_(JP16/USP/INN);_Crystodigin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00297	CYP3A7	CYP3A4	CYP3A5	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3	ABCB1
+D00298_Digoxin_(JP16/USP);_Lanoxicaps_(TN);_Lanoxin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00298	ATP1B4	SLCO1B3	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3	ABCB1	ABCB4	SLCO1A2
+D00303_Disopyramide_(JP16/USAN/INN);_Rythmodan_P_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00303	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A1	SLC22A3
+D00304_Divalproex_sodium_(USP);_Valproate_semisodium_(INN);_Depakote_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00304	HDAC6	HDAC5	CPS1	CYP2C9	CYP3A4	NAGS	ABAT	CDY2B	CDY1B	HDAC1	HDAC2	ARG1	ARG2	ASL	ASS1	OTC	HDAC7	POLG	HDAC8	HDAC10	HDAC3	CACNA1I	CACNA1H	CACNA1G	CDY1	CDY2A	HDAC9	HDAC4
+D00311_Estazolam_(JP16/USAN/INN);_ProSom_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00311	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00318_Famotidine_(JP16/USP/INN);_Fluxid_(TN);_Pepcid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00318	CYP1A2	HRH2	SLC22A3	SLC22A2	SLC22A8
+D00319_Felodipine_(JAN/USP/INN);_Plendil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00319	CYP3A7	CYP3A4	CYP3A5	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00322_Fluconazole_(JP16/USAN/INN);_Fluconazole_capsules_(JP16);_Diflucan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00322	CYP3A7	CYP2C19	CYP2C9	CYP3A4	CYP3A5
+D00326_Fluoxetine_(USAN/INN);_Fluoxetine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00326	CYP3A7	CYP2C19	CYP2C9	CYP2D6	CYP3A4	CYP3A5	ABCB1	SLC6A4
+D00329_Flurazepam_(JAN/INN);_Insumin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00329	CYP2C19	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00331_Furosemide_(JP16/USP/INN);_Frusemide;_Lasix_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00331	ABCC4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	SLC12A1	SLC12A2	SLC22A6	SLC22A8
+D00336_Glibenclamide_(JP16/INN);_Glyburide_(USP);_Diabeta_(TN);_Glynase_(TN);_Micronase_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00336	SLC22A7	SLCO2B1	ABCC2	CYP2C9	G6PD	KCNJ11	ABCB1	ABCC8	ABCB11
+D00346_Isoniazid_(JP16/USP/INN);_Laniazid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00346	CYP3A7	CYP2C9	CYP2E1	CYP3A4	CYP3A5	MAOA	MAOB
+D00351_Ketoconazole_(JP16/USP);_Nizoral_(TN);_Xolegel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00351	CYP3A7	CYP2C19	CYP2C8	CYP3A4	CYP3A5	CYP17A1	ABCB1
+D00354_Lamotrigine_(JAN/USAN/INN);_Lamictal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00354	UGT1A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D00355_Lansoprazole_(JAN/USP/INN);_Prevacid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00355	ABCC2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D00357_Losartan_potassium_(JP16/USAN);_Cozaar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00357	SLC22A12	CYP2C9	CYP3A4	AGTR1	ABCB11
+D00358_Lidocaine_(JP16/USP/INN);_Dentipatch_(TN);_Xylocaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00358	CYP1A2	CYP2D6	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A	SLC22A3
+D00359_Lovastatin_(USP/INN);_MK-803;_ML-530B;_Mevacor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00359	SLCO1B1	CYP3A7	CYP2C9	CYP3A4	CYP3A5	HMGCR	ABCG2
+D00365_Lorazepam_(JP16/USP/INN);_Ativan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00365	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00370_Temazepam_(USP/INN);_Restoril_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00370	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00371_Theophylline_(JP16);_Elixophyllin_(TN);_Quibron-t_(TN);_Theo-24_(TN);_Theodur_G_(TN);_Theolair_(TN);_Uniphyl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00371	PDE10A	ADORA1	ADORA2A	CYP1A2	CYP2E1	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D00375_Mephenytoin_(USP/INN);_Mesantoin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00375	CYP2C19	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D00376_Meprobamate_(JAN/USP/INN);_Equanil_(TN);_Miltown_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00376	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00387_Triazolam_(JAN/USP/INN);_Halcion_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00387	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00397_Tropicamide_(JP16/USP/INN);_Mydriacyl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00397	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00399_Valproic_acid_(USP);_Depakene_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00399	HDAC6	HDAC5	CPS1	CYP2C9	CYP3A4	NAGS	ABAT	CDY2B	CDY1B	HDAC1	HDAC2	ARG1	ARG2	ASL	ASS1	OTC	HDAC7	POLG	HDAC8	HDAC10	HDAC3	CACNA1I	CACNA1H	CACNA1G	CDY1	CDY2A	HDAC9	HDAC4
+D00400_Valsartan_(JP16/USAN/INN);_Diovan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00400	SLCO1B1	ABCC2	CYP2C9	AGTR1	SLCO1B3
+D00403_Levomepromazine_(USAN/INN);_Methotrimeprazine_(USP);_Levoprome_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00403	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HTR2A	HTR2B	HTR2C
+D00414_Zileuton_(USP/INN);_Zyflo_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00414	CYP1A2	CYP3A7	CYP3A4	CYP3A5	ALOX5
+D00422_Ranitidine_(USAN/INN);_Ranitidine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00422	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HRH2	SLC22A2
+D00426_Risperidone_(JP16/USAN/INN);_Risperdal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00426	ADRA1D	ADRA1B	ADRA1A	CYP2D6	CYP3A4	DRD2	HTR2A
+D00427_Ritonavir_(JAN/USAN/INN);_Norvir_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00427	SLCO1B1	CYP3A7	CYP2D6	CYP3A4	CYP3A5	SLCO1B3	ABCB1	SLCO1A2
+D00429_Saquinavir_(JAN/USP/INN);_Fortovase_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00429	SLCO1B1	CYP3A7	CYP3A4	CYP3A5	ABCB1	SLCO1A2
+D00430_Secobarbital_(USP/INN);_Seconal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00430	CYP2C9	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00437_Nifedipine_(JP16/USP/INN);_Adalat_(TN);_Afeditab_CR_(TN);_Procardia_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00437	CYP3A4	CYP3A5	CACNA1C	CACNA1D	CACNA1F	CACNA1S	ABCB11
+D00438_Nimodipine_(USAN/INN);_Nimotop_(TN);_Nymalize_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00438	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00442_Octreotide_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00442	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D00454_Olanzapine_(JAN/USAN/INN);_Zyprexa_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00454	ADRA1D	ADRA1B	ADRA1A	CYP1A2	CYP2D6	DRD2	DRD3	DRD4	HRH1	HTR2A	HTR2C
+D00455_Omeprazole_(JP16/USP/INN);_Prilosec_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00455	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D00456_Ondansetron_(JAN/USP/INN);_Zofran_ODT_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00456	CYP1A2	CYP2D6	CYP3A4	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D00457_Quazepam_(JAN/USP/INN);_Doral_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00457	CYP2C9	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00458_Quetiapine_fumarate_(JP16/USAN);_Seroquel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00458	ADRA1D	ADRA1B	ADRA1A	CYP3A7	CYP3A4	CYP3A5	DRD2	DRD3	DRD4	HRH1	HTR2A	HTR6
+D00464_Oxazepam_(JAN/USP/INN);_Serax_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00464	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00470_Prazepam_(JP16/USAN/INN);_Centrax_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00470	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00473_Prednisone_(USP);_Prednisone_monohydrate;_Deltasone_(TN);_Meticorten_(TN);_Rayos_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00473	CYP3A7	CYP2C19	CYP3A4	CYP3A5	NR3C1
+D00475_Probenecid_(JP16/USP/INN);_Benemid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00475	SLC22A7	ABCC2	CYP2C19	CYP2C9	ABCC1	SLC22A6	SLC22A8
+D00477_Procainamide_hydrochloride_(JP16/USP);_Procan_SR_(TN);_Procanbid_(TN);_Pronestyl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00477	SLC47A1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A3	SLC22A2
+D00481_Propantheline_bromide_(JP16/USP/INN);_Pro-banthine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00481	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00483_Propranolol_hydrochloride_(JP16/USP);_Inderal_(TN);_Innopran_XL_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00483	ADRB1	ADRB2	CYP1A2	ADRB3	CYP3A7	CYP2C19	CYP2D6	CYP3A4	CYP3A5
+D00485_Pseudoephedrine_hydrochloride_(USP);_Sudafed_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00485	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D00491_Paclitaxel_(JAN/USP/INN);_Abraxane_(TN);_Taxol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00491	TUBB3	TUBB4A	TUBB4B	CYP2C8	CYP3A4	TUBB	TUBB8	TUBB2B	ABCB1	ABCB4	TUBB2A	TUBB1	TUBB6
+D00492_Pancuronium_bromide_(JP16/USAN/INN);_Pavulon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00492	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00499_Pentobarbital_(USP/INN);_Nembutal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00499	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00500_Pentobarbital_sodium_(JAN/USP);_Nembutal_sodium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00500	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00506_Phenobarbital_(JP16/USP/INN);_Luminal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00506	CYP1A2	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	ABCB1	GABRQ
+D00507_Phenoxybenzamine_hydrochloride_(USP);_Dibenzyline_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00507	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D00509_Phentolamine_mesilate_(JAN/INN);_Phentolamine_mesylate_(USP);_Regitine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00509	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D00512_Phenytoin_(JP16/USP/INN);_Dilantin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00512	CYP1A2	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5	HLA-B	ABCB1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D00513_Pindolol_(JP16/USP/INN);_Blocklin-L_(TN);_Carvisken_(TN);_Visken_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00513	ADRB1	ADRB2	ADRB3	CYP2D6	SLC22A2
+D00518_Diclofenamide_(JP16/INN);_Dichlorphenamide_(USP);_Daranide_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00518	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D00521_Terfenadine_(JAN/USAN/INN);_Seldane_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00521	CYP3A7	CYP3A4	CYP3A5	HRH1	KCNH2
+D00524_Carbachol_(JAN/USP/INN);_Miostat_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00524	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00525_Pilocarpine_(JAN/USP);_Ocusert_pilo-20_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00525	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	CYP2A6
+D00528_Anhydrous_caffeine_(JP16);_Caffeine_(USP);_Anhydrous_caffeine_(TN);_Respia_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00528	PDE10A	ADORA1	ADORA2A	ADORA2B	CYP1A2	CYP3A7	CYP2E1	CYP3A4	CYP3A5	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D00529_Montelukast_sodium_(JAN/USAN);_Singulair_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00529	CYSLTR1	CYP1A2	CYP2C8	CYP2C9	CYP3A4
+D00531_Nitrazepam_(JP16/USAN/INN);_Benzalin_(TN);_Nitrazepam_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00531	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00532_Glutethimide_(JAN/INN);_Doriden_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00532	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00533_Oxcarbazepine_(JAN/USAN/INN);_Oxtellar_(TN);_Trileptal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00533	CYP3A7	CYP2C19	CYP3A4	CYP3A5	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D00537_Topiramate_(JAN/USAN/INN);_Topamax_(TN);_Trokendi_xr_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00537	CYP2C19	CYP3A4	GRIA1	GRIA2	GRIA3	GRIA4	GRIK1	GRIK2	GRIK3	GRIK4	GRIK5	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00538_Zonisamide_(JAN/USAN/INN);_Excegran_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00538	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	CACNA1I	CACNA1H	CACNA1G
+D00539_Ethosuximide_(JP16/USP/INN);_Zarontin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00539	CYP2E1	CYP3A4	CACNA1I	CACNA1H	CACNA1G
+D00549_Propofol_(JAN/USAN/INN);_Diprivan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00549	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00550_Midazolam_(JAN/USP/INN);_Dormicum_(TN);_Buccolam_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00550	CYP3A7	CYP3A4	CYP3A5	CYP4B1	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00551_Tetracaine_(USP/INN);_Amethocaine;_Amethocaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00551	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D00552_Ethyl_aminobenzoate_(JP16);_Benzocaine_(USP/INN);_Parathesin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00552	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D00553_Propitocaine_(JAN);_Prilocaine_(USP/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00553	SCN1A	SCN2A	SCN3A	SCN5A	SCN7A	SCN10A	CACNA1I
+D00555_Amobarbital_(JP16/INN);_Isomytal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00555	CYP3A7	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00557_Methaqualone_(JAN/USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00557	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00559_Pramipexole_hydrochloride_hydrate_(JAN);_Pramipexole_hydrochloride_(USAN);_Mirapex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00559	SLC47A2	DRD2	DRD3	DRD4	SLC22A1	SLC22A2
+D00560_Pimozide_(JP16/USP/INN);_Orap_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00560	ADRA1D	ADRA1B	ADRA1A	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	DRD2	DRD3
+D00561_Sertindole_(USAN/INN);_SerLect_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00561	ADRA1D	ADRA1B	ADRA1A	DRD2	HTR2A
+D00563_Mirtazapine_(JAN/USAN/INN);_Remeron_(TN);_Reflex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00563	ADRA2A	ADRA2B	ADRA2C	CYP1A2	CYP2D6	CYP3A4	HTR3C	HTR3D	HTR3E	HTR2A	HTR2B	HTR2C	HTR3A	HTR3B
+D00570_Colchicine_(JP16/USP);_Colchicine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00570	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	ABCB1	TUBB2A	TUBB1	TUBB6
+D00578_Voriconazole_(JAN/USAN/INN);_Vfend_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00578	CYP3A7	CYP2C19	CYP2C9	CYP3A4	CYP3A5
+D00600_Labetalol_hydrochloride_(JP16/USP);_Normodyne_(TN);_Trandate_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00600	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D00607_Guanadrel_sulfate_(USP);_Hylorel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00607	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D00611_Mecamylamine_hydrochloride_(USP);_Inversine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00611	CHRNA1	CHRNA2	CHRNA3	CHRNA4	CHRNA5	CHRNA7	CHRNB1	CHRNB2	CHRNB3	CHRNB4	CHRND	CHRNE	CHRNG	CHRNA9	CHRNA10	CHRNA6
+D00612_Trimetaphan_camsilate_(JAN/INN);_Trimetaphan_camsylate;_Arfonad_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00612	CHRNA1	CHRNA2	CHRNA3	CHRNA4	CHRNA5	CHRNA7	CHRNB1	CHRNB2	CHRNB3	CHRNB4	CHRND	CHRNE	CHRNG	CHRNA9	CHRNA10	CHRNA6
+D00615_Amlodipine_besilate_(JP16);_Amlodipine_besylate_(USAN);_Norvasc_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00615	CYP3A7	CYP3A4	CYP3A5	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00616_Diltiazem_hydrochloride_(JP16/USP);_Cardizem_(TN);_Cartia_XT_(TN);_Dilacor_XR_(TN);_Dilt-CD_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00616	CYP3A7	CYP2D6	CYP3A4	CYP3A5	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00617_Nicardipine_hydrochloride_(JP16/USAN);_Cardene_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00617	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00618_Nisoldipine_(JAN/USAN/INN);_Sular_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00618	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00619_Verapamil_hydrochloride_(JP16/USP);_Calan_(TN);_Covera-hs_(TN);_Vasolan_(TN);_Verelan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00619	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	KCNA3	KCNA7	KCNA10	KCNC2	KCNJ6	ABCB1	ABCB4	SLC22A3	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00629_Nitrendipine_(JP16/USAN/INN);_Baypress_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00629	CYP3A7	CYP3A4	CYP3A5	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D00631_Bepridil_hydrochloride_hydrate_(JAN);_Bepridil_hydrochloride_(USAN);_Vascor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00631	CYP2C9	CYP2D6	CYP3A4	KCNA5	KCND3	KCNH2	KCNJ3	KCNJ5	KCNJ8	KCNJ11	KCNJ12	KCNQ1	CACNA1C	CACNA1D	CACNA1F	CACNA1S	CACNA1I	CACNA1H	CACNA1G
+D00633_Dopamine_hydrochloride_(JP16/USP);_Actopamin_(TN);_Intropin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00633	COMT	DRD1	DRD2	DRD3	DRD4	DRD5	MAOB	SLC22A2
+D00636_Amiodarone_hydrochloride_(JP16/USAN);_Ancaron_(TN);_Cordarone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00636	ADRA1D	ADRA1B	ADRA1A	ADRB1	CYP1A2	CYP2C9	CYP2D6	CYP3A4	KCND3	KCNH2	KCNJ3	KCNJ5	KCNJ8	KCNJ11	KCNJ12	KCNQ1	ABCB1
+D00637_Disopyramide_phosphate_(JAN/USP);_Norpace_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00637	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A1	SLC22A3
+D00638_Flecainide_acetate_(JP16/USP);_Tambocor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00638	CYP2D6	CYP3A4	KCND3	KCNH2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	KCNH6	KCNH7
+D00639_Mexiletine_hydrochloride_(JP16/USP);_Mexitil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00639	CYP1A2	CYP2D6	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN9A
+D00640_Propafenone_hydrochloride_(JP16/USP);_Rythmol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00640	ADRB1	CYP1A2	CYP2D6	CYP3A4	ABCB1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D00642_Quinidine_gluconate_(USP);_Quinaglute_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00642	SLC47A2	CYP2D6	CYP3A4	ABCB1	SLC47A1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A1	SLC22A3	SLC22A2
+D00643_Quinidine_polygalacturonate;_Cardioquin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00643	SLC47A2	CYP2D6	CYP3A4	ABCB1	SLC47A1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A1	SLC22A3	SLC22A2
+D00652_Brinzolamide_(JAN/USP/INN);_Azopt_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00652	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D00653_Dorzolamide_hydrochloride_(JP16/USP);_Trusopt_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00653	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D00655_Methazolamide_(JAN/USP/INN);_Neptazane_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00655	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D00665_Chlorpheniramine_maleate_(JP16/USP);_Chlor-trimeton_(TN);_Teldrin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00665	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HRH1
+D00668_d-Chlorpheniramine_maleate_(JP16);_Dexchlorpheniramine_maleate_(USP);_Mylaramine_(TN);_Polaramine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00668	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HRH1
+D00671_Fexofenadine_hydrochloride_(JP16/USAN);_Allegra_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00671	SLCO2B1	SLCO1B3	HRH1	ABCB1	SLCO1A2	ABCC3
+D00673_Ranitidine_hydrochloride_(JP16/USP);_Zantac_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00673	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HRH2	SLC22A2
+D00674_Naratriptan_hydrochloride_(JAN/USAN);_Amerge_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00674	CYP1A2	CYP2C9	CYP2D6	CYP2E1	CYP3A4	CYP3A5	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F
+D00677_Granisetron_hydrochloride_(JAN/USAN);_Kytril_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00677	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D00678_Ondansetron_hydrochloride_hydrate_(JAN/USP);_Ondansetron_hydrochloride;_Zofran_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00678	CYP1A2	CYP2D6	CYP3A4	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D00679_Ergotamine_tartrate_(JP16/USP);_Ergomar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00679	ADRA1D	ADRA1B	ADRA1A	CYP3A4	DRD2	HTR1A
+D00680_Methylergometrine_maleate_(JP16);_Methylergonovine_maleate_(USP);_Methergine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00680	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP3A4	DRD2	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F
+D00681_Methysergide_maleate_(USP);_Sansert_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00681	HTR1A	HTR1B	HTR1D	HTR2A	HTR2C
+D00693_Chlordiazepoxide_hydrochloride_(JAN/USP);_Librium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00693	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00694_Clorazepate_dipotassium_(JP16/USP);_Tranxene_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00694	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00695_Flurazepam_hydrochloride_(USP);_Flurazepam_dihydrochloride;_Dalmane_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00695	CYP2C19	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00696_Midazolam_hydrochloride_(USAN);_Versed_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00696	CYP3A7	CYP3A4	CYP3A5	CYP4B1	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00697_Flumazenil_(JAN/USP/INN);_Romazicon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00697	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00700_Mephobarbital_(JAN/USP);_Methylphenobarbital_(INN);_Mebaral_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00700	CYP2C19	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00701_Phenobarbital_sodium_(JAN/USP/INN);_Luminal_sodium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00701	CYP1A2	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	ABCB1	GABRQ
+D00706_Zolpidem_tartrate_(JP16/USAN);_Ambien_(TN);_Intermezzo_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00706	CYP1A2	CYP3A7	CYP2C9	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00707_Fomepizole_(JAN/USAN/INN);_Antizol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00707	ADH1A	ADH1B	ADH1C	ADH4	ADH5	ADH6	ADH7
+D00710_Sodium_valproate_(JP16);_Valproate_sodium_(USAN);_Depakene_(TN);_Selenica_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00710	HDAC6	HDAC5	CPS1	CYP2C9	CYP3A4	NAGS	ABAT	CDY2B	CDY1B	HDAC1	HDAC2	ARG1	ARG2	ASL	ASS1	OTC	HDAC7	POLG	HDAC8	HDAC10	HDAC3	CACNA1I	CACNA1H	CACNA1G	CDY1	CDY2A	HDAC9	HDAC4
+D00711_Ketamine_hydrochloride_(JP16/USP);_Ketalar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00711	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D00713_Thiamylal_sodium_(JP16);_Surital_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00713	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00714_Thiopental_sodium_(JP16/USP/INN);_Pentothal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00714	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D00715_Hyoscine_methobromide_(INN);_Methscopolamine_bromide;_Pamine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00715	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00716_Clidinium_bromide_(USP/INN);_Quarzan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00716	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00718_Flavoxate_hydrochloride_(JP16/USAN);_Urispas_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00718	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D00719_Hyoscyamine_sulfate_(USP);_Hyoscyamine_sulfate_dihydrate;_Egacene_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00719	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00720_Mepenzolate_bromide_(JP16/INN);_Cantil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00720	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00721_Methanthelinium_bromide_(INN);_Methantheline_bromide;_Banthine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00721	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00723_Tridihexethyl_chloride_(BAN);_Pathilon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00723	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00725_Dolasetron_mesylate_(USP);_Anzemet_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00725	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D00726_Metoclopramide_(JP16/INN);_Elieten_(TN);_Terperan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00726	CYP2D6	HTR3C	CYB5R3	DRD2	HTR3D	HTR3E	HTR3A	HTR4	CYB5R4	CYB5R2	CYB5R1	HTR3B
+D00732_Chloroprocaine_hydrochloride_(USP);_Nesacaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00732	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D00733_Dibucaine_(USP);_Cinchocaine_(INN);_Nupercaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00733	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D00735_Dyclonine_hydrochloride_(USP);_Dyclone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00735	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D00738_Mepivacaine_hydrochloride_(JP16/USP);_Carbocaine_(TN);_Polocaine_(TN);_Scandonest_plain_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00738	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D00740_Procaine_hydrochloride_(JP16/USP);_Novocain_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00740	RYR1	RYR2	RYR3	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A	KCNK5
+D00741_Tetracaine_hydrochloride_(JP16/USP);_Protocaine_hydrochloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00741	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D00749_Leflunomide_(JAN/USAN/INN);_Arava_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00749	CYP2C19	CYP2C9	CYP2D6	CYP3A4	DHODH
+D00753_Sirolimus_(JAN/USAN/INN);_Rapamune_(TN);_Rapamycin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00753	CYP3A7	CYP3A4	CYP3A5	MTOR	ABCB1
+D00758_Atracurium_besylate_(USP);_Atracurium_besilate_(INN);_Tracrium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00758	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00759_Cisatracurium_besylate_(USAN);_Cisatracurium_besilate_(INN);_Nimbex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00759	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00760_Doxacurium_chloride_(USAN/INN);_Nuromax_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00760	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00763_Mivacurium_chloride_(USAN/INN);_Mivacron_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00763	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG	BCHE
+D00764_Pipecuronium_bromide_(USAN/INN);_Arduan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00764	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00765_Rocuronium_bromide_(JAN/USAN/INN);_Zemuron_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00765	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00766_Succinylcholine_chloride_(USP);_Suxamethonium_chloride_(INN);_Anectine_(TN);_Quelicin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00766	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00767_Vecuronium_bromide_(JAN/USAN/INN);_Norcuron_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00767	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D00769_Clopidogrel_sulfate_(JP16);_Clopidogrel_bisulfate_(USAN);_Clopidogrel_sulfate_tablets_(JP16);_Isocover_(TN);_Plavix_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00769	CYP1A2	CYP2B6	CYP2C19	CYP3A4	P2RY12
+D00774_Orphenadrine_citrate_(USP);_Norflex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00774	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00778_Benztropine_mesilate_(JAN);_Benztropine_mesylate_(USP);_Cogentin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00778	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00779_Biperiden_(JAN/USP/INN);_Akineton_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00779	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00782_Procyclidine_hydrochloride_(USP);_Kemadrin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00782	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00787_Trihexyphenidyl_hydrochloride_(JP16/USP);_Artane_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00787	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D00789_Chlorpromazine_hydrochloride_(JP16/USP);_Sonazine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00789	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HRH1	HTR2A	HTR2B	HTR2C
+D00808_Suramin_hexasodium_(USAN);_Bayer_205_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00808	CFTR	P2RX2	P2RX1	P2RX3	P2RX4	P2RX5	P2RX7	RYR1	RYR2	RYR3
+D00809_Amitriptyline_hydrochloride_(JP16/USP);_Elavil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00809	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D00811_Clomipramine_hydrochloride_(JP16/USP);_Anafranil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00811	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D00815_Imipramine_hydrochloride_(JP16/USP);_Tofranil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00815	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D00819_Nefazodone_hydrochloride_(USAN);_Serzone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00819	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HTR2A	HTR2C
+D00820_Trazodone_hydrochloride_(JAN/USP);_Desyrel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00820	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HTR2A	SLC6A4
+D00822_Citalopram_hydrobromide_(USAN);_Celexa_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00822	CYP2C19	CYP2D6	CYP3A4	ABCB1	SLC6A4
+D00823_Fluoxetine_hydrochloride_(JAN/USP);_Prozac_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00823	CYP3A7	CYP2C19	CYP2C9	CYP2D6	CYP3A4	CYP3A5	ABCB1	SLC6A4
+D00824_Fluvoxamine_maleate_(JP16/USAN);_Luvox_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00824	CYP1A2	CYP3A7	CYP2C19	CYP2C8	CYP2C9	CYP2D6	CYP3A4	CYP3A5	ABCB1	SLC6A4
+D00825_Sertraline_hydrochloride_(JAN/USAN);_Zoloft_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00825	CYP2B6	CYP2C19	CYP2C9	CYP2D6	CYP3A4	ABCB1	SLC6A4
+D00848_Dextromethorphan_hydrobromide_hydrate_(JP16);_Dextromethorphan_hydrobromide_(USP);_Benylin_DM_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00848	CYP2D6	CYP3A4	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D00851_Erythromycin_estorate_(JAN);_Erythromycin_estolate_(USP);_Ilosone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00851	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D00887_Atorvastatin_calcium_(USAN);_Lipitor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00887	SLCO1B1	CYP3A7	CYP3A4	CYP3A5	SLCO1B3	HMGCR	LDLR
+D00892_Fluvastatin_sodium_(JAN/USAN);_Lescol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00892	SLCO1B1	CYP2C9	CYP3A4	HMGCR	ABCB11
+D00893_Pravastatin_sodium_(JP16/USAN);_CS-514;_Pravachol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00893	SLCO1B1	CYP3A4	HMGCR	LDLR	ABCB11	SLC22A8
+D00895_Delavirdine_mesilate_(JAN);_Delavirdine_mesylate_(USAN);_Rescriptor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00895	ABCC2	CYP2C19	CYP2C9	CYP2D6	CYP3A4	ABCC3
+D00896_Efavirenz_(JAN/INN);_Sustiva_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00896	ABCC2	CYP3A7	CYP2B6	CYP3A4	CYP3A5	ABCC3
+D00899_Nelfinavir_mesilate_(JAN);_Nelfinavir_mesylate_(USAN/INN);_Viracept_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00899	CYP3A7	CYP2C19	CYP2C9	CYP2D6	CYP2E1	CYP3A4	CYP3A5	ABCB1
+D00903_Diclofenac_potassium_(USAN);_Cambia_(TN);_Cataflam_(TN);_Zipsor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00903	ABCC4	CYP2C9	PTGS1	PTGS2	SLC22A8
+D00904_Diclofenac_sodium_(JP16/USP);_Solaraze_(TN);_Voltaren_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00904	ABCC4	SLC22A7	ABCC2	CYP2C9	PTGS1	PTGS2	SLC22A8
+D00944_Metformin_hydrochloride_(JP16/USP);_Glucophage_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00944	SLC47A2	SLC47A1	PRKAA1	PRKAA2	SLC22A1	SLC22A2
+D00957_Testosterone_cypionate_(USP);_Depo-testosterone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00957	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D00958_Testosterone_enanthate_(JP16/USP);_Delatestryl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00958	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D00959_Testosterone_propionate_(JP16/USP);_Testex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00959	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D00960_Anastrozole_(JAN/USAN/INN);_Arimidex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00960	CYP1A2	CYP2C9	CYP3A4	CYP19A1	ESR1	ESR2	PGR
+D00964_Letrozole_(JAN/USP/INN);_Femara_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00964	CYP2A6	CYP3A4	CYP19A1	ESR1	ESR2	PGR
+D00966_Tamoxifen_citrate_(JP16/USP);_Nolvadex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00966	ABCC2	CYP1A2	CYP2C9	CYP2D6	CYP3A4	ESR1	ESR2	F2	F5	PGR
+D00975_Dexamethasone_sodium_phosphate_(JAN/USP);_Dalalone_(TN);_Maxidex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00975	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D00996_Epinephrine_hydrochloride_(JAN);_Adrenalin_chloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00996	COMT	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3	MAOA	MAOB
+D00997_Tolazoline_hydrochloride_(JAN/USP);_Priscoline_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00997	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D00999_Acetylcholine_chloride_(JP16/USP/INN);_Miochol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D00999	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	CHRNA1	CHRNA2	CHRNA3	CHRNA4	CHRNA5	CHRNA7	CHRNB1	CHRNB2	CHRNB3	CHRNB4	CHRND	CHRNE	CHRNG	ACHE	CHRNA9	CHRNA10	CHRNA6
+D01000_Bethanechol_chloride_(JP16/USP);_Urecholine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01000	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01002_Cyclopentolate_hydrochloride_(JP16/USP);_Cyclogyl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01002	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01003_Hexocyclium_metilsulfate_(INN);_Hexocyclium_methyl_sulfate;_Tral_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01003	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01004_Homatropine_hydrobromide_(JP16/USP);_Isopto_homatropine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01004	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01005_Isopropamide_iodide_(JAN/USP/INN);_Darbid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01005	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01007_Propiverine_hydrochloride_(JP16);_Bup-4_(TN);_Mictonorm_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01007	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	CYP3A4
+D01017_Dipivefrin_hydrochloride_(JAN/USP);_Propine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01017	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D01019_Metaraminol_bitartrate_(JAN/USP);_Aramine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01019	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D01025_Levobunolol_hydrochloride_(JAN/USP);_Betagan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01025	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D01028_Ticlopidine_hydrochloride_(JP16/USAN);_Ticlid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01028	CYP1A2	CYP2B6	CYP2C19	CYP2D6	P2RY12
+D01061_Irinotecan_hydrochloride_hydrate_(JAN);_Irinotecan_hydrochloride_(USAN);_CPT_11;_CPT-11;_Campto_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01061	CYP3A7	CYP3A4	CYP3A5	ABCB1	UGT1A1	TOP1	ABCG2
+D01068_Vinblastine_sulfate_(JP16/USP);_Exal_(TN);_Velban_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01068	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	ABCB1	ABCB4	TUBB2A	TUBB1	TUBB6
+D01071_Hexobarbital_(JAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01071	CYP2C19	CYP2C9	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01077_Atropine_methonitrate_(JAN/INN);_Methylatropine_nitrate_(USAN);_Ekomine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01077	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01103_Trospium_chloride_(JAN/USAN/INN);_Spasmex_(TN);_Spasmoplex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01103	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01104_Barnidipine_hydrochloride_(JAN);_Hypoca_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01104	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D01111_Nateglinide_(JP16/USAN/INN);_Starsis_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01111	CYP3A7	CYP2C9	CYP3A4	CYP3A5	ABCC8
+D01118_Profenamine_hydrochloride_(JAN);_Ethopropazine_hydrochloride;_Parkin_(TN);_Parsidol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01118	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01145_Azelnidipine_(JP16/INN);_Azelnidipine_tablets_(JP16);_Calblock_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01145	CYP3A4	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D01160_Saquinavir_mesilate_(JAN);_Saquinavir_mesylate_(USP);_Invirase_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01160	SLCO1B1	CYP3A7	CYP3A4	CYP3A5	ABCB1	SLCO1A2
+D01163_Ergometrine_maleate_(JP16);_Ergonovine_maleate_(USP);_Ergometrine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01163	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP3A4	DRD2	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F
+D01164_Aripiprazole_(JAN/USAN/INN);_Abilify_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01164	CYP2D6	CYP3A4	DRD2	HTR1A	HTR2A
+D01165_Piperidolate_hydrochloride_(JAN);_Dactil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01165	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01173_Cilnidipine_(JAN/INN);_Atelec_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01173	CYP2C19	CYP3A4	CACNA1B	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D01175_Carpronium_chloride_(JAN/INN);_Actinamin_(TN);_Furozin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01175	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01196_Acetazolamide_sodium_(JAN);_Diamox_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01196	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D01201_Tiemonium_iodide_(JAN/INN);_Visceralgine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01201	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01207_Omeprazole_sodium_(USAN);_Losec_sodium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01207	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D01213_Tolvaptan_(JAN/USAN/INN);_Samsca_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01213	CYP3A7	CYP3A4	CYP3A5	ABCB1	AVPR2
+D01220_Trapidil_(JP16/INN);_Rocornal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01220	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	TBXAS1	PDE8B
+D01227_Bosentan_hydrate_(JAN);_Bosentan_(USAN);_Tracleer_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01227	SLCO1B1	CYP2C19	CYP2C9	CYP3A4	EDNRA	EDNRB	ABCB11
+D01230_Flunitrazepam_(JP16/USAN/INN);_Rohypnol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01230	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01231_Piroheptine_hydrochloride_(JAN);_Trimol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01231	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01236_Conivaptan_hydrochloride_(JAN/USAN);_Vaprisol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01236	CYP3A7	CYP3A4	CYP3A5	ABCB1	AVPR1A	AVPR2
+D01238_Bucladesine_sodium_(JAN);_Actosin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01238	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D01240_Deslanoside_(JP16/USP/INN);_Cedilanid-d_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01240	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D01243_Propitocaine_hydrochloride_(JAN);_Prilocaine_hydrochloride_(USP);_Citanest_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01243	SCN1A	SCN2A	SCN3A	SCN5A	SCN7A	SCN10A	CACNA1I
+D01245_Bromazepam_(JP16/USAN/INN);_Lectopam_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01245	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01253_Clobazam_(JAN/USAN/INN);_Mystan_(TN);_Onfi_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01253	CYP2C19	CYP2D6	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01254_Tofisopam_(JP16/INN);_Emandaxin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01254	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01268_Cloxazolam_(JP16/INN);_Sepazon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01268	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01276_Atazanavir_sulfate_(JAN/USAN);_Reyataz_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01276	SLCO1B1	CYP3A7	CYP3A4	CYP3A5	SLCO1B3	UGT1A1
+D01278_Oxazolam_(JP16/INN);_Serenal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01278	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01279_Flutoprazepam_(JP16/INN);_Restas_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01279	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01286_Flutazolam_(JAN/INN);_Coreminal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01286	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01287_Levobupivacaine_hydrochloride_(JAN/USAN);_Chirocaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01287	CYP1A2	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D01292_Medazepam_(JP16/INN);_Pamnace_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01292	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01293_Ethyl_loflazepate_(JAN/INN);_Meilax_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01293	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01310_Secobarbital_sodium_(JAN/USP);_Seconal_sodium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01310	CYP2C9	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01315_Methylbenactyzium_bromide_(JP16/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01315	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01316_Mexazolam_(JAN/INN);_Melex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01316	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01326_Aprindine_hydrochloride_(JP16/USAN);_Aspenon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01326	CYP3A4	KCNH2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D01328_Clotiazepam_(JP16/INN);_Rize_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01328	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01354_Fludiazepam_(JP16/INN);_Erispan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01354	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01358_Mianserin_hydrochloride_(JAN/USAN);_Tetramide_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01358	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP1A2	CYP2C19	CYP2D6	CYP3A4	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2B	HTR2C	ABCB1
+D01359_Etomidoline_(JAN/INN);_Smedolin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01359	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01361_Erythromycin_ethylsuccinate_(JP16/USP);_E.E.S._(TN);_Eryped_(TN);_Erythrocin_W_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01361	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D01372_Zopiclone_(JAN/INN);_Amoban_(TN);_Zopiclone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01372	CYP2C8	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01377_Prifinium_bromide_(JAN/INN);_Padrin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01377	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01379_Proscillaridin_(JAN/USAN/INN);_Talusin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01379	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D01385_Ibudilast_(JP16/INN);_Ketas_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01385	CYSLTR1	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PTGIR
+D01386_Ephedrine_hydrochloride_(JP16/USP);_Ephedrine_hydrochloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01386	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D01408_Flurazepam_hydrochloride_(JP16);_Flurazepam_monohydrochloride;_Dalmate_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01408	CYP2C19	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01413_Estradiol_valerate_(JAN/USP/INN);_Deladumone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01413	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D01425_Lopinavir_(JAN/USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01425	SLCO1B1	CYP3A7	CYP2D6	CYP3A4	CYP3A5	SLCO1B3	SLCO1A2
+D01429_Fosfluconazole_(JAN/INN);_Prodif_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01429	CYP3A7	CYP2C19	CYP2C9	CYP3A4	CYP3A5
+D01441_Imatinib_mesilate_(JAN);_Imatinib_mesylate_(USAN);_Gleevec_(TN);_Glivec_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01441	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5	ABL1	KIT	PDGFRA	PDGFRB	ABCB1	BCR	FIP1L1	ABCG2
+D01444_Bunitrolol_hydrochloride_(JAN);_Betrilol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01444	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3	CYP2D6
+D01450_Bupivacaine_hydrochloride_hydrate_(JP16);_Bupivacaine_hydrochloride_(USP);_Marcaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01450	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D01451_Scopolamine_butylbromide_(JP16);_Butylscopolamine_bromide;_Buscopan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01451	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01453_Caffeine_hydrate_(JP16);_Caffeine_monohydrate;_Caffeine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01453	PDE10A	ADORA1	ADORA2A	ADORA2B	CYP1A2	CYP3A7	CYP2E1	CYP3A4	CYP3A5	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D01455_Cibenzoline_succinate_(JP16);_Cifenline_succinate_(USAN);_Cibenol_(TN);_Cipralan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01455	CYP2D6	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D01463_Diponium_bromide_(JAN/INN);_Dipenine_bromide	http://www.genome.jp/dbget-bin/www_bget?drug+D01463	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01469_Amosulalol_hydrochloride_(JP16);_Lowgan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01469	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D01477_Opipramol_hydrochloride_(JAN/USAN);_Insidon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01477	SIGMAR1	DRD2	HRH1	HTR2A	HTR2B	HTR2C
+D01479_Ambroxol_hydrochloride_(JAN);_Hustless_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01479	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D01491_Butropium_bromide_(JP16/INN);_Coliopan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01491	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01500_Trimebutine_maleate_(JP16);_Cerekinon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01500	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	OPRM1
+D01510_Dexamethasone_metasulfobenzoate_sodium_(JAN);_Dexamethazone_metasulfobenzoate_sodium;_Dexapos;_Santeson_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01510	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D01514_Etizolam_(JP16/INN);_Etizolam_fine_granules_(JP16);_Etizolam_tablets_(JP16);_Sedekopan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01514	CYP2C9	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01520_Levomepromazine_hydrochloride_(JAN/USAN);_Nozinan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01520	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HTR2A	HTR2B	HTR2C
+D01521_Pipethanate_hydrochloride_(JAN);_Glymor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01521	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01538_Valethamate_bromide_(JAN);_Shinmetane_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01538	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01553_Manidipine_hydrochloride_(JP16);_Manidipine_dihydrochloride;_Calslot_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01553	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D01554_Pilsicainide_hydrochloride_hydrate_(JP16);_Pilsicainide_hydrochloride;_Pilsicainide_hydrochloride_capsules_(JP16);_SUN_1165_(TN);_Sunrythm_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01554	KCNA1	KCNA2	KCNA5	KCNA7	KCNC1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A2
+D01562_Aranidipine_(JAN/INN);_Sapresta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01562	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S	CACNA1I	CACNA1H	CACNA1G
+D01564_Rilmazafone_hydrochloride_hydrate_(JAN);_Rilmazafone_hydrochloride_dihydrate;_Rilmazafone_hydrochloride;_Rhythmy_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01564	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01593_Nimetazepam_(JAN/INN);_Erimin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01593	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01600_Diphenylpiperidinomethyldioxolan_iodide_(JAN);_Anacolin;_Gastrophyllin-A_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01600	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01604_Efonidipine_hydrochloride_ethanolate_(JAN);_Efonidipine_hydrochloride_ethanol;_Efonidipine_hydrochloride;_NZ_105_ethanolate;_Landel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01604	CACNA1C	CACNA1D	CACNA1F	CACNA1S	CACNA1I	CACNA1H	CACNA1G
+D01613_Azasetron_hydrochloride_(JAN);_Serotone_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01613	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D01615_Dexamethasone_palmitate_(JAN);_Dexamethasone_21-palmitate;_Limethason_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01615	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D01617_Estradiol_dipropionate_(JAN);_Ovahormon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01617	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D01624_Sarpogrelate_hydrochloride_(JP16);_Anplag_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01624	CYP1A2	CYP2C19	CYP2C9	CYP2D6	CYP3A4	HTR2A
+D01630_Propentofylline_(JAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01630	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D01632_Dexamethasone_propionate_(JAN);_Dexamethasone_dipropionate_(USAN);_Hifmeta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01632	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D01648_Hyoscyamine_methylbromide_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01648	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01657_Lormetazepam_(JAN/USAN/INN);_Loramet_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01657	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01663_Quinine_ethylcarbonate_(JP16);_Quinine_ethylcarbonate_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01663	CYP3A7	CYP3A4	CYP3A5	G6PD	SLC22A1	SLC22A2
+D01691_Nipradilol_(JAN/INN);_Hypadil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01691	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D01697_Colforsin_daropate_hydrochloride_(JAN);_Nkh_477;_Adehl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01697	ADCY1	ADCY2	ADCY3	ADCY5	ADCY6	ADCY7	ADCY8	ADCY9	CYP3A4	ADCY4	ADCY10
+D01712_Theophylline_sodium_acetate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01712	PDE10A	ADORA1	ADORA2A	CYP1A2	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D01740_Barbital_(JP16/INN);_Barbital_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01740	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01744_Brotizolam_(JP16/USAN/INN);_Lendormin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01744	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01758_Haloxazolam_(JP16/INN);_Somelin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01758	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D01769_Vindesine_sulfate_(JAN/USAN);_Fildesin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01769	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D01771_Proxyphylline_(JAN/INN);_Monophyllin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01771	PDE10A	ADORA1	ADORA2A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D01785_Pirmenol_hydrochloride_hydrate_(JAN);_Pimenol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01785	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D01815_Oxapium_iodide_(JP16/INN);_Espalexan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01815	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01822_Clofenamide_(JAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01822	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D01830_Arotinolol_hydrochloride_(JP16);_Almarl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01830	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D01832_Modafinil_(JAN/USAN/INN);_Provigil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01832	CYP1A2	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP2D6	CYP3A4	CYP3A5
+D01849_Lercanidipine_hydrochloride_(JAN/USAN);_Cardiovasc_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01849	CYP3A7	CYP3A4	CYP3A5	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D01871_Metixene_hydrochloride_(JAN);_Methixene_hydrochloride_(USAN);_Methixene_hydrochloride_hydrete;_Trest_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01871	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01896_Cilostazol_(JP16/USAN/INN);_Pletal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01896	CYP3A7	CYP2C19	CYP2D6	CYP3A4	CYP3A5	PDE3A	PDE3B
+D01898_Haloperidol_decanoate_(JAN/USAN);_Halomonth_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01898	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	DRD2
+D01908_Nilvadipine_(JP16/USAN/INN);_Nivadil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01908	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D01915_Rosuvastatin_calcium_(JAN/USAN);_ZD_4522;_Crestor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01915	SLCO1B1	SLCO1B3	HMGCR	LDLR	SLC22A8	ABCG2
+D01926_Temiverine_hydrochloride_hydrate_(JAN);_Urespan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01926	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01935_Vinorelbine_ditartrate_(JAN);_Vinorelbine_tartrate_(USP);_KW_2307;_Navelbine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01935	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D01939_Ziprasidone_hydrochloride_hydrate_(JAN);_Ziprasidone_hydrochloride_(USAN);_Geodon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01939	CYP3A7	CYP3A4	CYP3A5	DRD2	HTR2A	HTR2B	HTR2C
+D01946_Oxitropium_bromide_(JAN/INN);_Tersigan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01946	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01948_Dexamethasone_valerate_(JAN);_Dexamethasone_17-valerate;_DV-17;_Voalla_ointment_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01948	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D01952_L-Methylephedrine_hydrochloride_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01952	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D01953_Estradiol_benzoate_(JP16);_Ovahormon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01953	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D01955_Aclatonium_napadisilate_(JAN);_Abovis_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01955	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01972_Lanatoside_C_(JP16/INN);_Digilanogen_C_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01972	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D01973_Eletriptan_hydrobromide_(JAN/USAN);_Relpax_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01973	CYP3A7	CYP3A4	CYP3A5	HTR1B	HTR1D
+D01976_N-Methylscopolamine_methylsulfate_(JAN);_Daipin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01976	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D01984_Esomeprazole_magnesium_hydrate_(JAN);_Esomeprazole_magnesium_(USAN);_Nexium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01984	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D01987_Pipethanate_ethobromide_(JAN);_Panpurol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D01987	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02002_Isoniazid_sodium_methanesulfonate_hydrate_(JAN);_Isoniazid_sodium_methanesulfonate_monohydrate;_Isoniazid_sodium_methanesulfonate;_IHMS;_Neoiscotin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02002	CYP3A7	CYP2C9	CYP2E1	CYP3A4	CYP3A5	MAOA	MAOB
+D02009_Erythromycin_lactobionate_(JP16/USP);_EML;_Erythrocin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02009	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D02016_Ramosetron_hydrochloride_(JAN);_YM_060;_Nasea_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02016	CYP1A1	CYP1A2	CYP2D6	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D02017_Choline_theophylline_(JAN);_Oxtriphylline_(USP);_Choline_theophyllinate_(INN);_Theophyline	http://www.genome.jp/dbget-bin/www_bget?drug+D02017	PDE10A	ADORA1	ADORA2A	CYP1A2	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D02034_Setiptiline_maleate_(JAN);_Tecipul_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02034	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	HTR2A	HTR2B	HTR2C
+D02041_Tropisetron_hydrochloride_(JAN);_Navoban_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02041	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D02045_Benidipine_hydrochloride_(JP16);_KW_3049;_Coniel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02045	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D02069_Atropine_sulfate_(JP16/USP);_Isopto_Atropine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02069	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02070_Homatropine_methylbromide_(USP);_Equipin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02070	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02071_Scopolamine_hydrobromide_hydrate_(JP16);_Scopolamine_hydrobromide_(USP);_Scopolamine_hydrobromide_trihydrate;_Hysco_(TN);_Isopto_hyoscine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02071	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02086_Lidocaine_injection_(JP16);_Lidocaine_hydrochloride_(JAN/USP);_Dalcaine_(TN);_Xylocaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02086	CYP1A2	CYP2D6	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A	SLC22A3
+D02087_Moricizine_hydrochloride_(USP);_Ethmozine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02087	CYP1A2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D02088_Tocainide_hydrochloride_(USP);_Tonocard_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02088	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D02096_Fosphenytoin_sodium_(USP);_Cerebyx_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02096	CYP2B6	CYP2C19	CYP2C9	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D02098_Proparacaine_hydrochloride_(USP);_Alcaine_(TN);_Ophthetic_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02098	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D02100_Ziprasidone_mesylate_(USAN);_Ziprasidone_mesylate_hydrate;_Geodon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02100	CYP3A7	CYP3A4	CYP3A5	DRD2	HTR2A	HTR2B	HTR2C
+D02102_Methadone_hydrochloride_(JAN/USP);_Dolophine_hydrochloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02102	CYP2B6	CYP2D6	CYP3A4	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	OPRM1
+D02103_Phenytoin_sodium_for_injection_(JP16);_Phenytoin_sodium_(USP);_Aleviatin_(TN);_Dilantin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02103	CYP1A2	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5	HLA-B	ABCB1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D02105_Tetracosactide_acetate_(JAN);_Cortrosyn_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02105	MC1R	MC2R	MC3R	MC4R	MC5R
+D02108_Indium_In_111_pentetreotide_(USP);_OctreoScan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02108	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D02109_dl-Methylephedrine_hydrochloride_(JP16);_Methy-F_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02109	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D02115_Methotrexate_sodium;_Trexall_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02115	ABCC4	ABCC2	DHFR	DHFR2	SLCO1A2	ABCC3	SLC22A6	SLC22A8	ABCG2
+D02130_Tropisetron_(INN);_Navoban_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02130	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D02149_Epinephrine_bitartrate_(JAN/USP);_Asmatane_mist_(TN);_Medihaler-epi_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02149	COMT	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3	MAOA	MAOB
+D02165_Docetaxel_hydrate_(JP16);_Docetaxel_(USAN);_Docetaxel_injection_(JP16);_Docetaxel_for_injection_(JP16);_Taxotere_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02165	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D02174_Dexamethasone_acetate_(JAN/USP);_Decadronal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02174	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D02182_Cocaine_hydrochloride_(JP16/USP);_Cocaine_hydrochloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02182	CYP2D6	KCNH2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN9A	SCN10A	SLC6A2	SLC6A3	SLC6A4
+D02184_Erythromycin_stearate_(JP16/USP);_ES;_Bristamycin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02184	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D02197_Vincristine_sulfate_(JP16/USP);_VCR;_Marqibo_(TN);_Oncovin_(TN);_Vincasar_(TN);_Vincrex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02197	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D02200_Pilocarpine_hydrochloride_(JP16/USP);_Isopto_carpine_(TN);_Pilopine_HS_(TN);_Sanpilo_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02200	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	CYP2A6
+D02202_Lobeline_hydrochloride_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02202	CHRNA1	CHRNA2	CHRNA3	CHRNA4	CHRNA5	CHRNA7	CHRNB1	CHRNB2	CHRNB3	CHRNB4	CHRND	CHRNE	CHRNG	CHRNA9	CHRNA10	CHRNA6
+D02204_Hexamethonium_bromide_(JAN/INN);_Hexamethonium_bromide_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02204	CHRNA2	CHRNA3	CHRNA4	CHRNA5	CHRNA7	CHRNB2	CHRNB3	CHRNB4	CHRNA9	CHRNA10	CHRNA6
+D02207_Tubocurarine_chloride_hydrate_(JAN);_Tubocurarine_chloride_(USP);_Tubocurarine_chloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02207	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D02211_Dihydroergotamine_mesilate_(JP16);_Dihydroergotamine_mesylate_(USP);_Migranal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02211	ADRA1D	ADRA1B	ADRA1A	CYP3A7	CYP3A4	CYP3A5	DRD2	HTR1A
+D02212_Ipratropium_bromide_hydrate_(JP16);_Ipratropium_bromide_(USAN);_Atrovent_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02212	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02213_Metoclopramide_hydrochloride_(JAN);_Metoclopramide_dihydrochloride_monohydrate;_Primperan_(TN);_Reglan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02213	CYP2D6	HTR3C	CYB5R3	DRD2	HTR3D	HTR3E	HTR3A	HTR4	CYB5R4	CYB5R2	CYB5R1	HTR3B
+D02216_Ciprofloxacin_hydrochloride_(JAN/USP);_CPFX;_Ciloxan_(TN);_Cipro_(TN);_Proquin_XR_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02216	CYP1A2	CYP3A7	CYP3A4	CYP3A5	SLC22A6	SLC22A8
+D02218_Papaverine_hydrochloride_(JP16/USP);_Pavabid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02218	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D02219_Terbinafine_hydrochloride_(JP16/USP);_Lamisil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02219	CYP1A2	CYP2C19	CYP2C8	CYP2C9	CYP2D6	CYP3A4
+D02220_Dibucaine_hydrochloride_(JP16/USP);_Nupercaine_hydrochloride_(TN);_Percamin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02220	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D02229_Sildenafil_citrate_(JAN/USAN);_Revatio_(TN);_Viagra_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02229	CYP3A7	CYP2C9	CYP3A4	CYP3A5	PDE5A
+D02246_Biperiden_hydrochloride_(JP16/USP);_Tasmolin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02246	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02247_Biperiden_lactate_(JAN/USP);_Tasmolin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02247	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02248_Levomepromazine_maleate_(JP16/USAN);_Hirnamin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02248	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HTR2A	HTR2B	HTR2C
+D02250_Octreotide_acetate_(JAN);_Octreotide_diacetate;_Sandostatin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02250	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D02252_Amobarbital_sodium_(JAN/USP);_Amytal_sodium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02252	CYP3A7	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02253_Pentobarbital_calcium_(JP16);_Ravona_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02253	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02258_Atorvastatin_calcium_hydrate_(JP16);_Lipitor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02258	SLCO1B1	CYP3A7	CYP3A4	CYP3A5	SLCO1B3	HMGCR	LDLR
+D02261_Quinine_hydrochloride_hydrate_(JP16);_Quinine_hydrochloride_dihydrate;_Quinine_hydrochloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02261	CYP3A7	CYP3A4	CYP3A5	G6PD	SLC22A1	SLC22A2
+D02262_Quinine_sulfate_hydrate_(JP16);_Quinine_sulfate_(USP);_Quinine_hydrogen_sulfate;_Coco-quinine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02262	CYP3A7	CYP3A4	CYP3A5	G6PD	SLC22A1	SLC22A2
+D02272_Quinidine_sulfate_hydrate_(JP16);_Quinidine_sulfate_(USP);_Quinidex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02272	SLC47A2	CYP2D6	CYP3A4	ABCB1	SLC47A1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A1	SLC22A3	SLC22A2
+D02275_Suxamethonium_chloride_hydrate_(JP16);_Suxamethonium_chloride_dihydrate;_Succin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02275	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D02283_Iomazenil_(123I)_(JAN/INN);_Benzodine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02283	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02292_Gallamine_triethiodide_(USP);_Flaxedil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02292	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D02341_Meclofenamic_acid_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02341	PLA2G2D	PLA2G2E	PLA2G2C	PLA2G3	PLA2G1B	PLA2G2A	PLA2G5	PTGS1	PTGS2	PLA2G2F	PLA2G12A	PLA2G10	PLA2G12B
+D02349_Dipivefrin_(USAN);_Dipivefrine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02349	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D02356_Verapamil_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02356	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	KCNA3	KCNA7	KCNA10	KCNC2	KCNJ6	ABCB1	ABCB4	SLC22A3	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D02357_Methysergide_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02357	HTR1A	HTR1B	HTR1D	HTR2A	HTR2C
+D02360_Sertraline_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02360	CYP2B6	CYP2C19	CYP2C9	CYP2D6	CYP3A4	ABCB1	SLC6A4
+D02363_Ketanserin_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02363	ADRA1D	ADRA1B	ADRA1A	HRH1	HTR2A
+D02364_Lobeline_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02364	CHRNA1	CHRNA2	CHRNA3	CHRNA4	CHRNA5	CHRNA7	CHRNB1	CHRNB2	CHRNB3	CHRNB4	CHRND	CHRNE	CHRNG	CHRNA9	CHRNA10	CHRNA6
+D02375_Terbinafine_(USAN/INN);_Lamasil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02375	CYP1A2	CYP2C19	CYP2C8	CYP2C9	CYP2D6	CYP3A4
+D02410_Selfotel_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02410	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D02417_Flutropium_bromide_(JAN);_Flutropium_bromide_monohydrate;_Flubron_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02417	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02441_Ethoxzolamide;_Cardrase_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02441	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D02497_Fosamprenavir_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02497	CYP1A2	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5
+D02523_Erythromycin_acistrate_(USAN);_EA;_Erasis_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02523	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D02524_Erythromycin_gluceptate_(USP);_Erythromycin_glucoheptonate;_Ilotycin_gluceptate_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02524	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D02525_Erythromycin_propionate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02525	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D02535_Timepidium_bromide_hydrate_(JP16);_Sesden_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02535	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02537_Dronedarone_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02537	ADRA1D	ADRA1B	ADRA1A	ADRB1	CYP3A7	CYP3A4	CYP3A5	KCND3	KCNH2	KCNJ3	KCNJ5	KCNJ11	KCNQ1	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D02546_Kainic_acid_hydrate_(JP16);_Digenin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02546	GRIK1	GRIK2	GRIK3	GRIK4	GRIK5
+D02587_Metildigoxin_(JP16);_Lanirapid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02587	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D02591_Dexamethasone_acefurate_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02591	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D02592_Dexamethasone_beloxil_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02592	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D02594_Abecarnil_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02594	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02599_Orphenadrine_hydrochloride;_Disipal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02599	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D02616_Pagoclone_(USAN/INN);_Bextra_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02616	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02617_Ocinaplon_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02617	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02624_Eszopiclone_(JAN/USAN/INN);_Estorra_(TN);_Lunesta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02624	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02632_Indisetron_hydrochloride_(JAN);_Sinseron_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02632	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D02676_Oxiperomide_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02676	DRD1	DRD2	DRD3	DRD4	DRD5
+D02698_Teniposide_(USAN/INN);_Vumon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02698	CYP2C19	CYP2C9	CYP3A4	TOP2A	TOP2B
+D02714_Everolimus_(JAN/USAN/INN);_Afinitor_(TN);_Votubia_(TN);_Zortress_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02714	CYP3A4	ERBB2	ESR1	ESR2	MTOR	ABCB1
+D02731_Vardenafil_dihydrochoride_(USAN);_Levitra_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02731	CYP3A7	CYP2C19	CYP2C8	CYP2C9	CYP3A4	CYP3A5	PDE5A
+D02770_Adinazolam_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02770	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02771_Adinazolam_mesylate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02771	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D02780_Acamprosate_calcium_(JAN/USAN);_Campral_(TN);_Regtect_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02780	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D02815_Alitretinoin_(USAN);_Panretin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02815	RARA	RARB	RARG	RXRA	RXRB	RXRG
+D02829_Alosetron_hydrochloride_(USAN);_Lotrpnex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02829	CYP1A2	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D02867_Fosamprenavir_calcium_hydrate_(JAN);_Lexiva_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02867	CYP1A2	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5
+D02906_Aminobenzoate_potassium_(USP);_Potaba_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02906	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D02907_Aminobenzoate_sodium_(USP);_Sodium_aminobenzoate	http://www.genome.jp/dbget-bin/www_bget?drug+D02907	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D02910_Amiodarone_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02910	ADRA1D	ADRA1B	ADRA1A	ADRB1	CYP1A2	CYP2C9	CYP2D6	CYP3A4	KCND3	KCNH2	KCNJ3	KCNJ5	KCNJ8	KCNJ11	KCNJ12	KCNQ1	ABCB1
+D02914_Amlodipine_maleate_(USAN);_Amvaz_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02914	CYP3A7	CYP3A4	CYP3A5	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D02968_Aprepitant_(JAN/USAN/INN);_Emend_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02968	CYP3A7	CYP2C9	CYP3A4	CYP3A5	TACR1
+D02969_Aprindine_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02969	CYP2D6	KCNH2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D02973_Aptiganel_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02973	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D02976_Arbutamine_hydrochloride_(USAN);_Genesa_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02976	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D02977_Arcitumomab_(USAN/INN);_Cea-Scan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02977	CEACAM5	CEACAM3	CEACAM7	CEACAM8	CEACAM4	MUC1	CEACAM6	CEACAM1	CEACAM21
+D02995_Asenapine_maleate_(JAN/USAN);_Saphris_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D02995	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	DRD2	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2B	HTR2C
+D03011_Atropine_oxide_hydrochloride_(USAN);_Genatropine_hydrochloride	http://www.genome.jp/dbget-bin/www_bget?drug+D03011	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D03012_Avasimibe_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03012	CYP3A7	CYP3A4	CYP3A5	ABCB1	SOAT1	SOAT2
+D03060_Batanopride_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03060	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D03087_Benzetimide_hydrochloride_(USAN);_Dioxatrine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03087	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D03150_Bortezomib_(JAN/USAN/INN);_Velcade_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03150	CYP1A2	CYP2C19	CYP3A4	PSMB1	PSMB5
+D03155_Bretazenil_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03155	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D03213_Apixaban_(JAN/USAN/INN);_Eliquis_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03213	CYP3A4	CYP3A5	F10	ABCB1	ABCG2
+D03215_Armodafinil_(USAN/INN);_Nuvigil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03215	CYP1A2	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5
+D03218_Axitinib_(JAN/USAN);_Inlyta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03218	CYP3A4	CYP3A5	FLT1	FLT4	KDR	KIT	PDGFRB
+D03260_Vardenafil_hydrochloride_hydrate_(JAN);_Levitra_(TN);_Staxyn_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03260	CYP3A7	CYP2C19	CYP2C8	CYP2C9	CYP3A4	CYP3A5	PDE5A
+D03264_Mazaticol_hydrochloride_hydrate_(JAN);_Mazaticol_hydrochloride;_Pentona_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03264	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D03274_Chlorpromazine_hibenzate_(JAN);_Contomin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03274	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HRH1	HTR2A	HTR2B	HTR2C
+D03276_Profenamine_hibenzate_(JAN);_Parkin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03276	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D03415_Carvedilol_phosphate_hydrate_(JAN);_Carvedilol_phosphate_(USAN);_Coreg_CR_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03415	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	CYP1A2	ADRB3	CYP2C9	CYP2D6	CYP2E1	CYP3A4	ABCB1
+D03492_Cifenline_(USAN);_Cibenzoline_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03492	CYP2D6	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D03495_Cilansetron_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03495	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D03496_Cilansetron_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03496	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D03503_Cimetidine_hydrochloride_(USP);_Cimetidine_hydrochloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03503	SLC47A2	CYP1A2	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5	HRH2	SLC47A1	SLC22A3	SLC22A2
+D03562_Clorazepate_monopotassium_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03562	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D03593_Corticotropin_zinc_hydroxide_(USP);_Corticotropin-Zinc_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03593	MC1R	MC2R	MC3R	MC4R	MC5R
+D03648_Dapiprazole_hydrochloride_(USAN);_Rev-Eyes_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03648	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D03658_Dasatinib_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03658	CYP3A7	CYP3A4	CYP3A5	EPHA2	FMO3	ABL1	KIT	PDGFRB	BCR	SRC
+D03662_Dazopride_fumarate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03662	HTR3C	HTR3D	HTR3E	HTR3A	HTR4	HTR3B
+D03669_Deferasirox_(JAN/USAN/INN);_Exjade_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03669	CYP1A2	CYP2C8	CYP3A4	UGT1A1	UGT1A3
+D03679_Delucemine_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03679	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D03711_Dexetimide_(USAN/INN);_(+)-Benzetimide	http://www.genome.jp/dbget-bin/www_bget?drug+D03711	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D03729_Dexpropranolol_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03729	ADRB1	ADRB2	CYP1A2	ADRB3	CYP3A7	CYP2C19	CYP2D6	CYP3A4	CYP3A5
+D03737_Dextofisopam_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03737	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D03742_Dextromethorphan_(USP)	http://www.genome.jp/dbget-bin/www_bget?drug+D03742	CYP2D6	CYP3A4	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D03744_Dextromethorphan_polistirex_(USAN);_Delsym_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03744	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D03746_Dextrorphan_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03746	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D03797_Prinomastat_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03797	MMP2	MMP3	MMP9	MMP13	MMP14
+D03814_Atropine_methylbromide_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03814	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D03824_Dihexyverine_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03824	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D03830_Diltiazem_malate_(USAN);_Tiamate_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03830	CYP3A7	CYP2D6	CYP3A4	CYP3A5	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D03835_Fosamprenavir_calcium_(USAN);_Lexiva_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03835	CYP1A2	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5
+D03837_Fosamprenavir_sodium_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03837	CYP1A2	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5
+D03844_Phenytoin	http://www.genome.jp/dbget-bin/www_bget?drug+D03844	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5
+D03845_Sezolamide_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03845	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D03878_Dizocilpine_maleate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03878	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D03891_Dopexamine_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03891	ADRB2	DRD1	DRD2	DRD3	DRD4	DRD5
+D03892_Dopexamine_hydrochloride_(USAN);_Dopacard_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03892	ADRB2	DRD1	DRD2	DRD3	DRD4	DRD5
+D03898_Doxofylline_(USAN/INN);_Maxivent_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03898	ADORA1	PDE4A	PDE4B	PDE4C	PDE4D
+D03914_Dronedarone_hydrochloride_(USAN);_Multaq_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03914	ADRA1D	ADRA1B	ADRA1A	ADRB1	CYP3A7	CYP3A4	CYP3A5	KCND3	KCNH2	KCNJ3	KCNJ5	KCNJ11	KCNQ1	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D03978_Eltrombopag_olamine_(JAN/USAN);_Promacta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03978	SLCO1B1	CYP1A2	CYP2C8	F5	MPL	SERPINC1	ABCG2
+D03991_Encainide_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D03991	CYP2D6	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D04018_Ephedrine_sulfate_(USP);_Isofedrol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04018	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D04024_Lapatinib_tosilate_hydrate_(JAN);_Lapatinib_ditosylate_(USAN);_Tykerb_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04024	CYP3A7	CYP2C8	CYP3A4	CYP3A5	EGFR	ERBB2	ABCB1	ABCG2
+D04028_Orlistat_(USAN/INN);_Xenical_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04028	CEL	PLA2G2D	PLA2G2E	PLA2G2C	PLA2G3	PLA2G1B	PLA2G2A	PLA2G5	PNLIP	PNLIPRP1	PNLIPRP2	PLA2G2F	PLA2G12A	PLA2G10	PLA2G12B
+D04034_Chlorpromazine_phenolphthalinate_(JAN);_Wintermin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04034	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HRH1	HTR2A	HTR2B	HTR2C
+D04048_Ropivacaine_hydrochloride_hydrate_(JAN);_Ropivacaine_hydrochloride_(USP);_Anapeine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04048	CYP1A2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D04054_Erythromycin_salnacedin_(USAN);_Erythromycin_salnacedin_dihydrate	http://www.genome.jp/dbget-bin/www_bget?drug+D04054	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D04056_Esomeprazole_sodium_(USAN);_Nexium_IV_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04056	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D04061_Estradiol_acetate_(USAN);_Femring_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04061	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D04063_Estradiol_cypionate_(USP);_Depo-estradiol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04063	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D04064_Estradiol_enanthate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04064	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D04065_Estradiol_undecylate_(USAN/INN);_Delestrec_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04065	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D04087_Ethybenztropine_(USAN);_Etybenzatropine_(INN);_Panolid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04087	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D04112_Etravirine_(JAN/USAN/INN);_Intelence_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04112	CYP3A7	CYP2C19	CYP2C9	CYP3A4	CYP3A5
+D04116_Eucatropine_hydrochloride_(USP_XXXII)	http://www.genome.jp/dbget-bin/www_bget?drug+D04116	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D04226_Flupirtine_maleate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04226	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D04257_Fospropofol_disodium_(USAN);_Aquavan_(TN);_Lusedra_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04257	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D04282_Gaboxadol_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04282	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D04300_Ganaxolone_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04300	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D04303_Gantacurium_chloride_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04303	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D04308_Gavestinel_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04308	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D04370_Granisetron_(JAN/USAN/INN);_Sancuso_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04370	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D04479_Hyoscyamine_hydrobromide_(USP)	http://www.genome.jp/dbget-bin/www_bget?drug+D04479	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D04498_Idronoxil_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04498	SRD5A1	SRD5A2	TOP2A	TOP2B	SRD5A3
+D04533_Indorenate_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04533	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F
+D04642_Itasetron_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04642	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D04666_Lanreotide_acetate_(JAN/USAN);_Somatuline_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04666	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D04721_Levotofisopam_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04721	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D04728_Licostinel_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04728	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D04741_Linopirdine_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04741	KCNQ1	KCNQ2	KCNQ3	KCNQ5	KCNQ4
+D04820_Lurasidone_hydrochloride_(JAN/USAN);_SM_13496;_Latuda_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04820	CYP3A7	CYP3A4	CYP3A5	DRD2	HTR1A	HTR2A	HTR2B	HTR2C	HTR7
+D04864_Maytansine_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04864	TUBB3	TUBB4A	TUBB4B	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D04868_Mebeverine_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04868	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D04882_Medazepam_hydrochloride_(USAN);_Nobrium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04882	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D04888_Medroxalol_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04888	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D04889_Medroxalol_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04889	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D04905_Memantine_hydrochloride_(JAN/USAN);_Namenda_(TN);_Memary_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04905	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	SLC22A2
+D04931_Mercaptopurine_(INN);_Mercaptopurine_anhydrous;_Purinethol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04931	SLC29A1	SLC29A2	SLC28A3	TPMT	SLC28A2
+D04966_Metformin_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04966	SLC47A2	SLC47A1	PRKAA1	PRKAA2	SLC22A1	SLC22A2
+D04970_Methacholine_chloride_(USAN/INN);_Provocholine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D04970	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D05008_Metoclopramide_hydrochloride_(USAN);_Metoclopramide_hydrochloride_monohydrate;_Clopra_(TN);_Reglan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05008	CYP2D6	HTR3C	CYB5R3	DRD2	HTR3D	HTR3E	HTR3A	HTR4	CYB5R4	CYB5R2	CYB5R1	HTR3B
+D05024_Mibefradil_dihydrochloride_(USAN);_Posicor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05024	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	CACNA1I	CACNA1H	CACNA1G
+D05028_Midazolam_maleate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05028	CYP3A7	CYP3A4	CYP3A5	CYP4B1	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D05029_Midostaurin_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05029	FLT3	KDR	KIT	PDGFRB	PRKCA
+D05035_Milameline_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05035	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D05077_Moricizine_(USAN);_Moracizine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05077	CYP1A2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D05145_Neramexane_mesylate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05145	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D05183_Ulinastatin_(JP16);_Miraclid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05183	CTRB1	CTRB2	PRSS1	PRSS2	PRSS3
+D05206_Norepinephrine_bitartrate_(USP);_Levophed_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05206	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3	MAOA
+D05230_Octreotide_pamoate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05230	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D05259_Omeprazole_magnesium_(USAN);_Prilosec_OTC_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05259	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D05261_Omeprazole_sodium_injection_(JAN);_Omeprazole_sodium_hydrate;_Omepral_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05261	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D05333_Paclitaxel_poliglumex_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05333	TUBB3	TUBB4A	TUBB4B	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D05343_Palonocetron_hydrochloride_(JAN);_Palonosetron_hydrochloride_(USAN);_Aloxi_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05343	CYP1A2	CYP2D6	CYP3A4	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D05348_Pancopride_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05348	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D05380_Pazopanib_hydrochloride_(JAN/USAN);_Votrient_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05380	CYP3A7	CYP2D6	CYP3A4	CYP3A5	FLT1	FLT4	KDR	KIT	PDGFRA	PDGFRB	UGT1A1
+D05395_Pelanserin_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05395	ADRA1D	ADRA1B	ADRA1A	HTR2A	HTR2B	HTR2C
+D05429_Aminophylline_hydrate_(JP16)	http://www.genome.jp/dbget-bin/www_bget?drug+D05429	PDE10A	ADORA1	ADORA2A	CYP1A2	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D05442_Perhexiline_maleate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05442	CPT1C	CPT1A	CPT1B	CPT2	CYP2D6	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D05447_Perzinfotel_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05447	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D05453_Phencyclidine_hydrochloride_(USAN);_PCP	http://www.genome.jp/dbget-bin/www_bget?drug+D05453	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D05478_Pilocarpine_nitrate_(USP);_Pilagan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05478	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	CYP2A6
+D05480_Pimecrolimus_(JAN/USAN/INN);_Elidel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05480	CHP1	PPP3CA	PPP3CB	PPP3CC	PPP3R1	PPP3R2	CHP2
+D05523_Pizotyline_(USAN);_Pizotifen_(INN);_Sandomigran_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05523	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2C
+D05529_Podofilox_(USAN);_Podophyllotoxin_(BAN);_Condylox_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05529	TUBB3	TUBB4A	TUBB4B	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D05575_Pramipexole_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05575	SLC47A2	DRD2	DRD3	DRD4	SLC22A1	SLC22A2
+D05648_Pseudoephedrine_polistirex_(USAN);_Pseudo-12_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05648	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D05649_Pseudoephedrine_sulfate_(USP);_Afrinol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05649	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D05681_Quinine_ascorbate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05681	CYP3A7	CYP3A4	CYP3A5	G6PD	SLC22A1	SLC22A2
+D05685_Quipazine_maleate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05685	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D05699_Ranitidine_bismuth_citrate_(USAN);_Tritec_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05699	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HRH2	SLC22A2
+D05703_Rapacuronium_bromide_(USAN/INN);_Raplon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05703	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D05714_Remacemide_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05714	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D05779_Sabcomeline_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05779	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D05827_Seractide_acetate_(USAN);_Seractide_acetate_hydrate;_Acthar_gel-syntehtic_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05827	MC1R	MC2R	MC3R	MC4R	MC5R
+D05868_Sodium_phenylbutyrate_(JAN/USAN);_Buphenyl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05868	CPS1	NAGS	ARG1	ARG2	ASL	ASS1	OTC
+D05928_Stiripentol_(JAN/USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D05928	CYP1A2	CYP2C19	CYP2C9	CYP2D6	CYP3A4
+D06015_Tazomeline_citrate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06015	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D06028_Technetium_Tc_99m_arcitumomab_(USP)	http://www.genome.jp/dbget-bin/www_bget?drug+D06028	CEACAM5	CEACAM3	CEACAM7	CEACAM8	CEACAM4	MUC1	CEACAM6	CEACAM1	CEACAM21
+D06085_Testosterone_ketolaurate_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06085	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D06086_Testosterone_phenylacetate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06086	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D06087_Testosterone_undecanoate_(USAN);_Andriol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06087	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D06103_Theophylline_(USP);_Theophylline_monohydrate;_Accurbron_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06103	PDE10A	ADORA1	ADORA2A	CYP1A2	CYP2E1	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D06104_Theophylline_sodium_glycinate_(USP);_Asbron_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06104	PDE10A	ADORA1	ADORA2A	CYP1A2	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D06106_Thiamylal	http://www.genome.jp/dbget-bin/www_bget?drug+D06106	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D06132_Tibenelast_sodium_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06132	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D06146_Tiletamine_hydrochloride_(USP)	http://www.genome.jp/dbget-bin/www_bget?drug+D06146	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D06172_Tocainide_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06172	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D06217_Triampyzine_sulfate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06217	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D06253_Tropanserin_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06253	HTR3C	HTR3D	HTR3E	HTR2A	HTR2B	HTR2C	HTR3A	HTR3B
+D06272_Sorafenib_tosilate_(JAN);_Sorafenib_tosylate_(USAN);_Nexavar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06272	CYP2B6	CYP2C8	CYP2C9	CYP3A4	FLT3	FLT4	KDR	KIT	PDGFRB	UGT1A9	UGT1A1	BRAF
+D06281_Vapreotide_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06281	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D06283_Varespladib_sodium_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06283	PLA2G2D	PLA2G2E	PLA2G2C	PLA2G3	PLA2G1B	PLA2G2A	PLA2G5	PLA2G2F	PLA2G12A	PLA2G10	PLA2G12B
+D06285_Vatalanib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06285	FLT1	FLT4	KDR	KIT	PDGFRB
+D06304_Vindesine_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06304	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D06350_Yttrium_Y_90_labetuzumab_(USAN);_CES-Cide_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06350	CEACAM5	CEACAM3	CEACAM7	CEACAM8	CEACAM4	CEACAM6	CEACAM1	CEACAM21
+D06351_Yttrium_Y_90_labetuzumab_tetraxetan_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06351	CEACAM5	CEACAM3	CEACAM7	CEACAM8	CEACAM4	CEACAM6	CEACAM1	CEACAM21
+D06353_Zacopride_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06353	HTR3C	HTR3D	HTR3E	HTR3A	HTR4	HTR3B
+D06396_Renzapride_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06396	HTR3C	HTR3D	HTR3E	HTR3A	HTR4	HTR3B
+D06402_Sunitinib_malate_(JAN/USAN);_Sutent_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06402	CSF1	CYP3A4	FLT1	FLT3	FLT4	KDR	KIT	PDGFRA	PDGFRB	RET
+D06413_Nilotinib_hydrochloride_hydrate_(JAN);_Tasigna_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06413	CYP3A7	CYP2C8	CYP3A4	CYP3A5	ABL1	KIT	PDGFRA	PDGFRB	ABCB1	UGT1A1	BCR
+D06414_Dasatinib_hydrate_(JAN);_Dasatinib_(USAN);_Sprycel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06414	CYP3A7	CYP3A4	CYP3A5	EPHA2	FMO3	ABL1	KIT	PDGFRB	BCR	SRC
+D06495_Octreotide_acetate_(USAN);_Sandostatin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06495	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D06517_Pirmenol_hydrochloride_(USAN);_Pirmavar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06517	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D06544_Corticotropin,_repository_(USP);_Cortigel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06544	MC1R	MC2R	MC3R	MC4R	MC5R
+D06569_Bremelanotide_(USAN/INN);_PT-141	http://www.genome.jp/dbget-bin/www_bget?drug+D06569	MC1R	MC2R	MC3R	MC4R	MC5R
+D06597_Fosaprepitant_meglumine_(JAN);_Fosaprepitant_dimeglumine_(USAN);_Proemend_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06597	CYP3A7	CYP2C9	CYP3A4	CYP3A5	TACR1
+D06623_Olanzapine_pamoate_(USAN);_Olanzapine_pamoate_monohydrate	http://www.genome.jp/dbget-bin/www_bget?drug+D06623	ADRA1D	ADRA1B	ADRA1A	CYP1A2	CYP2D6	DRD2	DRD3	DRD4	HRH1	HTR2A	HTR2C
+D06637_Romidepsin_(JAN/USAN/INN);_Istodax_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06637	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D06652_Tedisamil_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06652	KCND3	KCNH2	KCNJ8	KCNJ11	KCNQ1
+D06653_Tedisamil_sesquifumarate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06653	KCND3	KCNH2	KCNJ8	KCNJ11	KCNQ1
+D06656_Tezampanel_(USAN);_Tezampanel_hydrate	http://www.genome.jp/dbget-bin/www_bget?drug+D06656	GRIA1	GRIA2	GRIA3	GRIA4	GRIK1	GRIK2	GRIK3	GRIK4	GRIK5
+D06670_Maraviroc_(JAN/INN);_Selzentry_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06670	CCR5	CYP3A7	CYP3A4	CYP3A5	ABCB1
+D06678_Motesanib;_AMG_706	http://www.genome.jp/dbget-bin/www_bget?drug+D06678	FLT1	FLT4	KDR	KIT	PDGFRA	PDGFRB	RET
+D06881_Acetyldigitoxin_(INN);_Acylanid_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D06881	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D07058_Acamprosate_(INN);_Aotal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07058	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D07073_Dexamethasone_cipecilate_(JAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07073	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07086_Rivaroxaban_(JAN/USAN/INN);_Xarelto_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07086	CYP2J2	CYP3A4	CYP3A5	F10	ABCB1
+D07089_Moxaverine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07089	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D07099_Cimetropium_bromide_(INN);_Alginor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07099	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07129_Alosetron_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07129	CYP1A2	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D07147_Gitoformate_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07147	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D07148_Oxedrine_(BAN);_(+/-)-Synephrine	http://www.genome.jp/dbget-bin/www_bget?drug+D07148	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D07175_Palonosetron_(INN);_Aloxi_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07175	CYP1A2	CYP2D6	CYP3A4	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D07218_Metergoline_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07218	HTR3C	HTR3D	HTR3E	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2B	HTR2C	HTR3A	HTR5A	HTR6	HTR7	HTR3B
+D07226_Fesoterodine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07226	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07272_Dimethyltubocurarine_(BAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07272	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D07283_Esketamine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07283	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D07305_Piribedil_(INN);_Trivastal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07305	ADRA2A	ADRA2B	ADRA2C	DRD2	DRD3
+D07326_Loprazolam_(INN);_Dormonoct_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07326	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D07349_Choline_alfoscerate_(INN);_Gliatilin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07349	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07398_Chlorphenamine_(INN);_Chlorpheniramine;_Clofeniramina_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07398	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HRH1
+D07409_Pentetrazol_(INN);_Pentylenetetrazol;_Coryvet_[veterinary]_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07409	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D07417_Alsactide_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07417	MC1R	MC2R	MC3R	MC4R	MC5R
+D07425_Papaverine_(BAN);_Mesotina_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07425	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D07428_Bunaftine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07428	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D07431_Somatostatin_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07431	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D07439_Papaverine_sulfate;_Papaverine_SAD_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07439	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D07442_Ambroxol_(INN);_Tabcin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07442	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D07448_Amitriptyline_(INN);_Laroxyl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07448	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D07450_Amlodipine_(USAN/INN);_Norvasc_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07450	CYP3A7	CYP3A4	CYP3A5	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D07451_Amosulalol_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07451	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D07465_Arotinolol_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07465	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D07471_Atazanavir_(INN);_Reyataz_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07471	SLCO1B1	CYP3A7	CYP3A4	CYP3A5	SLCO1B3	UGT1A1
+D07474_Atorvastatin_(INN);_Lipitor_(TN);_Sortis_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07474	SLCO1B1	CYP3A7	CYP3A4	CYP3A5	SLCO1B3	HMGCR	LDLR
+D07477_Atropine_oxide_(INN);_Apitropin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07477	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07481_Azasetron_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07481	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D07494_Barnidipine_(INN);_Vasexten_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07494	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D07509_Benidipine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07509	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D07511_Benzatropine_(INN);_Benztropine	http://www.genome.jp/dbget-bin/www_bget?drug+D07511	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07513_Benzetimide_(INN);_Spasmental_[veterinary]_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07513	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07520_Bepridil_(INN);_Bepadin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07520	CYP2C9	CYP2D6	CYP3A4	KCNA5	KCND3	KCNH2	KCNJ3	KCNJ5	KCNJ8	KCNJ11	KCNJ12	KCNQ1	CACNA1C	CACNA1D	CACNA1F	CACNA1S	CACNA1I	CACNA1H	CACNA1G
+D07538_Bosentan_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07538	SLCO1B1	CYP3A7	CYP2C19	CYP2C9	CYP3A4	CYP3A5	EDNRA	EDNRB	ABCB11
+D07546_Bucladesine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07546	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D07552_Bupivacaine_(USAN/INN);_Bucaine_(TN);_Exparel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07552	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D07555_Acetyldigoxin;_Cedigossima_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07555	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D07556_beta-Acetyldigoxin;_Acetyldigoxin_beta_isomer;_Corotal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07556	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D07583_Phenytoin	http://www.genome.jp/dbget-bin/www_bget?drug+D07583	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5
+D07595_Fosphenytoin_sodium_hydrate_(JAN);_Fostoin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07595	CYP2B6	CYP2C19	CYP2C9	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D07603_Caffeine_citrate_(USP);_Cafcit_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07603	PDE10A	ADORA1	ADORA2A	ADORA2B	CYP1A2	CYP3A7	CYP2E1	CYP3A4	CYP3A5	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D07678_Chloroprocaine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07678	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D07700_Cinitapride_(INN);_Paxapride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07700	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2B	HTR2C	HTR4
+D07701_Cinitapride_tartrate;_Blaston_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07701	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2B	HTR2C	HTR4
+D07702_Ciprofloxacin_lactate;_Ciproxin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07702	CYP1A2	CYP3A7	CYP3A4	CYP3A5	SLC22A6	SLC22A8
+D07704_Citalopram_(USP/INN);_Citadur_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07704	CYP2C19	CYP2D6	CYP3A4	ABCB1	SLC6A4
+D07705_Citalopram_hydrochloride;_Seropram_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07705	CYP2C19	CYP2D6	CYP3A4	ABCB1	SLC6A4
+D07727_Clomipramine_(INN);_Anafranil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07727	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D07729_Clopidogrel_(USP/INN);_Clopidogrel_(TN);_Plavix_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07729	CYP1A2	CYP2B6	CYP2C19	CYP3A4	P2RY12
+D07748_Conivaptan_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07748	CYP3A7	CYP3A4	CYP3A5	ABCB1	AVPR1A	AVPR2
+D07759_Cyclopentolate_(INN);_Bell_Pentolate_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07759	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07760_Cyclophosphamide_(INN);_Cyclophosphamide_(TN);_Cytoxan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07760	CYP2A6	CYP2B6	CYP2C8	CYP2C9	CYP3A4
+D07775_Dapiprazole_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07775	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D07782_Delavirdine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07782	ABCC2	CYP2C19	CYP2C9	CYP2D6	CYP3A4	ABCC3
+D07784_Delorazepam_(INN);_Dadumir_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07784	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D07796_Dexamethasone_21-acetate;_Dexamethasone_acetate_anhydrous;_Decaject-L.A._(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07796	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07797_Dexamethasone_isonicotinate;_Dexamethasone_21-isonicotinate;_Voren_[veterinary]_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07797	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07798_Dexamethasone_sodium_hemisulfate;_Dexamethasone_21-sodium_sulfate;_Colircusi_Dexametasona_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07798	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07799_Dexamethasone_21-tebutate;_Dexamethasone_tertiary_butyl_acetate;_Dexamedium_[veterinary]_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07799	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07800_Dexamethasone_21-valerate;_Voalla_(TN);_Zalucs_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07800	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07801_Dexamethasone_phenylpropionate;_Dexafort_[veterinary]_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07801	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07802_Dexamethasone_phosphate;_Decadron-phosphate_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07802	CYP3A7	CYP2D6	CYP3A4	CYP3A5	NR3C1
+D07803_Dexchlorpheniramine_(INN);_d-Chloropheniramine;_Dapriton_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07803	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HRH1
+D07804_Dexetimide_hydrochloride;_Tremblex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07804	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07816_Diclofenac_(USAN/INN);_Solaraze_(TN);_Zorvolex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07816	ABCC4	CYP2C9	PTGS1	PTGS2	SLC22A8
+D07817_Diclofenac_diethylamine;_Voltaren_Emulgel_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07817	ABCC4	CYP2C9	PTGS1	PTGS2	SLC22A8
+D07818_Diclofenac_hydroxyethylpyrrolidine;_Flector_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07818	ABCC4	CYP2C9	PTGS1	PTGS2	SLC22A8
+D07819_Diclofenac_calcium;_Voltaren_Actingo_Extra_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07819	ABCC4	CYP2C9	PTGS1	PTGS2	SLC22A8
+D07821_Dihexyverine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07821	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07837_Dihydroergotamine_(INN);_Neomigran_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07837	ADRA1D	ADRA1B	ADRA1A	CYP3A7	CYP3A4	CYP3A5	DRD2	HTR1A
+D07838_Dihydroergotamine_tartrate;_Divegal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07838	ADRA1D	ADRA1B	ADRA1A	CYP3A7	CYP3A4	CYP3A5	DRD2	HTR1A
+D07845_Diltiazem_(INN);_Surazem_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07845	CYP3A7	CYP2D6	CYP3A4	CYP3A5	ABCB1	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D07866_Docetaxel_(JAN/INN);_Docetaxel_(TN);_Taxotere_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07866	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D07867_Dolasetron_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07867	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D07870_Dopamine_(INN);_Medopa_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07870	COMT	DRD1	DRD2	DRD3	DRD4	DRD5	MAOB	SLC22A2
+D07871_Dorzolamide_(INN);_Trusopt_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07871	CA5B	CA14	CA13	CA1	CA2	CA3	CA4	CA5A	CA6	CA7	CA8	CA9	CA12
+D07881_Dyclonine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07881	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D07886_Efonidipine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07886	CACNA1C	CACNA1D	CACNA1F	CACNA1S	CACNA1I	CACNA1H	CACNA1G
+D07887_Eletriptan_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07887	CYP3A7	CYP3A4	CYP3A5	HTR1B	HTR1D
+D07894_Encainide_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07894	CYP2D6	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D07905_Ergometrine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07905	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP3A4	DRD2	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F
+D07906_Ergotamine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07906	ADRA1D	ADRA1B	ADRA1A	CYP3A4	DRD2	HTR1A
+D07909_Erythromycin_thiocyanate;_Erythrocin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07909	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D07910_Erythromycin_stinoprate_(INN);_Erysec_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07910	SLC22A7	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1
+D07917_Esomeprazole_(INN);_Inexium_paranova_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07917	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D07918_Estradiol_hemihydrate;_Estrasorb_(TN);_Vagifem_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07918	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D07919_Estradiol_17_beta-hemisuccinate;_17beta-Estradiol_hemisuccinate;_Eutocol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07919	CYP1A2	CYP1B1	CYP3A4	ESR1	ESR2
+D07951_Fentonium_bromide_(INN);_Ulcesium_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07951	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D07958_Fexofenadine_(INN);_Telfast_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07958	SLCO2B1	SLCO1B3	HRH1	ABCB1	SLCO1A2	ABCC3
+D07961_Flavoxate_(INN);_Bladuril_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07961	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D07962_Flecainide_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07962	CYP2D6	CYP3A4	KCND3	KCNH2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	KCNH6	KCNH7
+D07978_Flupirtine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07978	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D07979_Flupirtine_D-gluconate;_Katadolon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07979	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D07983_Fluvastatin_(INN);_Fluvas_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07983	SLCO1B1	CYP2C9	CYP3A4	HMGCR	ABCB11
+D07984_Fluvoxamine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07984	CYP1A2	CYP3A7	CYP2C19	CYP2C8	CYP2C9	CYP2D6	CYP3A4	CYP3A5	ABCB1	SLC6A4
+D07993_Fosphenytoin_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07993	CYP2B6	CYP2C19	CYP2C9	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D07999_Sodium_furosemide;_Frosemide_sodium;_Lasix_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D07999	ABCC4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	SLC12A1	SLC12A2	SLC22A6	SLC22A8
+D08001_Furosemide_diolamine;_Furosemide_diethanolamine_salt;_Nuriban_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08001	ABCC4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	SLC12A1	SLC12A2	SLC22A6	SLC22A8
+D08035_Haloperidol_lactate;_Haldol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08035	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	DRD2
+D08048_Hydroquinidine_(DCF);_Dihydroquinidine	http://www.genome.jp/dbget-bin/www_bget?drug+D08048	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D08049_Hydroquinidine_hydrochloride;_Idrochinidine_(TN);_Serecor_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08049	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D08066_Imatinib_(INN);_Glamox_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08066	CYP3A7	CYP2C9	CYP2D6	CYP3A4	CYP3A5	ABL1	KIT	PDGFRA	PDGFRB	ABCB1	BCR	FIP1L1	ABCG2
+D08070_Imipramine_(INN);_Tofranil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08070	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D08071_Imipramine_embonate;_Tofranil-pm_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08071	CYP1A2	CYP2C19	CYP2D6	CYP3A4	SLC6A2	SLC6A4
+D08086_Irinotecan_(INN);_Biotecan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08086	CYP3A7	CYP3A4	CYP3A5	ABCB1	UGT1A1	TOP1	ABCG2
+D08098_Ketamine_(INN);_Tekam_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08098	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D08099_Ketanserin_tartrate;_Sufrexal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08099	ADRA1D	ADRA1B	ADRA1A	HRH1	HTR2A
+D08100_Ketobemidone_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08100	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D08101_Ketobemidone_hydrochloride;_Ketogan_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08101	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D08106_Labetalol_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08106	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D08107_Varespladib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08107	PLA2G2D	PLA2G2E	PLA2G2C	PLA2G3	PLA2G1B	PLA2G2A	PLA2G5	PLA2G2F	PLA2G12A	PLA2G10	PLA2G12B
+D08108_Lapatinib_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08108	CYP3A7	CYP2C8	CYP3A4	CYP3A5	EGFR	ERBB2	ABCB1	ABCG2
+D08111_Lercanidipine_(INN);_Lercanil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08111	CYP3A7	CYP3A4	CYP3A5	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D08115_Levobunolol_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08115	ADRA1D	ADRA1B	ADRA1A	ADRB1	ADRB2	ADRB3
+D08116_Levobupivacaine_(INN);_Novabupi_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08116	CYP1A2	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D08121_Levomethadone_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08121	CYP2B6	CYP2D6	CYP3A4	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	OPRM1
+D08122_Levomethadone_hydrochloride;_L-polamidon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08122	CYP2B6	CYP2D6	CYP3A4	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	OPRM1
+D08127_Lidocaine_hydrochloride_monohydrate;_Lidocaine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08127	CYP1A2	CYP2D6	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A	SLC22A3
+D08138_Lobeline_sulfate;_Smokeless_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08138	CHRNA1	CHRNA2	CHRNA3	CHRNA4	CHRNA5	CHRNA7	CHRNB1	CHRNB2	CHRNB3	CHRNB4	CHRND	CHRNE	CHRNG	CHRNA9	CHRNA10	CHRNA6
+D08145_Loprazolam_mesilate;_Loprazolam_mesylate;_Loprazolam_methanesulfonate;_Havlane_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08145	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D08146_Losartan_(INN);_Losartic_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08146	SLC22A12	CYP2C9	CYP3A4	AGTR1	ABCB11
+D08155_Manidipine_(INN);_Manidipine_6300;_Artedil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08155	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D08157_Mazaticol_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08157	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08160_Mebeverine_(INN);_Arluy_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08160	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08162_Meclofenamate_sodium;_Meclomen_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08162	PLA2G2D	PLA2G2E	PLA2G2C	PLA2G3	PLA2G1B	PLA2G2A	PLA2G5	PTGS1	PTGS2	PLA2G2F	PLA2G12A	PLA2G10	PLA2G12B
+D08174_Memantine_(INN);_Exiba_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08174	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	SLC22A2
+D08192_Metaraminol_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08192	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D08195_Methadone_(BAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08195	CYP2B6	CYP2D6	CYP3A4	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	OPRM1
+D08206_Methylephedrine_(BAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08206	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D08207_Methylergometrine_(INN);_Ergotyl_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08207	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP3A4	DRD2	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F
+D08209_Metixene_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08209	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08215_Mexiletine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08215	CYP1A2	CYP2D6	CYP3A4	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D08216_Mianserin_(INN);_Tolvon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08216	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	CYP1A2	CYP2C19	CYP2D6	CYP3A4	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2B	HTR2C	ABCB1
+D08217_Mibefradil_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08217	CYP1A2	CYP3A7	CYP2D6	CYP3A4	CYP3A5	CACNA1I	CACNA1H	CACNA1G
+D08221_Varespladib_methyl_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08221	PLA2G2D	PLA2G2E	PLA2G2C	PLA2G3	PLA2G1B	PLA2G2A	PLA2G5	PLA2G2F	PLA2G12A	PLA2G10	PLA2G12B
+D08229_Montelukast_(INN);_Brondilat_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08229	CYSLTR1	CYP1A2	CYP2C8	CYP2C9	CYP3A4
+D08238_Moxaverine_hydrochloride;_Certonal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08238	PDE10A	PDE7B	PDE11A	PDE1A	PDE1C	PDE2A	PDE3A	PDE3B	PDE4A	PDE4B	PDE4C	PDE4D	PDE7A	PDE8A	PDE1B	PDE8B
+D08255_Naratriptan_(INN);_Naramig_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08255	CYP1A2	CYP2C9	CYP2D6	CYP2E1	CYP3A4	CYP3A5	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F
+D08257_Nefazodone_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08257	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HTR2A	HTR2C
+D08259_Nelfinavir_(INN);_Viracept_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08259	CYP3A7	CYP2C19	CYP2C9	CYP2D6	CYP2E1	CYP3A4	CYP3A5	ABCB1
+D08270_Nicardipine_(INN);_Cardene_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08270	CYP3A4	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D08279_Tozasertib_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08279	FLT3	ABL1	JAK2	AURKA	AURKC	AURKB
+D08283_Nordazepam_(INN);_Calmday_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08283	CYP2C19	CYP3A4	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D08284_Norepinephrine_hydrochoride;_(-)-Noradrenaline_hydrochloride;_Arterenol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08284	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3	MAOA
+D08297_Opipramol_(INN);_Opipramol_dura_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08297	SIGMAR1	DRD2	HRH1	HTR2A	HTR2B	HTR2C
+D08305_Orphenadrine_(INN);_Mialgin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08305	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08308_Oxedrine_tartrate;_Dacryoboraline_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08308	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D08309_Oxedrine_hydrochloride;_Ocuton_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08309	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D08340_Perhexiline_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08340	CPT1C	CPT1A	CPT1B	CPT2	CYP2D6	CACNA1C	CACNA1D	CACNA1F	CACNA1S
+D08344_Tozasertib_lactate_(USAN);_MK-0457	http://www.genome.jp/dbget-bin/www_bget?drug+D08344	FLT3	ABL1	JAK2	AURKA	AURKC	AURKB
+D08356_Phenobarbital_diethylamine;_Gratusminal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08356	CYP1A2	CYP3A7	CYP2B6	CYP2C19	CYP2C9	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	ABCB1	GABRQ
+D08358_Phenoxybenzamine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08358	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D08362_Phentolamine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08362	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D08376_Pilocarpine_borate;_pilolarpin_ophtha_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08376	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	CYP2A6
+D08377_Pilsicainide_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08377	KCNA1	KCNA2	KCNA5	KCNA7	KCNC1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A2
+D08382_Piperidolate_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08382	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08384_Pipethanate_(INN);_Piperilate	http://www.genome.jp/dbget-bin/www_bget?drug+D08384	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08394_Pirmenol_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08394	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D08395_Piroheptine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08395	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08397_Pizotifen_malate;_Mosegor_(TN);_Sandomigran_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08397	HTR1A	HTR1B	HTR1D	HTR1E	HTR1F	HTR2A	HTR2C
+D08410_Pravastatin_(INN);_Pravator_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08410	SLCO1B1	CYP3A4	HMGCR	LDLR	ABCB11	SLC22A8
+D08421_Procainamide_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08421	SLC47A1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A3	SLC22A2
+D08422_Procaine_(INN);_Solution_of_novocain_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08422	RYR1	RYR2	RYR3	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A	KCNK5
+D08425_Procyclidine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08425	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08426_Profenamine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08426	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08435_Propafenone_(INN);_Propafenon_hexal_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08435	ADRB1	CYP1A2	CYP2D6	CYP3A4	ABCB1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D08441_Propiverine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08441	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	CYP3A4
+D08443_Propranolol_(INN);_Propranolol_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08443	ADRB1	ADRB2	CYP1A2	ADRB3	CYP3A7	CYP2C19	CYP2D6	CYP3A4	CYP3A5
+D08448_Proxymetacaine_(INN);_Proparacaine	http://www.genome.jp/dbget-bin/www_bget?drug+D08448	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D08449_Pseudoephedrine_(INN);_Neodurasina_(TN);_Acunaso_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08449	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D08456_Quetiapine_(INN);_Norsic_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08456	ADRA1D	ADRA1B	ADRA1A	CYP3A7	CYP3A4	CYP3A5	DRD2	DRD3	DRD4	HRH1	HTR2A	HTR6
+D08458_Quinidine_(BAN);_Kinidin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08458	SLC47A2	CYP2D6	CYP3A4	ABCB1	SLC47A1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A1	SLC22A3	SLC22A2
+D08459_Quinidine_phenylethylbarbiturate;_Quinidine_5-ethyl_5-phenyl_barbiturate;_Natisedine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08459	SLC47A2	CYP2D6	CYP3A4	ABCB1	SLC47A1	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SLC22A1	SLC22A3	SLC22A2
+D08460_Quinine_(BAN);_Kinder_Quinina_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08460	CYP3A7	CYP3A4	CYP3A5	G6PD	SLC22A1	SLC22A2
+D08461_Quinine_dihydrochloride;_Quinine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08461	CYP3A7	CYP3A4	CYP3A5	G6PD	SLC22A1	SLC22A2
+D08466_Ramosetron_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08466	CYP1A1	CYP1A2	CYP2D6	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D08479_Rifampicin_sodium;_Rifadine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08479	SLCO1B1	SLCO2B1	ABCC2	CYP3A7	CYP2B6	CYP2C19	CYP2C8	CYP2C9	CYP2D6	CYP3A4	CYP3A5	SLCO1B3	SLCO1A2	ABCB11
+D08481_Rilmazafone_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08481	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D08490_Ropivacaine_(INN);_Naropin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08490	CYP1A2	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A	SCN10A
+D08492_Rosuvastatin_(INN);_Creston_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08492	SLCO1B1	SLCO1B3	HMGCR	LDLR	SLC22A8	ABCG2
+D08503_Toceranib_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08503	FLT1	FLT3	FLT4	KDR	KIT	PDGFRA	PDGFRB
+D08507_Sarmazenil_(INN);_Sarmazol_[veterinary]_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08507	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D08508_Sarpogrelate_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08508	CYP1A2	CYP2C19	CYP2C9	CYP2D6	CYP3A4	HTR2A
+D08511_Setiptiline_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08511	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	HTR2A	HTR2B	HTR2C
+D08514_Sildenafil_(INN);_Aphrodil_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08514	CYP3A7	CYP2C9	CYP3A4	CYP3A5	PDE5A
+D08524_Sorafenib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08524	CYP2B6	CYP2C8	CYP2C9	CYP3A4	FLT3	FLT4	KDR	KIT	PDGFRB	UGT1A9	UGT1A1	BRAF
+D08544_Toceranib_phosphate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08544	FLT1	FLT3	FLT4	KDR	KIT	PDGFRA	PDGFRB
+D08552_Sunitinib_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08552	CSF1	FLT1	FLT3	FLT4	KDR	KIT	PDGFRA	PDGFRB	RET
+D08556_Tacrolimus_(INN);_Prograf_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08556	CHP1	CYP3A4	FKBP1A	FKBP1B	PPP3CA	PPP3CB	PPP3CC	PPP3R1	PPP3R2	CHP2
+D08559_Tamoxifen_(INN);_Tamoxifen_(TN);_Tamoplex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08559	ABCC2	CYP1A2	CYP2C9	CYP2D6	CYP3A4	ESR1	ESR2	F2	F5	PGR
+D08573_Testosterone_decanoate;_Testosterone_17beta-decanoate;_Testocaps_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08573	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D08574_Testosterone_phenylpropionate;_Testosterone_17beta-phenpropionate;_Testanon_50_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08574	CYP3A7	CYP2B6	CYP3A4	CYP3A5	AR
+D08594_Ticlopidine_(INN);_Ticlopidin-Puren_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08594	CYP1A2	CYP2B6	CYP2C19	CYP2D6	P2RY12
+D08595_Tiemonium_methylsulfate;_Visceralgine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08595	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08596_Tiletamine_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08596	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D08614_Tolazoline_(INN);_Tolazine_[veterinary]_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08614	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C
+D08626_Trazodone_(INN);_Trittico_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08626	CYP3A7	CYP2D6	CYP3A4	CYP3A5	HTR2A	SLC6A4
+D08638_Trihexyphenidyl_(INN);_Apo-trihex_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08638	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08639_Trimebutine_(INN);_Trimebutina_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08639	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	OPRM1
+D08655_Tubocurarine_chloride_(INN);_Tubaine_(TN);_Tubocurarine_Chloride_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08655	CHRNA1	CHRNB1	CHRND	CHRNE	CHRNG
+D08667_Calcium_valproate;_Valproic_acid_calcium_salt;_Convulsofin_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08667	HDAC6	HDAC5	CPS1	CYP2C9	CYP3A4	NAGS	ABAT	CDY2B	CDY1B	HDAC1	HDAC2	ARG1	ARG2	ASL	ASS1	OTC	HDAC7	POLG	HDAC8	HDAC10	HDAC3	CACNA1I	CACNA1H	CACNA1G	CDY1	CDY2A	HDAC9	HDAC4
+D08668_Vardenafil_(INN);_Levitra_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08668	CYP3A7	CYP2C19	CYP2C8	CYP2C9	CYP3A4	CYP3A5	PDE5A
+D08675_Vinblastine_(INN);_Vinblastina_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08675	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	ABCB1	ABCB4	TUBB2A	TUBB1	TUBB6
+D08679_Vincristine_(INN);_Tecnocris_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08679	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D08680_Vinorelbine_(INN);_Navelbine_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08680	TUBB3	TUBB4A	TUBB4B	CYP3A4	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D08687_Ziprasidone_(INN);_Zipradon_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08687	CYP3A7	CYP3A4	CYP3A5	DRD2	HTR2A	HTR2B	HTR2C
+D08690_Zolpidem_(INN);_Sanval_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08690	CYP1A2	CYP3A7	CYP2C9	CYP3A4	CYP3A5	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D08837_Aclidinium_bromide_(JAN/USAN/INN);_Tudorza_pressair_(TN);_Eklira_genuair_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08837	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08840_Adipiplon_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08840	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D08870_Belinostat_(USAN/INN);_Beleodaq_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08870	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D08881_Cediranib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08881	FLT1	FLT4	KDR	KIT	PDGFRA	PDGFRB
+D08883_Cediranib_maleate_(JAN/USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08883	FLT1	FLT4	KDR	KIT	PDGFRA	PDGFRB
+D08903_Dexlansoprazole_(INN/USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08903	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D08907_Dovitinib_lactate_hydrate_(JAN);_Dovitinib_lactate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08907	FGFR1	FGFR3	FGFR2	FLT1	FLT4	KDR	PDGFRB
+D08914_Eribulin_mesilate_(JAN);_Eribulin_mesylate_(USAN);_Halaven_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08914	TUBB3	TUBB4A	TUBB4B	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D08923_Fesoterodine_fumarate_(JAN/USP);_Toviaz_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08923	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D08936_Labetuzumab_(INN/USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08936	CEACAM5	CEACAM3	CEACAM7	CEACAM8	CEACAM4	CEACAM6	CEACAM1	CEACAM21
+D08947_Motesanib_phosphate_(JAN);_Motesanib_diphosphate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08947	FLT1	FLT4	KDR	KIT	PDGFRA	PDGFRB	RET
+D08953_Nilotinib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D08953	CYP3A7	CYP2C8	CYP3A4	CYP3A5	ABL1	KIT	PDGFRA	PDGFRB	ABCB1	UGT1A1	BCR
+D09012_Telaprevir_(JAN/USAN/INN);_Incivek_(TN);_Incivo_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09012	CYP3A7	CYP3A4	CYP3A5	IFNL3	ABCB1
+D09017_Ticagrelor_(USAN/INN);_Brilinta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09017	CYP3A7	CYP2C19	CYP3A4	CYP3A5	ABCB1	P2RY12
+D09033_Voclosporin_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09033	CHP1	PPP3CA	PPP3CB	PPP3CC	PPP3R1	PPP3R2	CHP2
+D09215_Eslicarbazepine_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09215	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D09339_Esomeprazole_potassium_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09339	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D09402_Darotropium_bromide_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09402	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D09612_Eslicarbazepine_acetate_(USAN);_Zebinix_(TN);_Aptiom_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09612	SCN1A	SCN2A	SCN3A	SCN4A	SCN5A	SCN8A	SCN9A
+D09635_Linifanib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09635	CSF1	FLT1	FLT4	KDR	PDGFRA	PDGFRB
+D09662_Rontalizumab_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09662	IFNA1	IFNA2	IFNA4	IFNA5	IFNA6	IFNA7	IFNA8	IFNA10	IFNA13	IFNA14	IFNA16	IFNA17	IFNA21
+D09668_Sifalimumab_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09668	IFNA1	IFNA2	IFNA4	IFNA5	IFNA6	IFNA7	IFNA8	IFNA10	IFNA13	IFNA14	IFNA16	IFNA17	IFNA21
+D09731_Crizotinib_(JAN/USAN/INN);_Xalkori_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09731	CYP3A7	CYP3A4	CYP3A5	ALK	EML4
+D09749_Itasetron_hydrochloride_hydrate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09749	HTR3C	HTR3D	HTR3E	HTR3A	HTR3B
+D09752_Carpronium_chloride_hydrate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09752	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D09773_Isoniazid_glucuronate_sodium_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09773	CYP3A7	CYP2C9	CYP2E1	CYP3A4	CYP3A5	MAOA	MAOB
+D09794_Norepinephrine_hydrochloride_(JAN);_(+/-)-Noradrenaline_hydrochloride	http://www.genome.jp/dbget-bin/www_bget?drug+D09794	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3	MAOA
+D09801_Giractide_acetate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09801	MC1R	MC2R	MC3R	MC4R	MC5R
+D09819_Chlorpromazine_tannate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09819	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	ADRA2A	ADRA2B	ADRA2C	CYP2D6	DRD2	HRH1	HTR2A	HTR2B	HTR2C
+D09842_dl-Methylephedrine_saccharinate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09842	ADRA1D	ADRA1B	ADRA1A	ADRA2A	ADRA2B	ADRA2C	ADRB1	ADRB2	ADRB3
+D09843_Beradilol_monoethyl_maleate_(JAN);_TZC-5665	http://www.genome.jp/dbget-bin/www_bget?drug+D09843	ADRB1	ADRB2	ADRB3	PDE3A	PDE3B
+D09847_Metildigoxin_(INN);_Medigoxin_(BAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09847	ATP1B4	ATP1A1	ATP1A2	ATP1A3	ATP1A4	ATP1B1	ATP1B2	ATP1B3
+D09886_Dexpramipexole_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09886	DRD1	DRD2	DRD3	DRD4	DRD5
+D09887_Dexpramipexole_dihydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09887	DRD1	DRD2	DRD3	DRD4	DRD5
+D09917_Latrepirdine_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09917	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	ACHE
+D09918_Latrepirdine_dihydrochloride_(USAN);_Dimebolin;_Dimebon	http://www.genome.jp/dbget-bin/www_bget?drug+D09918	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D	HRH1	HTR6	ACHE
+D09919_Lenvatinib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09919	FGFR1	FGFR3	FGFR2	FGFR4	FLT1	PDGFRA	PDGFRB
+D09920_Lenvatinib_mesilate_(JAN);_Lenvatinib_mesylate_(USAN);_Lenvima_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09920	FGFR1	FGFR3	FGFR2	FGFR4	FLT1	PDGFRA	PDGFRB
+D09937_Giractide_(INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09937	MC1R	MC2R	MC3R	MC4R	MC5R
+D09988_Vapreotide_acetate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09988	SSTR1	SSTR2	SSTR3	SSTR4	SSTR5
+D09989_Vardenafil_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D09989	CYP3A7	CYP2C19	CYP2C8	CYP2C9	CYP3A4	CYP3A5	PDE5A
+D10019_Panobinostat_lactate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10019	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D10029_Verubulin_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10029	TUBB3	TUBB4A	TUBB4B	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D10030_Verubulin_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10030	TUBB3	TUBB4A	TUBB4B	TUBB	TUBB8	TUBB2B	TUBB2A	TUBB1	TUBB6
+D10060_Abexinostat_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10060	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D10062_Cabozantinib_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10062	FLT1	FLT4	KDR	KIT	PDGFRA	PDGFRB	RET
+D10064_Dabrafenib_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10064	CYP2B6	CYP2C19	CYP2C8	CYP2C9	CYP3A4	G6PD	BRAF
+D10084_Abexinostat_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10084	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D10095_Cabozantinib_s-malate_(USAN);_Cometriq_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10095	FLT1	FLT4	KDR	KIT	PDGFRA	PDGFRB	RET
+D10104_Dabrafenib_mesilate_(JAN);_Dabrafenib_mesylate_(USAN);_Tafinlar_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10104	CYP2B6	CYP2C19	CYP2C8	CYP2C9	CYP3A4	G6PD	BRAF
+D10120_Esomeprazole_strontium_(USAN);_Esomeprazole_strontium_tetrahydrate	http://www.genome.jp/dbget-bin/www_bget?drug+D10120	CYP1A2	CYP2C19	CYP3A4	ATP4A	ATP4B
+D10170_Tedatioxetine_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10170	HTR3C	HTR3D	HTR3E	HTR2C	HTR3A	SLC18A1	SLC18A2	HTR3B
+D10171_Tedatioxetine_hydrobromide_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10171	HTR3C	HTR3D	HTR3E	HTR2C	HTR3A	SLC18A1	SLC18A2	HTR3B
+D10180_Umeclidinium_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10180	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D10181_Umeclidinium_bromide_(JAN/USAN);_Incruse_ellipta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10181	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5
+D10184_Vortioxetine_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10184	HTR3C	HTR3D	HTR3E	HTR1A	HTR3A	HTR7	HTR3B
+D10185_Vortioxetine_hydrobromide_(JAN/USAN);_Brintellix_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10185	HTR3C	HTR3D	HTR3E	HTR1A	HTR3A	HTR7	HTR3B
+D10194_Remimazolam_besilate_(JAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10194	GABRA1	GABRA2	GABRA3	GABRA4	GABRA5	GABRA6	GABRB1	GABRB2	GABRB3	GABRD	GABRE	GABRG1	GABRG2	GABRG3	GABRP	GABRQ
+D10205_Sodium_phenylacetate_and_sodium_benzoate;_Ammonul_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10205	CPS1	NAGS	ARG1	ARG2	ASL	ASS1	OTC
+D10208_Dextromethorphan_hydrobromide_and_quinidine_sulfate;_Nuedexta_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10208	SIGMAR1	CYP2D6	GRIN1	GRIN2A	GRIN2B	GRIN2C	GRIN2D
+D10319_Panobinostat_(USAN/INN);_Farydak_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10319	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D10321_Quisinostat_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10321	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D10322_Quisinostat_hydrochloride_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10322	HDAC6	HDAC5	HDAC1	HDAC2	HDAC7	HDAC8	HDAC10	HDAC3	HDAC9	HDAC4
+D10355_Aripiprazole_cavoxil_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10355	CYP2D6	CYP3A4	DRD2	HTR1A	HTR2A
+D10364_Aripiprazole_lauroxil_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10364	CYP2D6	CYP3A4	DRD2	HTR1A	HTR2A
+D10396_Nintedanib_ethanesulfonate_(JAN);_Nintedanib_esylate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10396	FGFR1	FGFR2	FLT1	FLT3	FLT4	KDR	PDGFRA	PDGFRB
+D10423_Ilorasertib_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10423	FLT1	PDGFRA	PDGFRB	SRC	AURKA	AURKC	AURKB
+D10434_Vintafolide_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10434	TUBB3	TUBB4A	TUBB4B	TUBB	FOLR1	FOLR2	FOLR3	TUBB8	TUBB2B	IZUMO1R	TUBB2A	TUBB1	TUBB6
+D10444_Lirilumab_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10444	KIR2DS2	KIR2DL1	KIR2DL2	KIR2DL3	KIR2DL4	KIR2DS1	KIR2DS3	KIR2DS4	KIR2DS5	KIR2DL5B	KIR2DL5A
+D10481_Nintedanib_(USAN/INN);_Ofev_(TN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10481	FGFR1	FGFR2	FLT1	FLT3	FLT4	KDR	PDGFRA	PDGFRB
+D10516_Aripiprazole_hydrate_(JAN);_Aripiprazole_monohydrate	http://www.genome.jp/dbget-bin/www_bget?drug+D10516	CYP2D6	CYP3A4	DRD2	HTR1A	HTR2A
+D10545_Batefenterol_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10545	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	ADRB2
+D10546_Batefenterol_succinate_(USAN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10546	CHRM1	CHRM2	CHRM3	CHRM4	CHRM5	ADRB2
+D10552_Dactolisib_(USAN/INN)	http://www.genome.jp/dbget-bin/www_bget?drug+D10552	MTOR	PIK3CA	PIK3CB	PIK3CD	PIK3CG
