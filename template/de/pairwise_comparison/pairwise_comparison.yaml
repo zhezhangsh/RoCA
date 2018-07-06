@@ -96,6 +96,7 @@ input:
 # Parameters to run this analysis
 parameter: # All parameters
   genome: human               # Name of the reference genome, in the form of "human", "hsa", or "hg38".
+  entrez: 0                   # Column in the gene annotation table with Entrez gene ID. -1: not availabel; 0: row names; 1-n: column index
   paired: no                  # Whether it's a paired comparison, if TRUE, the two sample ID vectors must have matched orders
   processing:                 # Whether the gene expression matrix has be normalized
     logged: no                ## Data has been log2-transformed? (RNA-seq read count -> no; RNA-seq FPKM/TPM -> no; RMA processed microarray data -> yes)
