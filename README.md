@@ -25,9 +25,11 @@ The goal of RoCA is to set up a paradigm of reproducible data analysis. It provi
 ---
 
 <a name="howto"/>
+
 ## How to use
 
 <a name='installR'/>
+
 ### Install R packages
 
 Use the code below to install default R packages. Please note that individual R Markdown templates might require extra packages. Read instruction of each template for details. Before start,
@@ -56,6 +58,7 @@ installed <- RoCA::InstallDependency(reinstall=FALSE) # Use reinstall=TRUE to fo
 2. Download and edit a YAML file
 
 <a name='report'/>
+
 ### Generate a report
 
 1. Use the RoCA::CreateReport() function
@@ -67,6 +70,7 @@ installed <- RoCA::InstallDependency(reinstall=FALSE) # Use reinstall=TRUE to fo
 _<div align='right'><a href='#toc'>back to top</a></div>_
 
 <a name='develop'/>
+
 ## Develop a template
 
 ### R Markdown in a nutshell
