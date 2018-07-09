@@ -21,14 +21,15 @@ output:
 
 ```{r global_setup, include=FALSE}
 name.yaml <- 'meta_analysis.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'MASS', 'gplots', 'RoCA', 'DEGandMore', 'rchive'); 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'MASS', 
+                   'kableExtra', 'gplots', 'RoCA', 'DEGandMore', 'rchive'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table');
 
 knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE, fig.path='FIGURE/');
 
 ## Default knitr parameters
-knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
-
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, 
+                      fig.path = 'figure/');
 if (!require(devtools)) { install.packages('devtools'); require(devtools); }
 if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
 if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
@@ -50,6 +51,10 @@ prms <- yml$parameter;
 f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
 
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
@@ -115,15 +120,15 @@ tbl <- data.frame(Name=names(comp), Group1=nms[1, ], Group2=nms[2, ], Num1=szs[1
                   Test=mtd, Paired=prd, DEG_Higher=nds[1, ], DEG_Lower=nds[2, ], stringsAsFactors = FALSE); 
 
 if (ncol(cp) >=3) tbl[, 1] <- paste('[', tbl[, 1], '](', as.vector(cp[, 3]), ')', sep=''); 
+rownames(tbl) <- NULL;
 ```
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 1.** Information about individual comparisons, including comparison name, group names, group size, total number of genes, etc. 
+<div style="color:darkblue">
+`r OrderTable()` Information about individual comparisons, including comparison name, group names, group size, total number of genes, etc. 
 </div>
   
-<div align='center', style="padding:0 1cm">
-`r kable(tbl, row.names=FALSE, align=rep('c', ncol(tbl)))`
-</div>
+`r kable(tbl, align=rep('c', ncol(tbl))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 `r home.url` 
 
@@ -207,7 +212,6 @@ l2 <- paste(l2, 'is used as a representative statistic of the differential expre
 
 Gene-level statistics, log2 of fold change and p value, are retrieved from all individual comparisons. `r l1` [Fisher's method](https://en.wikipedia.org/wiki/Fisher%27s_method) of meta-analysis is performed on the p values of individual comparisons to get a combined p value for each gene. Other summary statistics of each gene include its maximum p value from all comparisons, and the average/minimum of _|log2 of fold change|_ from all comparisons. `r l2`
 
-<div align='center'>
 ```{r gene_cluster, include=TRUE, fig.width=min(6, 0.5*N+2), fig.height=min(6, 0.5*N+2), out.width='640px'}
 corr <- cor(rnk, use='pair'); 
 par(omi=c(1, 0, 0, 1)); 
@@ -215,10 +219,9 @@ wid <- 0.8*max(strwidth(NM, unit='inch'));
 for (i in 1:N) corr[i, i] <- NA;
 heatmap(1-corr, cexRow=1/wid, cexCol=1/wid, scale='none'); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 1.** Clustering of all the pairwise comparisons. `r l2` The representative statistics of all genes are then used for the clustering.  
+<div style="color:darkblue">
+`r OrderFigure()` Clustering of all the pairwise comparisons. `r l2` The representative statistics of all genes are then used for the clustering.  
 </div>
 
 `r home.url` 
@@ -227,7 +230,6 @@ heatmap(1-corr, cexRow=1/wid, cexCol=1/wid, scale='none');
 
 Selection of the top genes with the most prominent meta-analysis results. 
 
-<div align='center'>
 ```{r gene_top_mean, include=TRUE, fig.width=max(4, 0.5*(N+1)), fig.height=min(8, 0.1*prms$gene$top+1), out.width=paste(100*min(6, 0.5*N+2), 'px', sep='')}
 x <- rev(sort(rowMeans(abs(rnk))))[1:min(length(p0), prms$gene$top)]; 
 x <- rnk[names(x), , drop=FALSE]; 
@@ -240,15 +242,13 @@ CreateDatatable(tbl, paste(path.tbl, 'gene_top_mean.html', sep='/')) -> x;
 for (i in 1:ncol(anno)) tbl[, i] <- CleanHtmlTags(tbl[, i], remove.empty = FALSE); 
 write.csv(tbl, paste(path.tbl, 'gene_top_mean.csv', sep='/')); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 2A.** The [top `r nrow(x)` genes](table/gene_top_mean.html) with the most overall differential expression across all comparisons, based on their representative statistics. 
+<div style="color:darkblue">
+`r OrderFigure()` The [top `r nrow(x)` genes](table/gene_top_mean.html) with the most overall differential expression across all comparisons, based on their representative statistics. 
 </div>
 
 &nbsp;
 
-<div align='center'>
 ```{r gene_top_diff, include=TRUE, fig.width=max(4, 0.5*(N+1)), fig.height=min(8, 0.1*prms$gene$top+1), out.width=paste(100*min(6, 0.5*N+2), 'px', sep='')}
 x <- apply(rnk, 1, sd)
 x <- rev(sort(x))[1:min(length(p0), prms$gene$top)]; 
@@ -262,10 +262,9 @@ CreateDatatable(tbl, paste(path.tbl, 'gene_top_diff.html', sep='/')) -> x;
 for (i in 1:ncol(anno)) tbl[, i] <- CleanHtmlTags(tbl[, i], remove.empty = FALSE); 
 write.csv(tbl, paste(path.tbl, 'gene_top_diff.csv', sep='/')); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 2B.** The [top `r nrow(x)` genes](table/gene_top_diff.html) with the most different results of differential expression between the comparisons, based on their representative statistics. 
+<div style="color:darkblue">
+`r OrderFigure()` The [top `r nrow(x)` genes](table/gene_top_diff.html) with the most different results of differential expression between the comparisons, based on their representative statistics. 
 </div>
 
 `r home.url` 
@@ -341,7 +340,6 @@ if (x>=1 & x<=N) l2 <- paste('with the highest _|NES|_ from comparison ', NM[x],
 
 Statisitcs of gene set enrichment analysis, p value and normalized enriched score (NES), are retrieved from individual comparisons. `r l1` [Fisher's method](https://en.wikipedia.org/wiki/Fisher%27s_method) of meta-analysis is performed on the GSEA p values of individual comparisons to get a combined p value for each gene set. For the meta-analysis, p values of 0 from the original GSEA are rounded to `r min(pvl)`. Other summary statistics of each gene set include its maximum p value from all comparisons, and the average/minimum of _|NES|_ from all comparisons.
 
-<div align='center'>
 ```{r gsea_cluster, include=TRUE, fig.width=min(6, 0.5*N+2), fig.height=min(6, 0.5*N+2), out.width='640px'}
 corr <- cor(nes, use='pair'); 
 par(omi=c(1, 0, 0, 1)); 
@@ -349,10 +347,9 @@ wid <- 0.8*max(strwidth(NM, unit='inch'));
 for (i in 1:N) corr[i, i] <- NA;
 heatmap(1-corr, cexRow=1/wid, cexCol=1/wid, scale='none'); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 3.** Clustering of all the pairwise comparisons, using NES of all gene sets.
+<div style="color:darkblue">
+`r OrderFigure()` Clustering of all the pairwise comparisons, using NES of all gene sets.
 </div>
 
 `r home.url` 
@@ -380,7 +377,6 @@ sortNES <- function(x, top, ind, ord) {
 }; 
 ```
 
-<div align='center'>
 ```{r gsea_top_nes, include=TRUE, fig.width=max(4, 0.5*(N+4)), fig.height=min(8, 0.1*prms$gene$top+1), out.width='600px'}
 rownames(nes) <- rownames(pvl) <- nms;
 x <- y <- sortNES(nes, prms$geneset$heatmap$top$overall, prms$geneset$heatmap$sort$comparison, prms$geneset$heatmap$sort$order); 
@@ -391,15 +387,13 @@ tbl <- tbl0[tbl0[, 2] %in% rownames(x), , drop=FALSE];
 CreateDatatable(tbl, paste(path.tbl, 'gsea_top_nes.html', sep='/'), rownames = FALSE) -> x; 
 write.csv(tbl, paste(path.tbl, 'gsea_top_nes.csv', sep='/'), row.names = FALSE); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 4A.** The [top `r nrow(x)` gene sets](table/gsea_top_nes.html) `r l2`
+<div style="color:darkblue">
+`r OrderFigure()` The [top `r nrow(x)` gene sets](table/gsea_top_nes.html) `r l2`.
 </div>
 
 &nbsp;
 
-<div align='center'>
 ```{r gsea_top_diff, include=TRUE, fig.width=max(4, 0.5*(N+4)), fig.height=min(8, 0.1*prms$gene$top+1), out.width='600px'}
 x <- nes[rev(order(apply(nes, 1, sd))), , drop=FALSE]; 
 x <- x[1:min(length(p0), prms$geneset$heatmap$top$overall), , drop=FALSE]; 
@@ -411,10 +405,9 @@ tbl <- tbl0[tbl0[, 2] %in% rownames(x), , drop=FALSE];
 CreateDatatable(tbl, paste(path.tbl, 'gsea_top_diff.html', sep='/'), rownames = FALSE) -> x; 
 write.csv(tbl, paste(path.tbl, 'gsea_top_diff.csv', sep='/'), row.names = FALSE); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 4B.** The [top `r nrow(x)` gene sets](table/gsea_top_diff.html) with the most different NES values among all comparisons.
+<div style="color:darkblue">
+`r OrderFigure()` The [top `r nrow(x)` gene sets](table/gsea_top_diff.html) with the most different NES values among all comparisons.
 </div>
 
 `r home.url` 
