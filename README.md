@@ -17,11 +17,10 @@ The goal of RoCA is to set up a paradigm of reproducible data analysis. It provi
 <a name="toc"/>
 **Table of contents**
   - [How to use](#howto)
-    * [Install R packages](#installR)
-    * [Prepare for an analysis](#prepare)
-    * [Generate a report](#report)
+    - [Install R packages](#installR)
+    - [Prepare for an analysis](#prepare)
+    - [Generate a report](#report)
   - [Develop a template](#develop)
-</a>
 
 ---
 
