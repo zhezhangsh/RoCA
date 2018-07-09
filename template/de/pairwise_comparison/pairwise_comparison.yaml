@@ -128,7 +128,7 @@ gsea:
   kegg:           # Options to plot KEGG pathway maps
     collection: KEGG_pathway      # Name of the gmt file corresponding to gene set collection of KEGG pathways
     p: 0.05                       # GSEA p value cutoff to select KEGG pathways to be plotted
-    top: 3                        # The number of top-ranked pathways to be plotted
+    top: 10                        # The number of top-ranked pathways to be plotted
   options: # All GSEA options, check GSEA website for instruction: http://software.broadinstitute.org/gsea/doc/GSEAUserGuideFrame.html
   ##############################################
   # parameters commonly changed from run to run
