@@ -51,6 +51,7 @@ installed <- RoCA::InstallDependency(reinstall=FALSE) # Use reinstall=TRUE to fo
 ```
 
 <a name='prepare'/>
+
 ### Prepare for an analysis
 
 1. Clone the whole RoCA GitHub repo
