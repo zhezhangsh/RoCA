@@ -1,6 +1,6 @@
 
-### ***RoCA*** 
-***R***eporting ***o***f ***C***ustom ***A***nalysis
+### **RoCA** 
+**R**eporting **o**f **C**ustom **A**nalysis
 
 The goal of RoCA is to set up a paradigm of reproducible data analysis. It provides a framework for data analysts to conveniently re-run custom analysis using their own data and parameters. Each run will generates a self-contained output file folder and an _index.html_ file as a summary report. 
 
