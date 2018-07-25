@@ -12,10 +12,12 @@ output:
 ---
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-This procedure evaluates the efficiency of primers for targeted sequencing, in term of
+This procedure evaluates the efficiency of primers to capture targeted DNA sequences, in term of
 
   - the uniqueness of primer sequences in reference genome
   - the occurance of primer sequences in sequencing reads
+  
+High quality primers should have one or multiple perfect matches in the targeted sequences and no perfect matches in the other parts of the reference genome. In addition, even when mismatches are allowed, the primer should have as few matches in the off-target regions as possible. Primers efficiently capturing targeted sequences should also have matches in the sequencing reads. 
 </div>
 
 &nbsp;
@@ -76,9 +78,9 @@ targt <- ImportTable(DownloadFile(yml$input$target, path.input), rownames = TRUE
 targt <- GRanges(targt[, 1], IRanges(targt[, 2], targt[, 3]), name=rownames(targt));
 names(targt) <- targt$name;
 
-# saveRDS(prims, paste(path.input, 'primer.rds', sep='/'));
-# saveRDS(reads, paste(path.input, 'read.rds', sep='/'));
-# saveRDS(targt, paste(path.input, 'target.rds', sep='/'));
+saveRDS(prims, paste(path.input, 'primer.rds', sep='/'));
+saveRDS(reads, paste(path.input, 'read.rds', sep='/'));
+saveRDS(targt, paste(path.input, 'target.rds', sep='/'));
 
 genom <- getBSgenome(prms$genome$package);
 chrnm <- seqnames(genom)[seqlengths(genom) >= prms$genome$length];
@@ -451,7 +453,7 @@ dimnames(cnt) <- list(names(seq1), paste(0:max(1, prms$match$mismatch), 'mismatc
 col <- c(colorpanel(ncol(cnt), '#0E6251', '#D1F2EB'));
 cex <- min(0.75/max(strwidth(rownames(cnt), units='inches')), 0.08/max(strheight('A', units='inches'))); 
 barplot(t(cnt[, ncol(cnt):1, drop=FALSE]), col=col, border=NA, space=0.2, 
-        ylim=c(0, 1.15*max(rowSums(cnt))), ylab='Number of hits', cex.lab=1.25, 
+        ylim=c(0, 1.25*max(rowSums(cnt))), ylab='Number of hits', cex.lab=1.25, 
         xlim=c(0, 1.2*nrow(cnt)), xaxs='i', names.arg = rownames(cnt), cex.names = cex, las=3);
 legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(cnt)-1));
 abline(h=0);
