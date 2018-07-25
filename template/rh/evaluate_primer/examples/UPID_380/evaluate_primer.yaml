@@ -49,11 +49,11 @@ parameter:
   genome: ## Parameters about reference genome
     name: GRCh38                            # Name of the reference genome
     package: BSgenome.Hsapiens.NCBI.GRCh38  # Name of the Bioconductor BSgenome package to be used as reference genome
-    length: 200000000                       # Minimum length of a chromosome to be used as part of the reference genome
+    length: 1000000                         # Minimum length of a chromosome to be used as part of the reference genome
   match:  ## Parameters about primer-reference match 
     strand: 0                               # Which strand to match? 1: use original sequence; -1: use reverse complementary; 0: use both (default)
     mismatch: 3                             # Max number of mismatches; must be non-negative integer
-    multicore: 4                            # Number of CPU cores to be used for parallel computing
+    multicore: 2                            # Number of CPU cores to be used for parallel computing
 
 ######################    END OF DOCUMENT    ######################
 

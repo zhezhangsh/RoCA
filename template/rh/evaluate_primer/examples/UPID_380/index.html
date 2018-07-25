@@ -235,7 +235,12 @@ div.tocify {
 
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-
+<p>This procedure evaluates the efficiency of primers to capture targeted DNA sequences, in term of</p>
+<ul>
+<li>the uniqueness of primer sequences in reference genome</li>
+<li>the occurance of primer sequences in sequencing reads</li>
+</ul>
+<p>High quality primers should have one or multiple perfect matches in the targeted sequences and no perfect matches in the other parts of the reference genome. In addition, even when mismatches are allowed, the primer should have as few matches in the off-target regions as possible. Primers efficiently capturing targeted sequences should also have matches in the sequencing reads.</p>
 </div>
 <p> </p>
 <div align="right">
@@ -261,9 +266,6 @@ div.tocify {
 <div align="right">
 <em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
 </div>
-<div align="right">
-<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
-</div>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -282,9 +284,6 @@ div.tocify {
 <div style="color:darkblue">
 <p><strong>Figure 2.</strong> Frequency of bases in each primer.</p>
 </div>
-<div align="right">
-<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
-</div>
 <div id="on-target-match" class="section level3">
 <h3><span class="header-section-number">2.1.1</span> On-target match</h3>
 <p>An ideal primer should only have perfect match to the targeted regions in the whole reference genome. In addition, they should have as few matches to the off-target regions as possible even when mismatches are allowed. Click link below to view full table of match locations:</p>
@@ -301,9 +300,6 @@ div.tocify {
 <li>Number of primers with perfect match to off-target regions: <strong>0</strong></li>
 </ul>
 <p><em>Primers with no perfect match to the targeted regions or any perfect match to the off-target regions will be disqualified and excluded from further analysis.</em></p>
-</div>
-<div align="right">
-<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
 </div>
 </div>
 <div id="mismatch" class="section level3">
@@ -425,6 +421,9 @@ N(%)
 <div style="color:darkblue">
 <p><strong>Figure 5.</strong> Expected and actual dinucleotide frequencies in the sequencing reads. Frequency was calculated for each read first and summarized from all reads, so longer reads will not have more weight in the average. Dinucleotide combinations were sorted by the ratio of expected and observed frequencies. Vertical bars are standard errors.</p>
 </div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
 </div>
 <div id="primer-to-read-alignment" class="section level2">
 <h2><span class="header-section-number">2.3</span> Primer-to-read alignment</h2>
@@ -437,12 +436,13 @@ N(%)
 <p><strong>Figure 6.</strong> Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases. Click <a href="align_primer.html">here</a> to view full table of hit counts.</p>
 </div>
 </div>
-</div>
 <div id="read-summary" class="section level3">
 <h3><span class="header-section-number">2.3.2</span> Read summary</h3>
 <p>Summary of primer-to-read alignment by sequencing reads.</p>
 <p><img src="figure/summary_read2-1.png" width="280px" /></p>
+<div style="color:darkblue">
 <p><strong>Figure 7.</strong> Number of matches to primer sequences per sequencing reads.</p>
+</div>
 <div align="right">
 <em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
 </div>
