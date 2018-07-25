@@ -70,6 +70,10 @@ f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
@@ -155,12 +159,11 @@ tbl<-t(sapply(1:4, function(i) summary(rnorm(100))));
 rownames(tbl)<-paste('Draw', 1:nrow(tbl), sep='_'); 
 ```
 
-<div style="color:darkblue; padding:0 3cm">
-**Table 1** Write the table title and caption here.
+<div style="color:darkblue">
+`r OrderTable()` Write the table title and caption here.
 </div>
 
-<div align='center', style="padding:0 3cm"> <!-- Horizontally align the table at the center of the page -->
-<!-- Use the kable function to directly put a small table in the report -->
+<div align='center'"> 
 `r kable(tbl, row.names=TRUE, align=rep('c', ncol(tbl)))`
 </div>
 
@@ -170,15 +173,13 @@ rownames(tbl)<-paste('Draw', 1:nrow(tbl), sep='_');
 By default, all figures will be saved in the _figure/_ subfolder as both .pdf and .png files.
 
 <!-- this is a code chunk that will generate a plot to be written into the report -->
-<div align='center'> <!-- Horizontally align the figure at the center of the page -->
 ```{r figure_1, include=TRUE, fig.width=6, fig.height=4, out.width='600px'}
 # <!-- a random, meaningless plot -->
 plot(density(rnorm(100)), lwd=2, col='gold', main='', xlab='', ylab=''); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 3cm">
-**Figure 1.** Write the figure caption here. 
+<div style="color:darkblue">
+`r OrderFigure()` Write the figure caption here. 
 </div>
 
 `r home.url`

@@ -1,0 +1,544 @@
+---
+title: "Performance evaluation of primers used for targeted sequencing"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'evaluate_primer.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'gplots',
+                   'Biostrings', 'GenomicRanges', 'BSgenome', 'RoCA', 'awsomics'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); 
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, fig.path = 'figure/');
+
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+		yml <- yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+```{r load_data, include=FALSE}
+prims <- ImportTable(DownloadFile(yml$input$primer, path.input), rownames = FALSE);
+seqns <- prims[, 2];
+names(seqns) <- prims[, 1];
+seqns <- DNAStringSet(seqns);
+
+reads <- ImportVector(DownloadFile(yml$input$read, path.input));
+reads <- DNAStringSet(reads);
+
+targt <- ImportTable(DownloadFile(yml$input$target, path.input), rownames = TRUE);
+targt <- GRanges(targt[, 1], IRanges(targt[, 2], targt[, 3]), name=rownames(targt));
+names(targt) <- targt$name;
+
+# saveRDS(prims, paste(path.input, 'primer.rds', sep='/'));
+# saveRDS(reads, paste(path.input, 'read.rds', sep='/'));
+# saveRDS(targt, paste(path.input, 'target.rds', sep='/'));
+
+genom <- getBSgenome(prms$genome$package);
+chrnm <- seqnames(genom)[seqlengths(genom) >= prms$genome$length];
+genom <- DNAStringSet(lapply(chrnm, function(nm) genom[[nm]]));
+names(genom) <- chrnm; 
+```
+
+`r home.url`
+
+# Results
+
+## Primer characteristis
+
+```{r base, include=FALSE}
+len <- seqlengths(seqns);
+# len <- len[len==25];
+num <- table(len);
+
+frq <- alphabetFrequency(seqns)[, c('C', 'G', 'T', 'A')];
+pct <- 100*frq/rowSums(frq);
+
+wid1 <- min(8, 2+0.5*length(num)); 
+out1 <- paste(100*wid1, 'px', sep='');
+
+wid2 <- min(8, 2+0.1*length(seqns));
+out2 <- paste(100*wid2, 'px', sep='');
+
+tbl <- cbind(prims[, 1:2], Length=len, pct);
+if (ncol(prims) > 2) tbl <- cbind(tbl, prims[, 3:ncol(prims), drop=FALSE]);
+rownames(tbl) <- rownames(prims); 
+
+saveRDS(tbl, paste(path.r, 'primer.rds', sep='/'));
+CreateDatatable(tbl, paste(path.tbl, 'primer.html', sep='/')); 
+```
+
+General characteristics of all primers. Click link below to view full table.
+
+> [Primer features](table/primer.html)
+
+```{r length, include=TRUE, fig.height=3, fig.width=wid1, out.width=out1}
+par(mar=c(5, 5, 1, 1));
+barplot(num, xlab='Primer length (bp)', ylab='Number of primers', 
+        cex.lab=1.25, xlim=c(-0.5, length(num)+1.5));
+abline(h=0);
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Primer length. 
+</div>
+
+```{r alphabet, include=TRUE, fig.height=4, fig.width=wid2, out.width=out2}
+par(mai=c(1, 0.8, 0.1, 0.1));
+col <- c('#21618C', '#D4AC0D', '#B03A2E', '#1E8449');
+cex <- min(0.75/max(strwidth(names(seqns), units='inches')), 0.08/max(strheight('a', units='inches'))); 
+barplot(t(pct), col=col, border='lightgrey', space=0, yaxt='n', ylim=c(0, 115),
+        ylab='Base frequency (%)', cex.lab=1.25, xlim=c(0, nrow(pct)), xaxs='i',
+        names.arg = names(seqns), cex.names = cex, las=3);
+axis(2, at=seq(0, 100, 25), label=seq(0, 100, 25));
+legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=rev(colnames(pct)));
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Frequency of bases in each primer.
+</div>
+
+`r home.url`
+
+### On-target match
+
+An ideal primer should only have perfect match to the targeted regions in the whole reference genome. In addition, they should have as few matches to the off-target regions as possible even when mismatches are allowed. Click link below to view full table of match locations:
+
+> [Perfect matches](table/match.html)
+
+```{r match, include=FALSE}
+##################################################################
+run.match <- function(s, g, mx, mn, strand) {
+  m <- vmatchPattern(s, g, max.mismatch = mx, min.mismatch = mn);
+  c <- rep(names(g), sapply(m, length));
+  if (length(c) == 0) c <- character();
+  m <- unlist(m);
+  m <- data.frame(seqname=c, start=start(m), end=end(m), stringsAsFactors = FALSE);
+  m$strand <- rep(strand, nrow(m));
+  m;
+};
+##################################################################
+
+mth <- lapply(seqns, function(s) { print(s); 
+  if (prms$match$strand==1) {
+    m <- run.match(s, genom, 0, 0, 1);
+  } else if (prms$match$strand==1) {
+    m <- run.match(reverseComplement(s), genom, 0, 0, -1);
+  } else {
+    m <- rbind(run.match(s, genom, 0, 0, 1), run.match(reverseComplement(s), genom, 0, 0, -1));
+  }; 
+}); 
+
+mth <- lapply(mth, function(u) {
+  if (nrow(u) == 0) u$target <- integer() else {
+    gr <- GRanges(u$seqname, IRanges(u$start, u$end)); 
+    ol <- countOverlaps(gr, targt, ignore.strand=TRUE);
+    u$target <- ol;
+  };
+  u; 
+});
+
+nm0 <- sapply(mth, function(u) nrow(u[u$target==0, , drop=FALSE]));
+nm1 <- sapply(mth, function(u) nrow(u[u$target==1, , drop=FALSE]));
+
+tfw <- nm1[nm1==0];  # Too few matches
+tmn <- nm0[nm0>0];   # Too many matches
+if (length(tfw)==0) lfw <- ' ' else lfw <- paste(' (', paste(names(tfw), collapse=';'), ')', sep='');
+if (length(tmn)==0) lmn <- ' ' else lmn <- paste(' (', paste(names(tmn), collapse=';'), ')', sep='');
+
+tbl <- do.call('rbind', mth);
+tbl <- cbind(primer=rep(names(mth), sapply(mth, nrow)), tbl);
+saveRDS(tbl, paste(path.r, 'match.rds', sep='/'));
+CreateDatatable(tbl, paste(path.tbl, 'match.html', sep='/'), rownames = FALSE);
+```
+
+```{r match_count, include=TRUE, fig.height=2+0.5*prms$match$mismatch, fig.width=wid2, out.width=out2}
+par(mai=c(1, 0.8, 0.1, 0.1));
+col <- c('#76D7C4', '#F1948A');
+cex <- min(0.75/max(strwidth(names(nm1), units='inches')), 0.08/max(strheight('a', units='inches'))); 
+barplot(rbind(nm1, nm0), col=col, border=NA, space=0.2, 
+        ylim=c(0, 1.15*max(nm0+nm1)), ylab='Number of sites', cex.lab=1.25, 
+        xlim=c(0, 1.2*length(nm1)), xaxs='i', names.arg = names(nm1), cex.names = cex, las=3);
+legend('topright', bty='n', pch=15, col=col, horiz=TRUE, legend=c('On-target', 'Off-target'));
+abline(h=0);
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` On-target and off-target perfect matches of each primer within reference genome.
+
+**Alert:**
+
+  - Number of primers with no perfect match to targeted regions: **`r length(tfw)`** `r lfw`
+  - Number of primers with perfect match to off-target regions: **`r length(tmn)`** `r lmn`
+  
+_Primers with no perfect match to the targeted regions or any perfect match to the off-target regions will be disqualified and excluded from further analysis._
+</div>
+
+`r home.url`
+
+### Mismatch
+
+Sequences with small number of mismatches to each can still bind to each other due to cross-hybridization. Therefore, the primers will become less effective if they have a large number of imperfect matches in the reference genome. 
+
+```{r mismatch, include=FALSE}
+summ.match <- function(vmatch, strand=NA) {
+  smm <- do.call('rbind', lapply(vmatch, as.data.frame)); 
+  smm <- data.frame(seqname=rep(names(vmatch), sapply(vmatch, length)), smm[, 1:2], stringsAsFactors = FALSE);
+  if (!identical(NA, strand)) smm$strand <- rep(strand, nrow(smm));
+  smm;
+}
+para.match <- function(x) {
+  require(Biostrings);
+  vmatchPattern(x[[1]], x[[2]], x[[3]], x[[4]]);
+};
+
+seq1 <- seqns[nm1>=1&nm0==0];
+
+if (TRUE) {  #################################### FOR DEBUG ONLY ####################################
+mis <- lapply(1:max(1, max(1, prms$match$mismatch)), function(mis) {
+  if (prms$match$multicore <= 1) {
+    c <- lapply(seq1, function(s) { print(s); 
+      # sum(vmatchPattern(s, genom, mis, mis)) + sum(vmatchPattern(reverseComplement(s), genom, mis, mis));
+      if (prms$match$strand == 1) summ.match(vmatchPattern(s, genom, mis, mis), 1) else
+        if (prms$match$strand == -1) summ.match(vmatchPattern(reverseComplement(s), genom, mis, mis), -1) else
+          rbind(summ.match(vmatchPattern(s, genom, mis, mis), 1), 
+               summ.match(vmatchPattern(reverseComplement(s), genom, mis, mis), -1));
+    }); 
+  } else {
+    cl <- makeCluster(prms$match$multicore, type='SOCK');
+    if (prms$match$strand == 1) {
+      c <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+                          subject=genom, max.mismatch=mis, min.mismatch=mis);
+      c <- lapply(c, summ.match, 1);
+    } else if (prms$match$strand == -1) {
+      c <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+                          subject=genom, max.mismatch=mis, min.mismatch=mis);
+      c <- lapply(c, summ.match, -1);
+    } else {
+      c1 <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+                          subject=genom, max.mismatch=mis, min.mismatch=mis);
+      c2 <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+                          subject=genom, max.mismatch=mis, min.mismatch=mis);
+      c <- lapply(1:length(c1), function(i) rbind(summ.match(c1[[i]], 1), summ.match(c2[[i]], -1)));
+    };
+    try(stopCluster(cl));
+  }
+  names(c) <- names(seq1); 
+  c;
+}); 
+names(mis) <- 1:max(1, max(1, prms$match$mismatch));
+saveRDS(mis, paste(path.r, 'mismatch.rds', sep='/'));
+} else mis <- readRDS(paste(path.r, 'mismatch.rds', sep='/')); 
+
+mis <- lapply(mis, function(x) lapply(x, function(x) {
+  g <- GRanges(x[, 1], IRanges(x[, 2], x[, 3]));
+  c <- countOverlaps(g, targt, ignore.strand=TRUE);
+  cbind(x, target=pmin(1, c));
+  # c(length(c[c==0]), length(c[c>0]));
+}));
+ct0 <- sapply(mis, function(x) sapply(x, function(x) nrow(x[x$target==0, , drop=FALSE])));
+ct1 <- sapply(mis, function(x) sapply(x, function(x) nrow(x[x$target==1, , drop=FALSE])));
+ct0 <- cbind(nm0[rownames(ct0)], ct0);
+ct1 <- cbind(nm1[rownames(ct1)], ct1);
+colnames(ct0) <- paste(0:(ncol(ct0)-1), 'mismatch_off', sep='_');
+colnames(ct1) <- paste(0:(ncol(ct1)-1), 'mismatch_on', sep='_');
+
+saveRDS(cbind(ct1, ct0), paste(path.r, 'mismatch_count.rds', sep='/'));
+CreateDatatable(cbind(ct1, ct0), paste(path.tbl, 'mismatch_count', sep='/'));
+
+loc <- lapply(mis, function(x) {
+  y <- do.call('rbind', x); 
+  z <- rep(names(x), sapply(x, nrow)); 
+  data.frame(primer=z, y, stringsAsFactors = FALSE);
+});
+loc <- data.frame(do.call('rbind', loc), mismatch=rep(as.numeric(names(loc)), sapply(loc, nrow)));
+saveRDS(loc, paste(path.r, 'mismatch_location.rds', sep='/'));
+CreateDatatable(loc, paste(path.tbl, 'mismatch_location', sep='/'), rownames = FALSE);
+
+wid3 <- length(seq1)/length(seqns) * wid2;
+out3 <- paste(100*wid3, 'px', sep='');
+```
+
+```{r mismatch_count, include=TRUE, fig.height=4+1*prms$match$mismatch, fig.width=wid3, out.width=out3}
+par(mfrow=c(2, 1), mai=c(1, 0.8, 0.25, 0.1));
+col <- c(colorpanel(ncol(ct0), '#78281F', '#FADBD8'));
+cex <- min(0.75/max(strwidth(rownames(ct0), units='inches')), 0.08/max(strheight('A', units='inches'))); 
+barplot(t(ct0[, ncol(ct0):1, drop=FALSE]), col=col, border=NA, space=0.2, main='Off target',
+        ylim=c(0, 1.15*max(rowSums(ct0))), ylab='Number of hits', cex.lab=1.25, 
+        xlim=c(0, 1.2*nrow(ct0)), xaxs='i', names.arg = rownames(ct0), cex.names = cex, las=3);
+legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(ct0)-1));
+abline(h=0);
+
+col <- c(colorpanel(ncol(ct1), '#0E6251', '#D1F2EB'));
+cex <- min(0.75/max(strwidth(rownames(ct1), units='inches')), 0.08/max(strheight('A', units='inches'))); 
+barplot(t(ct1[, ncol(ct1):1, drop=FALSE]), col=col, border=NA, space=0.2, main='On target',
+        ylim=c(0, 1.15*max(rowSums(ct1))), ylab='Number of hits', cex.lab=1.25, 
+        xlim=c(0, 1.2*nrow(ct1)), xaxs='i', names.arg = rownames(ct1), cex.names = cex, las=3);
+legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(ct1)-1));
+abline(h=0);
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Number of hits in the reference genome matching each primer sequence, while allowing up to `r prms$match$mismatch` mismatches. Locations of hits are split according to whether they are on or off targeted regions. Color represents number of mismatched bases. Click [here](table/mismathc_count.html) to view the full table of hit counts and [here](table/mismatch_location.html) to view the full table of hit locations. 
+</div>
+
+`r home.url`
+
+## Read characteritics
+
+General characteristics of sequencing reads.
+
+```{r read, include=FALSE}
+len <- seqlengths(reads);
+frq <- alphabetFrequency(reads);
+gc  <- rowSums(frq[, 2:3])/rowSums(frq[, 1:4]);
+ns  <- frq[, 'N']/rowSums(frq);
+
+tbl <- cbind(Length=summary(len), 'GC(%)'=summary(round(100*gc), 3), 'N(%)'=round(summary(100*ns), 4));
+tbl <- t(tbl);
+```
+
+<div style="color:darkblue">
+`r OrderTable()` Sequencing read characteristics.
+</div>
+
+`r kable(tbl) %>% 
+    kable_styling(bootstrap_options = c("hover", "condensed", "responsive"), full_width=FALSE)`
+
+```{r di, include=TRUE, fig.width=7.2, fig.height=4.8, out.width='720px'}
+dif <- dinucleotideFrequency(reads);
+pc1 <- apply(dif, 2, function(x) 100*x/rowSums(dif));
+mn1 <- colMeans(pc1);
+se1 <- apply(pc1, 2, sd)/sqrt(nrow(pc1));
+
+pc0 <- apply(frq[, 1:4], 2, function(x) x/rowSums(frq));
+pc0 <- apply(cbind(rep(1:4, each=4), rep(1:4, 4)), 1, function(i) 100*pc0[, i[1]]*pc0[, i[2]]);
+mn0 <- colMeans(pc0);
+se0 <- apply(pc0, 2, sd)/sqrt(nrow(pc0));
+
+mns <- rbind(mn0, mn1);
+los <- mns - rbind(se0, se1);
+ups <- mns + rbind(se0, se1);
+
+mns <- mns[, order(mns[1, ]/mns[2, ])];
+los <- los[, colnames(mns)];
+ups <- ups[, colnames(mns)];
+
+par(mar=c(3, 5, 2, 2));
+barplot2(mns, be=TRUE, col=c('#839192', '#F39C12'), ylab='Frequency (%)', xlab='', las=3, border=NA,
+        ylim=c(0, 1.2*max(ups)), plot.ci=TRUE, ci.l=los, ci.u=ups, ci.color='black');
+legend('topleft', horiz = TRUE, bty='n', pch=15, legend=c('Expected', 'Observed'),
+       col=c('#839192', '#F39C12'), cex=1.5);
+abline(h=0, lwd=1.5); 
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Expected and actual dinucleotide frequencies in the sequencing reads. Frequency was calculated for each read first and summarized from all reads, so longer reads will not have more weight in the average. Dinucleotide combinations were sorted by the ratio of expected and observed frequencies. Vertical bars are standard errors. 
+</div>
+
+## Primer-to-read alignment
+
+Alignment of primer to sequencing reads.
+
+```{r primer_read, include=FALSE}
+if (TRUE) {  #################################### FOR DEBUG ONLY ####################################
+aln <- lapply(0:max(1, max(1, prms$match$mismatch)), function(mis) { print(mis);
+  if (prms$match$multicore <= 1) {
+    c <- lapply(seq1, function(s) { print(s); 
+      # sum(vmatchPattern(s, genom, mis, mis)) + sum(vmatchPattern(reverseComplement(s), genom, mis, mis));
+      if (prms$match$strand == 1) summ.match(vmatchPattern(s, reads, mis, mis), 1) else
+        if (prms$match$strand == -1) summ.match(vmatchPattern(reverseComplement(s), reads, mis, mis), -1) else
+          rbind(summ.match(vmatchPattern(s, reads, mis, mis), 1), 
+               summ.match(vmatchPattern(reverseComplement(s), reads, mis, mis), -1));
+    }); 
+  } else {
+    cl <- makeCluster(prms$match$multicore, type='SOCK');
+    if (prms$match$strand == 1) {
+      c <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+                          subject=reads, max.mismatch=mis, min.mismatch=mis);
+      c <- lapply(c, summ.match, 1);
+    } else if (prms$match$strand == -1) {
+      c <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+                          subject=reads, max.mismatch=mis, min.mismatch=mis);
+      c <- lapply(c, summ.match, -1);
+    } else {
+      c1 <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+                          subject=reads, max.mismatch=mis, min.mismatch=mis);
+      c2 <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+                          subject=reads, max.mismatch=mis, min.mismatch=mis);
+      c <- lapply(1:length(c1), function(i) rbind(summ.match(c1[[i]], 1), summ.match(c2[[i]], -1)));
+    };
+    try(stopCluster(cl));
+  }
+  names(c) <- names(seq1); 
+  c;
+}); 
+names(aln) <- 0:max(1, max(1, prms$match$mismatch));
+saveRDS(aln, paste(path.r, 'alignment.rds', sep='/'));
+} else aln <- readRDS(paste(path.r, 'alignment.rds', sep='/')); 
+
+aln <- lapply(aln, function(x) {
+  a <- do.call('rbind', x);
+  a <- data.frame(primer=rep(names(x), sapply(x, nrow)), a, stringsAsFactors = FALSE);
+});
+aln <- data.frame(do.call('rbind', aln), 
+                  mismatch=as.integer(rep(names(aln), sapply(aln, nrow)), stringsAsFactors = FALSE));
+rownames(aln) <- 1:nrow(aln);
+saveRDS(aln, paste(path.r, 'alignment_all.rds', sep='/'));
+```
+
+### Primer summary
+
+Summary of primer-to-read alignment by primers.
+
+```{r summary_primer, include=TRUE, fig.height=2+0.5*prms$match$mismatch, fig.width=wid3, out.width=out3}
+cnt <- sapply(0:max(1, prms$match$mismatch), function(i) {
+  c <- aln[aln$mismatch==i, , drop=FALSE];
+  c <- table(c$primer)[names(seq1)];
+  x <- as.integer(c);
+  names(x) <- names(c);
+  x <- x[names(seq1)];
+  x[is.na(x)] <- 0;
+  x; 
+}); 
+dimnames(cnt) <- list(names(seq1), paste(0:max(1, prms$match$mismatch), 'mismatch', sep='_'));
+
+col <- c(colorpanel(ncol(cnt), '#0E6251', '#D1F2EB'));
+cex <- min(0.75/max(strwidth(rownames(cnt), units='inches')), 0.08/max(strheight('A', units='inches'))); 
+barplot(t(cnt[, ncol(cnt):1, drop=FALSE]), col=col, border=NA, space=0.2, 
+        ylim=c(0, 1.15*max(rowSums(cnt))), ylab='Number of hits', cex.lab=1.25, 
+        xlim=c(0, 1.2*nrow(cnt)), xaxs='i', names.arg = rownames(cnt), cex.names = cex, las=3);
+legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(cnt)-1));
+abline(h=0);
+
+tbl <- cbind(cnt, Total=rowSums(cnt));
+saveRDS(cnt, paste(path.r, 'align_primer.rds', sep='/'));
+CreateDatatable(tbl, paste(path.tbl, 'align_primer', sep='/')) -> x;
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases. Click [here](align_primer.html) to view full table of hit counts.
+</div>
+</div>
+
+### Read summary
+
+Summary of primer-to-read alignment by sequencing reads.
+
+```{r summary_read, include=TRUE, fig.height=4.8, fig.width=wid3, out.width=out3}
+spl <- lapply(0:max(1, prms$match$mismatch), function(i) aln[aln$mismatch==i, , drop=FALSE]);
+tbl <- lapply(spl, function(x) table(x$seqname));
+cnt <- matrix(0, nr=max(unlist(tbl), na.rm=TRUE), nc=length(tbl));
+dimnames(cnt) <- list(1:nrow(cnt), paste(0:max(1, prms$match$mismatch), 'mismatch', sep='_'));
+for (i in 1:ncol(cnt)) for (j in 1:nrow(cnt)) {
+  x <- tbl[[i]]; 
+  cnt[j, i] <- length(x[x==j]);
+};
+
+wid4 <- min(8, 2+0.4*nrow(cnt));
+out4 <- paste(100*wid4, 'px', sep='');
+```
+
+```{r summary_read2, include=TRUE, fig.height=4.8, fig.width=wid4, out.width=out4}
+par(mai=c(1, 0.8, 0.25, 0.1));
+col <- c(colorpanel(ncol(cnt), '#1B4F72', '#85C1E9'));
+cex <- min(0.75/max(strwidth(rownames(cnt), units='inches')), 0.08/max(strheight('A', units='inches'))); 
+barplot(t(cnt[, ncol(cnt):1, drop=FALSE]), border=NA, space=0.2, col=col, ylab='Number of reads', 
+        ylim=c(0, 1.15*max(rowSums(cnt))), cex.lab=1.25, xlab='Matches per read',
+        xlim=c(0, 1.2*nrow(cnt)), xaxs='i', names.arg = rownames(cnt), cex.names = cex, las=1);
+legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(cnt)-1));
+```
+
+`r OrderFigure()` Number of matches to primer sequences per sequencing reads. 
+
+`r home.url`
+
+***
+
+<!-- Keep this section unchanged for all RoCA templates -->
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

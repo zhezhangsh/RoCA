@@ -1,0 +1,60 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <primer> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first row is column names
+#   - the first column must be the unique names given to the primers
+#   - the second column must be the DNA sequences of the primer
+#   - [optional] extra columns of more characteristis of the primers, such as Tm value and known location
+#   - No need to include GC content and length of the primers, which can be easily calculated
+# <read> a named character vector saved in a .rdata, .rda, or .rds
+#   - each element is a sequencing read
+#   - each element is named with a unique ID, which is usually the read ID assigned by the sequencer
+# <target> a table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - the first column or row names are unique name of the targeted regions
+#   - the next column must be the chromosome name of targeted regions (matching the names in reference genome)
+#   - the next 2 columns must be the start and end of the targeted regions
+#############################################################################################################################
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+template: evaluate_primer.Rmd
+output: examples/UPID_380                 # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+description:    
+  Project: Genotyping of RH genes
+  Sample: UPID_380
+  Experiment: "PacBio technology was used to run whole genome sequencing while designed 25-mer primers were used to enrich 2 RH genes and 10 other genes."
+  Analysis: "Evaluation of all primers designed to capture 12 targeted genes. The targeted genomic regions include the start and end positions of those genes, with 5kb extension."
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+input:    
+  primer: rhd_primer.rds    # Named character vector of primer sequences 
+  read: random10k.rds       # Named character vector of sequencing reads 
+  target: target.rds        # Location of genomic regions targeted by the primers
+  
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+parameter: 
+  genome: ## Parameters about reference genome
+    name: GRCh38                            # Name of the reference genome
+    package: BSgenome.Hsapiens.NCBI.GRCh38  # Name of the Bioconductor BSgenome package to be used as reference genome
+    length: 200000000                       # Minimum length of a chromosome to be used as part of the reference genome
+  match:  ## Parameters about primer-reference match 
+    strand: 0                               # Which strand to match? 1: use original sequence; -1: use reverse complementary; 0: use both (default)
+    mismatch: 3                             # Max number of mismatches; must be non-negative integer
+    multicore: 4                            # Number of CPU cores to be used for parallel computing
+
+######################    END OF DOCUMENT    ######################
+
+
