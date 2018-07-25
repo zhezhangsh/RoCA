@@ -12,7 +12,10 @@ output:
 ---
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+This procedure evaluates the efficiency of primers for targeted sequencing, in term of
 
+  - the uniqueness of primer sequences in reference genome
+  - the occurance of primer sequences in sequencing reads
 </div>
 
 &nbsp;
@@ -60,8 +63,6 @@ home.url <- Link2Home(yml$home);
 
 `r WriteDescription(yml$description)`
 
-`r home.url`
-
 ```{r load_data, include=FALSE}
 prims <- ImportTable(DownloadFile(yml$input$primer, path.input), rownames = FALSE);
 seqns <- prims[, 2];
@@ -86,6 +87,7 @@ names(genom) <- chrnm;
 ```
 
 `r home.url`
+
 
 # Results
 
@@ -142,8 +144,6 @@ legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=rev(colname
 <div style="color:darkblue">
 `r OrderFigure()` Frequency of bases in each primer.
 </div>
-
-`r home.url`
 
 ### On-target match
 
@@ -218,8 +218,6 @@ abline(h=0);
   
 _Primers with no perfect match to the targeted regions or any perfect match to the off-target regions will be disqualified and excluded from further analysis._
 </div>
-
-`r home.url`
 
 ### Mismatch
 
@@ -381,6 +379,8 @@ abline(h=0, lwd=1.5);
 `r OrderFigure()` Expected and actual dinucleotide frequencies in the sequencing reads. Frequency was calculated for each read first and summarized from all reads, so longer reads will not have more weight in the average. Dinucleotide combinations were sorted by the ratio of expected and observed frequencies. Vertical bars are standard errors. 
 </div>
 
+`r home.url`
+
 ## Primer-to-read alignment
 
 Alignment of primer to sequencing reads.
@@ -464,7 +464,6 @@ CreateDatatable(tbl, paste(path.tbl, 'align_primer', sep='/')) -> x;
 <div style="color:darkblue">
 `r OrderFigure()` Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases. Click [here](align_primer.html) to view full table of hit counts.
 </div>
-</div>
 
 ### Read summary
 
@@ -494,7 +493,9 @@ barplot(t(cnt[, ncol(cnt):1, drop=FALSE]), border=NA, space=0.2, col=col, ylab='
 legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(cnt)-1));
 ```
 
+<div style="color:darkblue">
 `r OrderFigure()` Number of matches to primer sequences per sequencing reads. 
+</div>
 
 `r home.url`
 
