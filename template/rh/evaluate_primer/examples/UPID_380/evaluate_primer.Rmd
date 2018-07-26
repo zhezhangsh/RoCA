@@ -57,6 +57,8 @@ OrderTable(reset=TRUE);
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
+
+debug <- TRUE;
 ```
 
 `r home.url` 
@@ -166,6 +168,7 @@ run.match <- function(s, g, mx, mn, strand) {
 };
 ##################################################################
 
+if (!debug) {  #################################### FOR DEBUG ONLY ####################################
 mth <- lapply(seqns, function(s) { print(s); 
   if (prms$match$strand==1) {
     m <- run.match(s, genom, 0, 0, 1);
@@ -175,7 +178,9 @@ mth <- lapply(seqns, function(s) { print(s);
     m <- rbind(run.match(s, genom, 0, 0, 1), run.match(reverseComplement(s), genom, 0, 0, -1));
   }; 
 }); 
-
+saveRDS(mth, paste(path.r, 'match.rds', sep='/'));
+} else mth <- readRDS(paste(path.r, 'match.rds', sep='/'));
+  
 mth <- lapply(mth, function(u) {
   if (nrow(u) == 0) u$target <- integer() else {
     gr <- GRanges(u$seqname, IRanges(u$start, u$end)); 
@@ -195,7 +200,7 @@ if (length(tmn)==0) lmn <- ' ' else lmn <- paste(' (', paste(names(tmn), collaps
 
 tbl <- do.call('rbind', mth);
 tbl <- cbind(primer=rep(names(mth), sapply(mth, nrow)), tbl);
-saveRDS(tbl, paste(path.r, 'match.rds', sep='/'));
+saveRDS(tbl, paste(path.r, 'match_target.rds', sep='/'));
 CreateDatatable(tbl, paste(path.tbl, 'match.html', sep='/'), rownames = FALSE);
 ```
 
@@ -226,45 +231,94 @@ _Primers with no perfect match to the targeted regions or any perfect match to t
 Sequences with small number of mismatches to each can still bind to each other due to cross-hybridization. Therefore, the primers will become less effective if they have a large number of imperfect matches in the reference genome. 
 
 ```{r mismatch, include=FALSE}
-summ.match <- function(vmatch, strand=NA) {
-  smm <- do.call('rbind', lapply(vmatch, as.data.frame)); 
-  smm <- data.frame(seqname=rep(names(vmatch), sapply(vmatch, length)), smm[, 1:2], stringsAsFactors = FALSE);
+# summ.match <- function(vmatch, strand=NA) {
+#   if (class(vmatch)=='ByPos_MIndex') {
+#     smm <- do.call('rbind', lapply(vmatch, as.data.frame)); 
+#     smm <- data.frame(seqname=rep(names(vmatch), sapply(vmatch, length)), smm[, 1:2], stringsAsFactors = FALSE);
+#     if (!identical(NA, strand)) smm$strand <- rep(strand, nrow(smm));
+#   } else if (class(vmatch)=='list') {
+#     smm <- data.frame(seqnames=rep(names(vmatch), elementNROWS(vmatch)), 
+#                       start=as.vector(unlist(lapply(vmatch, start))), 
+#                       end=as.vector(unlist(lapply(vmatch, end))), stringsAsFactors = FALSE);
+#     if (!identical(NA, strand)) smm$strand <- rep(strand, nrow(smm)); 
+#   } else smm <- NA;
+#   smm;
+# };
+run.match2 <- function(s, g, mx, mn, indel, strand=NA) {
+  if (indel) { print(mx);
+    mth <- lapply(g, function(g) Biostrings::matchPattern(s, g, mx, 0, with.indels = TRUE));
+    smm <- data.frame(seqnames=rep(names(mth), elementNROWS(mth)), 
+                      start=as.vector(unlist(lapply(mth, start))), 
+                      end=as.vector(unlist(lapply(mth, end))), stringsAsFactors = FALSE);
+  } else {
+    mth <- Biostrings::vmatchPattern(s, g, mx, mn);
+    smm <- do.call('rbind', lapply(mth, as.data.frame)); 
+    smm <- data.frame(seqname=rep(names(mth), sapply(mth, length)), smm[, 1:2], stringsAsFactors = FALSE);
+  }
   if (!identical(NA, strand)) smm$strand <- rep(strand, nrow(smm));
   smm;
-}
-para.match <- function(x) {
-  require(Biostrings);
-  vmatchPattern(x[[1]], x[[2]], x[[3]], x[[4]]);
 };
+
+remove.redun <- function(x) {
+  if (length(x) > 1) {
+    mis <- 1:length(x);
+    ids <- unique(unlist(lapply(x, names))); 
+    for (i in ids) {
+      for (j in max(mis):2) {
+        a <- x[[j]][[i]];
+        b <- x[[j-1]][[i]];
+        if (!is.null(a) & !is.null(b)) {
+          if (nrow(a)>0 & nrow(b)>0) {
+            g1 <- GRanges(a[, 1], IRanges(a[, 2], a[, 3]));
+            g2 <- GRanges(b[, 1], IRanges(b[, 2], b[, 3]));
+            x[[j]][[i]] <- a[suppressWarnings(countOverlaps(g1, g2, ignore.strand=TRUE))==0, , drop=FALSE];
+          }
+        }
+      }
+    }
+  }
+  x;
+}
+
 
 seq1 <- seqns[nm1>=1&nm0==0];
 
-if (TRUE) {  #################################### FOR DEBUG ONLY ####################################
-mis <- lapply(1:max(1, max(1, prms$match$mismatch)), function(mis) {
+if (!debug) {  #################################### FOR DEBUG ONLY ####################################
+mis <- lapply(1:max(1, max(1, prms$match$mismatch)), function(mis) { print(mis);
+  ndl <- prms$match$indel;
   if (prms$match$multicore <= 1) {
     c <- lapply(seq1, function(s) { print(s); 
       # sum(vmatchPattern(s, genom, mis, mis)) + sum(vmatchPattern(reverseComplement(s), genom, mis, mis));
-      if (prms$match$strand == 1) summ.match(vmatchPattern(s, genom, mis, mis), 1) else
-        if (prms$match$strand == -1) summ.match(vmatchPattern(reverseComplement(s), genom, mis, mis), -1) else
-          rbind(summ.match(vmatchPattern(s, genom, mis, mis), 1), 
-               summ.match(vmatchPattern(reverseComplement(s), genom, mis, mis), -1));
+      if (prms$match$strand == 1) run.match2(s, genom, mis, mis, ndl, 1) else
+        if (prms$match$strand == -1) run.match2(reverseComplement(s), genom, mis, mis, ndl, -1) else
+          rbind(run.match2(s, genom, mis, mis, ndl, 1), 
+               run.match2(reverseComplement(s), genom, mis, mis, ndl, -1));
     }); 
   } else {
     cl <- makeCluster(prms$match$multicore, type='SOCK');
-    if (prms$match$strand == 1) {
-      c <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
-                          subject=genom, max.mismatch=mis, min.mismatch=mis);
-      c <- lapply(c, summ.match, 1);
+    if (prms$match$strand == 1) { 
+      c <- clusterApplyLB(cl, seq1, run.match2, 
+                          g=genom, mx=mis, mn=mis, indel=ndl, strand=1);
+      # c <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+      #                     subject=genom, max.mismatch=mis, min.mismatch=mis);
+      # c <- lapply(c, summ.match, 1);
     } else if (prms$match$strand == -1) {
-      c <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
-                          subject=genom, max.mismatch=mis, min.mismatch=mis);
-      c <- lapply(c, summ.match, -1);
+      c <- clusterApplyLB(cl, reverseComplement(seq1), run.match2, 
+                          g=genom, mx=mis, mn=mis, indel=ndl, strand=-1);
+      # c <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+      #                     subject=genom, max.mismatch=mis, min.mismatch=mis);
+      # c <- lapply(c, summ.match, -1);
     } else {
-      c1 <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
-                          subject=genom, max.mismatch=mis, min.mismatch=mis);
-      c2 <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
-                          subject=genom, max.mismatch=mis, min.mismatch=mis);
-      c <- lapply(1:length(c1), function(i) rbind(summ.match(c1[[i]], 1), summ.match(c2[[i]], -1)));
+      # c1 <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+      #                     subject=genom, max.mismatch=mis, min.mismatch=mis);
+      # c2 <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+      #                     subject=genom, max.mismatch=mis, min.mismatch=mis);
+      # c <- lapply(1:length(c1), function(i) rbind(summ.match(c1[[i]], 1), summ.match(c2[[i]], -1)));
+      c1 <- clusterApplyLB(cl, seq1, run.match2, g=genom, 
+                          mx=mis, mn=mis, indel=ndl, strand=1);
+      c2 <- clusterApplyLB(cl, reverseComplement(seq1), run.match2, 
+                          g=genom, mx=mis, mn=mis, indel=ndl, strand=-1);
+      c <- lapply(1:length(c1), function(i) rbind(c1[[i]], c2[[i]]));
     };
     try(stopCluster(cl));
   }
@@ -274,6 +328,8 @@ mis <- lapply(1:max(1, max(1, prms$match$mismatch)), function(mis) {
 names(mis) <- 1:max(1, max(1, prms$match$mismatch));
 saveRDS(mis, paste(path.r, 'mismatch.rds', sep='/'));
 } else mis <- readRDS(paste(path.r, 'mismatch.rds', sep='/')); 
+
+mis <- remove.redun(c(list('0'=mth), mis))[-1];
 
 mis <- lapply(mis, function(x) lapply(x, function(x) {
   g <- GRanges(x[, 1], IRanges(x[, 2], x[, 3]));
@@ -388,32 +444,42 @@ abline(h=0, lwd=1.5);
 Alignment of primer to sequencing reads.
 
 ```{r primer_read, include=FALSE}
-if (TRUE) {  #################################### FOR DEBUG ONLY ####################################
+if (!debug) {  #################################### FOR DEBUG ONLY ####################################
 aln <- lapply(0:max(1, max(1, prms$match$mismatch)), function(mis) { print(mis);
+  ndl <- prms$match$indel;
   if (prms$match$multicore <= 1) {
     c <- lapply(seq1, function(s) { print(s); 
       # sum(vmatchPattern(s, genom, mis, mis)) + sum(vmatchPattern(reverseComplement(s), genom, mis, mis));
-      if (prms$match$strand == 1) summ.match(vmatchPattern(s, reads, mis, mis), 1) else
-        if (prms$match$strand == -1) summ.match(vmatchPattern(reverseComplement(s), reads, mis, mis), -1) else
-          rbind(summ.match(vmatchPattern(s, reads, mis, mis), 1), 
-               summ.match(vmatchPattern(reverseComplement(s), reads, mis, mis), -1));
+      if (prms$match$strand == 1) run.match2(s, reads, mis, mis, ndl, 1) else
+        if (prms$match$strand == -1) run.match2(reverseComplement(s), reads, mis, mis, ndl, -1) else
+          rbind(run.match2(s, reads, mis, mis, ndl, 1), 
+               run.match2(reverseComplement(s), reads, mis, mis, ndl, -1));
     }); 
   } else {
     cl <- makeCluster(prms$match$multicore, type='SOCK');
     if (prms$match$strand == 1) {
-      c <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
-                          subject=reads, max.mismatch=mis, min.mismatch=mis);
-      c <- lapply(c, summ.match, 1);
+      # c <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+      #                     subject=reads, max.mismatch=mis, min.mismatch=mis);
+      # c <- lapply(c, summ.match, 1);
+      c <- clusterApplyLB(cl, seq1, run.match2, g=reads, 
+                          mx=mis, mn=mis, indel=ndl, strand=1);
     } else if (prms$match$strand == -1) {
-      c <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
-                          subject=reads, max.mismatch=mis, min.mismatch=mis);
-      c <- lapply(c, summ.match, -1);
+      # c <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+      #                     subject=reads, max.mismatch=mis, min.mismatch=mis);
+      # c <- lapply(c, summ.match, -1);
+      c <- clusterApplyLB(cl, reverseComplement(seq1), run.match2, 
+                          g=reads, mx=mis, mn=mis, indel=ndl, strand=-1);
     } else {
-      c1 <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
-                          subject=reads, max.mismatch=mis, min.mismatch=mis);
-      c2 <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
-                          subject=reads, max.mismatch=mis, min.mismatch=mis);
-      c <- lapply(1:length(c1), function(i) rbind(summ.match(c1[[i]], 1), summ.match(c2[[i]], -1)));
+      # c1 <- clusterApplyLB(cl, seq1, Biostrings::vmatchPattern, 
+      #                     subject=reads, max.mismatch=mis, min.mismatch=mis);
+      # c2 <- clusterApplyLB(cl, reverseComplement(seq1), Biostrings::vmatchPattern, 
+      #                     subject=reads, max.mismatch=mis, min.mismatch=mis);
+      # c <- lapply(1:length(c1), function(i) rbind(summ.match(c1[[i]], 1), summ.match(c2[[i]], -1)));
+      c1 <- clusterApplyLB(cl, seq1, run.match2, g=reads, 
+                          mx=mis, mn=mis, indel=ndl, strand=1);
+      c2 <- clusterApplyLB(cl, reverseComplement(seq1), run.match2, 
+                          g=reads, mx=mis, mn=mis, indel=ndl, strand=-1);
+      c <- lapply(1:length(c1), function(i) rbind(c1[[i]], c2[[i]]));
     };
     try(stopCluster(cl));
   }
@@ -424,6 +490,8 @@ names(aln) <- 0:max(1, max(1, prms$match$mismatch));
 saveRDS(aln, paste(path.r, 'alignment.rds', sep='/'));
 } else aln <- readRDS(paste(path.r, 'alignment.rds', sep='/')); 
 
+aln <- remove.redun(aln);
+
 aln <- lapply(aln, function(x) {
   a <- do.call('rbind', x);
   a <- data.frame(primer=rep(names(x), sapply(x, nrow)), a, stringsAsFactors = FALSE);
@@ -431,7 +499,7 @@ aln <- lapply(aln, function(x) {
 aln <- data.frame(do.call('rbind', aln), 
                   mismatch=as.integer(rep(names(aln), sapply(aln, nrow)), stringsAsFactors = FALSE));
 rownames(aln) <- 1:nrow(aln);
-saveRDS(aln, paste(path.r, 'alignment_all.rds', sep='/'));
+saveRDS(aln, paste(path.r, 'alignment_formatted.rds', sep='/'));
 ```
 
 ### Primer summary
@@ -459,12 +527,12 @@ legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(cnt
 abline(h=0);
 
 tbl <- cbind(cnt, Total=rowSums(cnt));
-saveRDS(cnt, paste(path.r, 'align_primer.rds', sep='/'));
-CreateDatatable(tbl, paste(path.tbl, 'align_primer', sep='/')) -> x;
+saveRDS(cnt, paste(path.r, 'alignment_count_primer.rds', sep='/'));
+CreateDatatable(tbl, paste(path.tbl, 'alignment_count_primer', sep='/')) -> x;
 ```
 
 <div style="color:darkblue">
-`r OrderFigure()` Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases. Click [here](align_primer.html) to view full table of hit counts.
+`r OrderFigure()` Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases. Click [here](alignment_count_primer.html) to view full table of hit counts.
 </div>
 
 ### Read summary
@@ -493,11 +561,27 @@ barplot(t(cnt[, ncol(cnt):1, drop=FALSE]), border=NA, space=0.2, col=col, ylab='
         ylim=c(0, 1.15*max(rowSums(cnt))), cex.lab=1.25, xlab='Matches per read',
         xlim=c(0, 1.2*nrow(cnt)), xaxs='i', names.arg = rownames(cnt), cex.names = cex, las=1);
 legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=0:(ncol(cnt)-1));
+abline(h=0, lwd=1.25);
+
+# tbl <- cbind(cnt, Total=rowSums(cnt));
+rownames(cnt) <- paste(rownames(cnt), 'primer_match', sep='_');
+saveRDS(cnt, paste(path.r, 'alignment_summary_read.rds', sep='/'));
+CreateDatatable(cnt, paste(path.tbl, 'alignment_summary_read', sep='/')) -> x;
 ```
 
 <div style="color:darkblue">
-`r OrderFigure()` Number of matches to primer sequences per sequencing reads. 
+`r OrderFigure()` Number of reads including up to `r nrow(cnt)` matches to primer sequences. Color represents number of mismatches. Click [here](alignment_summary_read.html) to view full table of read counts.
 </div>
+
+```{r}
+# ind <- 1;
+# 
+# gr1 <- GRanges(mth[[aln[ind, 1]]][1, 1], IRanges(mth[[aln[ind, 1]]][1, 2], mth[[aln[ind, 1]]][1, 3]));
+# gr2 <- GRanges(aln[ind, 'seqname'], IRanges(aln[ind, 'start'], aln[ind, 'end']))
+# sq1 <- getSeq(genom, resize(gr1, fix='center', 300))[[1]];
+# sq2 <- getSeq(reads, resize(gr2, fix='center', 300))[[1]];
+
+```
 
 `r home.url`
 

@@ -53,7 +53,8 @@ parameter:
   match:  ## Parameters about primer-reference match 
     strand: 0                               # Which strand to match? 1: use original sequence; -1: use reverse complementary; 0: use both (default)
     mismatch: 3                             # Max number of mismatches; must be non-negative integer
-    multicore: 2                            # Number of CPU cores to be used for parallel computing
+    indel: TRUE                             # Whether to allow INDEL in alignment
+    multicore: 3                            # Number of CPU cores to be used for parallel computing
 
 ######################    END OF DOCUMENT    ######################
 
