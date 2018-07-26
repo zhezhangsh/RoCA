@@ -92,6 +92,29 @@ names(genom) <- chrnm;
 
 `r home.url`
 
+# Input
+
+```{r input}
+seq0 <- getSeq(getBSgenome(prms$genome$package), targt);
+tbl1 <- sapply(list(Primer=seqns, Target=seq0, Reference=genom, Read=reads), function(s) {
+  c <- length(s);
+  l <- seqlengths(s);
+  f <- alphabetFrequency(s)[, 1:4];
+  p <- rowSums(f[, 2:3])/rowSums(f[, 1:4]);
+  c(c, mean(l), median(l), min(l), max(l), sum(as.numeric(l)), round(100*mean(p), 2));
+});
+tbl1 <- apply(tbl1, 1, function(x) format(round(x, 2), big.mark = ','));
+colnames(tbl1) <- c('Number', 'Length_Mean', 'Length_Median', 'Length_Minimum', 'Length_Maximum', 'Length_Total', 'GC_Percent');
+```
+
+<div style="color:darkblue">
+`r OrderTable()` Input data (primers, sequencing reads, targeted regions, and reference genome). (_Genome_ = **`r prms$genome$name`**; _Maximum mismatches_ = **`r prms$match$mismatch`**; _Allow INDEL_ = **`r prms$match$indel`**)
+</div>
+
+`r kable(tbl1, align='r') %>% 
+    kable_styling(bootstrap_options = c("hover", "condensed", "responsive"), full_width=FALSE)`
+
+`r home.url`
 
 # Results
 
@@ -119,7 +142,7 @@ saveRDS(tbl, paste(path.r, 'primer.rds', sep='/'));
 CreateDatatable(tbl, paste(path.tbl, 'primer.html', sep='/')); 
 ```
 
-General characteristics of all primers. Click link below to view full table.
+General characteristics of all primers. 
 
 > [Primer features](table/primer.html)
 
@@ -151,7 +174,7 @@ legend('topright', bty='n', pch=15, col=rev(col), horiz=TRUE, legend=rev(colname
 
 ### On-target match
 
-An ideal primer should only have perfect match to the targeted regions in the whole reference genome. In addition, they should have as few matches to the off-target regions as possible even when mismatches are allowed. Click link below to view full table of match locations:
+An ideal primer should only have perfect match to the targeted regions in the whole reference genome. In addition, they should have as few matches to the off-target regions as possible even when mismatches are allowed. 
 
 > [Perfect matches](table/match.html)
 
@@ -247,7 +270,7 @@ Sequences with small number of mismatches to each can still bind to each other d
 run.match2 <- function(s, g, mx, mn, indel, strand=NA) {
   if (indel) { print(mx);
     mth <- lapply(g, function(g) Biostrings::matchPattern(s, g, mx, 0, with.indels = TRUE));
-    smm <- data.frame(seqnames=rep(names(mth), elementNROWS(mth)), 
+    smm <- data.frame(seqname=rep(names(mth), elementNROWS(mth)), 
                       start=as.vector(unlist(lapply(mth, start))), 
                       end=as.vector(unlist(lapply(mth, end))), stringsAsFactors = FALSE);
   } else {
@@ -326,10 +349,9 @@ mis <- lapply(1:max(1, max(1, prms$match$mismatch)), function(mis) { print(mis);
   c;
 }); 
 names(mis) <- 1:max(1, max(1, prms$match$mismatch));
+mis <- remove.redun(c(list('0'=mth), mis))[-1];
 saveRDS(mis, paste(path.r, 'mismatch.rds', sep='/'));
 } else mis <- readRDS(paste(path.r, 'mismatch.rds', sep='/')); 
-
-mis <- remove.redun(c(list('0'=mth), mis))[-1];
 
 mis <- lapply(mis, function(x) lapply(x, function(x) {
   g <- GRanges(x[, 1], IRanges(x[, 2], x[, 3]));
@@ -351,8 +373,14 @@ loc <- lapply(mis, function(x) {
   y <- do.call('rbind', x); 
   z <- rep(names(x), sapply(x, nrow)); 
   data.frame(primer=z, y, stringsAsFactors = FALSE);
-});
+})
 loc <- data.frame(do.call('rbind', loc), mismatch=rep(as.numeric(names(loc)), sapply(loc, nrow)));
+loc <- cbind(loc, length_primer=seqlengths(seq1)[loc$primer], length_match=loc$end-loc$start+1);
+loc$seq_primer <- as.character(seq1[loc$primer]);
+sq0 <- getSeq(getBSgenome(prms$genome$package), GRanges(loc[, 2], IRanges(loc[, 3], loc[, 4])));
+sq0[loc$strand==-1] <- reverseComplement(sq0[loc$strand==-1]);
+loc$seq_match  <- as.character(sq0);
+
 saveRDS(loc, paste(path.r, 'mismatch_location.rds', sep='/'));
 CreateDatatable(loc, paste(path.tbl, 'mismatch_location', sep='/'), rownames = FALSE);
 
@@ -380,14 +408,17 @@ abline(h=0);
 ```
 
 <div style="color:darkblue">
-`r OrderFigure()` Number of hits in the reference genome matching each primer sequence, while allowing up to `r prms$match$mismatch` mismatches. Locations of hits are split according to whether they are on or off targeted regions. Color represents number of mismatched bases. Click [here](table/mismathc_count.html) to view the full table of hit counts and [here](table/mismatch_location.html) to view the full table of hit locations. 
+`r OrderFigure()` Number of hits in the reference genome matching each primer sequence, while allowing up to `r prms$match$mismatch` mismatches. Locations of hits are split according to whether they are on or off targeted regions. Color represents number of mismatched bases. 
+
+  > [# of hits by primers and by mismatches](table/mismatch_count.html)
+  > [Location of all hits](table/mismatch_location.html)
 </div>
 
 `r home.url`
 
 ## Read characteritics
 
-General characteristics of sequencing reads.
+General characteristics of `r length(reads)` sequencing reads.
 
 ```{r read, include=FALSE}
 len <- seqlengths(reads);
@@ -434,7 +465,7 @@ abline(h=0, lwd=1.5);
 ```
 
 <div style="color:darkblue">
-`r OrderFigure()` Expected and actual dinucleotide frequencies in the sequencing reads. Frequency was calculated for each read first and summarized from all reads, so longer reads will not have more weight in the average. Dinucleotide combinations were sorted by the ratio of expected and observed frequencies. Vertical bars are standard errors. 
+`r OrderFigure()` Expected and actual dinucleotide frequencies in the sequencing reads. Frequency was calculated for each read first and summarized from all reads, so longer reads will not have more weight in the average. Expected frequency was calculated by multiplying the overall frequencies of two bases.  Dinucleotide combinations were sorted by the ratio of expected and observed frequencies. Vertical bars are standard errors. 
 </div>
 
 `r home.url`
@@ -487,10 +518,9 @@ aln <- lapply(0:max(1, max(1, prms$match$mismatch)), function(mis) { print(mis);
   c;
 }); 
 names(aln) <- 0:max(1, max(1, prms$match$mismatch));
+aln <- remove.redun(aln);
 saveRDS(aln, paste(path.r, 'alignment.rds', sep='/'));
 } else aln <- readRDS(paste(path.r, 'alignment.rds', sep='/')); 
-
-aln <- remove.redun(aln);
 
 aln <- lapply(aln, function(x) {
   a <- do.call('rbind', x);
@@ -504,7 +534,7 @@ saveRDS(aln, paste(path.r, 'alignment_formatted.rds', sep='/'));
 
 ### Primer summary
 
-Summary of primer-to-read alignment by primers.
+Summary of primer-to-read alignment by `r length(seq1)` primers.
 
 ```{r summary_primer, include=TRUE, fig.height=2+0.5*prms$match$mismatch, fig.width=wid3, out.width=out3}
 cnt <- sapply(0:max(1, prms$match$mismatch), function(i) {
@@ -532,12 +562,14 @@ CreateDatatable(tbl, paste(path.tbl, 'alignment_count_primer', sep='/')) -> x;
 ```
 
 <div style="color:darkblue">
-`r OrderFigure()` Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases. Click [here](alignment_count_primer.html) to view full table of hit counts.
+`r OrderFigure()` Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases. 
+
+> [# of hits by primers and by mismatches](table/alignment_count_primer.html)
 </div>
 
 ### Read summary
 
-Summary of primer-to-read alignment by sequencing reads.
+Summary of primer-to-read alignment by `r length(reads)` sequencing reads.
 
 ```{r summary_read, include=TRUE, fig.height=4.8, fig.width=wid3, out.width=out3}
 spl <- lapply(0:max(1, prms$match$mismatch), function(i) aln[aln$mismatch==i, , drop=FALSE]);
@@ -570,7 +602,9 @@ CreateDatatable(cnt, paste(path.tbl, 'alignment_summary_read', sep='/')) -> x;
 ```
 
 <div style="color:darkblue">
-`r OrderFigure()` Number of reads including up to `r nrow(cnt)` matches to primer sequences. Color represents number of mismatches. Click [here](alignment_summary_read.html) to view full table of read counts.
+`r OrderFigure()` Number of reads including up to `r nrow(cnt)` matches to primer sequences. Color represents number of mismatches. 
+
+> [# of reads by primer hits and mismatches](table/alignment_summary_read.html)
 </div>
 
 ```{r}

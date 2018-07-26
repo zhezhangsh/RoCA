@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2018-07-26" />
+
+<title>Performance evaluation of primers used for targeted sequencing</title>
+
+<script src="evaluate_primer_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="evaluate_primer_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="evaluate_primer_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="evaluate_primer_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="evaluate_primer_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="evaluate_primer_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="evaluate_primer_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="evaluate_primer_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="evaluate_primer_files/navigation-1.1/tabsets.js"></script>
+<link href="evaluate_primer_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="evaluate_primer_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="evaluate_primer_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Performance evaluation of primers used for targeted sequencing</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2018-07-26</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This procedure evaluates the efficiency of primers to capture targeted DNA sequences, in term of</p>
+<ul>
+<li>the uniqueness of primer sequences in reference genome</li>
+<li>the occurance of primer sequences in sequencing reads</li>
+</ul>
+<p>High quality primers should have one or multiple perfect matches in the targeted sequences and no perfect matches in the other parts of the reference genome. In addition, even when mismatches are allowed, the primer should have as few matches in the off-target regions as possible. Primers efficiently capturing targeted sequences should also have matches in the sequencing reads.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Genotyping of RH genes</p>
+</div>
+<div id="sample" class="section level2">
+<h2><span class="header-section-number">1.2</span> Sample</h2>
+<p>UPID_380</p>
+</div>
+<div id="experiment" class="section level2">
+<h2><span class="header-section-number">1.3</span> Experiment</h2>
+<p>PacBio technology was used to run whole genome sequencing while designed 25-mer primers were used to enrich 2 RH genes and 10 other genes.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.4</span> Analysis</h2>
+<p>Evaluation of all primers designed to capture 12 targeted genes. The targeted genomic regions include the start and end positions of those genes, with 5kb extension.</p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="input" class="section level1">
+<h1><span class="header-section-number">2</span> Input</h1>
+<p><em>Genome</em> = <strong>GRCh38</strong>; <em>Maximum mismatches</em> = <strong>3</strong>; <em>Allow INDEL</em> = <strong>TRUE</strong></p>
+<div style="color:darkblue">
+<p><strong>Table 1.</strong> Summary statistics of primers, sequencing reads, targeted regions, and reference genome.</p>
+</div>
+<table class="table table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Number
+</th>
+<th style="text-align:right;">
+Length_Mean
+</th>
+<th style="text-align:right;">
+Length_Median
+</th>
+<th style="text-align:right;">
+Length_Minimum
+</th>
+<th style="text-align:right;">
+Length_Maximum
+</th>
+<th style="text-align:right;">
+Length_Total
+</th>
+<th style="text-align:right;">
+GC_Percent
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Primer
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+25.00
+</td>
+<td style="text-align:right;">
+25.0
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+275
+</td>
+<td style="text-align:right;">
+52.36
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Target
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+34,725.17
+</td>
+<td style="text-align:right;">
+32,272.5
+</td>
+<td style="text-align:right;">
+13,194
+</td>
+<td style="text-align:right;">
+77,944
+</td>
+<td style="text-align:right;">
+416,702
+</td>
+<td style="text-align:right;">
+47.62
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Reference
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+128,677,909.67
+</td>
+<td style="text-align:right;">
+133,536,365.5
+</td>
+<td style="text-align:right;">
+46,709,983
+</td>
+<td style="text-align:right;">
+248,956,422
+</td>
+<td style="text-align:right;">
+3,088,269,832
+</td>
+<td style="text-align:right;">
+41.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Read
+</td>
+<td style="text-align:right;">
+10,000
+</td>
+<td style="text-align:right;">
+7,686.48
+</td>
+<td style="text-align:right;">
+6,006.0
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+62,616
+</td>
+<td style="text-align:right;">
+76,864,801
+</td>
+<td style="text-align:right;">
+47.43
+</td>
+</tr>
+</tbody>
+</table>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">3</span> Results</h1>
+<div id="primer-characteristis" class="section level2">
+<h2><span class="header-section-number">3.1</span> Primer characteristis</h2>
+<p>General characteristics of all primers.</p>
+<blockquote>
+<p><a href="table/primer.html">Primer features</a></p>
+</blockquote>
+<p><img src="figure/length-1.png" width="250px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 1.</strong> Primer length.</p>
+</div>
+<p><img src="figure/alphabet-1.png" width="310px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 2.</strong> Frequency of bases in each primer.</p>
+</div>
+<div id="on-target-match" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> On-target match</h3>
+<p>An ideal primer should only have perfect match to the targeted regions in the whole reference genome. In addition, they should have as few matches to the off-target regions as possible even when mismatches are allowed.</p>
+<blockquote>
+<p><a href="table/match.html">Perfect matches</a></p>
+</blockquote>
+<p><img src="figure/match_count-1.png" width="310px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 3.</strong> On-target and off-target perfect matches of each primer within reference genome.</p>
+<p><strong>Alert:</strong></p>
+<ul>
+<li>Number of primers with no perfect match to targeted regions: <strong>0</strong><br />
+</li>
+<li>Number of primers with perfect match to off-target regions: <strong>0</strong></li>
+</ul>
+<p><em>Primers with no perfect match to the targeted regions or any perfect match to the off-target regions will be disqualified and excluded from further analysis.</em></p>
+</div>
+</div>
+<div id="mismatch" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Mismatch</h3>
+<p>Sequences with small number of mismatches to each can still bind to each other due to cross-hybridization. Therefore, the primers will become less effective if they have a large number of imperfect matches in the reference genome.</p>
+<p><img src="figure/mismatch_count-1.png" width="310px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 4.</strong> Number of hits in the reference genome matching each primer sequence, while allowing up to 3 mismatches. Locations of hits are split according to whether they are on or off targeted regions. Color represents number of mismatched bases.</p>
+<blockquote>
+<p><a href="table/mismatch_count.html">Number of hits by primers and by mismatches</a> <a href="table/mismatch_location.html">Location of all hits</a></p>
+</blockquote>
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="read-characteritics" class="section level2">
+<h2><span class="header-section-number">3.2</span> Read characteritics</h2>
+<p>General characteristics of 10000 sequencing reads.</p>
+<div style="color:darkblue">
+<p><strong>Table 2.</strong> Sequencing read characteristics.</p>
+</div>
+<table class="table table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Length
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+1828
+</td>
+<td style="text-align:right;">
+6006
+</td>
+<td style="text-align:right;">
+7686.00
+</td>
+<td style="text-align:right;">
+11570
+</td>
+<td style="text-align:right;">
+62620
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GC(%)
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+47
+</td>
+<td style="text-align:right;">
+47.44
+</td>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:right;">
+98
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+N(%)
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="figure/di-1.png" width="720px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 5.</strong> Expected and actual dinucleotide frequencies in the sequencing reads. Frequency was calculated for each read first and summarized from all reads, so longer reads will not have more weight in the average. Expected frequency was calculated by multiplying the overall frequencies of two bases. Dinucleotide combinations were sorted by the ratio of expected and observed frequencies. Vertical bars are standard errors.</p>
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="primer-to-read-alignment" class="section level2">
+<h2><span class="header-section-number">3.3</span> Primer-to-read alignment</h2>
+<p>Alignment of primer to sequencing reads.</p>
+<div id="primer-summary" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Primer summary</h3>
+<p>Summary of primer-to-read alignment by 11 primers.</p>
+<p><img src="figure/summary_primer-1.png" width="310px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 6.</strong> Occurance of primer sequences in sequencing reads. Color represents number of mismatched bases.</p>
+<blockquote>
+<p><a href="table/alignment_count_primer.html">Number of hits by primers and by mismatches</a></p>
+</blockquote>
+</div>
+</div>
+<div id="read-summary" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Read summary</h3>
+<p>Summary of primer-to-read alignment by 10000 sequencing reads.</p>
+<p><img src="figure/summary_read2-1.png" width="440px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 7.</strong> Number of reads including up to 6 matches to primer sequences. Color represents number of mismatches.</p>
+<blockquote>
+<p><a href="table/alignment_summary_read.html">Number of reads by primer hits and mismatches</a></p>
+</blockquote>
+</div>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<!-- Keep this section unchanged for all RoCA templates -->
+</div>
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">4</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">4.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<ul>
+<li><em>output</em> : where you want to put the output files
+<ul>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">4.2</span> Session information</h2>
+<pre><code>## R version 3.3.3 (2017-03-06)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X Yosemite 10.10.5
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] BSgenome.Hsapiens.NCBI.GRCh38_1.3.1000
+##  [2] awsomics_0.0.0.9000                   
+##  [3] BSgenome_1.42.0                       
+##  [4] rtracklayer_1.34.2                    
+##  [5] GenomicRanges_1.26.4                  
+##  [6] GenomeInfoDb_1.10.3                   
+##  [7] Biostrings_2.42.1                     
+##  [8] XVector_0.14.1                        
+##  [9] IRanges_2.8.2                         
+## [10] S4Vectors_0.12.2                      
+## [11] BiocGenerics_0.20.0                   
+## [12] gplots_3.0.1                          
+## [13] htmlwidgets_0.9                       
+## [14] DT_0.2                                
+## [15] yaml_2.1.16                           
+## [16] kableExtra_0.9.0                      
+## [17] knitr_1.18                            
+## [18] rmarkdown_1.10.3                      
+## [19] RoCA_0.0.0.9000                       
+## [20] RCurl_1.95-4.9                        
+## [21] bitops_1.0-6                          
+## [22] devtools_1.13.4                       
+## 
+## loaded via a namespace (and not attached):
+##  [1] SummarizedExperiment_1.4.0 gtools_3.5.0              
+##  [3] lattice_0.20-34            colorspace_1.3-2          
+##  [5] htmltools_0.3.6            viridisLite_0.2.0         
+##  [7] XML_3.98-1.9               rlang_0.1.6               
+##  [9] pillar_1.1.0               withr_2.1.1               
+## [11] BiocParallel_1.8.2         plyr_1.8.4                
+## [13] stringr_1.2.0              zlibbioc_1.20.0           
+## [15] munsell_0.4.3              rvest_0.3.2               
+## [17] caTools_1.17.1             memoise_1.1.0             
+## [19] evaluate_0.10.1            Biobase_2.34.0            
+## [21] highr_0.6                  Rcpp_0.12.14              
+## [23] KernSmooth_2.23-15         readr_1.1.1               
+## [25] scales_0.5.0               backports_1.1.2           
+## [27] gdata_2.18.0               jsonlite_1.5              
+## [29] Rsamtools_1.26.2           hms_0.4.0                 
+## [31] digest_0.6.13              stringi_1.1.6             
+## [33] grid_3.3.3                 rprojroot_1.3-2           
+## [35] tools_3.3.3                magrittr_1.5              
+## [37] tibble_1.4.2               pkgconfig_2.0.1           
+## [39] Matrix_1.2-8               xml2_1.1.1                
+## [41] httr_1.3.1                 rstudioapi_0.7            
+## [43] R6_2.2.2                   GenomicAlignments_1.10.1</code></pre>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
