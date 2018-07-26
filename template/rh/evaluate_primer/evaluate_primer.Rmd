@@ -104,7 +104,8 @@ tbl1 <- sapply(list(Primer=seqns, Target=seq0, Reference=genom, Read=reads), fun
   c(c, mean(l), median(l), min(l), max(l), sum(as.numeric(l)), round(100*mean(p), 2));
 });
 tbl1 <- apply(tbl1, 1, function(x) format(round(x, 2), big.mark = ','));
-colnames(tbl1) <- c('Number', 'Length_Mean', 'Length_Median', 'Length_Minimum', 'Length_Maximum', 'Length_Total', 'GC_Percent');
+colnames(tbl1) <- c('Number', 'Length_Mean', 'Length_Median', 'Length_Minimum', 
+                    'Length_Maximum', 'Length_Total', 'GC_Percent');
 ```
 
 _Genome_ = **`r prms$genome$name`**; _Maximum mismatches_ = **`r prms$match$mismatch`**; _Allow INDEL_ = **`r prms$match$indel`**
@@ -141,7 +142,7 @@ if (ncol(prims) > 2) tbl <- cbind(tbl, prims[, 3:ncol(prims), drop=FALSE]);
 rownames(tbl) <- rownames(prims); 
 
 saveRDS(tbl, paste(path.r, 'primer.rds', sep='/'));
-CreateDatatable(tbl, paste(path.tbl, 'primer.html', sep='/')); 
+CreateDatatable(tbl, paste(path.tbl, 'primer.html', sep='/'), rownames = FALSE); 
 ```
 
 General characteristics of all primers. 
