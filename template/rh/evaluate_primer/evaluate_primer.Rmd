@@ -58,7 +58,7 @@ OrderTable(reset=TRUE);
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
 
-debug <- TRUE;
+debug <- FALSE;
 ```
 
 `r home.url` 
