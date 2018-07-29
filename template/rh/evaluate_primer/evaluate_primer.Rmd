@@ -414,6 +414,7 @@ abline(h=0);
 `r OrderFigure()` Number of hits in the reference genome matching each primer sequence, while allowing up to `r prms$match$mismatch` mismatches. Locations of hits are split according to whether they are on or off targeted regions. Color represents number of mismatched bases. 
 
   > [Number of hits by primers and by mismatches](table/mismatch_count.html)
+  
   > [Location of all hits](table/mismatch_location.html)
 </div>
 
