@@ -420,7 +420,7 @@ dn.formatted     <- GeneList2Datatable(FormatNumeric(dn.tbl), paste(path.deg2, '
                                        title=paste('Genes with lower expression in', g2.name));
 names(xls)[-1] <- deg.sub;
 xls <- lapply(xls, function(x) {
-  for (i in 1:ncol(x)) x[[i]] <- CleanHtmlTags(x[[i]]);
+  for (i in 1:ncol(x)) x[[i]] <- CleanHtmlTags(x[[i]], FALSE);
   for (i in 1:ncol(stat)) x[, colnames(stat)[i]] <- as.numeric(x[, colnames(stat)[i]]);
   FormatNumeric(x);
 }); 
