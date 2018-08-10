@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Zhe Zhang" />
+
+<meta name="date" content="2018-08-10" />
+
+<title>Two-group differential gene expression</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Two-group differential gene expression</h1>
+<h4 class="author"><em>Zhe Zhang</em></h4>
+<h4 class="date"><em>2018-08-10</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This procedure performs a two-group comparison of all genes in a transcriptome, or similar, data set. It accepts either read count data (RNA-seq) or normalized/log-transformed signal intensity (microarray or RNA-seq) as input. Gene-level analysis will be performed by applying a selected statistical test to the comparison of group means of each genes.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Transcriptome in immune cells of control-patient samples</p>
+</div>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">1.2</span> Data</h2>
+<p>Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. Raw data was processed to get gene-level read counts.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>This is a demo.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="analysis-and-results" class="section level1">
+<h1><span class="header-section-number">2</span> Analysis and results</h1>
+<p>The analysis results below were based upon the following:</p>
+<ul>
+<li><strong>Gene expression data</strong>:
+<ul>
+<li><strong>File location:</strong> /Users/zhangz/Documents/RoCA/template/de/differential_expression/count_ss.rds</li>
+<li><strong>Number of genes:</strong> 10162</li>
+<li><strong>Number of samples:</strong> 6</li>
+</ul></li>
+<li><strong>Gene annotation:</strong>
+<ul>
+<li><strong>File location:</strong> /Users/zhangz/Documents/RoCA/template/de/differential_expression/anno_ss.rds</li>
+<li><strong>Column names:</strong> symbol; chromosome; length; num_transcript</li>
+</ul></li>
+<li><strong>Comparison:</strong>
+<ul>
+<li><strong>Group0, Control:</strong> B_Control_A; B_Control_B; B_Control_C (n=3)</li>
+<li><strong>Group1, Patient:</strong> B_Patient_D; B_Patient_E; B_Patient_F (n=3)</li>
+<li><strong>Paired:</strong> FALSE</li>
+<li><strong>Method:</strong> DeSeq</li>
+</ul></li>
+<li><strong>Location of outputs:</strong> /Users/zhangz/Documents/RoCA/template/de/differential_expression/examples/rnaseq</li>
+</ul>
+<div id="sample-analysis" class="section level2">
+<h2><span class="header-section-number">2.1</span> Sample analysis</h2>
+<p>This section analyzes the samples by summarizing their global expression patterns, through descriptive statistics, unsupervised clustering, and sample-sample correlation.</p>
+<div id="data-distribution" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Data distribution</h3>
+<p>Distribution of average expression level and between-sample variance.</p>
+<p><img src="figure/data_distribution-1.png" width="480px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 1.</strong></p>
+<ul>
+<li><strong>A.</strong> This figure is based on the average expression measurements of all genes. They often have a bi-modal (two-peak) distribution: a high and narrow peak on the left corresponding to inactive genes and a relatively lower and wider peak on the right corresponding to active genes expressed different levels.</li>
+<li><strong>B.</strong> This figure is based on the between-sample standard deviations of all genes. The distribution usually has a single peak and a long tail on the right side. An enlarged tail usually indicates more genes are differentially expressed between samples. In a high quality data set, a gene not differentially expressed between samples should have small variance. So, if we assume that the majority of genes have no or little differential expression, the skewness of the peak towards the left side roughly represents data quality.</li>
+<li><strong>C.</strong> This figure summarizes the relationship between gene expression measurements and their between-sample variance. If there is a strong dependency of variance on expression measurements, the analysis of differential expression will be affected by the baseline expression of genes. Variance stabilization procedure is commonly used during data normalization to minimize such dependency. In the figure, the red line is the result of LOWESS smoothing and the majority of this line should be approximately straight and horizontal if the data has been normalized properly.</li>
+</ul>
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="sample-similarity" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Sample similarity</h3>
+<p>By comparing gene expression patterns of different samples, observations can be made about the sample similarity. This section compares samples via data distribution, hierarchical clustering, and principal components analysis, which can potentially be used to identify outliers and confounding variables.</p>
+<p><img src="figure/analysis_boxplot-1.png" width="640px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 2.</strong> Each boxplot summarizes the expression measurements of all genes in one sample. Based on the assumption that all samples have approximately the same global distribution of gene expression measurements, all boxes should look similar regardless of which group they belong to. This assumption is not always true though. For example, normal cells and cancer cells could have dramatically different global patterns of gene expression. The notches of each box indicate the median, the lower and upper sides of the box represent the first and third quantile, and the individual data points out of the whiskers are the outliers (more than 1.5 inter-quantile range from the median).</p>
+</div>
+<p><img src="figure/analysis_clustering-1.png" width="640px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 3.</strong> This is an unsupervised clustering of samples used all genes in the data set. On the clustering tree, the vertical location of their lowest common node of any two samples represents their similarity (lower = more similar). Since the sample grouping information is not used, the splitting of samples into two sub-trees will indicate that these samples belong to different groups due to a known or unknown factor. Unexpected splitting often suggest outliers or confounding variables.</p>
+</div>
+<p><img src="figure/analysis_pca-1.png" width="640px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 4.</strong> Principal Components Analysis (PCA) is also an unsupervised analysis that converts a large number of correlated variables (genes) into a smaller set of uncorrelated variables called principal components (PCs). Each principal component accounts for certain percentage of total variability of a data set so the PCs can be ordered by their percentages. This figure plots the top two PCs on the two axes. In general, samples closer to each other have more similar gene expression patterns. PCA can be used to identify sample features, such as age, disease, and treatment, that are associated with one or two PCs. It then can be concluded that these features are responsible for part of the total variability in the data set.</p>
+</div>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="differential-gene-expression" class="section level2">
+<h2><span class="header-section-number">2.2</span> Differential gene expression</h2>
+<ul>
+<li><strong>Fold change, percentage change, ratio, or log2-ratio:</strong> These statistics indicate the magnitude of the difference of group averages. They are the same values in different scale and can be easily converted to each other (see <strong>Appendix 1</strong>). Given the data has been log2-transformed, the difference of group averages is equivalent to the log2-ratio of unlogged data as <em>log2(A/B)==log2(A)-log2(B)</em>. So, group difference will be referred as log2-ratio throughout this report.</li>
+<li><strong>p value, q value, or FDR:</strong> These statistics indicates the statistical significance of group difference. P value refers to type I error of statistical test, or the chance to mistakenly conclude the differential expression of a gene while the gene is actually unchanged. RP estimates both p values and FDR based on a permutation procedure during which the ranked gene lists were shuffled to generate a background distribution of rank products.</li>
+</ul>
+<div id="deg-summary" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> DEG summary</h3>
+<p><img src="figure/deg_plot-1.png" width="800px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 5.</strong> The differential expression of all <a href="DEG/all_genes.html">10162</a> genes can be visualized in different ways:</p>
+<ul>
+<li><strong>A:</strong> <strong><em>M-A Plot.</em></strong> This plot visualizes global pattern of group difference (as log2-ratio). <strong>M</strong> (Y axis) is the log2-ratio and <strong>A</strong> (X axis) is the average measurements of the two groups. Each dot represents a gene and the green line is generated by LOWESS smoothing. The location and shape of the LOWESS line indicate whether there is an overall skewness of differential expression or expression level-dependent differential expression.</li>
+<li><strong>B:</strong> <strong><em>Volcano Plot.</em></strong> This plot puts together both types of variables (usually <strong>p value</strong> and <strong>log2-ratio</strong>) used to represent differential expression and their association. A common strategy is to only consider genes with both small p values and large log2-ratios as GOI (genes of interest). Each dot represents a gene and its size is proportional to its distance from the [0, 1] point. The horizontal line corresponds to a p value of 0.05 and the vertical lines correspond to 2.0 fold change on both sides.</li>
+<li><strong>C:</strong> <strong><em>P Value Distribution.</em></strong> This plot shows the counts of genes whose Rank Product p values are located in each 0.01 interval. So, the leftmost bar indicates the number of genes having p values less than 0.01. If the data is completely random and there are enough samples, the p values will have a uniform distribution, with approximately the same number of genes in each interval. If there are indeed a number of genes differentially expressed between the compared groups and the microarray experiments are properly designed and executed, we expect that the p values have a distribution with the highest density on the left side. If the highest density of the distribution is in the middle or on the right side, we will suspect a confounding factor that has a bigger influence on the data than the factor distinguishing the two compared groups.</li>
+<li><strong>D:</strong> <strong><em>FDR.</em></strong> This plots traces the number of genes corresponding to each FDR (false discovery rate) cutoff. <strong>Table 1</strong> lists the number of genes corresponding to commonly used FDR cutoffs.</li>
+</ul>
+</div>
+<div style="color:darkblue">
+<p><strong>Table 1.</strong> Number of top DEGs selected via different cutoffs of FDR. FDRs are calculated using the Benjamini&amp;Hochberg method (<em>Controlling the false discovery rate: a practical and powerful approach to multiple testing</em>. Journal of the Royal Statistical Society Series B 57, 289–300. 1995)</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+FDR
+</th>
+<th style="text-align:right;">
+Higher_in_Patient
+</th>
+<th style="text-align:right;">
+Lower_in_Patient
+</th>
+<th style="text-align:right;">
+Total
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+1250
+</td>
+<td style="text-align:right;">
+1743
+</td>
+<td style="text-align:right;">
+2993
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+1453
+</td>
+<td style="text-align:right;">
+1957
+</td>
+<td style="text-align:right;">
+3410
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.05
+</td>
+<td style="text-align:right;">
+1868
+</td>
+<td style="text-align:right;">
+2321
+</td>
+<td style="text-align:right;">
+4189
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.10
+</td>
+<td style="text-align:right;">
+2240
+</td>
+<td style="text-align:right;">
+2659
+</td>
+<td style="text-align:right;">
+4899
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.15
+</td>
+<td style="text-align:right;">
+2560
+</td>
+<td style="text-align:right;">
+2920
+</td>
+<td style="text-align:right;">
+5480
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.20
+</td>
+<td style="text-align:right;">
+2790
+</td>
+<td style="text-align:right;">
+3092
+</td>
+<td style="text-align:right;">
+5882
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.25
+</td>
+<td style="text-align:right;">
+2981
+</td>
+<td style="text-align:right;">
+3272
+</td>
+<td style="text-align:right;">
+6253
+</td>
+</tr>
+</tbody>
+</table>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="top-genes" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Top genes</h3>
+<p><img src="figure/deg_top-1.png" width="640px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 6.</strong> Top-ranked genes with increased (left) and decreased (right) expression in Patient. Click <a href="DEG/all_genes.html">here</a> to view differential expression of all genes.</p>
+</div>
+<p><img src="figure/deg_heatmap-1.png" width="640px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 7.</strong> Heatmap of the top 100 and 100 DEGs with higher (red) and lower (yellow) expression in Patient. Each row represents a DEG, whose expression measurements are normalized across samples. Samples are clustered by these genes and the columns are colored (blue = Control and red = Patient).</p>
+</div>
+</div>
+</div>
+<div id="view-and-download-results" class="section level2">
+<h2><span class="header-section-number">2.3</span> View and download results</h2>
+<p />
+<p><strong>Click links below to view table or download files:</strong></p>
+<ul>
+<li><a href="DEG/all_genes.html">Differential expression of all genes</a>
+<ul>
+<li><a href="DEG/Higher_in_Patient/index.html">100 DEGs with higher expression in Patient</a></li>
+<li><a href="DEG/Lower_in_Patient/index.html">100 DEGs with lower expression in Patient</a></li>
+</ul></li>
+<li><strong>Download:</strong>
+<ul>
+<li><a href="deg/deg.zip">DEG tables and figures</a></li>
+<li><a href="deg/deg.xlsx">Excel file</a></li>
+<li><a href="figure/figure.zip">Other Figures</a></li>
+<li><a href="R/R.zip">R objects</a></li>
+</ul></li>
+</ul>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">3</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="fold-change-vs.logfold-change" class="section level2">
+<h2><span class="header-section-number">3.1</span> Fold change vs. log(fold change)</h2>
+<p>The terms to represent differential expression can be used quite confusingly. In this report, <strong>fold change</strong> refers the ratio of two group means in their unlogged form. So a fold change of 2.0 means the average of the second group is increased to twice of the average of the first group; similarly, a fold change of 0.5 means the average is reduced to half. <strong>Log2(fold change)</strong> equals to the log2-transformation of the fold change. The table below gives a few examples of the conversion of these 2 variables. <strong>Log2(fold change)</strong> is more suitable for statistical analysis since it is symmetric around 0.</p>
+<div style="color:darkblue">
+<p><strong>Supplemental Table 1.</strong> Fold Change vs. Log(Fold Change) vs. Percentage Change</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;">
+Fold change
+</th>
+<th style="text-align:right;">
+Log2(fold change)
+</th>
+<th style="text-align:right;">
+Percentage change (%)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.125
+</td>
+<td style="text-align:right;">
+-3.000
+</td>
+<td style="text-align:right;">
+-87.500
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.250
+</td>
+<td style="text-align:right;">
+-2.000
+</td>
+<td style="text-align:right;">
+-75.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.500
+</td>
+<td style="text-align:right;">
+-1.000
+</td>
+<td style="text-align:right;">
+-50.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.667
+</td>
+<td style="text-align:right;">
+-0.585
+</td>
+<td style="text-align:right;">
+-33.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.800
+</td>
+<td style="text-align:right;">
+-0.322
+</td>
+<td style="text-align:right;">
+-20.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1.250
+</td>
+<td style="text-align:right;">
+0.322
+</td>
+<td style="text-align:right;">
+25.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1.500
+</td>
+<td style="text-align:right;">
+0.585
+</td>
+<td style="text-align:right;">
+50.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+100.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4.000
+</td>
+<td style="text-align:right;">
+2.000
+</td>
+<td style="text-align:right;">
+300.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+8.000
+</td>
+<td style="text-align:right;">
+3.000
+</td>
+<td style="text-align:right;">
+700.000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="methods-and-functions" class="section level2">
+<h2><span class="header-section-number">3.2</span> Methods and functions</h2>
+<p>The key steps of statistical analysis in this report use existing R/Bioconductor packages and functions.</p>
+<div style="color:darkblue">
+<p><strong>Supplemental Table 2.</strong> R/Bioconductor key functions</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Task
+</th>
+<th style="text-align:left;">
+R package
+</th>
+<th style="text-align:left;">
+R function
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Hierarchical clustering
+</td>
+<td style="text-align:left;">
+stats
+</td>
+<td style="text-align:left;">
+hclust
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCA
+</td>
+<td style="text-align:left;">
+stats
+</td>
+<td style="text-align:left;">
+prcomp
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Differential expression
+</td>
+<td style="text-align:left;">
+DEGandMore
+</td>
+<td style="text-align:left;">
+DeWrapper
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Heatmap
+</td>
+<td style="text-align:left;">
+stats
+</td>
+<td style="text-align:left;">
+heatmap
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Write Java HTML datatables
+</td>
+<td style="text-align:left;">
+awsomics
+</td>
+<td style="text-align:left;">
+CreateDatatable
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Write data to Excel
+</td>
+<td style="text-align:left;">
+xlsx
+</td>
+<td style="text-align:left;">
+createWorkbook
+</td>
+</tr>
+</tbody>
+</table>
+<p />
+</div>
+<div id="references" class="section level2">
+<h2><span class="header-section-number">3.3</span> References</h2>
+<ul>
+<li><strong>R:</strong> R Development Core Team, 2011. <em>R: A Language and Environment for Statistical Computing.</em> ISBN 3-900051-07-0. <a href="http://www.R-project.org">Home page</a>.</li>
+<li><strong>Bioconductor:</strong> Gentleman RC et al., 2004. <em>Bioconductor: open software development for computational biology and bioinformatics.</em> Genome Biology. <a href="http://www.bioconductor.org">Home page</a>.</li>
+<li><strong>Biclustering:</strong> Ihmels J, Bergmann S, Barkai N, 2004 <em>Defining transcription modules using large-scale gene expression data.</em> Bioinformatics. <a href="http://www2.unil.ch/cbg/index.php?title=ISA">Home page</a>.</li>
+<li><strong>GSEA:</strong> Subramanian A et al. 2005 <em>Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles</em> PNAS. <a href="http://software.broadinstitute.org/gsea/index.jsp">Home page</a></li>
+<li><strong><a href="http://zhezhangsh.github.io/RoCA">RoCA</a></strong></li>
+<li><strong><a href="awsomics.org">Awsomics</a></strong></li>
+</ul>
+</div>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">3.4</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<pre><code>- **output**        : where you want to put the output files
+- **home**          : the URL if you have a home page for your project
+- **analyst**       : your name
+- **description**   : background information about your project, analysis, etc.
+- **input**         : where are your input data, read instruction for preparing them
+- **parameter**     : parameters for this analysis; read instruction about how to prepare input data</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+</div>
+<div id="session-information" class="section level1">
+<h1><span class="header-section-number">4</span> Session information</h1>
+<pre><code>## R version 3.3.3 (2017-03-06)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X Yosemite 10.10.5
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] DESeq2_1.14.1              SummarizedExperiment_1.4.0
+##  [3] Biobase_2.34.0             GenomicRanges_1.26.4      
+##  [5] GenomeInfoDb_1.10.3        IRanges_2.8.2             
+##  [7] S4Vectors_0.12.2           BiocGenerics_0.20.0       
+##  [9] xlsx_0.5.7                 xlsxjars_0.6.1            
+## [11] rJava_0.9-9                DEGandMore_0.0.0.9000     
+## [13] snow_0.4-2                 rchive_0.0.0.9000         
+## [15] colorspace_1.3-2           gplots_3.0.1              
+## [17] MASS_7.3-45                htmlwidgets_0.9           
+## [19] DT_0.2                     kableExtra_0.9.0          
+## [21] awsomics_0.0.0.9000        yaml_2.1.16               
+## [23] rmarkdown_1.10.3           knitr_1.18                
+## [25] RoCA_0.0.0.9000            RCurl_1.95-4.9            
+## [27] bitops_1.0-6               devtools_1.13.4           
+## 
+## loaded via a namespace (and not attached):
+##  [1] bit64_0.9-7          RColorBrewer_1.1-2   httr_1.3.1          
+##  [4] rprojroot_1.3-2      tools_3.3.3          backports_1.1.2     
+##  [7] R6_2.2.2             rpart_4.1-10         KernSmooth_2.23-15  
+## [10] Hmisc_4.1-0          DBI_0.7              lazyeval_0.2.1      
+## [13] nnet_7.3-12          withr_2.1.1          gridExtra_2.3       
+## [16] bit_1.1-12           rvest_0.3.2          htmlTable_1.11.1    
+## [19] xml2_1.1.1           caTools_1.17.1       scales_0.5.0        
+## [22] checkmate_1.8.5      readr_1.1.1          genefilter_1.56.0   
+## [25] stringr_1.2.0        digest_0.6.13        foreign_0.8-67      
+## [28] XVector_0.14.1       base64enc_0.1-3      pkgconfig_2.0.1     
+## [31] htmltools_0.3.6      highr_0.6            rlang_0.1.6         
+## [34] rstudioapi_0.7       RSQLite_2.0          jsonlite_1.5        
+## [37] BiocParallel_1.8.2   gtools_3.5.0         acepack_1.4.1       
+## [40] magrittr_1.5         Formula_1.2-2        Matrix_1.2-8        
+## [43] Rcpp_0.12.14         munsell_0.4.3        stringi_1.1.6       
+## [46] zlibbioc_1.20.0      plyr_1.8.4           grid_3.3.3          
+## [49] blob_1.1.0           gdata_2.18.0         lattice_0.20-34     
+## [52] splines_3.3.3        annotate_1.52.1      hms_0.4.0           
+## [55] locfit_1.5-9.1       pillar_1.1.0         geneplotter_1.52.0  
+## [58] XML_3.98-1.9         evaluate_0.10.1      latticeExtra_0.6-28 
+## [61] data.table_1.10.4-3  gtable_0.2.0         ggplot2_2.2.1       
+## [64] xtable_1.8-2         survival_2.40-1      viridisLite_0.2.0   
+## [67] tibble_1.4.2         AnnotationDbi_1.36.2 memoise_1.1.0       
+## [70] cluster_2.0.5</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -103,9 +103,10 @@ tbl1 <- sapply(list(Primer=seqns, Target=seq0, Reference=genom, Read=reads), fun
   p <- rowSums(f[, 2:3])/rowSums(f[, 1:4]);
   c(c, mean(l), median(l), min(l), max(l), sum(as.numeric(l)), round(100*mean(p), 2));
 });
-tbl1 <- apply(tbl1, 1, function(x) format(round(x, 2), big.mark = ','));
-colnames(tbl1) <- c('Number', 'Length_Mean', 'Length_Median', 'Length_Minimum', 
+rownames(tbl1) <- c('Number', 'Length_Mean', 'Length_Median', 'Length_Minimum', 
                     'Length_Maximum', 'Length_Total', 'GC_Percent');
+saveRDS(tbl1, paste(path.r, 'input_summary.rds', sep='/'));
+tbl1 <- apply(tbl1, 1, function(x) format(round(x, 2), big.mark = ','));
 ```
 
 _Genome_ = **`r prms$genome$name`**; _Maximum mismatches_ = **`r prms$match$mismatch`**; _Allow INDEL_ = **`r prms$match$indel`**

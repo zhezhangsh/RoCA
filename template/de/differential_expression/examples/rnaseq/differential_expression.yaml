@@ -1,0 +1,61 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <expr> numeric matrix of full transcriptome data set saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - commonly RMA processed microarray data, RNA-seq read count or FPKM/TPM
+#   - the first column or the row names of an R object must be unique Entrez gene IDs
+#   - the first row or column names of an R object is unique sample IDs
+# <anno> a table of gene annotation saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column or the row names of an R object must be unique Entrez gene ID matching the row names of <data>
+#   - the second column is official gene symbols matching the gene IDs
+# <comparison> a list of 2 named character vectors saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - Vector names will be used as group names
+#   - The first vector has the control samples and the second has the case samples
+#   - Each vector includes unique sample IDs matching column names of <data>
+#   - Each vector must include multiple sample IDs matching the column names of <data>, as replicates of each group
+#   - The two vectors cannot have any overlapping
+#############################################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for generating any report using the RoCA::CreateReport() function
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/differential_expression.Rmd
+template: differential_expression.Rmd
+output: examples/rnaseq                                                             # Where to write all the output files
+home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                                                  # Name of the analyst
+zip: no                                                                             # Whether to zip all output files
+
+#################
+##### ABOUT #####
+#################
+# Description of this analysis, could be any name/text pairs
+description:      
+  Project: "Transcriptome in immune cells of control-patient samples"
+  Data: "Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. 
+        Raw data was processed to get gene-level read counts."
+  Analysis: "This is a demo."
+  
+##################
+##### INPUTS #####
+##################
+# Prepared input data, saved in .rds format using the saveRDS() function
+input:
+  expr: count_ss.rds      ## a matrix of data, row=gene, column=sample, row names must be unique NCBI Entrez gene IDs
+  anno: anno_ss.rds       ## a data frame of gene annotation, row names match the row names of the data matrix, the first column is optimally official gene symbol
+  comparison: group.rds   ## a list of 2 named character vectors of sample IDs, matching column names of the data matrix, vector names are names of the 2 groups to be compared
+  
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter: # All parameters
+  genome: human               # Name of the reference genome, in the form of "human", "hsa", or "hg38".
+  entrez: 0                   # Column in the gene annotation table with Entrez gene ID. -1: not availabel; 0: row names; 1-n: column index
+  count: yes                   # Whether gene expression matrix is RNA-seq read counts or similar data type; if TRUE, matrix will be normalized using DESeq2 method 
+  deg:                        # Options of selecting differentially expressed genes 
+    method: DeDeSeq             ## Statistical tests, use one of the returned values of DeMethods()
+    paired: no                  ## Whether it's a paired comparison, if TRUE, the two sample ID vectors must have matched orders
+    rank: both                  ## The method to pre-rank genes for GSEA ('p' = by p value only; 'fc' = by fold change only; 'both' = by combination of p value and fold change)
+    num.top: 100                 ## Number of top ranked DEGs to be selected from both directions
+    
