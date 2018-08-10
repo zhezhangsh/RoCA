@@ -467,9 +467,9 @@ zip(paste(path.r, 'R.zip', sep='/'), path.r, zip = 'zip');
 
 **Click links below to view table or download files:**
 
-  - [Differential expression of all genes](DEG/all_genes.html)
-    - [`r nrow(up)` DEGs with higher expression in `r g2.name`](`r paste('DEG', deg.sub[1], 'index.html', sep='/')`)
-    - [`r nrow(dn)` DEGs with lower expression in `r g2.name`](`r paste('DEG', deg.sub[2], 'index.html', sep='/')`)
+  - [Differential expression of all genes](deg/all_genes.html)
+    - [`r nrow(up)` DEGs with higher expression in `r g2.name`](`r paste('deg', deg.sub[1], 'index.html', sep='/')`)
+    - [`r nrow(dn)` DEGs with lower expression in `r g2.name`](`r paste('deg', deg.sub[2], 'index.html', sep='/')`)
 
   - **Download:**
     - [DEG tables and figures](deg/deg.zip)
