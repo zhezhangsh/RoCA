@@ -405,7 +405,7 @@ up.tbl <- data.frame(anno[rownames(up), , drop=FALSE], up, rep('Figure', nrow(up
 colnames(up.tbl) <- cnm;
 xls$Up <- up.tbl;
 up.tbl$Samples   <- AddHref(up.tbl$Samples, paste('bars/', rownames(up), '.pdf', sep='')); 
-if (ind > 0) up.tbl <- cbind('Entrez_ID'=up.tbl[, ind], up.tbl[, -ind]);
+if (ind > 0) up.tbl <- cbind(ID=rownames(up.tbl), 'Entrez_ID'=up.tbl[, ind], up.tbl[, -ind]);
 up.formatted     <- GeneList2Datatable(FormatNumeric(up.tbl), fn=paste(path.deg1, 'index.html', sep='/'), 
                                        col.entrez=as.integer(prms$entrez>0), genome=prms$genome, 
                                        title=paste('Genes with higher expression in', g2.name));
@@ -414,7 +414,7 @@ dn.tbl <- data.frame(anno[rownames(dn), , drop=FALSE], dn, rep('Figure', nrow(dn
 colnames(dn.tbl) <- cnm;
 xls$Down <- dn.tbl;
 dn.tbl$Samples   <- AddHref(dn.tbl$Samples, paste('bars/', rownames(dn), '.pdf', sep='')); 
-if (ind > 0) dn.tbl <- cbind('Entrez_ID'=dn.tbl[, ind], dn.tbl[, -ind]);
+if (ind > 0) dn.tbl <- cbind(ID=rownames(dn.tbl), 'Entrez_ID'=dn.tbl[, ind], dn.tbl[, -ind]);
 dn.formatted     <- GeneList2Datatable(FormatNumeric(dn.tbl), paste(path.deg2, 'index.html', sep='/'), 
                                        col.entrez=as.integer(prms$entrez>0), genome=prms$genome, 
                                        title=paste('Genes with lower expression in', g2.name));
