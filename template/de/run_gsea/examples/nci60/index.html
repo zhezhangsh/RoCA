@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Zhe Zhang" />
+
+<meta name="date" content="2018-08-13" />
+
+<title>Gene Set Enrichment Analysis</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Gene Set Enrichment Analysis</h1>
+<h4 class="author"><em>Zhe Zhang</em></h4>
+<h4 class="date"><em>2018-08-13</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This procedure runs Gene Set Enrichment Analysis (<a href="http://software.broadinstitute.org/gsea/index.jsp">GSEA</a>) on a transcriptome, or similar, data set. GSEA is a gene set-level analysis that takes into account all genes in the data set after they were ranked by a test statistic of differential expression. The original GSEA was developed by Broad Institute and is usually run as a stand-alone program, using <a href="https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set/gmt">gene set collections</a> obtained from different sources, such as BioSystems and KEGG.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>NCI60 tumor cell lines</p>
+</div>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">1.2</span> Data</h2>
+<p>Microarray data generated from NCI60. Data was normalized by RMA</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>This is a demo.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div align="center">
+<span style="color:blue; font-family:Georgia; font-size:2.5em;"> Blood </span> <span style="color:black; font-family:Georgia; font-size:2em;"> vs. </span> <span style="color:red; font-family:Georgia; font-size:2.5em;"> Breast </span>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">2</span> Results</h1>
+<div id="enrichment-score" class="section level2">
+<h2><span class="header-section-number">2.1</span> Enrichment score</h2>
+<p>GSEA uses enrichment score and corresponding p value to report the significance of differential expression at gene set level. The generation of enrichment score can be illustrated with an enrichment plot.</p>
+<p><img src="GSEA/MSigDb_Hallmark/enplot_H_ALL_30_HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION_3.png" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 1.</strong> <strong>Enrichment plot.</strong> In an enrichment plot, all genes are ranked on the x-axis according to their differential expression. The color scales from red to blue correspond to the rankings, from the most increased to most decreased differential expression. Each black vertical line along the color scales represents one gene in the gene set to be tested. The overall skewness of these lines towards the right or left is summarized by the green curve, which is called the enrichment profile. The level of skewness The detailed intepretation of enrichment plot can be found <a href="http://software.broadinstitute.org/gsea/doc/GSEAUserGuideTEXT.htm#_GSEA_Statistics">here</a>.</p>
+</div>
+<p>GSEA tests each collection of gene sets separately and reports the NES (nominal enrichment score) and p value of each gene set. FDR (false discovery rate) will also be calculated based on the p values within each collection.</p>
+<p><img src="figure/enrichment_score-1.png" width="380px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 2.</strong> Distribution of nominal enrichment scores by gene set collections. Positive and negative scores are plotted separately.</p>
+</div>
+</div>
+<div id="leading-edge-genes" class="section level2">
+<h2><span class="header-section-number">2.2</span> Leading edge genes</h2>
+<p>There is often overlapping between gene sets in different collections, such as KEGG and Reactome pathways. As a result, top gene sets reported by GSEA might be redundant if they include the same leading edge genes with the highest levels of differential expression.</p>
+<p><img src="figure/leading_edge_plot-1.png" width="960px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 3.</strong> Leading edge analyis of top 47 gene sets and genes included by at least 4 of these gene sets. Colored blocks are genes included by the corresponding gene sets.</p>
+</div>
+</div>
+<div id="view-and-download-results" class="section level2">
+<h2><span class="header-section-number">2.3</span> View and download results</h2>
+<p><strong>Download links:</strong></p>
+<ul>
+<li><a href="GSEA.zip">All results in a zip file</a></li>
+<li><a href="table/GSEA.xlsx">Results as Excel spreadsheets</a></li>
+<li><a href="R/GSEA.rds">Results as R object</a></li>
+<li><a href="figure.zip">Figures</a></li>
+</ul>
+<div style="color:darkblue">
+<p><strong>Table 1.</strong> Summary of GSEA results. Gene sets were analyzed as collections. Click the links the view GSEA results of individual collections.</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Collection
+</th>
+<th style="text-align:center;">
+Gene_Set
+</th>
+<th style="text-align:center;">
+Blood &gt; Breast
+</th>
+<th style="text-align:center;">
+Breast &gt; Blood
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:center;">
+50
+</td>
+<td style="text-align:center;">
+<a href="GSEA/MSigDb_Hallmark/gsea_report_for_Blood_1534185154876.html">List</a>
+</td>
+<td style="text-align:center;">
+<a href="GSEA/MSigDb_Hallmark/gsea_report_for_Breast_1534185154876.html">List</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:center;">
+219
+</td>
+<td style="text-align:center;">
+<a href="GSEA/Wiki_pathway/gsea_report_for_Blood_1534185154916.html">List</a>
+</td>
+<td style="text-align:center;">
+<a href="GSEA/Wiki_pathway/gsea_report_for_Breast_1534185154916.html">List</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEGG_pathway
+</td>
+<td style="text-align:center;">
+82
+</td>
+<td style="text-align:center;">
+<a href="GSEA/KEGG_pathway/gsea_report_for_Blood_1534185154889.html">List</a>
+</td>
+<td style="text-align:center;">
+<a href="GSEA/KEGG_pathway/gsea_report_for_Breast_1534185154889.html">List</a>
+</td>
+</tr>
+</tbody>
+</table>
+<div style="color:darkblue">
+<p><strong>Table 2.</strong> Top 50 gene sets with the lowest and highest nominal enrichment scores.</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Collection
+</th>
+<th style="text-align:left;">
+Gene_set
+</th>
+<th style="text-align:center;">
+Size
+</th>
+<th style="text-align:center;">
+NES
+</th>
+<th style="text-align:center;">
+PValue
+</th>
+<th style="text-align:center;">
+FDR
+</th>
+<th style="text-align:left;">
+Breast&gt;Blood
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_28_HALLMARK_MYC_TARGETS_V1.html">H_ALL_28_HALLMARK_MYC_TARGETS_V1</a>
+</td>
+<td style="text-align:center;">
+176
+</td>
+<td style="text-align:center;">
+-2.7179
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198843_WP411_MRNA_PROCESSING.html">198843_WP411_MRNA_PROCESSING</a>
+</td>
+<td style="text-align:center;">
+114
+</td>
+<td style="text-align:center;">
+-2.4320
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_29_HALLMARK_MYC_TARGETS_V2.html">H_ALL_29_HALLMARK_MYC_TARGETS_V2</a>
+</td>
+<td style="text-align:center;">
+55
+</td>
+<td style="text-align:center;">
+-2.3479
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198860_WP111_ELECTRON_TRANSPORT_CHAIN.html">198860_WP111_ELECTRON_TRANSPORT_CHAIN</a>
+</td>
+<td style="text-align:center;">
+81
+</td>
+<td style="text-align:center;">
+-2.2257
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_27_HALLMARK_E2F_TARGETS.html">H_ALL_27_HALLMARK_E2F_TARGETS</a>
+</td>
+<td style="text-align:center;">
+193
+</td>
+<td style="text-align:center;">
+-2.1337
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198853_WP477_CYTOPLASMIC_RIBOSOMAL_PROTEINS.html">198853_WP477_CYTOPLASMIC_RIBOSOMAL_PROTEINS</a>
+</td>
+<td style="text-align:center;">
+49
+</td>
+<td style="text-align:center;">
+-2.0930
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198771_WP466_DNA_REPLICATION.html">198771_WP466_DNA_REPLICATION</a>
+</td>
+<td style="text-align:center;">
+41
+</td>
+<td style="text-align:center;">
+-2.0925
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_46_HALLMARK_ALLOGRAFT_REJECTION.html">H_ALL_46_HALLMARK_ALLOGRAFT_REJECTION</a>
+</td>
+<td style="text-align:center;">
+192
+</td>
+<td style="text-align:center;">
+-2.0817
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198870_WP623_OXIDATIVE_PHOSPHORYLATION.html">198870_WP623_OXIDATIVE_PHOSPHORYLATION</a>
+</td>
+<td style="text-align:center;">
+51
+</td>
+<td style="text-align:center;">
+-2.0183
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEGG_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/KEGG_pathway/HSA00190_OXIDATIVE_PHOSPHORYLATION.html">HSA00190_OXIDATIVE_PHOSPHORYLATION</a>
+</td>
+<td style="text-align:center;">
+110
+</td>
+<td style="text-align:center;">
+-2.0002
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00120
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_34_HALLMARK_OXIDATIVE_PHOSPHORYLATION.html">H_ALL_34_HALLMARK_OXIDATIVE_PHOSPHORYLATION</a>
+</td>
+<td style="text-align:center;">
+187
+</td>
+<td style="text-align:center;">
+-1.9745
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00014
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_18_HALLMARK_INTERFERON_ALPHA_RESPONSE.html">H_ALL_18_HALLMARK_INTERFERON_ALPHA_RESPONSE</a>
+</td>
+<td style="text-align:center;">
+94
+</td>
+<td style="text-align:center;">
+-1.9204
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00012
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198756_WP241_ONE_CARBON_METABOLISM.html">198756_WP241_ONE_CARBON_METABOLISM</a>
+</td>
+<td style="text-align:center;">
+25
+</td>
+<td style="text-align:center;">
+-1.8769
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00170
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198811_WP179_CELL_CYCLE.html">198811_WP179_CELL_CYCLE</a>
+</td>
+<td style="text-align:center;">
+98
+</td>
+<td style="text-align:center;">
+-1.8668
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00200
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198876_WP404_NUCLEOTIDE_METABOLISM.html">198876_WP404_NUCLEOTIDE_METABOLISM</a>
+</td>
+<td style="text-align:center;">
+17
+</td>
+<td style="text-align:center;">
+-1.8590
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00220
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198909_WP23_B_CELL_RECEPTOR_SIGNALING_PATHWAY.html">198909_WP23_B_CELL_RECEPTOR_SIGNALING_PATHWAY</a>
+</td>
+<td style="text-align:center;">
+155
+</td>
+<td style="text-align:center;">
+-1.8513
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00200
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/920977_WP2446_RB_IN_CANCER.html">920977_WP2446_RB_IN_CANCER</a>
+</td>
+<td style="text-align:center;">
+85
+</td>
+<td style="text-align:center;">
+-1.8231
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00310
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEGG_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/KEGG_pathway/HSA00230_PURINE_METABOLISM.html">HSA00230_PURINE_METABOLISM</a>
+</td>
+<td style="text-align:center;">
+163
+</td>
+<td style="text-align:center;">
+-1.8072
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.01300
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEGG_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/KEGG_pathway/HSA00240_PYRIMIDINE_METABOLISM.html">HSA00240_PYRIMIDINE_METABOLISM</a>
+</td>
+<td style="text-align:center;">
+97
+</td>
+<td style="text-align:center;">
+-1.7771
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.01400
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_8_HALLMARK_DNA_REPAIR.html">H_ALL_8_HALLMARK_DNA_REPAIR</a>
+</td>
+<td style="text-align:center;">
+142
+</td>
+<td style="text-align:center;">
+-1.7581
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00096
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198885_WP49_IL_2_SIGNALING_PATHWAY.html">198885_WP49_IL_2_SIGNALING_PATHWAY</a>
+</td>
+<td style="text-align:center;">
+42
+</td>
+<td style="text-align:center;">
+-1.7531
+</td>
+<td style="text-align:center;">
+0.0019
+</td>
+<td style="text-align:center;">
+0.00980
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEGG_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/KEGG_pathway/HSA00970_AMINOACYL_TRNA_BIOSYNTHESIS.html">HSA00970_AMINOACYL_TRNA_BIOSYNTHESIS</a>
+</td>
+<td style="text-align:center;">
+43
+</td>
+<td style="text-align:center;">
+-1.7120
+</td>
+<td style="text-align:center;">
+0.0020
+</td>
+<td style="text-align:center;">
+0.03000
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198770_WP127_IL_5_SIGNALING_PATHWAY.html">198770_WP127_IL_5_SIGNALING_PATHWAY</a>
+</td>
+<td style="text-align:center;">
+68
+</td>
+<td style="text-align:center;">
+-1.7075
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.01700
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198862_WP69_TCR_SIGNALING_PATHWAY.html">198862_WP69_TCR_SIGNALING_PATHWAY</a>
+</td>
+<td style="text-align:center;">
+87
+</td>
+<td style="text-align:center;">
+-1.7034
+</td>
+<td style="text-align:center;">
+0.0019
+</td>
+<td style="text-align:center;">
+0.01700
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEGG_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/KEGG_pathway/HSA00270_CYSTEINE_AND_METHIONINE_METABOLISM.html">HSA00270_CYSTEINE_AND_METHIONINE_METABOLISM</a>
+</td>
+<td style="text-align:center;">
+33
+</td>
+<td style="text-align:center;">
+-1.6616
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.04400
+</td>
+<td style="text-align:left;">
+No
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198828_WP516_HYPERTROPHY_MODEL.html">198828_WP516_HYPERTROPHY_MODEL</a>
+</td>
+<td style="text-align:center;">
+19
+</td>
+<td style="text-align:center;">
+1.7550
+</td>
+<td style="text-align:center;">
+0.0062
+</td>
+<td style="text-align:center;">
+0.02500
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_10_HALLMARK_APOPTOSIS.html">H_ALL_10_HALLMARK_APOPTOSIS</a>
+</td>
+<td style="text-align:center;">
+156
+</td>
+<td style="text-align:center;">
+1.7604
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00067
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198840_WP272_BLOOD_CLOTTING_CASCADE.html">198840_WP272_BLOOD_CLOTTING_CASCADE</a>
+</td>
+<td style="text-align:center;">
+20
+</td>
+<td style="text-align:center;">
+1.7614
+</td>
+<td style="text-align:center;">
+0.0086
+</td>
+<td style="text-align:center;">
+0.02600
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEGG_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/KEGG_pathway/HSA00600_SPHINGOLIPID_METABOLISM.html">HSA00600_SPHINGOLIPID_METABOLISM</a>
+</td>
+<td style="text-align:center;">
+42
+</td>
+<td style="text-align:center;">
+1.7641
+</td>
+<td style="text-align:center;">
+0.0021
+</td>
+<td style="text-align:center;">
+0.11000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_22_HALLMARK_HEDGEHOG_SIGNALING.html">H_ALL_22_HALLMARK_HEDGEHOG_SIGNALING</a>
+</td>
+<td style="text-align:center;">
+34
+</td>
+<td style="text-align:center;">
+1.7648
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00061
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198816_WP185_INTEGRIN_MEDIATED_CELL_ADHESION.html">198816_WP185_INTEGRIN_MEDIATED_CELL_ADHESION</a>
+</td>
+<td style="text-align:center;">
+95
+</td>
+<td style="text-align:center;">
+1.8067
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.01600
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198772_WP1539_ANGIOGENESIS.html">198772_WP1539_ANGIOGENESIS</a>
+</td>
+<td style="text-align:center;">
+23
+</td>
+<td style="text-align:center;">
+1.8084
+</td>
+<td style="text-align:center;">
+0.0022
+</td>
+<td style="text-align:center;">
+0.01900
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_35_HALLMARK_GLYCOLYSIS.html">H_ALL_35_HALLMARK_GLYCOLYSIS</a>
+</td>
+<td style="text-align:center;">
+193
+</td>
+<td style="text-align:center;">
+1.8153
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00033
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198780_WP615_SENESCENCE_AND_AUTOPHAGY.html">198780_WP615_SENESCENCE_AND_AUTOPHAGY</a>
+</td>
+<td style="text-align:center;">
+100
+</td>
+<td style="text-align:center;">
+1.8196
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.02000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/672454_WP2118_ARRHYTHMOGENIC_RIGHT_VENTRICULAR_CARDIOMYOPATHY.html">672454_WP2118_ARRHYTHMOGENIC_RIGHT_VENTRICULAR_CARDIOMYOPATHY</a>
+</td>
+<td style="text-align:center;">
+71
+</td>
+<td style="text-align:center;">
+1.9330
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00390
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_6_HALLMARK_TGF_BETA_SIGNALING.html">H_ALL_6_HALLMARK_TGF_BETA_SIGNALING</a>
+</td>
+<td style="text-align:center;">
+53
+</td>
+<td style="text-align:center;">
+1.9428
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198912_WP98_PROSTAGLANDIN_SYNTHESIS_AND_REGULATION.html">198912_WP98_PROSTAGLANDIN_SYNTHESIS_AND_REGULATION</a>
+</td>
+<td style="text-align:center;">
+28
+</td>
+<td style="text-align:center;">
+1.9666
+</td>
+<td style="text-align:center;">
+0.0021
+</td>
+<td style="text-align:center;">
+0.00260
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198795_WP306_FOCAL_ADHESION.html">198795_WP306_FOCAL_ADHESION</a>
+</td>
+<td style="text-align:center;">
+176
+</td>
+<td style="text-align:center;">
+1.9853
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00220
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_14_HALLMARK_ESTROGEN_RESPONSE_LATE.html">H_ALL_14_HALLMARK_ESTROGEN_RESPONSE_LATE</a>
+</td>
+<td style="text-align:center;">
+190
+</td>
+<td style="text-align:center;">
+1.9899
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198903_WP383_STRIATED_MUSCLE_CONTRACTION.html">198903_WP383_STRIATED_MUSCLE_CONTRACTION</a>
+</td>
+<td style="text-align:center;">
+38
+</td>
+<td style="text-align:center;">
+2.0084
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00200
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_20_HALLMARK_APICAL_JUNCTION.html">H_ALL_20_HALLMARK_APICAL_JUNCTION</a>
+</td>
+<td style="text-align:center;">
+192
+</td>
+<td style="text-align:center;">
+2.0162
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Wiki_pathway
+</td>
+<td style="text-align:left;">
+<a href="GSEA/Wiki_pathway/198807_WP244_ALPHA6_BETA4_INTEGRIN_SIGNALING_PATHWAY.html">198807_WP244_ALPHA6_BETA4_INTEGRIN_SIGNALING_PATHWAY</a>
+</td>
+<td style="text-align:center;">
+63
+</td>
+<td style="text-align:center;">
+2.1073
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_3_HALLMARK_CHOLESTEROL_HOMEOSTASIS.html">H_ALL_3_HALLMARK_CHOLESTEROL_HOMEOSTASIS</a>
+</td>
+<td style="text-align:center;">
+69
+</td>
+<td style="text-align:center;">
+2.1398
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_1_HALLMARK_TNFA_SIGNALING_VIA_NFKB.html">H_ALL_1_HALLMARK_TNFA_SIGNALING_VIA_NFKB</a>
+</td>
+<td style="text-align:center;">
+195
+</td>
+<td style="text-align:center;">
+2.1453
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_13_HALLMARK_ESTROGEN_RESPONSE_EARLY.html">H_ALL_13_HALLMARK_ESTROGEN_RESPONSE_EARLY</a>
+</td>
+<td style="text-align:center;">
+193
+</td>
+<td style="text-align:center;">
+2.1533
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_42_HALLMARK_COAGULATION.html">H_ALL_42_HALLMARK_COAGULATION</a>
+</td>
+<td style="text-align:center;">
+133
+</td>
+<td style="text-align:center;">
+2.1881
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_2_HALLMARK_HYPOXIA.html">H_ALL_2_HALLMARK_HYPOXIA</a>
+</td>
+<td style="text-align:center;">
+191
+</td>
+<td style="text-align:center;">
+2.2756
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_16_HALLMARK_MYOGENESIS.html">H_ALL_16_HALLMARK_MYOGENESIS</a>
+</td>
+<td style="text-align:center;">
+193
+</td>
+<td style="text-align:center;">
+2.3580
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_39_HALLMARK_UV_RESPONSE_DN.html">H_ALL_39_HALLMARK_UV_RESPONSE_DN</a>
+</td>
+<td style="text-align:center;">
+142
+</td>
+<td style="text-align:center;">
+2.5685
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSigDb_Hallmark
+</td>
+<td style="text-align:left;">
+<a href="GSEA/MSigDb_Hallmark/H_ALL_30_HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION.html">H_ALL_30_HALLMARK_EPITHELIAL_MESENCHYMAL_TRANSITION</a>
+</td>
+<td style="text-align:center;">
+193
+</td>
+<td style="text-align:center;">
+2.9737
+</td>
+<td style="text-align:center;">
+0.0000
+</td>
+<td style="text-align:center;">
+0.00000
+</td>
+<td style="text-align:left;">
+Yes
+</td>
+</tr>
+</tbody>
+</table>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">3</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="references" class="section level2">
+<h2><span class="header-section-number">3.1</span> References</h2>
+<ul>
+<li><strong>R:</strong> R Development Core Team, 2011. <em>R: A Language and Environment for Statistical Computing.</em> ISBN 3-900051-07-0. <a href="http://www.R-project.org">Home page</a>.
+<ul>
+<li><strong>Bioconductor:</strong> Gentleman RC et al., 2004. <em>Bioconductor: open software development for computational biology and bioinformatics.</em> Genome Biology. <a href="http://www.bioconductor.org">Home page</a>.</li>
+<li><strong>GSEA:</strong> Subramanian A et al. 2005 <em>Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles</em> PNAS. <a href="http://software.broadinstitute.org/gsea/index.jsp">Home page</a></li>
+<li><strong><a href="http://zhezhangsh.github.io/RoCA">RoCA</a></strong></li>
+<li><strong><a href="awsomics.org">Awsomics</a></strong></li>
+</ul></li>
+</ul>
+</div>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">3.2</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<ul>
+<li><em>output</em> : where you want to put the output files
+<ul>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">3.3</span> Session information</h2>
+<pre><code>## R version 3.3.3 (2017-03-06)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X Yosemite 10.10.5
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+##  [1] grid      parallel  stats4    stats     graphics  grDevices utils    
+##  [8] datasets  methods   base     
+## 
+## other attached packages:
+##  [1] xlsx_0.5.7            xlsxjars_0.6.1        rJava_0.9-9          
+##  [4] DEGandMore_0.0.0.9000 snow_0.4-2            awsomics_0.0.0.9000  
+##  [7] rchive_0.0.0.9000     colorspace_1.3-2      flexclust_1.3-4      
+## [10] modeltools_0.2-21     lattice_0.20-34       PGSEA_1.48.0         
+## [13] annaffy_1.46.0        KEGG.db_3.2.3         GO.db_3.4.0          
+## [16] pathview_1.14.0       org.Hs.eg.db_3.4.0    AnnotationDbi_1.36.2 
+## [19] IRanges_2.8.2         S4Vectors_0.12.2      Biobase_2.34.0       
+## [22] BiocGenerics_0.20.0   gplots_3.0.1          MASS_7.3-45          
+## [25] htmlwidgets_0.9       DT_0.2                yaml_2.1.16          
+## [28] kableExtra_0.9.0      knitr_1.18            rmarkdown_1.10.3     
+## [31] RoCA_0.0.0.9000       RCurl_1.95-4.9        bitops_1.0-6         
+## [34] devtools_1.13.4      
+## 
+## loaded via a namespace (and not attached):
+##  [1] httr_1.3.1         jsonlite_1.5       bit64_0.9-7       
+##  [4] viridisLite_0.2.0  gtools_3.5.0       highr_0.6         
+##  [7] blob_1.1.0         pillar_1.1.0       RSQLite_2.0       
+## [10] backports_1.1.2    digest_0.6.13      XVector_0.14.1    
+## [13] rvest_0.3.2        htmltools_0.3.6    plyr_1.8.4        
+## [16] XML_3.98-1.9       pkgconfig_2.0.1    zlibbioc_1.20.0   
+## [19] scales_0.5.0       gdata_2.18.0       tibble_1.4.2      
+## [22] KEGGREST_1.14.1    withr_2.1.1        magrittr_1.5      
+## [25] memoise_1.1.0      evaluate_0.10.1    KEGGgraph_1.32.0  
+## [28] xml2_1.1.1         graph_1.52.0       rsconnect_0.8.5   
+## [31] tools_3.3.3        hms_0.4.0          stringr_1.2.0     
+## [34] munsell_0.4.3      Biostrings_2.42.1  caTools_1.17.1    
+## [37] rlang_0.1.6        rstudioapi_0.7     DBI_0.7           
+## [40] R6_2.2.2           bit_1.1-12         rprojroot_1.3-2   
+## [43] KernSmooth_2.23-15 readr_1.1.1        Rgraphviz_2.18.0  
+## [46] stringi_1.1.6      Rcpp_0.12.14       png_0.1-7</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

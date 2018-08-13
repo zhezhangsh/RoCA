@@ -1,0 +1,37 @@
+jar: /Users/zhangz/Documents/RoCA/template/de/run_gsea/examples/nci60/input/gsea2-2.2.0.jar
+preranked: no
+thread: 4
+name: Blood_vs_Breast
+groups:
+  control: Blood
+  case: Breast
+out: /Users/zhangz/Documents/RoCA/template/de/run_gsea/examples/nci60
+input: /Users/zhangz/Documents/RoCA/template/de/run_gsea/examples/nci60/input/Blood_vs_Breast.gct
+class: /Users/zhangz/Documents/RoCA/template/de/run_gsea/examples/nci60/input/Blood_vs_Breast.cls
+gmt:
+  MSigDb_Hallmark: ~/Documents/RoCA/data/gene.set/gmt/human/MSigDb/C0_Hallmark.gmt
+  Wiki_pathway: ~/Documents/RoCA/data/gene.set/gmt/human/WikiPathways.gmt
+  KEGG_pathway: ~/Documents/RoCA/data/gene.set/gmt/human/KEGG/KEGG_pathway_ss.gmt
+options:
+  metric: Diff_of_Classes
+  nperm: 1000
+  permute: gene_set
+  plot_top_x: 100
+  set_max: 500
+  set_min: 15
+  scoring_scheme: weighted
+  collapse: yes
+  mode: Max_probe
+  norm: meandiv
+  rnd_type: no_balance
+  sort: real
+  order: descending
+  include_only_symbols: yes
+  make_sets: yes
+  median: no
+  num: 100
+  rnd_seed: timestamp
+  save_rnd_lists: no
+  zip_report: no
+  gui: no
+

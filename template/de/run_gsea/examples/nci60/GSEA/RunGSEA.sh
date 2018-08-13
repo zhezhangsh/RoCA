@@ -1,0 +1,9 @@
+java -Xmx5G -cp /Users/zhangz/Documents/RoCA/template/de/run_gsea/examples/nci60/input/gsea2-2.2.0.jar xtools.gsea.Gsea -res Blood_vs_Breast/Blood_vs_Breast.gct -cls Blood_vs_Breast/Blood_vs_Breast.cls -metric Diff_of_Classes -nperm 1000 -permute gene_set -plot_top_x 100 -set_max 500 -set_min 15 -scoring_scheme weighted -collapse TRUE -mode Max_probe -norm meandiv -rnd_type no_balance -sort real -order descending -include_only_symbols TRUE -make_sets TRUE -median FALSE -num 100 -rnd_seed timestamp -save_rnd_lists FALSE -zip_report FALSE -gui FALSE -gmx Blood_vs_Breast/C0_Hallmark.gmt -rpt_label MSigDb_Hallmark -out Blood_vs_Breast
+
+
+java -Xmx5G -cp /Users/zhangz/Documents/RoCA/template/de/run_gsea/examples/nci60/input/gsea2-2.2.0.jar xtools.gsea.Gsea -res Blood_vs_Breast/Blood_vs_Breast.gct -cls Blood_vs_Breast/Blood_vs_Breast.cls -metric Diff_of_Classes -nperm 1000 -permute gene_set -plot_top_x 100 -set_max 500 -set_min 15 -scoring_scheme weighted -collapse TRUE -mode Max_probe -norm meandiv -rnd_type no_balance -sort real -order descending -include_only_symbols TRUE -make_sets TRUE -median FALSE -num 100 -rnd_seed timestamp -save_rnd_lists FALSE -zip_report FALSE -gui FALSE -gmx Blood_vs_Breast/WikiPathways.gmt -rpt_label Wiki_pathway -out Blood_vs_Breast
+
+
+java -Xmx5G -cp /Users/zhangz/Documents/RoCA/template/de/run_gsea/examples/nci60/input/gsea2-2.2.0.jar xtools.gsea.Gsea -res Blood_vs_Breast/Blood_vs_Breast.gct -cls Blood_vs_Breast/Blood_vs_Breast.cls -metric Diff_of_Classes -nperm 1000 -permute gene_set -plot_top_x 100 -set_max 500 -set_min 15 -scoring_scheme weighted -collapse TRUE -mode Max_probe -norm meandiv -rnd_type no_balance -sort real -order descending -include_only_symbols TRUE -make_sets TRUE -median FALSE -num 100 -rnd_seed timestamp -save_rnd_lists FALSE -zip_report FALSE -gui FALSE -gmx Blood_vs_Breast/KEGG_pathway_ss.gmt -rpt_label KEGG_pathway -out Blood_vs_Breast
+
+

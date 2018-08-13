@@ -1,0 +1,337 @@
+---
+title: "Gene Set Enrichment Analysis"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+This procedure runs Gene Set Enrichment Analysis ([GSEA](http://software.broadinstitute.org/gsea/index.jsp)) on a transcriptome, or similar, data set. GSEA is a gene set-level analysis that takes into account all genes in the data set after they were ranked by a test statistic of differential expression. The original GSEA was developed by Broad Institute and is usually run as a stand-alone program, using [gene set collections](https://github.com/zhezhangsh/RoCA/tree/master/data/gene.set/gmt) obtained from different sources, such as BioSystems and KEGG. 
+</div>
+
+&nbsp;
+
+```{r global_setup, include=FALSE}
+name.yaml <- 'run_gsea.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'MASS', 'gplots', 
+                   'pathview', 'PGSEA', 'flexclust', 'colorspace', 'RoCA', 'rchive', 'awsomics', 'DEGandMore'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 
+                     'path.deg'='DEG', 'path.ora'='ORA', 'path.gsea'='GSEA');
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, fig.path='figure/');
+
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+```{r load_data, include=FALSE}
+inputs<-yml$input;
+
+# All input variables
+expr    <- as.matrix(ImportTable(DownloadFile(inputs$expr, path.input)));
+grps    <- ImportR(DownloadFile(inputs$comparison, path.input));
+anno    <- expr[, 1]
+expr    <- as.matrix(expr[, -1, drop=FALSE]);
+g1.ind  <- intersect(colnames(expr), grps[[1]]);
+g2.ind  <- intersect(colnames(expr), grps[[2]]);
+g1.name <- gsub('-', '_', names(grps)[1]);
+g2.name <- gsub('-', '_', names(grps)[2]);
+
+if (is.null(g1.name))                        g1.name <- 'Group_1';
+if (is.null(g2.name))                        g2.name <- 'Group_2';
+```
+
+`r home.url` 
+
+# Description
+  
+`r WriteDescription(yml$description)`
+
+`r home.url` 
+
+<div align='center'> <span style="color:blue; font-family:Georgia; font-size:2.5em;"> `r g1.name` </span> <span style="color:black; font-family:Georgia; font-size:2em;"> vs. </span> <span style="color:red; font-family:Georgia; font-size:2.5em;"> `r g2.name` </span> </div>
+
+# Results
+
+```{r run_gsea, include=FALSE}
+names(grps) <- c(g1.name, g2.name);
+dir.gmt <- paste(path.input, 'gmt', sep='/'); 
+if (file.exists(dir.gmt)) unlink(dir.gmt, recursive = TRUE); 
+dir.create(dir.gmt, recursive = TRUE, showWarnings = FALSE); 
+fn.gsea <- PrepareGSEA(expr, grps, paste(path.input, '/', g1.name, '_vs_', g2.name, sep=''), desc = anno); 
+input.gsea               <- yml$gsea;
+gsea.yml                 <- list();
+gsea.yml$jar             <- DownloadFile(yml$input$jar, path.input); 
+gsea.yml$preranked       <- FALSE;
+gsea.yml$thread          <- prms$thread; 
+gsea.yml$name            <- paste(g1.name, '_vs_', g2.name, sep='')
+gsea.yml$groups$control  <- g1.name;
+gsea.yml$groups$case     <- g2.name;
+gsea.yml$out             <- path;
+gsea.yml$input           <- fn.gsea[1];
+gsea.yml$class           <- fn.gsea[2];
+gsea.yml$chip            <- c();
+gsea.yml$gmt             <- yml$input$gmt;
+gsea.yml$options         <- prms$options;
+
+writeLines(as.yaml(gsea.yml), paste(path.input, 'gsea.yaml', sep='/')); 
+
+######################################
+gsea.cmmd <- GSEAviaJava(gsea.yml); ##
+######################################
+
+if (dir.exists(path.gsea)) unlink(path.gsea, recursive = TRUE);
+dir.create(path.gsea, recursive = TRUE);
+file.rename(paste(path, gsea.yml$name, sep='/'), path.gsea);
+```
+
+```{r gsea_result, include=FALSE}
+gsea.tbl <- readRDS(paste(path.gsea, 'full_table.rds', sep='/'));
+for (i in 1:ncol(gsea.tbl)) gsea.tbl[[i]] <- as.vector(gsea.tbl[[i]]); 
+saveRDS(gsea.tbl, file=paste(path.gsea, 'full_table.rds', sep='/')); 
+
+
+# Load gene lists of gene sets from GMT files
+fn.gmt <- paste(path.gsea, TrimPath(as.vector(unlist(gsea.yml$gmt))), sep='/');
+gmts <- lapply(fn.gmt, readGmt); 
+gsea.lst <- lapply(gmts, function(gmt) {
+  nm <- sub(' $', '', sapply(gmt, function(g) g@reference)); 
+  lst <- lapply(gmt, function(g) g@ids); 
+  names(lst) <- toupper(nm); 
+  lst;
+}); 
+names(gmts) <- names(gsea.lst) <- names(yml$input$gmt);
+
+cll <- sort(unique(gsea.tbl$Collection));
+tbls <- lapply(cll, function(c) gsea.tbl[gsea.tbl$Collection==c, , drop=FALSE]);
+names(tbls) <- cll;
+
+wid1 <- min(9.6, 2 + 0.6 * length(tbls));
+out1 <- paste(100*wid1, 'px', sep='');
+```
+
+## Enrichment score
+
+GSEA uses enrichment score and corresponding p value to report the significance of differential expression at gene set level. The generation of enrichment score can be illustrated with an enrichment plot.
+
+```{r enrichment_score_ex, eval=TRUE, include=FALSE}
+gsea.ex <- gsea.tbl;
+gsea.ex <- gsea.ex[!is.na(gsea.ex$NES), , drop=FALSE];
+gsea.ex <- gsea.ex[abs(gsea.ex$NES)==max(abs(gsea.ex$NES)), ];
+ex.gsea <- dir(paste(path.gsea, gsea.ex$Collection, sep='/'));
+ex.gsea <- ex.gsea[grep(gsea.ex$Gene_set[1], ex.gsea)];
+ex.gsea <- paste(path.gsea, gsea.ex$Collection, ex.gsea[grep('^enplot', ex.gsea)][1], sep='/');
+```
+
+![](`r TruncatePathPrefix(ex.gsea, path)`)
+
+<div style="color:darkblue">
+`r OrderFigure()` **Enrichment plot.** In an enrichment plot, all genes are ranked on the x-axis according to their differential expression. The color scales from red to blue correspond to the rankings, from the most increased to most decreased differential expression. Each black vertical line along the color scales represents one gene in the gene set to be tested. The overall skewness of these lines towards the right or left is summarized by the green curve, which is called the enrichment profile. The level of skewness    The detailed intepretation of enrichment plot can be found [here](http://software.broadinstitute.org/gsea/doc/GSEAUserGuideTEXT.htm#_GSEA_Statistics).
+</div>
+
+GSEA tests each collection of gene sets separately and reports the NES (nominal enrichment score) and p value of each gene set. FDR (false discovery rate) will also be calculated based on the p values within each collection.
+
+```{r enrichment_score, fig.height=4.8, fig.width=wid1, out.width=out1}
+par(mar=c(8, 5, 1, 1));
+
+sc <- lapply(tbls, function(x) x$NES);
+ps <- lapply(sc, function(s) s[s>0]);
+ng <- lapply(sc, function(s) s[s<0]);
+mx <- max(sapply(sc, max));
+cx <- max(strwidth(names(tbls), units = 'inch'))/2;
+plot(0, type='n', ylim=c(-mx, mx), xlim=c(0, length(sc)), xaxt='n', xlab='', 
+     ylab='Nominal enrichment score');
+boxplot(ps, add=TRUE, at=(1:length(tbls)-0.5), col='#E74C3CBB', pch=18, 
+        boxwex=0.5, names=rep('', length(ps)));
+boxplot(ng, add=TRUE, at=(1:length(tbls)-0.5), col='#16A085BB', pch=18, 
+        boxwex=0.5, names=rep('', length(ng)));
+axis(1, at=(1:length(tbls)-0.5), label=names(tbls), las=3, cex.axis=cx);
+abline(h=0);
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Distribution of nominal enrichment scores by gene set collections. Positive and negative scores are plotted separately. 
+</div>
+
+## Leading edge genes
+
+There is often overlapping between gene sets in different collections, such as KEGG and Reactome pathways. As a result, top gene sets reported by GSEA might be redundant if they include the same leading edge genes with the highest levels of differential expression. 
+
+```{r leading_edge, include=FALSE}
+tp1 <- gsea.tbl[gsea.tbl$NES<0, ];
+tp2 <- gsea.tbl[gsea.tbl$NES>0, ];
+tp1 <- tp1[order(tp1$NES), , drop=FALSE][1:min(nrow(tp1), max(2, prms$num_top)), , drop=FALSE];
+tp2 <- tp2[rev(order(tp2$NES)), , drop=FALSE][1:min(nrow(tp2), max(2, prms$num_top)), , drop=FALSE];
+top <- rbind(tp1, tp2);
+lst <- lapply(1:nrow(top), function(i) gsea.lst[[top[i, 1]]][[top[i, 2]]]);
+gns <- table(unlist(lst, use.names=FALSE));
+gns <- rev(sort(gns));
+gns <- gns[gns>=gns[min(length(gns), 2*nrow(top))]];
+gns <- names(gns[gns>1]);
+
+tbl <- matrix(0, nc=length(gns), nr=nrow(top), dimnames = list(top$Gene_set, gns));
+for (i in 1:nrow(top)) tbl[i, colnames(tbl) %in% lst[[i]]] <- 1;
+tbl <- tbl[, hclust(as.dist(1-cor(tbl)))$order];
+tbl <- tbl[rowSums(tbl)>0, , drop=FALSE];
+tbl <- tbl[hclust(as.dist(1-cor(t(tbl))))$order, ];
+
+hgt2 <- min(8, 2+0.1*nrow(tbl));
+wid2 <- min(9.6, 3+0.15*ncol(tbl));
+out2 <- paste(100*wid2, 'px', sep='');
+```
+
+```{r leading_edge_plot, include=TRUE, fig.height=hgt2, fig.width=wid2, out.width=out2}
+colnames(tbl) <- paste(names(anno[colnames(tbl)]), anno[colnames(tbl)], sep='_');
+PlotColoredBlock(-tbl, -2, 2);
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Leading edge analyis of top `r nrow(tbl)` gene sets and genes included by at least `r min(colSums(tbl))` of these gene sets. Colored blocks are genes included by the corresponding gene sets.
+</div>
+
+## View and download results
+
+```{r download, include=FALSE}
+tbls$Top <- top;
+WriteExcel(tbls, paste(path.tbl, 'GSEA', sep='/'));
+saveRDS(tbls, paste(path.r, 'GSEA.rds', sep='/'));
+zip(paste(path, 'GSEA.zip', sep='/'), path.gsea, zip = 'zip');
+zip(paste(path, 'figure.zip', sep='/'), path.fig, zip = 'zip');
+```
+
+**Download links:**
+  
+  - [All results in a zip file](GSEA.zip)
+  - [Results as Excel spreadsheets](table/GSEA.xlsx)
+  - [Results as R object](R/GSEA.rds)
+  - [Figures](figure.zip)
+
+<div style="color:darkblue">
+`r OrderTable()` Summary of GSEA results. Gene sets were analyzed as collections. Click the links the view GSEA results of individual collections.
+</div>
+
+```{r view_collection, include=TRUE}
+tbl <- data.frame(Collection=names(gmts), Gene_Set=sapply(gmts, length), rep('List', length(gmts)), 
+                rep('List', length(gmts)),stringsAsFactors = FALSE);
+  
+names(tbl)[3:4] <- c(paste(g1.name, g2.name, sep=' > '), paste(g2.name, g1.name, sep=' > ')); 
+lnk <- sapply(names(gmts), function(nm) {
+  x <- paste(path.gsea, nm, sep='/'); 
+  y <- dir(x); 
+  y <- y[grep('.html$', y)]; 
+  z <- sapply(c(g1.name, g2.name), function(x) y[grep(paste('^gsea_report_for_', x, sep=''), y)]);
+  paste('GSEA', nm, z, sep='/'); 
+}); 
+tbl [, 3] <- paste('[', tbl[, 3], '](', lnk[1, ], ')', sep=''); 
+tbl [, 4] <- paste('[', tbl[, 4], '](', lnk[2, ], ')', sep=''); 
+rownames(tbl) <- NULL;
+
+kable(tbl, align=c('l', 'c', 'c', 'c')) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+```
+
+<div style="color:darkblue">
+`r OrderTable()` Top `r nrow(top)` gene sets with the lowest and highest nominal enrichment scores. 
+</div>
+
+```{r view_top, include=TRUE}
+top <- rbind(tp1, tp2);
+lnk <- sapply(1:nrow(top), function(i) {
+  cll <- paste(path.gsea, top$Collection[i], sep='/');
+  fns <- dir(cll);
+  fnm <- fns[grep(top$Gene_set[i], fns)];
+  fnm <- fnm[grep('html$', fnm, ignore.case = TRUE)][1];
+  paste('GSEA', top$Collection[i], fnm, sep='/');
+});
+top$Gene_set <- paste('[', top$Gene_set, '](', lnk, ')', sep='');
+
+kable(FormatNumeric(top[order(top$NES), , drop=FALSE]), row.names = FALSE, 
+      align=c('l', 'l', 'c', 'c', 'c', 'c', 'l')) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                full_width=FALSE); 
+```
+
+`r home.url` 
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## References
+
+  - **R:** R Development Core Team, 2011. _R: A Language and Environment for Statistical Computing._ ISBN 3-900051-07-0. [Home page](http://www.R-project.org).
+  - **Bioconductor:** Gentleman RC et al., 2004. _Bioconductor: open software development for computational biology and bioinformatics._ Genome Biology. [ Home page](http://www.bioconductor.org).
+  - **GSEA:** Subramanian A et al. 2005 _Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles_ PNAS. [Home page](http://software.broadinstitute.org/gsea/index.jsp)
+  - **[RoCA](http://zhezhangsh.github.io/RoCA)** 
+  - **[Awsomics](awsomics.org)**
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_
+
+

@@ -1,0 +1,80 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <expr> a data frame saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column or the row names of an R object must be unique gene IDs
+#   - the first row or column names of an R object is unique sample IDs
+#   - the first column of data frame is gene description, such as gene symbols; and the rest columns are numeric data
+# <comparison> a list of 2 named character vectors saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - Vector names will be used as group names
+#   - The first vector has the control samples and the second has the case samples
+#   - Each vector includes unique sample IDs matching column names of <expr>
+#   - Each vector must include multiple sample IDs matching the column names of <expr>, as replicates of each group
+#   - The two vectors cannot have any overlapping
+#############################################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for generating any report using the RoCA::CreateReport() function
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/run_gsea/run_gsea.Rmd
+template: run_gsea.Rmd
+output: examples/nci60                                                             # Where to write all the output files
+home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                                                  # Name of the analyst
+zip: no                                                                             # Whether to zip all output files
+
+#################
+##### ABOUT #####
+#################
+# Description of this analysis, could be any name/text pairs
+description:      
+  Project: "NCI60 tumor cell lines"
+  Data: "Microarray data generated from NCI60. Data was normalized by RMA"
+  Analysis: "This is a demo."
+
+##################
+##### INPUTS #####
+##################
+# Prepared input data, saved in .rds format using the saveRDS() function
+input:
+  jar: ~/Documents/RoCA/data/gene.set/gmt/gsea2-2.2.0.jar
+  expr: ~/Documents/RoCA/data/gex/NCI60/expr_symbol.rds       ## a matrix of data, row=gene, column=sample, row names must be unique NCBI Entrez gene IDs
+  comparison: ~/Documents/RoCA/data/gex/NCI60/group2sample.rds   ## a list of 2 named character vectors of sample IDs, matching column names of the data matrix, vector names are names of the 2 groups to be compared
+  gmt:
+    MSigDb_Hallmark: ~/Documents/RoCA/data/gene.set/gmt/human/MSigDb/C0_Hallmark.gmt
+    Wiki_pathway: ~/Documents/RoCA/data/gene.set/gmt/human/WikiPathways.gmt
+    KEGG_pathway: ~/Documents/RoCA/data/gene.set/gmt/human/KEGG/KEGG_pathway_ss.gmt  
+    
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter: # All parameters
+  thread: 4       # Number of CPU cores for parallel computing
+  num_top: 25     # Number of top gene sets (highest NES, both directions) for leading edge genes
+  options: # All GSEA options, check GSEA website for instruction: http://software.broadinstitute.org/gsea/doc/GSEAUserGuideFrame.html
+  ##############################################
+  # parameters commonly changed from run to run
+    metric: Diff_of_Classes   # metric for raning genes: <Signal2Noise>, <tTest>, <Cosine>, <Euclidean>, <Manhatten>, <Pearson>, <Ratio_of_Classes>, <Diff_of_Classes>, or <log2_Ratio_of_Classes>
+    nperm: 1000                # number of permuations
+    permute: gene_set         # type of permuation: <gene_set> or <phenotype>
+    plot_top_x: 100           # number of top pathways to plot 
+    set_max: 500 
+    set_min: 15 
+    ##############################################
+    # paramater rarely to be changed
+    scoring_scheme: weighted    # weighted enrichment statistics: <classic>, <weighted>, <weighted_p2> or <weighted_p1.5>
+    collapse: true              # collapse redundant genes: <true> or <false>
+    mode: Max_probe             # which one to use when there is redudant genes: <Max_probe> or <Median_of_probes>
+    norm: meandiv               # normalization mode: <none> or <meandiv>
+    rnd_type: no_balance 
+    sort: real 
+    order: descending 
+    include_only_symbols: true 
+    make_sets: true 
+    median: false 
+    num: 100 
+    rnd_seed: timestamp 
+    save_rnd_lists: false 
+    zip_report: false 
+    gui: false    
