@@ -68,8 +68,13 @@ g2.ind  <- intersect(colnames(expr), grps[[2]]);
 g1.name <- gsub('-', '_', names(grps)[1]);
 g2.name <- gsub('-', '_', names(grps)[2]);
 
-if (is.null(g1.name))                        g1.name <- 'Group_1';
-if (is.null(g2.name))                        g2.name <- 'Group_2';
+if (is.null(g1.name)) g1.name <- 'Group_1';
+if (is.null(g2.name)) g2.name <- 'Group_2';
+
+dir.gmt <- paste(path.input, 'gmt', sep='/'); 
+if (file.exists(dir.gmt)) unlink(dir.gmt, recursive = TRUE); 
+dir.create(dir.gmt, recursive = TRUE, showWarnings = FALSE); 
+yml$input$gmt <- lapply(yml$input$gmt, function(x) DownloadFile(x, dir.gmt)); 
 ```
 
 `r home.url` 
@@ -86,9 +91,7 @@ if (is.null(g2.name))                        g2.name <- 'Group_2';
 
 ```{r run_gsea, include=FALSE}
 names(grps) <- c(g1.name, g2.name);
-dir.gmt <- paste(path.input, 'gmt', sep='/'); 
-if (file.exists(dir.gmt)) unlink(dir.gmt, recursive = TRUE); 
-dir.create(dir.gmt, recursive = TRUE, showWarnings = FALSE); 
+
 fn.gsea <- PrepareGSEA(expr, grps, paste(path.input, '/', g1.name, '_vs_', g2.name, sep=''), desc = anno); 
 input.gsea               <- yml$gsea;
 gsea.yml                 <- list();

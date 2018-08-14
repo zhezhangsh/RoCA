@@ -44,7 +44,7 @@ input:
     MSigDb_Hallmark: ~/Documents/RoCA/data/gene.set/gmt/human/MSigDb/C0_Hallmark.gmt
     Wiki_pathway: ~/Documents/RoCA/data/gene.set/gmt/human/WikiPathways.gmt
     KEGG_pathway: ~/Documents/RoCA/data/gene.set/gmt/human/KEGG/KEGG_pathway_ss.gmt  
-    
+
 ######################
 ##### PARAMETERS #####
 ######################
