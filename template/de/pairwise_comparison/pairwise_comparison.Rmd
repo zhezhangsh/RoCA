@@ -984,7 +984,7 @@ gsea.ex <- gsea.tbl;
 gsea.ex <- gsea.ex[!is.na(gsea.ex$NES), , drop=FALSE];
 gsea.ex <- gsea.ex[abs(gsea.ex$NES)==max(abs(gsea.ex$NES)), ];
 ex.gsea <- dir(paste(path.gsea, gsea.ex$Collection, sep='/')); 
-ex.gsea <- ex.gsea[grep(gsea.ex$Gene_set[1], ex.gsea)];
+ex.gsea <- ex.gsea[grep(gsub(':', '_', gsea.ex$Gene_set[1]), ex.gsea)];
 ex.gsea <- paste(path.gsea, gsea.ex$Collection, ex.gsea[grep('^enplot', ex.gsea)][1], sep='/');
 ```
 
