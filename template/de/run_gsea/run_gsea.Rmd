@@ -172,7 +172,7 @@ sc <- lapply(tbls, function(x) x$NES);
 ps <- lapply(sc, function(s) s[s>0]);
 ng <- lapply(sc, function(s) s[s<0]);
 mx <- min(4, max(sapply(sc, function(s) max(abs(s), na.rm=TRUE)), na.rm=TRUE));
-cx <- max(strwidth(names(tbls), units = 'inch'))/2;
+cx <- max(strwidth(names(tbls), units = 'inch'))/3;
 plot(0, type='n', ylim=c(-mx, mx), xlim=c(0, length(sc)), xaxt='n', xlab='', 
      ylab='Nominal enrichment score');
 boxplot(ps, add=TRUE, at=(1:length(tbls)-0.5), col='#E74C3CBB', pch=18, 
