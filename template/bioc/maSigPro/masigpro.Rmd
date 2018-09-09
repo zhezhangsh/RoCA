@@ -401,6 +401,7 @@ tbl <- t(sapply(ora, function(ora) ora[gs]));
 dimnames(tbl)<-list(names(cl), gs); 
 tbl[is.na(tbl)]<-'0';
 rownames(tbl) <- names(cls); 
+saveRDS(ora, paste(path.r, 'ora.rds', sep='/'));
 ```
 
 <div style="color:darkblue">
