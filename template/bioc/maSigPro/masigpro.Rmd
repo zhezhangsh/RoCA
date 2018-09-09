@@ -1,5 +1,6 @@
 ---
-title: "Clustering of time series data in multiple conditions using _maSigPro_"
+title: 'Oxytocin Reduces Caloric Intake in Men Proteomics/Lipidomics analysis'
+subtitle: '--- **Data analysis: differential expression by maSigPro method** ---'
 author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
 date: "`r Sys.Date()`"
 output:
@@ -11,22 +12,10 @@ output:
       collapsed: no
 ---
 
-<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-**Introduction** 
-
-[maSigPro](https://www.ncbi.nlm.nih.gov/pubmed/?term=16481333) is a R package that initially was developed for the analysis of time series of multiple conditions. maSigPro follows a two steps regression strategy to find variable with significant temporal changes and significant differences between experimental conditions The method defines a general regression model for the data where the experimental conditions are identified by dummy variables. 
-
-  - The procedure first adjusts this global model by the least-squared technique to identify variables changing over time and selects significant ones applying false discovery rate control procedures. 
-
-  - Secondly, stepwise regression is applied as a variable selection strategy to study differences between experimental conditions and to find statistically significant different profiles. The coefficients obtained in this second regression model will be useful to cluster together significant variables with similar patterns over time.
-</div>
-
-&nbsp;
-
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'masigpro.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 
-                   'GenomicRanges', 'RoCA', 'awsomics', 'maSigPro'); 
+name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'kableExtra',
+                   'GenomicRanges', 'RoCA', 'awsomics', 'maSigPro', 'DEGandMore'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure',
                      'path.tbl'='table', 'path.cl'='cluster'); 
 
@@ -49,18 +38,13 @@ path <- yml$output;
 for (i in 1:length(name.subfolders)) 
   assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
+OrderFigure(reset = TRUE);
+OrderTable(reset = TRUE);
+
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
 ```
-
-`r home.url` 
-
-# Description
-
-`r WriteDescription(yml$description)`
-
-`r home.url`
 
 ```{r load_data, include=FALSE}
 mtrx <- ImportTable(yml$input$mtrx);
@@ -103,14 +87,38 @@ grps <- split(grps, ctgy[2, ])[colnames(dsgn)[3:ncol(dsgn)]];
 snum <- sapply(1:max(dsgn[, 1]), function(i) nrow(dsgn[dsgn[, 1]==i, , drop=FALSE]));
 ```
 
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+## Parameters
+
+The input data set includes **`r nrow(mtrx)`** variables (genes) and **`r ncol(mtrx)`** samples, in **`r length(grps)`** conditions and over **`r length(grps[[1]])`** time points. 
+
+  - Estimate parameters: degree = **`r prms$extra$estimate.degree`**, cluster = **`r prms$extra$estimate.k`**, and R-squared = **`r prms$extra$estimate.rsq`**. 
+  - Degree of regression: **`r prms$degree`**
+  - Maximum number of clusters: **`r prms$k`**
+  - R-squared cutoff: **`r prms$rsq`**
+  - False discovery rate cutoff: **`r prms$Q`**
+  - P value cutoff: **`r prms$alfa`**
+  - Merge cutoff: r = **`r prms$extra$merge$r`** and p = **`r prms$extra$merge$p`**
+  - Stepwise method: **`r prms$step.method`**
+  - Cluster method: **`r prms$cluster.method`**
+  - Paired tes: **`r prms$extra$paired`**
+  
+`r home.url`
+
 ```{r run_masigpro, include=FALSE}
 if (prms$extra$estimate.degree) gdr <- ceiling(sqrt(length(tmpt)-1)) else gdr <- prms$degree;
 if (prms$extra$estimate.k) ncl <- ceiling(sqrt(length(tmpt)) * (ncol(dsgn)-1)) else ncl <- prms$k; 
 if (prms$extra$estimate.rsq) rsq <- round(2/sqrt(ncol(mtrx)), 2) else rsq <- prms$rsq;
-ts <- maSigPro(mtrx, dsgn, degree = gdr, rsq = prms$rsq, k = ncl, Q = prms$Q,
+ts <- maSigPro(mtrx, dsgn, degree = gdr, rsq =rsq, k = ncl, Q = prms$Q,
                alfa = prms$alfa, cluster.method = prms$cluster.method,
                step.method = prms$step.method, vars = 'all', pdf = FALSE);
-saveRDS(ts, paste(path.r, 'all_result.rds', sep='/'));
+saveRDS(prms, paste(path.r, 'parameters.rds', sep='/'));
+saveRDS(ts, paste(path.r, 'masigpro.rds', sep='/'));
 saveRDS(ts$dis, paste(path.r, 'design.rds', sep='/'));
 # ts <- readRDS('/Users/zhangz/Google Drive/Projects/McCormack/2017-10_Proteomics/r/masigpro/all_result.rds');
 ```
@@ -120,7 +128,6 @@ saveRDS(ts$dis, paste(path.r, 'design.rds', sep='/'));
 ```{r cluster, include=FALSE}
 sigs <- ts$sig.genes;
 prof <- sigs$sig.profiles;
-# prof <- ts$sig.genes$Placebo$sig.profiles;
 
 cls <- split(rownames(prof), prof[, ncol(prof)]); 
 # merge similar clusters
@@ -145,20 +152,28 @@ mns <- sapply(cls, function(c) colMeans(mtrx[c, ]));
 mn <- lapply(1:length(cls), function(i) 
   sapply(grps, function(g) sapply(g, function(g) mean(mns[g, i]))));
 se <- lapply(1:length(cls), function(i) 
-  sapply(grps, function(g) sapply(g, function(g) sd(mns[g, i])/length(g))));
+  sapply(grps, function(g) sapply(g, function(g) sd(mns[g, i])/sqrt(length(g)))));
 mn <- lapply(mn, t);
 se <- lapply(se, t);
 names(mn) <- names(se) <- names(cls); 
 for (i in 1:length(mn)) colnames(mn[[i]]) <- colnames(se[[i]]) <- names(tmpt);
+
+tbl <- anno[unlist(cls, use.names=FALSE), , drop=FALSE];
+tbl <- cbind(Cluster=rep(names(cls), sapply(cls, length)), tbl);
+saveRDS(tbl, paste(path.r, 'gene2cluster.rds', sep='/'));
+invisible(CreateDatatable(tbl, paste(path.tbl, 'gene2cluster', sep='/'))); 
+WriteExcel(list(clustered=tbl), paste(path.tbl, 'gene2cluster', sep='/'));
 ```
 
 ## Clustering 
 
 ***maSigPro*** identified **`r length(cls)`** clusters of **`r sum(sapply(cls, length))`** variables in total.
 
+> Gene-to-cluster mapping: [view online](table/gene2cluster.html) - [download](table/gene2cluster.xlsx).
+  
 <div align='center'>
 ```{r, plot_heatmap, fig.with=8.0, fig.height=round(1.5+0.25*length(cls), 1), out.width='800px'}
-m <- lapply(grps, function(g) sapply(g, function(g) colMeans(mns[g, , drop=FALSE])));
+m <- lapply(grps, function(g) sapply(g, function(g) colMeans(mns[g, ])));
 g <- lapply(m, colnames);
 m <- do.call('cbind', m); 
 x <- ceiling(max(abs(m))); 
@@ -166,29 +181,26 @@ rownames(m) <- paste(rownames(m), '(N=', sapply(cls, length), ')', sep='');
 PlotColoredBlock(m, min=-1*x, max=x, groups = g);
 
 saveRDS(m, paste(path.r, 'cluster_mean.rds', sep='/'));
-CreateDatatable(FormatNumeric(m), paste(path.tbl, 'cluster_mean.rds', sep='/')) -> x; 
+CreateDatatable(FormatNumeric(m), paste(path.tbl, 'cluster_mean', sep='/')) -> x; 
 ```
 </div>
   
 <div style="color:darkblue; padding:0 0cm">
-**Figure 1.** Group averages of all genes in each cluster. Color corresponds to measurements (red = high). 
+`r OrderFigure()` Group averages of all genes in each cluster. Color corresponds to measurements (red = high). 
 
-> [Click](table/cluster_mean.rds) to view full table of group means.
+> [Cluster means](table/cluster_mean.html).
 </div>
 
-<div align='center'>
 ```{r plot_corr, include=TRUE, fig.width=6, fig.height=6, out.width='600px'}
 hcl <- hclust(as.dist(1-cor(mns)));
 crr <- cor(mns)[hcl$order, hcl$order]; 
 PlotColoredBlock(crr, -1, 1, key='Correlation coefficient'); 
 ```
+
+<div style="color:darkblue">
+`r OrderFigure()` Inter-correlation between clusters using their group means over conditions and time points. Similar clusters have higher correlation coefficient and are grouped together. 
 </div>
 
-<div style="color:darkblue; padding:0 3cm">
-**Figure 2.** Inter-correlation between the means of all clusters. Similar clusters have higher correlation coefficient. 
-</div>
-
-<div align='center'>
 ```{r plot_series, include=TRUE, fig.width=9.6, fig.height=3.6*ceiling(length(cls)/2), out.width='960px'}
 
 col <- prms$extra$plot$color;
@@ -198,15 +210,12 @@ if (length(lty) != length(grps)) lty <- c();
 
 par(mfrow=c(ceiling(length(cls)/2), 2));
 for (i in 1:length(cls)) {
-  v <- se[[i]]; 
-  v[is.na(v)] <- 0; 
-  PlotSeries(mn[[i]], v, col=col, lty=lty, title=names(cls)[i], draw.legend = i==1);
+  PlotSeries(mn[[i]], se[[i]], col=col, lty=lty, title=names(cls)[i], draw.legend = i==1);
 }; 
 ```
-</div>
 
-<div align='center', style="color:darkblue; padding:0 0cm">
-**Figure 3.** Cluster profiles. 
+<div style="color:darkblue">
+`r OrderFigure()` Cluster profiles. Each line represents a condition and x-axis corresponds to time points. Lines trace changes of group means and vertical bars are standard errors of samples in the same group.
 </div>
 
 ## Post-hoc analysis
@@ -235,14 +244,8 @@ dv1 <- lapply(cls, function(c) {
 });
 pv1 <- lapply(cls, function(c) {
   ps <- sapply(grps, function(g) {
-    sapply(2:length(g), function(i)
-      if (length(g[[1]])>1 & length(g[[i]])>1) {
-        t.test(colMeans(mtrx[c, g[[1]]]), colMeans(mtrx[c, g[[i]]]), paired=prd)$p.value; 
-      } else {
-        t.test(rowMeans(mtrx[c, g[[1]], drop=FALSE]), 
-               rowMeans(mtrx[c, g[[i]], drop=FALSE]), paired=TRUE)$p.value; 
-      }
-    )
+    sapply(2:length(g), function(i) 
+      t.test(colMeans(mtrx[c, g[[1]]]), colMeans(mtrx[c, g[[i]]]), paired=prd)$p.value); 
   });
   rownames(ps) <- names(tmpt)[-1];
   p0 <- apply(ps, 1, function(p) 
@@ -257,12 +260,15 @@ dv2 <- sapply(mn, function(m) d <- apply(m, 2, function(x) sd(x)));
 pv2 <- sapply(cls, function(c) {
   p0 <- sapply(1:length(tmpt), function(i) {
     s <- lapply(grps, function(g) g[[i]]);
-    if (max(sapply(s, length)) > 1) {
-      f <- as.factor(rep(1:length(s), sapply(s, length)));
-      m <- unlist(lapply(s, function(s) colMeans(mtrx[c, s, drop=FALSE])));
-      n <- sapply(s, length);
-      summary(aov(m ~ f))[[1]][1, 5];
-    } else 1;
+    f <- as.factor(rep(1:length(s), sapply(s, length)));
+    m <- unlist(lapply(s, function(s) colMeans(mtrx[c, s, drop=FALSE])));
+    n <- sapply(s, length);
+    summary(aov(m ~ f))[[1]][1, 5];
+    # if (prd & max(n)==min(n)) {
+    #   x <- rep(1:length(s), each=n[1]); 
+    #   a <- summary(aov(m ~ f + Error(x))); 
+    #   a[[2]][[1]][1, 5]
+    # } else summary(aov(m ~ f))[[1]][1, 5];
   })
 })
 rownames(pv2) <- names(tmpt);
@@ -285,25 +291,22 @@ CreateDatatable(tbl, paste(path.tbl, 'post_hoc_within.html', sep='/'));
 ```
 
 ```{r clusters, include=FALSE}
-fns <- sapply(names(cls), function(nm) {  print(nm); 
+fns <- sapply(names(cls), function(nm) { 
   fn<-paste(path.cl, '/', nm, '.pdf', sep=''); 
   pdf(fn, w=6, h=12); 
   par(mfrow=c(4, 1), omi=c(0.2, 0.2, 0.2, 0.2));
 
   x <- mtrx[cls[[nm]], , drop=FALSE];
-  x <- lapply(grps, function(g) sapply(g, function(g) rowMeans(x[, g, drop=FALSE])));
+  x <- lapply(grps, function(g) sapply(g, function(g) rowMeans(x[, g])));
   y <- do.call('cbind', x); 
   
   tbl <- FormatNumeric(y); 
   if (!is.null(anno)) tbl <- cbind(anno[rownames(tbl), , drop=FALSE], tbl); 
   CreateDatatable(tbl, paste(path.cl, '/', nm, '.html', sep='')); 
   
-  v <- se[[nm]];
-  v[is.na(v)] <- 0;
-  
   PlotColoredBlock(y, min=-max(abs(y)), max=max(abs(y)), groups = lapply(x, colnames));
   
-  PlotSeries(mn[[nm]], v, labs=c('', 'Group mean'), title=nm, 
+  PlotSeries(mn[[nm]], se[[nm]], labs=c('', 'Group mean'), title=nm, 
              draw.legend = TRUE, col = col, lty = lty); 
   PlotSeries(t(dv1[[nm]]), labs=c('', 'Average deviation'), 
              title='Deviation from beginning point', draw.legend = TRUE, 
@@ -339,15 +342,14 @@ tbl <- data.frame(
 );
 ```
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 1** The post-hoc analysis of clusters shown in **Figure 3**. The _between_ statistics represent the maximal deviation (when and how much) between a time point and the beginning time point, and the _within_ statistics represent the maximal deviation (when and how much) of the conditions from each other within the same time point.
+<div style="color:darkblue">
+`r OrderTable()` The post-hoc analysis of clusters. The _between_ statistics represent the maximal deviation (when and how much) between a time point and the beginning time point, and the _within_ statistics represent the maximal deviation (when and how much) of the conditions from each other within the same time point.
 </div>
 
-<div align='center', style="padding:0 1cm">
-`r kable(tbl, row.names = FALSE)`
-</div>
+`r kable(tbl, row.names = FALSE)  %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+<hr />
 
-<div align='center'>
 ```{r plot_dev, include=TRUE, fig.width=19.2, fig.height=7.2, out.width='960px'}
 par(mfrow=c(1, 2), mar=c(6,5,2,2)); 
 cl <- rainbow(length(cls)); 
@@ -378,10 +380,9 @@ axis(1, at=1:ncol(x), tick=TRUE, label=names(tmpt), las=3);
 text(y, z, pos=3, col='darkgrey', label=rownames(x), cex=1); 
 grid(nx=0, ny=NULL); 
 ```
-</div>
-  
-<div style="color:darkblue; padding:0 0cm">
-**Figure 4.** The left panel shows when and how much the maximal deviation happens for each cluster between the beginning time point and all the other time points. The right panel shows when and how much the maximal deviation between conditions happens within each time point. 
+
+<div style="color:darkblue">
+`r OrderFigure()` The left panel shows when and how much the maximal deviation happens for each cluster between the beginning time point and all the other time points. The right panel shows when and how much the maximal deviation between conditions happens within each time point. 
 </div>
 
 ## Over-representation analysis
@@ -402,14 +403,13 @@ tbl[is.na(tbl)]<-'0';
 rownames(tbl) <- names(cls); 
 ```
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 2** Numbers of pre-defined variable sets significantly enriched in each cluster. Sets were split based on their sources. Click on each number to see list of the variable sets. 
+<div style="color:darkblue">
+`r OrderTable()` Numbers of pre-defined gene sets significantly enriched in each cluster. Sets were split based on their sources. Click on each number to see list of the gene sets. 
 </div>
 
-<div align='center', style="padding:0 1cm">
-`r kable(tbl, align=rep('c', ncol(tbl)))`
-</div>
-
+`r kable(tbl, align=rep('c', ncol(tbl)))  %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+<hr />
 
 ***
 
