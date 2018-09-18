@@ -140,9 +140,9 @@ kable(tbl, row.names = FALSE) %>% kable_styling(
 if (debug) {
   con <- readRDS('/Users/zhangz/Google Drive/Projects/Chou/result/evaluate_consensus/consensus_muscle.rds');
 } else {
-    if (tolower(prms$method=='muscle')) con <- msaMuscle(fll[1:i], order='input') else 
-      if (tolower(prms$method=='clustalomega')) con <- msaClustalOmega(fll[1:i], order='input') else 
-        con <- msaClustalW(fll[1:i], order='input');
+    if (tolower(prms$method=='muscle')) con <- msaMuscle(seq[1:i], order='input') else 
+      if (tolower(prms$method=='clustalomega')) con <- msaClustalOmega(seq[1:i], order='input') else 
+        con <- msaClustalW(seq[1:i], order='input');
 };
 cap <- capture.output(msa::print(con, show='complete', showNames=TRUE, showConsensus=TRUE,
                             nameWidth=max(12, nchar(names(seq))+2)));
