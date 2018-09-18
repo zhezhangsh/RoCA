@@ -136,7 +136,7 @@ kable(tbl, row.names = FALSE) %>% kable_styling(
 
 ## Consensus of all sequences
 
-```{r run_msa, include=TRUE}
+```{r run_msa, include=FALSE}
 if (debug) {
   con <- readRDS('/Users/zhangz/Google Drive/Projects/Chou/result/evaluate_consensus/consensus_muscle.rds');
 } else {
