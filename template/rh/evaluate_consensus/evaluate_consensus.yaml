@@ -1,0 +1,41 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+#############################################################################################################################
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+template: evaluate_consensus.Rmd
+output: UPID380_Read_52429239             # Where to save the output files
+home: http://mybic.chop.edu/labs/chous_lab/RH_Gene_Genotyping  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+description:    
+  Project: Genotyping of RH genes
+  Experiment: "PacBio technology was used to run whole genome sequencing while designed 25-mer primers were used to enrich 2 RH genes and 10 other genes."
+  Analysis: "Make consensus of palindromic repeats in the same PacBio read and compare it to reference sequence of RH genes."
+  Sample: "UPID_380"
+  Read: "52429239"
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+input:    
+  sequence: seq.rds
+  reference: hg38_1_25382750_25376751.rds
+
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+parameter: 
+  method: 'Muscle' # One of "ClustalW", "ClustalOmega", "Muscle"
+  weight: 'r'      # One of "r", "count", "rank"
+
+######################    END OF DOCUMENT    ######################
+
+

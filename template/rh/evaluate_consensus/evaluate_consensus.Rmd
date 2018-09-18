@@ -1,0 +1,522 @@
+---
+title: "Multiple sequence consensus and evaluation"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+This procedure makes the consensus of a set of similar sequences using an **MSA** (multiple sequence alignment) method, and evaluate the quality of the consensus. The consensus sequence is then evaluated and optimized by comparing it to a reference. 
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'evaluate_consensus.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'msa', 'vioplot',
+                   'Biostrings', 'GenomicRanges', 'BSgenome', 'RoCA', 'awsomics', 'RH'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table',
+                     'path.align'='alignment'); 
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, fig.path = 'figure/');
+
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   
+	if (file.exists(name.yaml))         
+		yml <- yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+
+debug <- FALSE;
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+```{r load_data, include=FALSE}
+seq <- readRDS(yml$input$sequence);
+ref <- readRDS(yml$input$reference);
+
+if (class(seq) != 'DNAStringSet') seq <- DNAStringSet(seq);
+if (is.null(names(seq))) names(seq) <- paste('s', 1:length(seq), sep='');
+if (class(ref) != 'DNAStringSet') ref <- DNAStringSet(ref);
+names(ref) <- 'Reference';
+
+saveRDS(seq, paste(path.r, 'sequence.rds', sep='/'));
+saveRDS(ref, paste(path.r, 'reference.rds', sep='/'));
+```
+
+## Input
+
+<div style="color:darkblue">
+`r OrderTable()` Summary of inputs.
+
+  - Number of sequences: **`r length(seq)`**
+  - Average sequence length: **`r round(mean(width(seq)), 1)`**
+  - MSA method: **`r prms$method`**
+</div>
+
+```{r input, include=TRUE}
+wid <- c(width(ref), width(seq));
+frq <- alphabetFrequency(seq);
+frq <- rbind(alphabetFrequency(ref), frq);
+tbl <- cbind(wid, frq[, 1:4], round(100*rowSums(frq[, 2:3])/rowSums(frq[, 1:4]), 1));
+dimnames(tbl) <- list(c('Reference', names(seq)), c('Length', colnames(frq)[1:4], 'GC%'));
+
+kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
+```
+<p />
+
+`r home.url`
+
+# Results
+
+## Individual sequences vs. reference
+
+<div style="color:darkblue">
+`r OrderTable()` Summary of alignment between individual sequences and the reference sequence. The pairwise alignment between each sequence and the reference is done using the **glocal** (local-to-global) method.
+</div>
+
+```{r align_individual, include=TRUE}
+aln <- pairwiseAlignment(seq, ref, type='global-local');
+
+fns <- paste('reference_', names(seq), '.txt', sep='');
+for (i in 1:length(seq)) 
+  writePairwiseAlignments(aln[i], paste(path.align, fns[i], sep='/'), block.width = 100);
+
+tbl <- cbind(Length=width(seq), Length_Alignment=nchar(as.character(pattern(aln))), 
+             Score=score(aln), Match=nmatch(aln), Mismatch=nmismatch(aln), 
+             Insertion=nindel(aln)@insertion[, 2], Deletion=nindel(aln)@deletion[, 2]);
+
+tbl <- cbind(tbl, 'Match%'=round(100*tbl[, 'Match']/tbl[, 'Length_Alignment'], 1));
+rownames(tbl) <- names(seq);
+
+saveRDS(aln, paste(path.r, 'alignment_individual.rds', sep='/'));
+saveRDS(tbl, paste(path.r, 'alignment_individual_summary.rds', sep='/'));
+tbl <- data.frame(Sequence=paste('[', rownames(tbl), '](', paste('alignment', fns, sep='/'), ')', sep=''), 
+  tbl, stringsAsFactors = FALSE);
+colnames(tbl)[ncol(tbl)] <- 'Match%';
+kable(tbl, row.names = FALSE) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
+```
+<p />
+
+`r home.url`
+
+## Consensus of all sequences
+
+```{r run_msa, include=TRUE}
+if (debug) {
+  con <- readRDS('/Users/zhangz/Google Drive/Projects/Chou/result/evaluate_consensus/consensus_muscle.rds');
+} else {
+    if (tolower(prms$method=='muscle')) con <- msaMuscle(fll[1:i], order='input') else 
+      if (tolower(prms$method=='clustalomega')) con <- msaClustalOmega(fll[1:i], order='input') else 
+        con <- msaClustalW(fll[1:i], order='input');
+};
+cap <- capture.output(msa::print(con, show='complete', showNames=TRUE, showConsensus=TRUE,
+                            nameWidth=max(12, nchar(names(seq))+2)));
+saveRDS(cap, 'cap.rds');
+writeLines(cap, paste(path.align, 'full_alignment.txt', sep='/'));
+
+aln <- do.call('cbind', strsplit(as.character(con)[names(seq)], '')); 
+rownames(aln) <- 1:nrow(aln);
+
+wgt <- WeightConsensus(aln, method=tolower(prms$weight)[1]); 
+rng <- range(which(wgt$weighted[, 'Count']==ncol(aln)));
+wtd <- wgt$weighted;
+cll <- CallConsensus(wtd);
+sub <- paste(cll[cll!='-'], collapse='');
+ptn <- DNAStringSet(sub);
+names(ptn) <- 'Consensus';
+c2r <- AlignConsensus(ptn, ref);
+pw0 <- c2r$alignment;
+
+wmd <- tolower(prms$weight)[1];
+if (!(wmd %in% c('rank', 'r', 'count'))) wmd <- 'none';
+
+writePairwiseAlignments(pw0, paste(path.align, 'full_consensus_reference.txt', sep='/'), block.width = 100);
+saveRDS(con, paste(path.r, 'consensus.rds', sep='/'));
+```
+
+All `r length(seq)` sequences are aligned together to obtain a consensus; using the ***`r prms$method`*** method. The consensus includes **`r nrow(aln)`** bases and all sequences contributed to the **`r rng[2]-rng[1]+1`** (`r rng[1]` to `r rng[2]`) bases within the consensus. These `r rng[2]-rng[1]+1` bases are considered for weighting the sequences when obtaining consensus, using one of the following methods. These methods are all based on this assumption that sequences have better agreement with other sequences should have more weight. In the case of high throughput sequencing reads, better agreement between read sequences from the same original DNA fragment suggests better sequencing quality. So, the weighting methods first count the number of base calls agree with a sequence at each position, to obtain a matrix of agreement counts, within which each row is a base position and each column is a sequence.
+
+  - ***none:*** all sequences are weighted as 1; randomly pick one base if multiple bases have the same weight in consensus.
+  - **rank:** rank the sequences by their total numbers of agreement counts; the ranks will be used as weights in consensus.
+  - **r:** the weight of each sequence is its average correlation coefficient of agreement counts with all other sequences.
+  - **count:** the weight of each sequence is its average agreement at all base positions.
+  
+The weighting method used for this analysis is: **`r wmd`**.
+
+> [Full multiple sequence alignment](alignment/full_alignment.txt)
+
+> [Consensus-reference alignment](alignment/full_consensus_reference.txt)
+
+<div style="color:darkblue">
+`r OrderTable()` This table summarizes the agreement between sequences on individual bases in consensus sequence. It can be used to decide whether the strategy to call individual bases can be adjusted to improve accuracy. The deletion bases are those immediately after the deletion position and not included in the consensus. The table shows the total number of bases of each type, the number of bases agreed upon by any number of sequences, the mean of sequences numbers, and the number of sequences have gap in the consensus. 
+</div>
+
+```{r base_agreement, include=TRUE}
+cl0 <- cll[cll!='-' & wtd[, 'Count']==ncol(aln)];
+c2r <- AlignConsensus(paste(cl0, collapse=''), ref);
+pw1 <- c2r$alignment;
+writePairwiseAlignments(pw1, paste(path.align, 'core_consensus_reference.txt', sep='/'), block.width = 100);
+
+ch1 <- strsplit(as.character(pattern(pw1)), '')[[1]];
+ch2 <- strsplit(as.character(subject(pw1)), '')[[1]];
+loc <- matrix(0, nr=length(ch1), nc=4);
+loc[c2r$index$mismatch, 1] <- 1;
+loc[c2r$index$insertion, 2] <- 1;
+loc[ch1=='-', 3] <- 1;
+loc[ch1!='-', 4] <- 1:length(ch1[ch1!='-']);
+colnames(loc) <- c('mismatch', 'insertion', 'deletion', 'index');
+
+gp1 <- wtd[names(cl0)[loc[rowSums(loc[, 1:2])==0, 4]], , drop=FALSE];
+gp2 <- wtd[names(cl0)[loc[loc[, 1]>0, 4]], , drop=FALSE];
+gp3 <- wtd[names(cl0)[loc[loc[, 2]>0, 4]], , drop=FALSE];
+
+# Deletion
+i1 <- c2r$index$deletion;
+i1 <- as.numeric(names(cl0)[i1]);
+i1 <- IRanges(start=i1+1, width=c2r$index$deletion.width);
+gp4 <- lapply(1:length(i1), function(i) {
+  x <- wtd[as.character(start(i1)[i]:end(i1)[i]), , drop=FALSE];
+  c <- cll[rownames(x)];
+  a <- Rle(c=='-'); 
+  b <- 
+  if (runValue(a)[1]) x[1:end(a)[1], , drop=FALSE] else NULL;
+});
+gp4 <- do.call('rbind', gp4);
+
+grp <- list(Match=gp1, Mismatch=gp2, Insertion=gp3, Deletion=gp4);
+grp <- lapply(grp, function(g) aln[rownames(g), , drop=FALSE]);
+
+num <- lapply(grp, function(g) {
+  c <- cll[rownames(g)];
+  sapply(1:length(c), function(i) length(which(g[i, ]==c[i])));
+});
+gap <- lapply(grp, function(g) apply(g, 1, function(g) length(g[g=='-'])));
+cnt <- sapply(num, function(n) table(n)[as.character(1:ncol(aln))])
+rownames(cnt) <- 1:ncol(aln);
+cnt[is.na(cnt)] <- 0;
+cnt <- cnt[rowSums(cnt)>0, , drop=FALSE];
+cnt <- t(cnt);
+tbl <- cbind(Total=rowSums(cnt), cnt, Mean=round(sapply(num, mean), 2), Gap=round(sapply(gap, mean), 2));
+saveRDS(tbl, paste(path.r, 'consensus_base_agreement', sep='/'));
+
+kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
+```
+<p />
+
+```{r agreement_distribution, include=TRUE, fig.width=8, fig.height=3.2, out.width='800px'}
+col <- c('#E39C12', '#8E44AD', '#1ABC9C', '#3498DB');
+par(mfrow=c(1, 2), mar=c(6, 5, 1, 1));
+
+plot(0, type='n', ylim=range(unlist(num, use.names=FALSE)), xlim=c(0.4, 4.5), 
+     ylab='Number of agreed sequences', cex.lab=1, xaxt='n', xlab='');
+for (i in 1:length(num)) vioplot(num[[i]], at=i, add=TRUE, col=col[i]);
+axis(1, at=1:4, label=names(num), las=3);
+
+plot(0, type='n', ylim=range(unlist(gap, use.names=FALSE)), xlim=c(0.4, 4.5), 
+     ylab='Number of gapped sequences', cex.lab=1, xaxt='n', xlab='');
+for (i in 1:length(gap)) vioplot(gap[[i]], at=i, add=TRUE, col=col[i]);
+axis(1, at=1:4, label=names(gap), las=3);
+```
+
+`r OrderFigure()` Visualization of agreement on consensus sequences between sequences. Each violin is a density distribution. The left panel shows the number of sequences agree with the consensus, and the right panel shows the number of sequences have gap at the position. 
+
+`r home.url`
+
+## Stepwise consensus
+
+### Compare step-by-step results to reference
+
+When high throughput sequencing reads are used for obtaining consensus, reads with poor quality might have little, none, or even negative contribution to the overall accuracy of the consensus. Here, sequences are added into consensus one by one, in the order of their weight to track the change of the alignment between consensus and reference. Sequences will be randomly ordered if the sequences are not weighted.
+
+<div style="color:darkblue">
+`r OrderTable()` Stepwise procedure that adds sequences one by one, takes consensus, and aligns the consensus to reference.  
+</div>
+
+```{r stepwise, include=TRUE}
+w <- wgt$weight;
+if (wmd == 'none') o <- sample(names(w), length(w)) else o <- names(rev(sort(w)));
+
+alt <- aln[rng[1]:rng[2], o];
+ltt <- unique(as.vector(alt));
+fll <- apply(alt, 2, function(x) gsub('-', '', paste(x, collapse='')));
+fll <- DNAStringSet(fll);
+
+con <- sapply(1:length(fll), function(i) {
+  if (i > 1) {
+    if (debug) {
+      con <- readRDS('/Users/zhangz/Google Drive/Projects/Chou/result/evaluate_consensus/consensus_step.rds');
+      con <- con[[i]];
+      saveRDS(con, paste(path.r, '/stepwise_', i, '.rds', sep=''));
+    } else {
+      if (tolower(prms$method=='muscle')) con <- msaMuscle(fll[1:i], order='input') else 
+        if (tolower(prms$method=='clustalomega')) con <- msaClustalOmega(fll[1:i], order='input') else 
+          con <- msaClustalW(fll[1:i], order='input');   
+      saveRDS(con, paste(path.r, '/stepwise_1.rds', sep=''));
+    }
+    aln <- do.call('cbind', strsplit(as.character(con)[names(fll)[1:i]], '')); 
+    rownames(aln) <- 1:nrow(aln);
+    wgt <- WeightConsensus(aln, method=tolower(prms$weight)[1]); 
+    cll <- CallConsensus(wgt$weighted);    
+    sub <- paste(cll[cll!='-'], collapse='');    
+  } else sub <- as.character(fll[[1]]); 
+
+  sub; 
+});
+con <- as.character(con);
+pws <- lapply(con, function(c) {
+  c <- DNAStringSet(c);
+  names(c) <- 'Consensus';
+  AlignConsensus(c, ref);
+});
+con <- DNAStringSet(con); 
+names(pws) <- names(con) <- names(fll);
+
+cnt <- t(sapply(pws, function(x) x$count));
+scs <- sapply(pws, function(x) score(x[[1]]));
+pct <- 100*cnt[, 1]/seqlengths(con);
+fns <- sapply(1:length(pws), function(i) {
+  f <- paste('stepwise_', i, '_', names(fll)[i], '.txt', sep='');
+  writePairwiseAlignments(pws[[i]]$alignment, paste(path.align, f, sep='/'), block.width = 100);
+  f;
+});
+
+tbl <- data.frame(rownames(cnt), scs, cnt[, c(1, 2, 4, 6)], pct, stringsAsFactors = FALSE);
+colnames(tbl) <- c('Sequence_Added', 'Score', 'Match', 'Mismatch', 'Insertion', 'Deletion', 'Match%');
+tbl[[1]] <- paste('[', tbl[[1]], '](alignment/', fns, ')', sep=''); 
+rownames(tbl) <- paste('Step', 1:nrow(tbl), sep='_');
+kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
+
+saveRDS(con, paste(path.r, 'stepwise_consensus.rds', sep='/'));
+saveRDS(pws, paste(path.r, 'stepwise_alignment.rds', sep='/'));
+saveRDS(tbl, paste(path.r, 'stepwise_summary.rds', sep='/'));
+```
+<p />
+
+```{r error_count, include=TRUE, fig.width=6.4, fig.height=4.8, out.width='640px'}
+err <- cnt[, c(2, 4, 6)]; 
+
+par(mar=c(5, 5, 2, 2));
+c1 <- c('#8E44AD', '#1ABC9C', '#3498DB');
+# c2 <- c('#F4D03F', '#2ECC71', '#3498DB');
+plot(0, type='n', xlab='Number of sequences', ylab='Number of bases', cex.lab=1.5, xaxt='n',
+     xlim=c(1, nrow(err)), ylim=c(0, 1.1*max(rowSums(err))), xaxs='i', yaxs='i');
+for (i in ncol(err):1) {
+  polygon(c(1, 1:nrow(err), nrow(err)), c(0, rowSums(err[, 1:i, drop=FALSE]), 0), 
+          col=c1[i], border=c1[i], lwd=2);
+  points(1:nrow(err), rowSums(err[, 1:i, drop=FALSE]), pch='*', col='black', cex=1.5);
+};
+axis(1, at=1:nrow(err), las=3);
+legend('topright', bty='n', lwd=2, col=c1, cex=1.5, legend=c('Mismatch', 'Insertion', 'Deletion'));
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Number of mismatch, insertion and deletion bases when consensus sequence is obtained from sequences added one by one. 
+</div>
+
+`r home.url`
+
+### Compare step-by-step results to final consensus
+
+Same as the last section, but compare the results of each step to the final consensus of all sequences
+
+
+<div style="color:darkblue">
+`r OrderTable()` Stepwise procedure that adds sequences one by one, takes consensus, and aligns the consensus to the final consensus of all sequences.  
+</div>
+
+```{r stepwise_final, include=TRUE}
+fnl <- con[[length(con)]];
+pws <- lapply(con, function(c) {
+  c <- DNAStringSet(c);
+  f <- DNAStringSet(fnl);
+  names(c) <- 'Step_Consensus';
+  names(f) <- 'Final_Consensus';
+  AlignConsensus(c, f);
+});
+names(pws) <- names(con) <- names(fll);
+
+cnt <- t(sapply(pws, function(x) x$count));
+scs <- sapply(pws, function(x) score(x[[1]]));
+pct <- round(100*cnt[, 1]/seqlengths(con), 2);
+fns <- sapply(1:length(pws), function(i) {
+  f <- paste('stepwise2final_', i, '_', names(fll)[i], '.txt', sep='');
+  writePairwiseAlignments(pws[[i]]$alignment, paste(path.align, f, sep='/'), block.width = 100);
+  f;
+});
+
+tbl <- data.frame(rownames(cnt), scs, cnt[, c(1, 2, 4, 6)], pct, stringsAsFactors = FALSE);
+colnames(tbl) <- c('Sequence_Added', 'Score', 'Match', 'Mismatch', 'Insertion', 'Deletion', 'Match%');
+tbl[[1]] <- paste('[', tbl[[1]], '](alignment/', fns, ')', sep=''); 
+rownames(tbl) <- paste('Step', 1:nrow(tbl), sep='_');
+kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
+
+saveRDS(pws, paste(path.r, 'stepwise2final_alignment.rds', sep='/'));
+saveRDS(tbl, paste(path.r, 'stepwise2final_summary.rds', sep='/'));
+```
+<p />
+
+
+```{r error_count2final, include=TRUE, fig.width=6.4, fig.height=4.8, out.width='640px'}
+err <- cnt[, c(2, 4, 6)]; 
+
+par(mar=c(5, 5, 2, 2));
+c1 <- c('#8E44AD', '#1ABC9C', '#3498DB');
+# c2 <- c('#F4D03F', '#2ECC71', '#3498DB');
+plot(0, type='n', xlab='Number of sequences', ylab='Number of bases', cex.lab=1.5, xaxt='n',
+     xlim=c(1, nrow(err)), ylim=c(0, 1.1*max(rowSums(err))), xaxs='i', yaxs='i');
+for (i in ncol(err):1) {
+  polygon(c(1, 1:nrow(err), nrow(err)), c(0, rowSums(err[, 1:i, drop=FALSE]), 0), 
+          col=c1[i], border=c1[i], lwd=2);
+  points(1:nrow(err), rowSums(err[, 1:i, drop=FALSE]), pch='*', col='black', cex=1.5);
+};
+axis(1, at=1:nrow(err), las=3);
+legend('topright', bty='n', lwd=2, col=c1, cex=1.5, legend=c('Mismatch', 'Insertion', 'Deletion'));
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Number of mismatch, insertion and deletion bases when consensus sequence obtained from each step is compared to the final consensus of all sequences. 
+</div>
+
+`r home.url`
+
+### Step-to-step dynamics
+
+Changes between consensus of a step and the consensus of its previous step.
+
+```{r step2step, include=FALSE}
+pws <- lapply(2:length(con), function(i) {
+  c1 <- DNAStringSet(con[[i-1]]);
+  c2 <- DNAStringSet(con[[i]]);
+  names(c1) <- 'Previous_Consensus';
+  names(c2) <- 'Current_Consensus';
+  AlignConsensus(c2, c1);
+});
+names(pws) <- names(fll)[2:length(fll)];
+
+cnt <- t(sapply(pws, function(x) x$count));
+scs <- sapply(pws, function(x) score(x[[1]]));
+pct <- round(100*cnt[, 1]/seqlengths(con)[-1], 2);
+fns <- sapply(1:length(pws), function(i) {
+  f <- paste('step2step_', i+1, '_', names(fll)[i], '.txt', sep='');
+  writePairwiseAlignments(pws[[i]]$alignment, paste(path.align, f, sep='/'), block.width = 100);
+  f;
+});
+
+tbl <- data.frame(rownames(cnt), scs, cnt[, c(1, 2, 4, 6)], pct, stringsAsFactors = FALSE);
+colnames(tbl) <- c('Sequence_Added', 'Score', 'Match', 'Mismatch', 'Insertion', 'Deletion', 'Match%');
+tbl[[1]] <- paste('[', tbl[[1]], '](alignment/', fns, ')', sep=''); 
+rownames(tbl) <- paste('Step', 1:(nrow(tbl)), '-Step', 2:(nrow(tbl)+1), sep='');
+kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
+
+saveRDS(pws, paste(path.r, 'step2step_alignment.rds', sep='/'));
+saveRDS(tbl, paste(path.r, 'step2step_summary.rds', sep='/'));
+```
+<p />
+
+```{r error_count_step2step, include=TRUE, fig.width=6.4, fig.height=4.8, out.width='640px'}
+err <- cnt[, c(2, 4, 6)]; 
+
+par(mar=c(5, 5, 2, 2));
+c1 <- c('#8E44AD', '#1ABC9C', '#3498DB');
+# c2 <- c('#F4D03F', '#2ECC71', '#3498DB');
+plot(0, type='n', xlab='Number of sequences', ylab='Number of bases', cex.lab=1.5, xaxt='n',
+     xlim=c(1, nrow(err)), ylim=c(0, 1.1*max(rowSums(err))), xaxs='i', yaxs='i');
+for (i in ncol(err):1) {
+  polygon(c(1, 1:nrow(err), nrow(err)), c(0, rowSums(err[, 1:i, drop=FALSE]), 0), 
+          col=c1[i], border=c1[i], lwd=2);
+  points(1:nrow(err), rowSums(err[, 1:i, drop=FALSE]), pch='*', col='black', cex=1.5);
+};
+axis(1, at=1:nrow(err), las=3, label=paste(1:nrow(err), 2:(nrow(err)+1), sep='-'));
+legend('topright', bty='n', lwd=2, col=c1, cex=1.5, legend=c('Mismatch', 'Insertion', 'Deletion'));
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Number of mismatch, insertion and deletion bases between the consensus sequences of 2 steps next to each other.
+</div>
+
+
+`r home.url`
+
+***
+
+<!-- Keep this section unchanged for all RoCA templates -->
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_
