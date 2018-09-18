@@ -268,7 +268,7 @@ When high throughput sequencing reads are used for obtaining consensus, reads wi
 `r OrderTable()` Stepwise procedure that adds sequences one by one, takes consensus, and aligns the consensus to reference.  
 </div>
 
-```{r stepwise, include=TRUE}
+```{r stepwise, include=FALSE}
 w <- wgt$weight;
 if (wmd == 'none') o <- sample(names(w), length(w)) else o <- names(rev(sort(w)));
 
@@ -320,13 +320,15 @@ tbl <- data.frame(rownames(cnt), scs, cnt[, c(1, 2, 4, 6)], pct, stringsAsFactor
 colnames(tbl) <- c('Sequence_Added', 'Score', 'Match', 'Mismatch', 'Insertion', 'Deletion', 'Match%');
 tbl[[1]] <- paste('[', tbl[[1]], '](alignment/', fns, ')', sep=''); 
 rownames(tbl) <- paste('Step', 1:nrow(tbl), sep='_');
-kable(tbl) %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
 
 saveRDS(con, paste(path.r, 'stepwise_consensus.rds', sep='/'));
 saveRDS(pws, paste(path.r, 'stepwise_alignment.rds', sep='/'));
 saveRDS(tbl, paste(path.r, 'stepwise_summary.rds', sep='/'));
 ```
+
+`r kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+
 <p />
 
 ```{r error_count, include=TRUE, fig.width=6.4, fig.height=4.8, out.width='640px'}
@@ -361,7 +363,7 @@ Same as the last section, but compare the results of each step to the final cons
 `r OrderTable()` Stepwise procedure that adds sequences one by one, takes consensus, and aligns the consensus to the final consensus of all sequences.  
 </div>
 
-```{r stepwise_final, include=TRUE}
+```{r stepwise_final, include=FALSE}
 fnl <- con[[length(con)]];
 pws <- lapply(con, function(c) {
   c <- DNAStringSet(c);
@@ -385,12 +387,12 @@ tbl <- data.frame(rownames(cnt), scs, cnt[, c(1, 2, 4, 6)], pct, stringsAsFactor
 colnames(tbl) <- c('Sequence_Added', 'Score', 'Match', 'Mismatch', 'Insertion', 'Deletion', 'Match%');
 tbl[[1]] <- paste('[', tbl[[1]], '](alignment/', fns, ')', sep=''); 
 rownames(tbl) <- paste('Step', 1:nrow(tbl), sep='_');
-kable(tbl) %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
 
 saveRDS(pws, paste(path.r, 'stepwise2final_alignment.rds', sep='/'));
 saveRDS(tbl, paste(path.r, 'stepwise2final_summary.rds', sep='/'));
 ```
+`r kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 <p />
 
 
@@ -444,12 +446,13 @@ tbl <- data.frame(rownames(cnt), scs, cnt[, c(1, 2, 4, 6)], pct, stringsAsFactor
 colnames(tbl) <- c('Sequence_Added', 'Score', 'Match', 'Mismatch', 'Insertion', 'Deletion', 'Match%');
 tbl[[1]] <- paste('[', tbl[[1]], '](alignment/', fns, ')', sep=''); 
 rownames(tbl) <- paste('Step', 1:(nrow(tbl)), '-Step', 2:(nrow(tbl)+1), sep='');
-kable(tbl) %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE);
 
 saveRDS(pws, paste(path.r, 'step2step_alignment.rds', sep='/'));
 saveRDS(tbl, paste(path.r, 'step2step_summary.rds', sep='/'));
 ```
+
+`r kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 <p />
 
 ```{r error_count_step2step, include=TRUE, fig.width=6.4, fig.height=4.8, out.width='640px'}
