@@ -299,6 +299,7 @@ Listed below are samples with potentially quality problem, based on consistency 
 ## Tables
 
 ```{r write_table, include=FALSE}
+saveRDS(tbls, paste(path.r, 'stat.rds', sep='/'));
 CreateDatatable(tbls[[1]], paste(path.tbl, 'run_info.html', sep='/'));
 CreateDatatable(tbls[[2]], paste(path.tbl, 'count_mapped.html', sep='/'));
 CreateDatatable(tbls[[3]], paste(path.tbl, 'percent_mapped.html', sep='/'));

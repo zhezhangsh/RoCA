@@ -1,0 +1,361 @@
+########################################
+# Program: Biostrings (version 2.42.1), a Bioconductor package
+# Rundate: Mon Sep 24 02:08:25 2018
+########################################
+#=======================================
+#
+# Aligned_sequences: 2
+# 1: Consensus
+# 2: Reference
+# Matrix: NA
+# Gap_penalty: 14.0
+# Extend_penalty: 4.0
+#
+# Length: 8342
+# Identity:    5178/8342 (62.1%)
+# Similarity:    NA/8342 (NA%)
+# Gaps:        2215/8342 (26.6%)
+# Score: -7666.661
+#
+#
+#=======================================
+
+Consensus          1 CCAGCAAGGAACAGAA-TTGTGCTTGGCAGGATGCAGAGAAGGCCCCGA-GCGTGAGGTCCTGGAATGCAGGCAAGAGAGGGCCCCAGGTGGGCTGAATG     98
+                     |   ||||    |||  ||||  ||  ||| |   |  |  | | |||| || | || | |  | ||    |||   ||   || |          |   
+Reference        776 CTGTCAAGCCTTAGACCTTGTCATTACCAGTA---ACTGTTGCCTCCGAAGCCTCAGTTTCAAGCATC---GCACCTGATAACCACC---------ACCA    860
+
+Consensus         99 CTTGCTAAGGTCAAGTCCGGATAGGCTCGGGAAGTATCCATCTATGGATTTGACAGGCTCTGCCTTCCCTTCTGATCTTGGCATCGCATGTTGGTAGAGA    198
+                     | | |||   ||  |||||| |    ||   || |  ||  |  |        |||   || |  ||    | |  | ||  | |  ||| || |   ||
+Reference        861 CCTCCTA---TCT-GTCCGGCTCACTTCCTTAAATTGCCTCCCTT--------CAGCAGCTCCAATCAACGCAG--CCTGAGAACA-ATGGTGATGATGA    945
+
+Consensus        199 GTATAAGGTCAAAGGCCCTGGCTGGACTGATATCGATAGTCAGGGAGATGAGTTAAAGG-TGGAGA-CAGCATCCGTGGCAGCCTGACCAGACTGTGCTC    296
+                       ||||   ||   || ||| |   ||   || |    | |||| |  ||   |||| | |  ||| ||| || |     |   ||| || | ||| |  
+Reference        946 AAATAA---CA---GCACTGCCGCAACACTTACCCCATGCCAGGCAC-TGTCCTAAATGCTTTAGAACAGTATTCA----AAATTGAACA-AGTGTTCGG   1033
+
+Consensus        297 TACATGTGAACACGAAGTAGGTATCTTC-CAGCATAGAGGGCAATAATCCGATAGAGCAAGACAAAATCGAT-GATACAGACGAGAGATGAACTGCAATA    394
+                     | ||  ||  ||          ||| || || ||      | ||  | ||  ||     |  |  | || || ||||  ||  |  || | || |  |  
+Reference       1034 T-CACTTGTTCA----------ATCCTCACAACAGCCCTAGGAAGTAGCCT-TATTCTTATCCCCATTCTATAGATAGGGAA-ACTGAGGCACAGAGAGG   1120
+
+Consensus        395 TCGA-GAAGT--CCCGTTTTGAGTTGGCAAAGCCAGGGTGGGATTTGGAGCACTGATACCTTTAGGCCG-CTGCAGGGACGT--TCATCTTTTTTATAAA    488
+                     || | ||||   |||   | || |      ||| || ||||| |   ||||  ||| |  | ||  | | ||||  ||  |   ||  | |||| |    
+Reference       1121 TCAACGAAGGGGCCCAAATGGATTC-----AGCTAGTGTGGGTT---GAGC--TGAGATGTGTACCCAGGCTGCCAGGCTGGGCTCCCCATTTTCACTCT   1210
+
+Consensus        489 GATTATTTTCTTATACATACATTTTATTAAATTTATGTTTTTCACAGATACATTGTCACATTAGAGATTCCCTTGTGGCAAAATAACAATTTCATTAACT    588
+                        |  |||||||  ||         | | |||| |||     || | || | |  |           ||| |||   ||||    ||    |||   ||
+Reference       1211 CTCTCCTTTCTTAACCAGC-------TCAGATTT-TGTGGGCTACTGTTATACTTCC-----------TCCTTTG---CAAA----CAGCCCCAT---CT   1281
+
+Consensus        589 TTATTTTCATTTGTGGACAGTTGTTTTAACAGGACGTAGCA-TACATTTGACGATGAAATCTCATTTACATGGTATATTTTGATACGTCGATGGGGAACT    687
+                      |  | ||  ||| |     |||   | ||     | |||| | ||   | |   | ||  |||            | | || | | || |      || 
+Reference       1282 CTGGTCTCCCTTGGGCT---TTGGGCTCACTCTGGGCAGCACTCCA---GGCTGGGCAAGTTCA------------ACTCTGCTTCTTCCAC-----ACC   1358
+
+Consensus        688 TGCCCTTAAATGGAACTTGCTGGTAGTCTTGTCAGAAGCACTCCAAGCCGTTTCTTCCTAAGGATTTAGAAATTTATACTATGTATATCAGCATTTTCCT    787
+                     ||||      |||| |                 ||  |||| |  ||||    ||    |  |||   | | |||  || |  || |  |||     |||
+Reference       1359 TGCC------TGGAGC-----------------AGCTGCACAC--AGCC----CTGGTCACTGAT---GCACTTTCCACCAACTACA--AGC-----CCT   1419
+
+Consensus        788 ATTTTAAGTTTTCCTAGTTAGGTCACCATACGTGTAGTGGTATCTACCGACTCTAGAGGGAAGTGTTGTGAAACGTACACACTGTCTATTTTCTTCCTTT    887
+                     |      |    ||| ||       |||  | || |||        ||  ||  |             || | |   | |||| ||| |   || ||   
+Reference       1420 A------GGGACCCTGGTG------CCAGCC-TGCAGT--------CCCGCTGCACCCC---------TGCAGCCCTCTCACTCTCT-TCCACTCCC---   1485
+
+Consensus        888 CAAAGGTTTTAATTCCATTGATTAAAGAGTATTTTCCCTTAGTCCCATTTTCCCGATCATACTCTAATCATACGAAAGCTG--GGATTCTCTTTAAGAGA    985
+                      | || |    || |||    ||         | |||   |  |||||    ||  ||  || || | |||  |   | ||  ||   |||||     | 
+Reference       1486 -ACAGATGACCATACCACACTTTCCC------TCTCCGCAAACCCCATCCCTCCT-TCCCACCCTCA-CATGAGGCTGATGACGGTGCCTCTT-----GT   1571
+
+Consensus        986 TTGGAGAAGTAACGGCCAAAAGCTGATATATCAATTTAGAGTTA---TACGTGAGTCTTATACGAACTGGGCGGCACCCATTACTCACCAGAATCAGAAC   1082
+                     ||     || ||   | |  |  |  ||   || |||    |     | |  ||| || |    | ||| |  ||||||      ||||| |||| |   
+Reference       1572 TTCTCTGAGAAAATACAAGGAATTAGTAAGGCATTTTCTCCTCTCCCTGCAGGAGACTGA----ACCTGTG--GCACCCGC----CACCA-AATCTGCCG   1660
+
+Consensus       1083 TCATCTCACACTTAATAATTCCCTCTCCAACCTTTTCCTCAATGTTAAAATCTGTACTAATAATGTGATTAA-GAGAAGATGACTTTATGAATAGACATA   1181
+                      | | |  |||      | |||||  |||   |||  |||   ||||| ||  | |||       | |  || |||| |  |  | | || |     |  
+Reference       1661 GCCTATT-CAC------AGTCCCTG-CCA---TTTCTCTC---GTTAAGAT--GAACTCTCCGCCTCAGGAACGAGATGGCGGTTCTCTGGAGGCTGAGT   1744
+
+Consensus       1182 GGCGGATATTTCGTCTTTGTTTT---AGCTCTTAGGAATATATAAGCAGAGGCAAAGATATGCAACATTAATTCAAAGAGGAAACTCAAAAGGTCAGA--   1276
+                     | ||  |     | |   |       ||||||   |     |    ||| ||  | ||  |||  ||| |  |||     | |  ||   ||| | ||  
+Reference       1745 GCCGTTTGCGGTGCCCAAGGAGGCCGAGCTCTGTTGCTGCGAACTCCAGTGGTCA-GACCTGCT-CAT-ATCTCA-----GCATTTCTTCAGGACCGACC   1836
+
+Consensus       1277 -ATTCCCCAAATGTGGTAAGGGC-GCACATACACTTGTCACCGAGCTACCATTCTGGCTCATCGTGCTGCATCTCTCCCCCGAACTAGCGAGAGG-TTGT   1373
+                      || ||  ||  |||   || || |||||||||||||||||||||| |||||||||||||   | ||||||||||||| | | |||||||||||| ||||
+Reference       1837 TATCCCAGAATGGTGTGGAGTGCAGCACATACACTTGTCACCGAGCCACCATTCTGGCTCCAAG-GCTGCATCTCTCCACTGGACTAGCGAGAGGGTTGT   1935
+
+Consensus       1374 CAGTGTTTTGTTCCCAGGTCTGCTTTCGGCTGCTTATTTGAAATCCTTGCTCTGCGACGGACTAGTCCCTGGCCTGCAGCCCTCACTCTTCATGGTCTCT   1473
+                     |||||||||| |||| ||||||||| |||||||||||||||| ||||||||||||||||||||| |||||||| ||||||||||||||||||||||| ||
+Reference       1936 CAGTGTTTTGCTCCCGGGTCTGCTTCCGGCTGCTTATTTGAA-TCCTTGCTCTGCGACGGACTATTCCCTGGC-TGCAGCCCTCACTCTTCATGGTCACT   2033
+
+Consensus       1474 GGGGCCT-GTACACGTGGGTCACTGACTATGTTCATAGGGAATGCCTCGCAGAAAGCTGCCAAGGCAGGGGCATTTTGGCATTTTCCACTTTGAGATT-G   1571
+                     ||||||| | ||| || | | ||||||||||||||| |||| ||||||||||||||||||||||||||||   |||||||||||||  |||| |  || |
+Reference       2034 GGGGCCTTGGACAAGTTGTT-ACTGACTATGTTCATGGGGA-TGCCTCGCAGAAAGCTGCCAAGGCAGGGC--TTTTGGCATTTTCAGCTTTAACCTTTG   2129
+
+Consensus       1572 CTGGGGCTTTGCTATTTCAACTATCGACGATGTGG-CATGCTGCAAA-CTGTTTGCCATGCGGGTGGAAGCTCTGACCTTTTTTGACCTCCTT-TTTGAA   1668
+                     ||||| ||||||||||||||||||| ||||||||| ||| ||||||| ||||| ||||||| | ||||||||||||||||||| ||| ||||  ||||||
+Reference       2130 CTGGG-CTTTGCTATTTCAACTATC-ACGATGTGGGCAT-CTGCAAAGCTGTT-GCCATGCTG-TGGAAGCTCTGACCTTTTT-GACTTCCTACTTTGAA   2223
+
+Consensus       1669 GAATTGATGTATGCCTCTTTGCCCCTGCTTTGTCATGCCATTAAGCTCACAATAAGGAAGAAATAACAGATAAGTCCATTGGTGG-CAGACCTTCTTCTT   1767
+                     ||||||||||||||||||||||| ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| ||| ||||||||| 
+Reference       2224 GAATTGATGTATGCCTCTTTGCCTCTGCTTTGTCATGCCATTAAGCTCACAATAAGGAAGAAATAACAGATAAGTCCATTGGTGGACAG-CCTTCTTCTC   2322
+
+Consensus       1768 TTAATCA-AAGATTATTTTCAGAATTTTACTTTGGGGAAAAGGTTTGAGAGGAATTATATTTAAGTTGTGAGACTGAGTTCTGTATTCTGGTGAGTTAAT   1866
+                     ||||||| ||||||||||||||||||| |||||| |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Reference       2323 TTAATCACAAGATTATTTTCAGAATTTAACTTTGAGGAAAAGGTTTGAGAGGAATTATATTTAAGTTGTGAGACTGAGTTCTGTATTCTGGTGAGTTAAT   2422
+
+Consensus       1867 GGGGTTGCCTCCCAGCTTCTTATAAAGACTCACAGTATAACTAACCATGATATATCAGCTTTTGCCTTTTAATTTCTCAATCTCTTAAAAAGAAACCAGC   1966
+                     ||||||||||||||||||||||||| |||||||||||||||||| |||||||||||||||||||||||||||||||||||||||||||| |||| |||||
+Reference       2423 GGGGTTGCCTCCCAGCTTCTTATAA-GACTCACAGTATAACTAAACATGATATATCAGCTTTTGCCTTTTAATTTCTCAATCTCTTAAAGAGAATCCAGC   2521
+
+Consensus       1967 TTTAGTATGATTAGCATATGATCAAACTTCCATATTTGCCT-GGGAATAATGGACTAAGGGAAATACTCTTATATCATGAATAAAAACTTTGCAGAAAAA   2065
+                     ||||||||||||||||||||||||||||||||||||||||| ||||||||||||||||||||||||||||||  ||||||||||||||||||||||||| 
+Reference       2522 TTTAGTATGATTAGCATATGATCAAACTTCCATATTTGCCTTGGGAATAATGGACTAAGGGAAATACTCTTAATTCATGAATAAAAACTTTGCAGAAAA-   2620
+
+Consensus       2066 TTAGACAGTGTTTAATTTT-AAAAACTTCCCTCTCTAGTCCGGTAGATACCACCTACCGATGGTTACATATACTAGGAAATTTTTAAAATTAGGAAATGC   2164
+                     ||||||||||||||||||| |||||||||||||||||||| |||||||||||||||||||||||||||||||||||| || |||||||||||||||||||
+Reference       2621 TTAGACAGTGTTTAATTTTCAAAAACTTCCCTCTCTAGTC-GGTAGATACCACCTACCGATGGTTACATATACTAGGGAAATTTTAAAATTAGGAAATGC   2719
+
+Consensus       2165 TGATATCT-ATCATATAAAATTTCTAAATCCTAGGAAGAAACGCTTGGAGTGCTTCTGAAGAT-CAGAAGTTCCATTTAAGGGCAAGTTTCCCCATAGAC   2262
+                     |||||||| ||  |||||| ||||||||||||||||||||||||||||||||||||||||||| ||||||||||||||||||||||||||||||||||||
+Reference       2720 TGATATCTCATATTATAAA-TTTCTAAATCCTAGGAAGAAACGCTTGGAGTGCTTCTGAAGATACAGAAGTTCCATTTAAGGGCAAGTTTCCCCATAGAC   2818
+
+Consensus       2263 GTATCAAAATATTACCCATTGTAAACTGAGATTTAATTCTCAAATGTATTCTACTTGTTCTAAAACAATCTGTCCACAAA-ATAAAAATATAAGTAATAA   2361
+                     |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| |||||| ||||||||||||
+Reference       2819 GTATCAAAATATTACCCATTGTAAACTGAGATTTAATTCTCAAATGTATTCTACTTGTTCTAAAACAATCTGTCCACAAATATAAAACTATAAGTAATAA   2918
+
+Consensus       2362 ATTGTTATTT-CGCACCATGGGAATCTCTAATGTGAAAATGTTTTCTGTGAAAATAAATTTTTAAATAAAATGTTGTATAATAATAATAATTTTAAAAA-   2459
+                     |||||||||| ||||| ||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||||||||||||||||||||||||| 
+Reference       2919 ATTGTTATTTTCGCACAATGGGAATCTCTAATGTGAAAATGTATTCTGTGAAAATAAATTTTTAAATAAAATGTTGTATAATAATAATAATTTTAAAAAA   3018
+
+Consensus       2460 GATGAACTGTCCTGGCATCGGCCTAAAGGTATCAGTGCTCAAAATCCCACTCCTGCTTTCCAACTAAAAGGCTTGACTCTTGCAGTTCATCTCTCTTCTG   2559
+                     ||||||||||||  ||||||||||||||||||||||||||||||||||||||||||||||||||| ||||||||||||||||||||||||||||||||||
+Reference       3019 GATGAACTGTCCCTGCATCGGCCTAAAGGTATCAGTGCTCAAAATCCCACTCCTGCTTTCCAACTCAAAGGCTTGACTCTTGCAGTTCATCTCTCTTCTG   3118
+
+Consensus       2560 TATCATCAGATTTTTCCCTCTCTATCGGATTATTGCCCTCCTGCTTCTCCTCCATTTCTCTGTTCCCCTTTAGAGCAAAGTCCTTGGCAGGGCTGCCCCT   2659
+                     ||||||||||||||||| ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Reference       3119 TATCATCAGATTTTTCC-TCTCTATCGGATTATTGCCCTCCTGCTTCTCCTCCATTTCTCTGTTCCCCTTTAGAGCAAAGTCCTTGGCAGGGCTGCCCCT   3217
+
+Consensus       2660 GCATGCTGTCTCCACCTTTCTCATCTCCT-CTCCTGAAATCAGTCAAGCCAGGCTTTTGCCTTCATCCTCCTCTACAACCATGCATGCCAAG-TCTCCTT   2757
+                     ||||||||||||||| ||||||||||||| ||| |||| ||||||||||||||||||||||||||||||||||||||||||||||||||||| |||||||
+Reference       3218 GCATGCTGTCTCCAC-TTTCTCATCTCCTGCTCTTGAA-TCAGTCAAGCCAGGCTTTTGCCTTCATCCTCCTCTACAACCATGCATGCCAAGGTCTCCTT   3315
+
+Consensus       2758 GTCAAATCCAATGGCTACT-CCCAGCCCTTTACCGACTTGACCTCTCAGCAGCATTCAGCCCACCTGGGGCCC-CTCTT-CCTTGC-TTCCAGGACCTCA   2853
+                     ||||||||||||||||||| |||||||||   ||||||||||||||||||||||||||||||||||||||||| ||||| |||||| |||||||||||||
+Reference       3316 GTCAAATCCAATGGCTACTTCCCAGCCCTCATCCGACTTGACCTCTCAGCAGCATTCAGCCCACCTGGGGCCCTCTCTTTCCTTGCCTTCCAGGACCTCA   3415
+
+Consensus       2854 CGCTCTC-TGGGCTTCCTCCTGCCTCTCCAAGCACAATTCTGTCTCCTTTGCTGGCTCTTACACACATCCCCCCCTCTAAAATGCAGGGTGTTTCTAGGA   2952
+                     ||||||| |||||||||||||||||||||||||||||||||||||||||||||||||||||||||  ||||||| |||||||||||||||||| ||||||
+Reference       3416 CGCTCTCCTGGGCTTCCTCCTGCCTCTCCAAGCACAATTCTGTCTCCTTTGCTGGCTCTTACACATGTCCCCCC-TCTAAAATGCAGGGTGTT-CTAGGA   3513
+
+Consensus       2953 CTCA-TCCTCAGACTTCTTCC-ATCTCTCTTTATCCTCACTCCTGAGTGATCTCCTTGGGTCTCATGGCTTTAAAC-CCATCTGTTATTGTAACAACTCC   3049
+                     |||| |||||||||||||||| |||||||||||||||||||||||||||||||||||||||||||||||||||||| |||||||| ||||||||||||||
+Reference       3514 CTCAGTCCTCAGACTTCTTCCCATCTCTCTTTATCCTCACTCCTGAGTGATCTCCTTGGGTCTCATGGCTTTAAACACCATCTGT-ATTGTAACAACTCC   3612
+
+Consensus       3050 CAAATTTATATCCCTAGCCCTAACCTTTCACACAAAGCTTCAGACTTGTACAACTCCATTCAGTGTCTCCACTGGGATGTTTTCATACACATCTCTACCC   3149
+                     ||||||||||||||||||||||||||||| ||| |||||||||||||||||| ||||||||||||||||||||||||||||| |||||||||||||||||
+Reference       3613 CAAATTTATATCCCTAGCCCTAACCTTTC-CACTAAGCTTCAGACTTGTACATCTCCATTCAGTGTCTCCACTGGGATGTTT-CATACACATCTCTACCC   3710
+
+Consensus       3150 GCCCCAACCTTAACCCTAACGCTACCACATTCGACACTGAACTCTGGGTTTTCCCTCCCAAAATCTATCCCACCC-AATGTTCCCCATCTCAGTAAATGG   3248
+                     |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| | |||||||||||| ||||||||||||||||||||||||
+Reference       3711 GCCCCAACCTTAACCCTAACGCTACCACATTCGACACTGAACTCTGGGTTTTCCCTCCCAGA-TCTATCCCACCCCAATGTTCCCCATCTCAGTAAATGG   3809
+
+Consensus       3249 CAC-AGCAGCTGCTGAGTTGTGCCAGATGAGAACCTTGAAGTCATCTTGACCCTCTCCCACCCCACGTGCAGTCTATCAGCAAATTCTGTCAATTCTGCT   3347
+                     ||| ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| ||||||||||||||
+Reference       3810 CACCAGCAGCTGCTGAGTTGTGCCAGATGAGAACCTTGAAGTCATCTTGACCCTCTCCCACCCCACGTGCAGTCTATCAGCAAATCCTGTCAATTCTGCT   3909
+
+Consensus       3348 ATTAAAAATATAGTCAGGATCCAATCACTTCCCACCACTCTCACAGCTATTGTCCTAGTCTGAGTCTGGATGATGGCCATCACTGCCGCTCTGGTCTCCA   3447
+                     ||||||| |||||||||||||||||||||||||||||| ||||||||||||||||||||||||||||||||||||||||||||||| |||||||||||||
+Reference       3910 ATTAAAA-TATAGTCAGGATCCAATCACTTCCCACCACCCTCACAGCTATTGTCCTAGTCTGAGTCTGGATGATGGCCATCACTGCTGCTCTGGTCTCCA   4008
+
+Consensus       3448 CCCTGCTTCCTCTCT-GCCCCTTCAGTCTTTTCTGAACC-AGAAGCCAGGGTATCTTAAAACATAAGTCAGATCATAGCTCTCCTCTGCC-AACACTCCC   3544
+                     || |||||||||||| ||||||||||||||||||||||| ||||||||| |||||||||||||||||||||||||||||||||||||||| |||||||||
+Reference       4009 CC-TGCTTCCTCTCTTGCCCCTTCAGTCTTTTCTGAACCCAGAAGCCAGAGTATCTTAAAACATAAGTCAGATCATAGCTCTCCTCTGCCCAACACTCCC   4107
+
+Consensus       3545 TAGTTCTCCCTGTATTTCTCAGAGTAAATCCAA-GTCCTTTGGGATACTGAGGCACAGTAAAGGGGCTTCATGCTTTTTTTTTTTAAACGTGCA-CATTT   3642
+                     ||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||||||||||||||||| | ||||||||| |||||
+Reference       4108 TAGTTCTCCCTGTATTTCTCAGAGTAAATCCAAAGTCCTTTGGGATACTGAGGCACAGTAAAGGGGCTTCATGCTTTTTTTTGT-AAACGTGCATCATTT   4206
+
+Consensus       3643 TATGT--TGAATTAATAATACTCCCTCAAAACCCTATGTGGTA-TACTGTGCTACCCTCATATTACAGACGAAGAAACTAAAGCTCTAAAAGGGTTAAAT   3739
+                      ||||  | |||| | | ||||||||||||||||||||||||| |||||  |||||||||||||||||||||||||||||||||||||| ||| ||||||
+Reference       4207 CATGTGATTAATTCA-ATTACTCCCTCAAAACCCTATGTGGTAGTACTG--CTACCCTCATATTACAGACGAAGAAACTAAAGCTCTAAGAGG-TTAAAT   4302
+
+Consensus       3740 TGCCCAGAGTCACACAGGGATTTTGGGCAGAGCTGGGATGCACACCCCAGCCTTTGACTCCAAG-CCAGTGCACTTTCTTCTAAGCCAGGCTGGAACTGT   3838
+                     |||||||||||||||||||||||  ||||||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||||||||
+Reference       4303 TGCCCAGAGTCACACAGGGATTTATGGCAGAGCTGGGATGCACACCCCAGCCTTTGACTCCAAGTCCAGTGCACTTTCTTCTAAGCCAGGCTGGAACTGT   4402
+
+Consensus       3839 GGGTTTCCGCTTGGGTTCTGCCACTATCTTGCTATGTGATCTTGGGCAGTCCCTTCCCCTCTCCAGGCATCAGCTTTCTCACCTATGAGATGGGAAGGTT   3938
+                     |||||  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| |||||||||||||||||||||||||
+Reference       4403 GGGTTCTCGCTTGGGTTCTGCCACTATCTTGCTATGTGATCTTGGGCAGTCCCTTCCCCTCTCCAGGCATCAGCCTTCTCACCTATGAGATGGGAAGGTT   4502
+
+Consensus       3939 GGCTATGTCCTCACTCAGGGTCAGGGTTACAGCAGAGGAGCTGGGGAAGCCATTTGGATTGGCCTTACCT-CACAGCTGCCTTCAAACTTAGACCTTTCG   4037
+                     |||||||||||||||||||||||||||||||||||||||||||||  ||||||||||||||||||||||| ||||||||||||||||||||||| |||||
+Reference       4503 GGCTATGTCCTCACTCAGGGTCAGGGTTACAGCAGAGGAGCTGGGAGAGCCATTTGGATTGGCCTTACCTTCACAGCTGCCTTCAAACTTAGAC-TTTCG   4601
+
+Consensus       4038 ACAGGCTCTCCCAAAGAGAGGACATGTGCAGTTACTTGACACGCACTGACTGAAAGAAGATGCTGGCTGTACAAACTTGCTGGACCCACTGCTGGGTAGG   4137
+                     |||||||||||||| ||||||||||||||||||||| ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  |||
+Reference       4602 ACAGGCTCTCCCAATGAGAGGACATGTGCAGTTACT-GACACGCACTGACTGAAAGAAGATGCTGGCTGTACAAACTTGCTGGACCCACTGCTGGTGAGG   4700
+
+Consensus       4138 TCCTGAGAATTAATTACTTTTATACAACCATAATTACATCATGAATAG-ACAATCCTACAGGATTATACTGTAGTATTTAAGG--ACTGGTTTGTTGTGT   4234
+                       |||||||||||||||||||||||||||||||||||||||||||||| ||||||||||||||||||||||||||| |||| |  |||||||||||||||
+Reference       4701 CTCTGAGAATTAATTACTTTTATACAACCATAATTACATCATGAATAGCACAATCCTACAGGATTATACTGTAGTAGTTAAAGGCACTGGTTTGTTGTGT   4800
+
+Consensus       4235 TTAAACATTTGCACAGACCACACTTTTGTAACCTCATTTGGGTATCTATCTATCTATCAACTTTTTTTTTTTTTTTTTCTTTTTTTTT-ATTGGAGATGA   4333
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||  |||| |||| |||||||||||||||| |||||||||||
+Reference       4801 TTAAACATTTGCACAGACCACACTTTTGTAACCTCATTTGGGTATCTATCTATCTATCAATCTTTTCTTTTCTTTTTTCTTTTTTTTTTATTGGAGATGA   4900
+
+Consensus       4334 AGTCTTGCTCCTTGTCCCC-AGGCTGCAGTGCAATGGCGCGATCTCAGTTCACTGGCAACCTCCACCCTCCGGGTTCAAGCGATT-TCTTGCCTCAGCCT   4431
+                     |||||||||| |||||||| ||||||||||||||||||||||||||||||||||| ||||||||||||||||||||||||||||| ||||||||||||||
+Reference       4901 AGTCTTGCTC-TTGTCCCCCAGGCTGCAGTGCAATGGCGCGATCTCAGTTCACTG-CAACCTCCACCCTCCGGGTTCAAGCGATTCTCTTGCCTCAGCCT   4998
+
+Consensus       4432 CCTGAGTAGGGGGTAT-ACAGCAACCTGCCACCATGCCGCAGCTAAATTT-GTATTTTTTTAAGAAGATGAGGTTCCCCCATGTTGACCAGGCTGGTCTT   4529
+                     |||||||||  || || ||||  |||||||||||||| |||||||||||| ||||||||   ||| ||||||||||||||||||||||||||||||||||
+Reference       4999 CCTGAGTAGCTGGGATTACAGGCACCTGCCACCATGC-GCAGCTAAATTTTGTATTTTTAGTAGA-GATGAGGTTCCCCCATGTTGACCAGGCTGGTCTT   5096
+
+Consensus       4530 GAAACTCC-GACCTCAGGTGATCTCCCC-CCTTGGCCTCCCAAAGTGCTGGGAT-ACAGG-GTGAGCCACTGTAACCAGCCTGTCTGTCTGTCTGTCCTG   4625
+                     ||| |||| ||||||||||||||| ||| ||||||||||||||||||||||||| ||||| ||||||||||||| |||||||||||||||||||||| ||
+Reference       5097 GAA-CTCCTGACCTCAGGTGATCTGCCCTCCTTGGCCTCCCAAAGTGCTGGGATTACAGGTGTGAGCCACTGTACCCAGCCTGTCTGTCTGTCTGTC-TG   5194
+
+Consensus       4626 TCTGTCTATCA-TCTATCTATCTATCTATCTATC-ATCTATCTATCTATCCACCTACCTATTTTATTTTGAAGATGGGG-CTTGCTATATTGCCCAGGTT   4722
+                     ||||||| ||  |||||||||||||||||||||| |||||||||||||||||||||||||||| |||| || |||| || ||||||||||||||||||||
+Reference       5195 TCTGTCTGTCTGTCTATCTATCTATCTATCTATCTATCTATCTATCTATCCACCTACCTATTT-ATTTAGA-GATGAGGTCTTGCTATATTGCCCAGGTT   5292
+
+Consensus       4723 CATCTCTAACTC-TGGGCTCAAGCAATCCTTCCAACTCACACCTCAGCCTCCTGAGTAAC-GACACTACAGGGTGCATGCCACCACAAC-GGATAATTTA   4819
+                     |||||||||||| ||||||||||||||||||||||||||||||||||||||||||||||| ||||||||||| |||||||||||||||| ||||||||||
+Reference       5293 CATCTCTAACTCCTGGGCTCAAGCAATCCTTCCAACTCACACCTCAGCCTCCTGAGTAACTGACACTACAGG-TGCATGCCACCACAACTGGATAATTTA   5391
+
+Consensus       4820 AAAAAAATTTATTTTTAGAGATGAGGATCTTGCTATGAGGCC-AGGCTGGTCTCAAA-TCCTGGCCTCAAGTGATCTTCCCTCCTCAACCTCCCAAGTAG   4917
+                      ||||||||  ||||||||||||||||||||||||||| ||| |||| ||||||||| ||||||||||||||||||||||||||||||||||||||||||
+Reference       5392 GAAAAAATTACTTTTTAGAGATGAGGATCTTGCTATGATGCCCAGGCGGGTCTCAAACTCCTGGCCTCAAGTGATCTTCCCTCCTCAACCTCCCAAGTAG   5491
+
+Consensus       4918 CTGGGATTACAGGGTGTCTTTATTTTTCAAAACCC-GGAAGCCCCACCAAATGG-GCTTTTGGCCCTTTTCCCCCAGGTCCTCTCCCCAACCCCCATGTG   5015
+                     ||||||||||||| ||||||||||||||||||||| |||||||||||||||||| |||||||||||||||| |||||||||                   
+Reference       5492 CTGGGATTACAGGTTGTCTTTATTTTTCAAAACCCCGGAAGCCCCACCAAATGGAGCTTTTGGCCCTTTTCTCCCAGGTCCC------------------   5573
+
+Consensus       5016 TCCTCCCCAGCCACCATGCCCTA--TCGGACACATCA-TGGTGTGGGGGGAGGGGACCTGGGGGAAAGGGCCAAAAGCTCCATTTGTGGGGCTTCCGGGG   5112
+                     ||||||| ||| |||||| |  |  | | | | || | || ||            |||      |  | ||| ||||||        |   | |||    
+Reference       5574 TCCTCCC-AGC-ACCATGACTCACGTTGAAGATATTACTGATG------------ACCATCCTCAGGGTGCCTAAAGCT--------GTCACCTCC----   5647
+
+Consensus       5113 TTTTGAAAAAATAAAGAGACAACCTGTAATCCAGCTTACGTGGGAGTTTGAGGAGGGAGAATACCTTGAGGCCAGGAGTTTGAGACCAGCCTGGGCATCA   5212
+                                  |  || || | |     ||| ||   | |  |  ||||        || ||    ||  |  |    ||||| ||||   | |||  
+Reference       5648 -------------ACCAG-CACCATCACCACCAACT---GCGCCAAGTTGACCTTCCCCAAGAC----AGCACCCGC---TGAGATCAGCACCGACAT--   5721
+
+Consensus       5213 TAGCAAGATCCTCATCTCTAAAAAGTATATTTTTTTAAATTATCCGTTGTGGTGGCATGCACCTGTAGTTCAGTTCTCCTGAGGCTTAGGGTGTGAGTTG   5312
+                      ||||     |||||                                   ||||||   || | | |      | ||           ||| |||||   
+Reference       5722 -AGCA-----CTCAT-----------------------------------GGTGGC---CAGCCGAA------TACT-----------GGGGGTGAG---   5757
+
+Consensus       5313 GAAGGATTGCTTGAGCCCAGGATTTAGAGACGGAACTGGGCACATAGAGAAGCCTCATCTCTAATAAAAGATAGGTGGATGGATAGATAGATAGATAGAT   5412
+                      |||||      ||||| |||||           |||| | |   || || ||||| || || ||  |                               |
+Reference       5758 -AAGGA------GAGCC-AGGATG----------ACTGAGAAGGAAG-GATGCCTC-TCACTCATTCA-------------------------------T   5806
+
+Consensus       5413 TGATAGATAGATAGATAGATAGGACAGGACAGACAGACAGACAGACAGACAGGCTGGGGTACAGTGGCTCACACCTGTAATCCCAGCACTTTGGGAGGCC   5512
+                     | ||  ||  ||  ||  |                         ||| |||   | |||            |||||           |||||        
+Reference       5807 TCATTCATTCATTCATTCA-------------------------ACAAACACTGTTGGG------------CACCTT----------ACTTT--------   5851
+
+Consensus       5513 AAGGGGAGATCACCTGAGGTCAGGAGTTAAGACCAGCCTGGTCAACATGGGGGAACCTCTCTTTACTAAAAATACAAAATTTAGCTGCGAGGTGGGAAGT   5612
+                                  ||| ||                         | || |                    || |||| ||||                  
+Reference       5852 -------------CTGTGG-------------------------AAATAG--------------------AAGACAAGATTT------------------   5875
+
+Consensus       5613 GCCTGTAATCCCAGCTACTCAGAGGCTGAGACAAAGAATCGCTGAACCCGGGGTGGAGGTTGCAGTGAACTGAGATCGCGCCATTGCACTGCAGCCTGTG   5712
+                                   |||| ||    ||| |         ||||||  |     || ||  || |||||            ||||  | || |  ||  | 
+Reference       5876 --------------CTACCCAC---CTGGG---------CGCTGATGC-----TGCAGAGTGGAGTGA------------CCAT--CTCTTCTCCCGTT-   5929
+
+Consensus       5713 GGACAAGAGCAAGACTTCATCTCCATAAAAAAAAGAAAAAAAAAAAAAAAAGATTGAAAATAGATAATACCCAAATGAGGTTACAAAAGTGTGGTCTGTG   5812
+                               |||    | ||| ||                                            |||   ||||    ||    ||||||||| |
+Reference       5930 ----------AAGGTGGCCTCTGCA--------------------------------------------CCC---TGAGC---CA----TGTGGTCTG-G   5964
+
+Consensus       5813 CA-ATGTGTTAAACAACCAACACCCAGTGCCTTAACTACTACAGTATAATTACGGTAGGAGTGTGCTATTTGATGTAAGTATGGTGTATAAAAGTAATTA   5911
+                     || |||  |||| ||       | | |||||| |                            ||||   || || || |             ||  ||| 
+Reference       5965 CAGATGACTTAACCA-------CTCTGTGCCTCA----------------------------GTGCC--TTCATCTATG-------------AGGCATTG   6014
+
+Consensus       5912 ATTCTCAGAGCCTCACCAG-CAGGGGGTCCAGCAAGTTTGTACAAGCCAGCATCTTCTTTCAGTCCGTGCGTGTCAGAGTACCCGCACCTTCCATTCTTG   6010
+                     ||   || |  |||| | | | | ||||                       |||                | || |  || ||| ||            |
+Reference       6015 ATCTACACACACTCATCTGACTGAGGGTG----------------------ATCG---------------GGGTGACTGTTCCCTCAG-----------G   6066
+
+Consensus       6011 GGAGAGCCTGTCGAAAGTCTAGTTTGAAGGCAGCTGTGAAGGTGGCCAATCCAAAGGGTCTCCCAGCTCCTTGCTGTACCGGGACCCTGACAAGGACATA   6110
+                     |||              |||  |        | ||| ||   || |||         ||||      || || |||          ||| ||        
+Reference       6067 GGA--------------TCTGAT--------AACTGGGATTCTGCCCA---------GTCT------TCTTTTCTG----------CTGCCA--------   6111
+
+Consensus       6111 GCCAACGTCCTTACCTCATAGGTGAGAAAGCTGATGCTGGAGAGGGGAGGGGTACTGGCCCAAGATCACATAGAAAGGAAGTGGCAGAACCAAGCGAGAA   6210
+                            || ||                  | ||||||  | || ||    | |||   ||     | |              ||||      ||  |  
+Reference       6112 -------TCATT------------------CGGATGCTCAACAGAGG----GCACTCTTCC-----CCC--------------GCAG------GCCTG--   6155
+
+Consensus       6211 CCCACAGTTCCACCCTGGCTTAGAAGAAAGTAGCAATGGGAATGGGAGTCAAAGGCTGGGGGGGCATCCCAGATCTGCCATAAAATCCCGGTGTGACTCG   6310
+                     ||||||  ||||                                                  | || ||||              |||   | ||    |
+Reference       6156 CCCACA--TCCA--------------------------------------------------GTCACCCCA--------------TCCTCATCTG----G   6185
+
+Consensus       6311 GGCAATTTAACCTCTTAAGCTGTAATTTCTTCGTCGTAATATGAGGGTAGCAGTAATGCCACATAGGGTTTGAGGGAGTAATGGAGTAAAATCACATGAA   6410
+                     ||| | |   |||            | ||| | ||           || |||||                    |||                       
+Reference       6186 GGCCACTGTCCCT------------TCTCTCCCTCTCC--------GTGGCAGT--------------------GGA-----------------------   6222
+
+Consensus       6411 ATGATGCACGCGTTACAAAAAAACAAGAATGAAGCCCCTGTACTGTGCCCAGTATCCAAAGGACTTTGGACTTTACTCTGAGACTACAGGGAGAACTGAT   6510
+                                             |||||            ||||                || ||||||                              
+Reference       6223 ------------------------AAGAA------------ACTG----------------GA-TTTGGA------------------------------   6239
+
+Consensus       6511 GGACTAAGGGGGTGGGCAGAGGCGAGCATCAGATCTGACTTAGGTTTAAGATACTCTGGCTTCTGGTTCAGAAAAGATCTCAGGGGCAAAGAGAGGAAGC   6610
+                                                |||||    |||        |||     | ||||||     |||      || |||                 
+Reference       6240 ---------------------------ATCAG----GAC--------AAGC----CCGGCTTC-----CAG------TCCCAGCC---------------   6270
+
+Consensus       6611 AGGTGGAGACCAGAGCGGCAGTGAGGCATTCATTTCCGACTAGGACTAGGACAATAGCTGTGAGAGAGTGGTGGGAAGTGATTGGAGTCTGCTATTTTAA   6710
+                        | |  ||  ||| |||  |      ||||| ||        |||  | | ||  ||                            ||||| |     |
+Reference       6271 ---TTGCCACTGGAGTGGCTAT------TTCATCTC--------ACTGAGCCTATTTCTCCT-------------------------TCTGCAA-----A   6323
+
+Consensus       6711 TTAGCAGAATGAGAAGATTAGTGAAAAGGTTAGGGCTAGGGATATAAATTTGGGAGGTGTGACAATACAGAGGGTGTTTTAAAGCCAGAGACCAAGGAGA   6810
+                     |||  |||||||         |||                    | ||      | || |  ||          ||||                 || | 
+Reference       6324 TTA--AGAATGA---------TGA--------------------TCAA------ACGTATCCCA----------TGTT-----------------GGTG-   6358
+
+Consensus       6811 TCCTCAGGAGGTGAGGAAAGAGGATGGGAAGAAAGTATGAGGATGAGTCCTAGACACCCTGATTGCAGAGGCGGGACATGTGTAATGAGCCAGCAAATCT   6910
+                     ||||               | ||||| ||||       ||| ||   |||||                   |||    |||||   |   || |||  ||
+Reference       6359 TCCT---------------GGGGATGTGAAG-------GAGTATTCTTCCTAT------------------CGG----TGTGTCTAG---CACCAAGACT   6411
+
+Consensus       6911 GGGGAGACAGAAGTGTGCTGGAGAGGCAGGGGAAGCCAGGAGAGCGTGAGGTCCGGGAAGGCAAGGAAAAGAGAGGGCCCCAGGGGGGCTAAGGCTTCGG   7010
+                     ||  | | ||||                       |||             ||| |          |||||| |              |||         
+Reference       6412 GGC-ACAAAGAA-----------------------CCAAC-----------TCCTG----------AAAAGACA--------------CTA---------   6443
+
+Consensus       7011 AGAGGTCAAGCGGAGAGGGCTGGGAAAGTAGGCCTTTGATTGACAAGGAGACCCTTGGAATGCATGGTGGTAGAGGAGGATGAGCAAGCCTGGCTTGATG   7110
+                                                    |||||  ||| |||     ||     || | | |  |      |    ||||||| ||           
+Reference       6444 -------------------------------GCCTT--ATTAACACTATTAC-----GATTCCTTCCTTCCCTTGACCAATGAGCATGCT----------   6495
+
+Consensus       7111 AATCAAGAGCAGGAGATGAGGAAAGTGTAGACCGCATGCAGGGGCACAGCCCTGCCACGGACTTTGCTCTTAAAGGGGAACAGAGAAATGGAGGGAGAAG   7210
+                              ||||||  ||| ||| | |                                  |||| |||| ||||                        
+Reference       6496 ---------CAGGAG--GAGAAAATTAT----------------------------------TTTGGTCTTGAAGGT-----------------------   6527
+
+Consensus       7211 CCAGGAGGGCAATAATCCGAAGTAGAGGAAAAAATCTGATGATACAGAAGAGAGATGAAACTGCAAGAGTACACGCCTTGCGTGGAAAGCAGGAGTGGGA   7310
+                                                       ||| ||||| || || | | |  ||| ||                                     
+Reference       6528 ----------------------------------TCTTATGATCCAAAAAAAAAA--AAAATG-------------------------------------   6554
+
+Consensus       7311 TTGAGCACTGATACCTTTTAGCGATGCAGGGACAGTTCACTTTTAAAATTATTATTATTATACAACATTTTCTTAAAAAATTATTGCACAAGCATACATT   7410
+                                ||| | | | | |      |||||   ||                   ||||| |||                      ||| |     
+Reference       6555 -----------TACTTATGATCTA------GACAGGCTAC-------------------ATACACCATG---------------------AGCCT-----   6592
+
+Consensus       7411 TTCCCATTAGAGATTAACAGTGTGCGAAAAATAAAAATTGATTACTTATAGTTATATTTGGAAGATGGTTTTAGAATCTAAGTAGGGAAGTACATTTGAG   7510
+                                              |  || ||| |||  ||  ||    || ||||     | | || |          ||| |||   | |||| || 
+Reference       6593 -------------------------GTCAACTAAGAAT--AT--CT----GTGATATC----ACAAGGCT----------AGTGGGG---TTCATTGGA-   6641
+
+Consensus       7511 AATTAAAATCGAATGTTTACAATGGGTAATTTTTGATACGCTATGGGGAACTTGCCCTTAAAGGAACCCTTCGTATTTCTGAAGGACCTCCAAGCGGTCT   7610
+                      |  | |                |||| ||         |||    |||       ||||                   | | |||         || ||
+Reference       6642 -AGGAGA----------------GGGTGAT---------GCTGACTGGA-------CTTA-------------------TCAGGGA---------GGACT   6680
+
+Consensus       7611 TCCTAGGATTTAGAAAGTTATAATATGAGATTTATGCAGCATTCCAATTTAAATTTCCTAGTCTATGGAACCATCGGTTAAGGTGGTATCTACGATAGAG   7710
+                     |||| |     || ||||  || |  ||| |  |     || ||||                   ||||  ||||                         
+Reference       6681 TCCTGG-----AGGAAGTGGTACT--GAGCTGGA-----CAATCCA-------------------TGGA--CATC-------------------------   6722
+
+Consensus       7711 AGGGAAGTTTTGAAATAAACACTGTCTAAATTTCTGCAAAGTTTGTATTCATGAATTACGGGATTTCCCTTAGTCCAGTATTCCAAGGCAAATGATGGAA   7810
+                                        || | ||       |||   || |||   || |||   ||      |||||    ||     ||            ||| |
+Reference       6723 -------------------CAGTCTCCC-----CTGAGCAGCTTGC--TC-TGAG--AC------TCCCTCCTCCC-----TC------------TGGGA   6770
+
+Consensus       7811 GTGGCTTAATAGTGCTATCATACTAAAGCTGGATTCTCTTAAGAGATTGAGAAAATTAAAGCAAAAGCTGATTATATAAGTTTAGGATACTGTGTTATGT   7910
+                     ||    ||||  ||  || || ||| | |                            | ||||| || |||| |||                    ||| 
+Reference       6771 GT----TAATGATG--ATGATGCTACAACC---------------------------ACAGCAACAG-TGATGATA--------------------ATG-   6815
+
+Consensus       7911 ATTTATATATGTATAAGGGGACCCTATCTGAAACCCCATATCCCGACACAGAACTCAGTCTCACATAAATATAATTCCTCTCAAACCTTCCTCAAAAGGA   8010
+                     ||||||     |||||| | |   | | | ||||                      || ||   |  |  || |  |||||      ||          |
+Reference       6816 ATTTAT-----TATAAGAGCAT--TTTGTAAAAC----------------------AGGCTTGTAACAGCATCA--CCTCTT-----TT----------A   6869
+
+Consensus       8011 AATTCTGAAACAATATTGTGATTAAGAGAAGAAGGCTGT-CACAATGTTTTTGTTCGACTTATCTGTATATTTCTTCCTTATTGTGAGCTGAGTATGGCA   8109
+                     |||| |  |||  |||               |||||||  | || ||  |        | |  |||||     || ||        |||  | | ||| |
+Reference       6870 AATTTT--AACCCTAT---------------AAGGCTGGGCGCAGTGGCT--------CATGCCTGTA-----CTCCC--------AGC--ACTTTGGGA   6929
+
+Consensus       8110 TGACAAAGCAGGGCAAAGAGGCATCATCAATTCTTCAAAGTGGAAGAGACAACAAGGTCAGAGTCCACAGAATGGCAACAGCTTTGCAGATGCCCACATC   8209
+                      | ||| |||||       ||    |||| ||             ||| |  || ||     || || ||| ||||                        
+Reference       6930 GGCCAAGGCAGGT------GG----ATCACTT-------------GAGGC--CAGGG-----GTTCA-AGAGTGGC------------------------   6974
+
+Consensus       8210 GTGAGAGTTGAAAATAGCAAGCCAGCAAGGTTAAAGCGAAAA   8251
+                                      |  |||| || |||      |||| 
+Reference       6975 -----------------CTGGCCAACATGGT------GAAAC   6993
+
+
+#---------------------------------------
+#---------------------------------------

@@ -146,7 +146,7 @@ if (debug) {
 };
 cap <- capture.output(msa::print(con, show='complete', showNames=TRUE, showConsensus=TRUE,
                             nameWidth=max(12, nchar(names(seq))+2)));
-saveRDS(cap, 'cap.rds');
+saveRDS(cap, paste(path.r, 'cap.rds', sep='/'));
 writeLines(cap, paste(path.align, 'full_alignment.txt', sep='/'));
 
 aln <- do.call('cbind', strsplit(as.character(con)[names(seq)], '')); 
@@ -159,7 +159,7 @@ cll <- CallConsensus(wtd);
 sub <- paste(cll[cll!='-'], collapse='');
 ptn <- DNAStringSet(sub);
 names(ptn) <- 'Consensus';
-c2r <- AlignConsensus(ptn, ref);
+c2r <- AlignConsensus2Reference(ptn, ref);
 pw0 <- c2r$alignment;
 
 wmd <- tolower(prms$weight)[1];
@@ -188,7 +188,7 @@ The weighting method used for this analysis is: **`r wmd`**.
 
 ```{r base_agreement, include=TRUE}
 cl0 <- cll[cll!='-' & wtd[, 'Count']==ncol(aln)];
-c2r <- AlignConsensus(paste(cl0, collapse=''), ref);
+c2r <- AlignConsensus2Reference(paste(cl0, collapse=''), ref);
 pw1 <- c2r$alignment;
 writePairwiseAlignments(pw1, paste(path.align, 'core_consensus_reference.txt', sep='/'), block.width = 100);
 
@@ -302,7 +302,7 @@ con <- as.character(con);
 pws <- lapply(con, function(c) {
   c <- DNAStringSet(c);
   names(c) <- 'Consensus';
-  AlignConsensus(c, ref);
+  AlignConsensus2Reference(c, ref);
 });
 con <- DNAStringSet(con); 
 names(pws) <- names(con) <- names(fll);
@@ -370,7 +370,7 @@ pws <- lapply(con, function(c) {
   f <- DNAStringSet(fnl);
   names(c) <- 'Step_Consensus';
   names(f) <- 'Final_Consensus';
-  AlignConsensus(c, f);
+  AlignConsensus2Reference(c, f);
 });
 names(pws) <- names(con) <- names(fll);
 
@@ -429,7 +429,7 @@ pws <- lapply(2:length(con), function(i) {
   c2 <- DNAStringSet(con[[i]]);
   names(c1) <- 'Previous_Consensus';
   names(c2) <- 'Current_Consensus';
-  AlignConsensus(c2, c1);
+  AlignConsensus2Reference(c2, c1);
 });
 names(pws) <- names(fll)[2:length(fll)];
 

@@ -1,0 +1,317 @@
+########################################
+# Program: Biostrings (version 2.42.1), a Bioconductor package
+# Rundate: Mon Sep 24 02:05:54 2018
+########################################
+#=======================================
+#
+# Aligned_sequences: 2
+# 1: 18
+# 2: Reference
+# Matrix: NA
+# Gap_penalty: 14.0
+# Extend_penalty: 4.0
+#
+# Length: 7287
+# Identity:    4186/7287 (57.4%)
+# Similarity:    NA/7287 (NA%)
+# Gaps:        2353/7287 (32.3%)
+# Score: -9040.003
+#
+#
+#=======================================
+
+18                 1 CGCAGGCAACAGCTTTGCAGATGCCCACATCGTGATAAGTTGAAATAGCAAAGCCAGCAAGGTAAGCGGAAAA-TGCCAAAAAGCCGGCTTGAGCAGCTT     99
+                     |  ||||  || || | ||   | | |   || ||   ||||  |  |    ||   |  |||  ||       |||  |   |    ||||     || 
+Reference       1896 CCAAGGCTGCATCTCTCCACTGGACTAG--CGAGAGG-GTTGTCAGTGTTTTGCTCCCG-GGTCTGCTTCCGGCTGCTTATTTGAATCCTTG-----CTC   1986
+
+18               100 TCGCGACGGCAGCCCCAAGAACATCGGCAGTAGCAACAACTTGTCCAAGGCCCCAGTTCCCATTGAAGAGTGAGGGCTGCAGCCAGGGAATCG---TCCG    196
+                     | |||||||      | |   | | ||| | |||    |||  || | || | | |   || | ||  |||     ||| |    |   || |   | | 
+Reference       1987 T-GCGACGGA-----CTATTCCCT-GGCTGCAGCCCTCACTCTTC-ATGGTCACTGGGGCCTTGGACAAGTTGTTACTG-ACTATGTTCATGGGGATGCC   2077
+
+18               197 TCGCAGAGCAAGGATTCAAATAAGCAGCGGAAGCAGACCCGGGAGCAAAAACACTGACAACCTCTCGCTAGTCACAGTGGAGAGATGTGCAGCCTTGGAG    296
+                     |||||||              |||| ||  | ||||  |     |||    ||     ||||| | ||| | |   |       || | || |  |    
+Reference       2078 TCGCAGA--------------AAGCTGCCAAGGCAGGGCTTTTGGCATTTTCAGCTTTAACCTTT-GCTGGGCTTTGCT-----ATTT-CAACTAT----   2152
+
+18               297 CCAGAAGGGTGGCCGGTGACAAGTTATGGCTGCACGCACAACCAGTCTGGGGGAAGTTGGACATTT--GACTTCCTACTTTGAAGGAAATTGATGTATGC    394
+                      ||  | |  |||   ||  ||| | | ||            ||  ||| || |  |  ||| |||  |||||||||||||||||  |||||||||||||
+Reference       2153 -CACGATGTGGGCATCTGCAAAGCTGTTGC------------CATGCTGTGGAAGCTCTGACCTTTTTGACTTCCTACTTTGAAG--AATTGATGTATGC   2237
+
+18               395 CTATTTGCCCTCTGCTT---CATGCAATTAAGCTCACAATAAGGAAGAAATAACAGATAAG-CCATTGGTAGTGGACAGCCTTCTTCTCTTAATCACAAG    490
+                     || |||||| |||||||   ||||| ||||||||||||||||||||||||||||||||||| ||||||||   |||||||||||||||||||||||||||
+Reference       2238 CTCTTTGCC-TCTGCTTTGTCATGCCATTAAGCTCACAATAAGGAAGAAATAACAGATAAGTCCATTGGT---GGACAGCCTTCTTCTCTTAATCACAAG   2333
+
+18               491 ATG--TTGCAGAATTCAACTTTGAGGAAAAGGTT-GAGAGGCATTATATT-AAGTTGTGAGGATGG--TCTGTATTCTGGTGAGTTAATGGGGT-GCCTT    583
+                     ||   || ||||||| |||||||||||||||||| |||||| |||||||| ||||||||||  ||   |||||||||||||||||||||||||| |||| 
+Reference       2334 ATTATTTTCAGAATTTAACTTTGAGGAAAAGGTTTGAGAGGAATTATATTTAAGTTGTGAGACTGAGTTCTGTATTCTGGTGAGTTAATGGGGTTGCCTC   2433
+
+18               584 CCAGCTTCTTACAGAGGGGGGACCTCACAGGTAGAAAACTAAACATGAGATATCAGCTTTTGCCTTTTAATTTCTCAAT-TCTTCAAAGAGA-TCCCGCT    681
+                     ||||||||||| |       ||| ||||||    | |||||||||||| |||||||||||||||||||||||||||||| |||| ||||||| ||| |||
+Reference       2434 CCAGCTTCTTATAA------GAC-TCACAGT---ATAACTAAACATGATATATCAGCTTTTGCCTTTTAATTTCTCAATCTCTT-AAAGAGAATCCAGCT   2522
+
+18               682 TTAGTATGATTAGCATATGAGCAATACTCCATATTTGGCCTGG-ACTAATGGACTAAGGGAAATACTCTTAATTCATGAATAAAAACTT-GCAGAAAATT    779
+                     |||||||||||||||||||| |||   |||||||||| | ||| | ||||||||||||||||||||||||||||||||||||||||||| ||||||||||
+Reference       2523 TTAGTATGATTAGCATATGATCAAACTTCCATATTTGCCTTGGGAATAATGGACTAAGGGAAATACTCTTAATTCATGAATAAAAACTTTGCAGAAAATT   2622
+
+18               780 AGACAGTGTTTAATTTCAAAAAACTTCCCTCTCTCGTCGGTAGTTACCAC-TACCGATGGTCGCCATATACTAGG-AAAGTTAAAATTAAGGAAATG-TG    876
+                     ||||||||||||||||  |||||||||||||||| |||||||| |||||| ||||||||||  | |||||||||| ||| || ||| | |||||||| ||
+Reference       2623 AGACAGTGTTTAATTTTCAAAAACTTCCCTCTCTAGTCGGTAGATACCACCTACCGATGGTTAC-ATATACTAGGGAAATTTTAAAATTAGGAAATGCTG   2721
+
+18               877 A-ATCTCATTATTATAAATGTCTAAA----AGGAAGAAACGCTTGGCGG--TTCCGAAGATACCAAAAAAGGGGGGGGGGGAAGTTCCATTTAAGGGCAA    969
+                     | ||||||| ||||||||| ||||||    |||||||||||||||| |   ||| ||||||||                 ||||||||||||||||||||
+Reference       2722 ATATCTCAT-ATTATAAATTTCTAAATCCTAGGAAGAAACGCTTGGAGTGCTTCTGAAGATACA----------------GAAGTTCCATTTAAGGGCAA   2804
+
+18               970 GTTTCCCCAAGGACGTATCAAAATATTACCCATTGTAAACTGAGATTAA--TCTCAAAGGTATTCTACTTGTTCTAAAACAAT-TGTCCACCCAAATATA   1066
+                     |||||||||  |||||||||||||||||||||||||||||||||||| |  ||||||| |||||||||||||||||||||||| |||||||  |||||||
+Reference       2805 GTTTCCCCATAGACGTATCAAAATATTACCCATTGTAAACTGAGATTTAATTCTCAAATGTATTCTACTTGTTCTAAAACAATCTGTCCAC--AAATATA   2902
+
+18              1067 AAACTCTAAG--ACAAATTGTTATTTTCGAACAATGGGAATCTCTAATGTGAAA-TGGATTCTGTGAACT--AATTTTTAAATAAAATGTTGTATAATAA   1161
+                     ||||| ||||  | ||||||||||||||| |||||||||||||||||||||||| || ||||||||||    ||||||||||||||||||||||||||||
+Reference       2903 AAACTATAAGTAATAAATTGTTATTTTCGCACAATGGGAATCTCTAATGTGAAAATGTATTCTGTGAAAATAAATTTTTAAATAAAATGTTGTATAATAA   3002
+
+18              1162 TAATAATTTTAAAAAAAGAGAAACTGTTCGCTGCACGGCCCTAAAGGTATCCGGTGCTCACAATCCCACTCTCG-TTTCCAA-TCAAAGGCTTGACTCTT   1259
+                     |||||||||||||||| ||  |||||| | |||||  | |||||||||||| | |||||| ||||||||||  | ||||||| |||||||||||||||||
+Reference       3003 TAATAATTTTAAAAAA-GATGAACTGTCC-CTGCATCGGCCTAAAGGTATCAG-TGCTCAAAATCCCACTCCTGCTTTCCAACTCAAAGGCTTGACTCTT   3099
+
+18              1260 GCAGTTCAT-TCTCTTCTGTATCATCAGCTTTGTCCTCTCTATCGGATTATTGCCCTCCTGCTTCTCCTCA--TTCTCTGGTGCCCCTTAGAGCAAAGTC   1356
+                     ||||||||| |||||||||||||||||| ||| |||||||||||||||||||||||||||||||||||||   ||||||| | ||| |||||||||||||
+Reference       3100 GCAGTTCATCTCTCTTCTGTATCATCAGATTTTTCCTCTCTATCGGATTATTGCCCTCCTGCTTCTCCTCCATTTCTCTGTTCCCCTTTAGAGCAAAGTC   3199
+
+18              1357 CTTGGCAGGGCTGCCC-TGAGTGC-GTCTCCA--TTATAATCTCCTGCTGCTTGACTCAGTCAAGCCAGGCTTTTGA-TGAAGTCTCCTCTACAACCATG   1451
+                     |||||||||||||||| ||  ||| |||||||  || | |||||||||| ||||| ||||||||||||||||||||  |  |  ||||||||||||||||
+Reference       3200 CTTGGCAGGGCTGCCCCTGCATGCTGTCTCCACTTTCTCATCTCCTGCT-CTTGAATCAGTCAAGCCAGGCTTTTGCCTTCATCCTCCTCTACAACCATG   3298
+
+18              1452 CATGCCAAGGTCTCCTTGTCCAAATCCAATGGCTACCTCTTCCCCAGCCACTTATC--ACTTGAACCTC-CAGCAGCATTCAGGCCCAACTGGGGCC---   1545
+                     |||||||||||||||||||| ||||||||||||||| ||    |||||| || |||  |||||| |||| ||||||||||||| |||| ||||||||   
+Reference       3299 CATGCCAAGGTCTCCTTGTC-AAATCCAATGGCTACTTC----CCAGCC-CTCATCCGACTTGA-CCTCTCAGCAGCATTCAG-CCCACCTGGGGCCCTC   3390
+
+18              1546 TCTTTCCTTGCCGTCCCGGACCTCACGCTCTA-TGGGCTTCCTCCTGCCTCTCCGAGCACAATTCTGTCTC-TTTG-TGG-TCT-ACACATGTCCCCTCT   1640
+                     |||||||||||| ||| ||||||||||||||  ||||||||||||||||||||| |||||||||||||||| |||| ||| ||| |||||||||||| ||
+Reference       3391 TCTTTCCTTGCCTTCCAGGACCTCACGCTCTCCTGGGCTTCCTCCTGCCTCTCCAAGCACAATTCTGTCTCCTTTGCTGGCTCTTACACATGTCCCCCCT   3490
+
+18              1641 ---AAATG-AGGGTGTTC-AGGAC-CA-TCCTCAGA-TTCTTC--AATTCTCTTTATCATCACTCCTGAGTGATCTCCTTGGGTCTCATGGCTTTAAACA   1730
+                        ||||| ||||||||| ||||| || |||||||| ||||||  |  |||||||||| |||||||||||||||||||||||||||||||||||||||||
+Reference       3491 CTAAAATGCAGGGTGTTCTAGGACTCAGTCCTCAGACTTCTTCCCATCTCTCTTTATCCTCACTCCTGAGTGATCTCCTTGGGTCTCATGGCTTTAAACA   3590
+
+18              1731 CCATATGTAT-GTAACAACTCCCAAATTATCATCC-TAGCCCCTAACCTTTCCACTAAGCTTCAGACTTGTGTACATCTCCATTCAGTGTCTCCACTGGG   1828
+                     |||| ||||| |||||||||||||||||   |||| |||||| ||||||||||||||||||||||||||||  |||||||||||||||||||||||||||
+Reference       3591 CCATCTGTATTGTAACAACTCCCAAATTTATATCCCTAGCCC-TAACCTTTCCACTAAGCTTCAGACTTGT--ACATCTCCATTCAGTGTCTCCACTGGG   3687
+
+18              1829 ATGTTTCATACAAAAGTGCTATACCGCCCCAAA-TTAACC-TAACGCTACCACAT-CGCC-CTGAACTC-GGGTTTTCCCTCC-AGATCTATCCCACCCC   1922
+                     |||||||||||| |  | |||  |||||||||  |||||| |||||||||||||| || | |||||||| ||||||||||||| ||||||||||||||||
+Reference       3688 ATGTTTCATACACATCT-CTAC-CCGCCCCAACCTTAACCCTAACGCTACCACATTCGACACTGAACTCTGGGTTTTCCCTCCCAGATCTATCCCACCCC   3785
+
+18              1923 ACTGTTCCCCATCTCAGTAAATGGAAC-AGCAGCTGCTGAGT-GTGCCAGATGAGAAC-TTGAAGTCATCTTGACCTTCTCCAACCCCCAGTGCAGTCTA   2019
+                     | |||||||||||||||||||||| || |||||||||||||| ||||||||||||||| ||||||||||||||||| ||||| |||||  ||||||||||
+Reference       3786 AATGTTCCCCATCTCAGTAAATGGCACCAGCAGCTGCTGAGTTGTGCCAGATGAGAACCTTGAAGTCATCTTGACCCTCTCCCACCCCACGTGCAGTCTA   3885
+
+18              2020 TCAGCA--TTCGGTACAATTTGGATAT-AAAATCTAGATCAGGATACAATCCCTTTCCCACCACTCTCACAG-TATTGTCCTAGTCTGGTAATGGATGAT   2115
+                     ||||||  | | || |||||  | ||| ||||| ||| ||||||| ||||| ||| |||||||| ||||||| |||||||||||||||    ||||||||
+Reference       3886 TCAGCAAATCCTGT-CAATTCTGCTATTAAAATATAG-TCAGGATCCAATCACTT-CCCACCACCCTCACAGCTATTGTCCTAGTCTGAGTCTGGATGAT   3982
+
+18              2116 GGCCATCACTGCCGCTCTGGTCTCCCACCTGCTTCCTCTCT-GCCCTTCCCGTCTTT-CTGAACCCAGAAAGCCGCGTCATCTTTAAAACTTAAGTCAGA   2213
+                     |||||||||||| |||||||||||| ||||||||||||||| |||| | | |||||| ||||||||||||  | | || ||||| ||||| |||||||||
+Reference       3983 GGCCATCACTGCTGCTCTGGTCTCC-ACCTGCTTCCTCTCTTGCCCCTTCAGTCTTTTCTGAACCCAGAAGCCAGAGT-ATCTT-AAAACATAAGTCAGA   4079
+
+18              2214 -CATAGCTCTCCTCTGCCCAACACTCCCT-GTTCTCCC-GTATTTCT-AGAGTAAATCCAAAGTCCTTTGGGATG-TGAGGCACAGTCAAGGGGCT-CAT   2307
+                      |||||||||||||||||||||||||||| |||||||| |||||||| ||||||||||||||||||||||||||  ||||||||||| |||||||| |||
+Reference       4080 TCATAGCTCTCCTCTGCCCAACACTCCCTAGTTCTCCCTGTATTTCTCAGAGTAAATCCAAAGTCCTTTGGGATACTGAGGCACAGTAAAGGGGCTTCAT   4179
+
+18              2308 GCTGTTTTTTGCTAACGTGCATCAT--CATGTGATTCATTCAAATTACTCCTCAAAAACCCTATGTGGTAATACTGCTACC-TCATAGTACAGACGAAGA   2404
+                     ||| |||||||  ||||||||||||  ||||||||| |||||| |||||||   |||||||||||||||| |||||||||| ||||| ||||||||||||
+Reference       4180 GCTTTTTTTTGTAAACGTGCATCATTTCATGTGATTAATTCAA-TTACTCCCTCAAAACCCTATGTGGTAGTACTGCTACCCTCATATTACAGACGAAGA   4278
+
+18              2405 AACTATTAAAGCT-TAAGAGGTTCAATTGC--AGAGTCACACAGGGATTTATGGCAGAGCTGGGA-GCAGACACAGCCCTTTGACTCCAAGTC-AGTGCA   2499
+                     |||||   ||||| ||||||||| ||||||  ||||||||||||||||||||||||||||||||| ||| || |   |||||||||||||||| ||||||
+Reference       4279 AACTA---AAGCTCTAAGAGGTTAAATTGCCCAGAGTCACACAGGGATTTATGGCAGAGCTGGGATGCACACCCCAGCCTTTGACTCCAAGTCCAGTGCA   4375
+
+18              2500 CTTTCTTCTAAGCTAGG-TGGAACTGTGGGTTCTCGATTGGGTTCTGC-ACTAT-TTGCTA-GTGATCT-GGGCAGTCCTTCCCCCATCTCCAGGCATCA   2594
+                     ||||||||||||| ||| |||||||||||||||||| ||||||||||| ||||| |||||| ||||||| ||||||||| | |||| |||||||||||||
+Reference       4376 CTTTCTTCTAAGCCAGGCTGGAACTGTGGGTTCTCGCTTGGGTTCTGCCACTATCTTGCTATGTGATCTTGGGCAGTCCCTTCCCC-TCTCCAGGCATCA   4474
+
+18              2595 GCTTTCTCAA--ATGAGATGGGAAGGTGGTAT-TGTCTTCACTCAGGG-CAGGGTTAAAGCAGAGGAGCTGGG-GAGACATGTTGGATTGGCCTGGACTT   2689
+                     || ||||||   ||||||||||||||| |  | |||| |||||||||| |||||||| ||||||||||||||| ||| ||| ||||||||||||   |||
+Reference       4475 GCCTTCTCACCTATGAGATGGGAAGGTTGGCTATGTCCTCACTCAGGGTCAGGGTTACAGCAGAGGAGCTGGGAGAGCCAT-TTGGATTGGCCTTACCTT   4573
+
+18              2690 ACACAGATGCTTCAAAACTTAGTAGACTTTCGAAAGGCTCGCACAATGAGAGGGACATGTGCAGT-ACTG-CACGCACTGACTGAAAGA-GATGCTGGGT   2786
+                      ||||| ||| |  ||||||||   |||||||| |||||| | |||||||||| ||||||||||| |||| |||||||||||||||||| |||||||| |
+Reference       4574 -CACAGCTGCCTTCAAACTTAG---ACTTTCGACAGGCTCTCCCAATGAGAGG-ACATGTGCAGTTACTGACACGCACTGACTGAAAGAAGATGCTGGCT   4668
+
+18              2787 A-ACAAACTTGCTGGACCCAC-GCTGGTGAGGCTC-GAGAATTAATTACTTTTATACAAC-ATAATT-CATCATGAATAGCACTAATCCTACAGGATTAT   2881
+                       ||||||||||||||||||| ||||||||||||| |||||||||||||||||||||||| |||||| ||||||||||||||| ||||||||||||||||
+Reference       4669 GTACAAACTTGCTGGACCCACTGCTGGTGAGGCTCTGAGAATTAATTACTTTTATACAACCATAATTACATCATGAATAGCAC-AATCCTACAGGATTAT   4767
+
+18              2882 AAGGTAGTAGTTAAAGGCACTGGTC-GTGGTGTGTTAACATTTGCACAGACCACACTTTTGTAACCTAATTTGGGTATCTATCTATCTATCAATCTTT-C   2979
+                     |  |||||||||||||||||||||  || |||| | ||||||||||||||||||||||||||||||| |||||||||||||||||||||||||||||| |
+Reference       4768 ACTGTAGTAGTTAAAGGCACTGGTTTGTTGTGTTTAAACATTTGCACAGACCACACTTTTGTAACCTCATTTGGGTATCTATCTATCTATCAATCTTTTC   4867
+
+18              2980 TTTTCTTGTTC----TTTTTTTAT-GGAGATGAAGTCGTGCTATTGTCCCC-AGGCTGCAGTGGCAATGGAGCGATCTCAGTTCACGACAACCTCCACCC   3073
+                     ||||||| ||     ||||||||| |||||||||||| |||| |||||||| ||||||||||| |||||| |||||||||||||||  ||||||||||||
+Reference       4868 TTTTCTTTTTTCTTTTTTTTTTATTGGAGATGAAGTCTTGCTCTTGTCCCCCAGGCTGCAGTG-CAATGGCGCGATCTCAGTTCACTGCAACCTCCACCC   4966
+
+18              3074 TCCGGGTTCAAGCCGTTCTCTG--CTCAGCCTCCTGAGTAGCTGGGATGTAC-GGCACCTGAAACCATGGCGCAGGCAAATTT-GTATTTTTCGTAGAGG   3169
+                     |||||||||||||  ||||||   |||||||||||||||||||||||| ||| ||||||||  |||||| |||||  |||||| |||||||| |||||| 
+Reference       4967 TCCGGGTTCAAGCGATTCTCTTGCCTCAGCCTCCTGAGTAGCTGGGAT-TACAGGCACCTGCCACCATG-CGCAGCTAAATTTTGTATTTTTAGTAGAG-   5063
+
+18              3170 ATGAGGTTCCCC-ATGTTGACCAGC---GTCTTGA-CTTCAGACCTC-GGTGATCTGCCCGCCT-GGCCTCC-AAAGTGATGGGATTTACGGTGTGAGCC   3261
+                     |||||||||||| |||||||||||    ||||||| || | |||||| |||||||||||| ||| ||||||| |||||| |||||||   ||||||||||
+Reference       5064 ATGAGGTTCCCCCATGTTGACCAGGCTGGTCTTGAACTCCTGACCTCAGGTGATCTGCCCTCCTTGGCCTCCCAAAGTGCTGGGATTACAGGTGTGAGCC   5163
+
+18              3262 ACGGTACCCAGCCTGTC-GTATGTCTGTCTGTCTGTCTGTCTATCTATCGATC-ATCTATATATCC-TC-ATCTATCTATCAGCCCTACCTCTT-ATTTA   3356
+                     || |||||||||||||| || ||||||||||||||||||||| |||||| ||| |||||| ||||  || |||||||||||  || ||||| || |||||
+Reference       5164 ACTGTACCCAGCCTGTCTGTCTGTCTGTCTGTCTGTCTGTCTGTCTATCTATCTATCTATCTATCTATCTATCTATCTATCCACC-TACCTATTTATTTA   5262
+
+18              3357 GAGATGAGGTCT-GCTATATTGCCAGGATTCAT-TCTAAATC-TGGGCTCACGCA-TCTCTCCAACTCACACCTCAGCATGCTGAGTAACTGGACACTAC   3452
+                     |||||||||||| |||||||||||  | ||||| ||||| || |||||||| ||| ||  |||||||||||||||||| | ||||||||||| |||||||
+Reference       5263 GAGATGAGGTCTTGCTATATTGCCCAGGTTCATCTCTAACTCCTGGGCTCAAGCAATCCTTCCAACTCACACCTCAGCCTCCTGAGTAACTG-ACACTAC   5361
+
+18              3453 -GGTGCATGCCACCACAACTGGCTAATTTAGAAAAAATTAATATTTTAGAGATGAGGATCTTGCTATGGATGCCCAGGCTGGTATCAAACGACTGGC-TC   3550
+                      ||||||||||||||||||||| ||||||||||||||||| | ||||||||||||||||||||||||| |||||||||| ||| ||||||  ||||| ||
+Reference       5362 AGGTGCATGCCACCACAACTGGATAATTTAGAAAAAATTACT-TTTTAGAGATGAGGATCTTGCTATG-ATGCCCAGGCGGGTCTCAAACTCCTGGCCTC   5459
+
+18              3551 AAGTGATCTTCCCTCCTCA-CCTCACCAATAGCTGGGGATGACAGGTTGTCTT-ATTTTTCAAA-CCCCGGAAGCACCACCAA-TGGAGCTTT-GGCCCT   3645
+                     ||||||||||||||||||| |||| | | |||||||| || |||||||||||| |||||||||| |||||||||| ||||||| ||||||||| ||||||
+Reference       5460 AAGTGATCTTCCCTCCTCAACCTCCCAAGTAGCTGGG-ATTACAGGTTGTCTTTATTTTTCAAAACCCCGGAAGCCCCACCAAATGGAGCTTTTGGCCCT   5558
+
+18              3646 TTTCTC---GGTCCCTCCTCCCCG-ACAATGANNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNCATTGTGCTGGGAGGAGGGACGGGG   3741
+                     ||||||   ||||||||||||| | || ||||                                                                    
+Reference       5559 TTTCTCCCAGGTCCCTCCTCCCAGCACCATGAC-------------------------------------------------------------------   5591
+
+18              3742 AGAAAAGGCAAAAGTCATTTGGTGGGGCTTCGGGTTTTGAAAAATAAAGACAACTGTAATCCCAGTACTTGGGAGGTGAGGAGGGAAGATCACTTGGAGA   3841
+                                   |||             ||    ||||| |                    | ||||                  |||        ||
+Reference       5592 --------------TCA-------------CG----TTGAAGAT-------------------ATTACT------------------GAT--------GA   5615
+
+18              3842 CCAGGAGGTTTGAGAACAGGCTGGGAACATCGCAAGTCCTATCTCTAAAAAGTAATTTTTTCTAAATATCAGTGTGGTGGCAATGCACCTGTAGTGTAGT   3941
+                     |||                                 ||||                             ||| |||                        
+Reference       5616 CCA---------------------------------TCCT-----------------------------CAGGGTG------------------------   5629
+
+18              3942 ATCCGGAGGCTGATGGGTGAGTGGAAGGATTGCTGAGCCCGGCAGTTAGAGATGAACTGGGCAATATAGCAAGACCTCATCTCTAAATAAATGATAGGTG   4041
+                       ||  | ||||                                                                ||| |||                 
+Reference       5630 --CCTAAAGCTG----------------------------------------------------------------TCACCTC-----------------   5646
+
+18              4042 GATAGATAGAATCGATAGATAGATATATAGATAGATAGATAGGATGACAGGGCCAGCAGAAACATACAGACAGGCTGGGTACAG--GGCCTCCCCCTGTA   4139
+                                                                          || ||| | |||    ||   ||| |   ||  | ||| ||||   |
+Reference       5647 -----------------------------------------------------CACCAGCACCATCACCACCAACTGCGCCAAGTTGACCTTCCCC---A   5690
+
+18              4140 ATCCAGCACTTGGAGGCAAAGGAGGGCAGATCAACCTGAGGTCAGGAGTTCAGACAGGCCTGGTACCATGGGGAAACTCATCTATACTAAAAATACAAAA   4239
+                     |  ||||||  |                       ||||| |||| |   | ||||       || ||                                
+Reference       5691 AGACAGCACCCG-----------------------CTGAGATCAGCA---CCGACA-------TAGCA--------------------------------   5725
+
+18              4240 TTTAGTGCCGCATGGTGAAGGTGCCTGTAATCCAGGTACTCAGGAGGCTGAGGGCAAGAGAGAATCGCTTGACCCGTAGGTGGAGTTGCAGTGAACTGAG   4339
+                             | |||||||     ||| |    ||   ||||   | || ||||   ||| ||||                                     
+Reference       5726 --------CTCATGGTG-----GCCAG----CCGAATACT---GGGGGTGAG---AAG-GAGA-------------------------------------   5764
+
+18              4340 ATCGCGCCATTGCACGCAAGCCTGGGGGACAAGATGCAAGGACTTCATCTCCAGAAAAAAAAAAAAGAAAAAGAAAGAAAGATTGATTGATAGATCGATA   4439
+                          ||||      | | | |||       ||| | ||||| | | ||||                          |   ||| ||| ||  ||  || 
+Reference       5765 -----GCCA------GGATGACTG-------AGAAGGAAGGA-TGCCTCTC--------------------------ACTCATTCATTCATTCATTCATT   5819
+
+18              4440 CCCAATGAGGTTACAAAAGCTGTGTCCTCTGTGCAAATGGTTAAACAACAAACAGTGCTTTAAGACTACAGTATAATCGTAGGATGTGCTATCAGATGTC   4539
+                     |  | | |    |||||  ||||      || |||  |                 | ||||                       ||||  |  ||| | |
+Reference       5820 C--ATTCA----ACAAACACTGT------TGGGCACCT-----------------TACTTTC----------------------TGTGGAAATAGAAGAC   5868
+
+18              4540 ATTAGGTTGTAAATAGTAATTAATTCTCAGAGCCCACCAGCATGGGTCCAGCAAGTTGTACAGCCAGAATCTTCTTTCAGTCAGTGCGTGTCGTTAACAG   4639
+                     |  || ||                |||     ||||||    ||||  | | | | ||      |||| |               | ||| |        
+Reference       5869 A--AGATT----------------TCTA----CCCACC----TGGGCGCTG-ATGCTG------CAGAGTG--------------GAGTGAC--------   5913
+
+18              4640 CACATGTCCTCTCATTGGGAGAGCCTGTCGAAAGTCTAAGTTTCGCCGGGCAGCTGTGAAGGTAAGGCCAACAAATTGGACTATCCGCAGCTCATATGCC   4739
+                       ||| || ||||                                        | || |||||  ||||              || |||           
+Reference       5914 --CATCTCTTCTC----------------------------------------CCGTTAAGGT--GGCC--------------TCTGCA-----------   5944
+
+18              4740 GTAACCGCGACCCTGAGTGAGGACTAGCAACCTCCCATCTCATAGGTGAGAAAGCTGAGATGAGGAGGGAAGGGACTGCCAGATCACATAGCAAGATAGT   4839
+                               |||||||                 |||| |                                || ||| ||||| || || |        
+Reference       5945 ----------CCCTGAG-----------------CCATGT--------------------------------GGTCTGGCAGATGACTTAAC--------   5977
+
+18              4840 GGCAGAACCCAGCGAGAACCCAACAGTTCAGCCTGGATTAGAAGAAAGATGCACTGATGGAGTCAAAGGATGGGTGTGCATCCCAGTCTGCCATAATCCC   4939
+                                                                        ||||                   ||||| ||  |||  ||| | |||  
+Reference       5978 ---------------------------------------------------CACTC------------------TGTGCCTC--AGT--GCCTTCATC--   6002
+
+18              4940 TGTGTGACTCTGGGCAATGTACCTCTCAGCGCTTTAGTTCTTGTCTGTAATATGAGGGAGCAGTATTACAAATCAGGGTTTTGTAGGGAGTAATGAAATA   5039
+                       | |||     |||| ||  |  | ||           ||  ||||     |||||| |           ||| ||||                     
+Reference       6003 --TATGA-----GGCATTGATCTACACACA---------CTCATCTGAC---TGAGGGTG-----------ATCGGGGT---------------------   6051
+
+18              5040 TTAATCAATTGAATGAGCACGTTTTACAAAAAACAAGCATGAAGCCCCTTACTGTGCCTCAGATCCAAAGGATTTGGATTACTCTGAGAAAGAAAGGGAG   5139
+                               || ||  |                                      ||||||       |||| || || |||            |||| 
+Reference       6052 ----------GACTGTTC--------------------------------------CCTCAGG------GGATCTG-ATAACT------------GGGA-   6083
+
+18              5140 AGAACGAGGGAGGTGTTGGGCAGAGGAGAGCTTAGATCTGGACTTATGTGTAAGATACTCTGGCTTCTGGGTTCAGAAAGGACGAGGGGCAGAGAGAAAG   5239
+                                  |  ||  |||       |||         ||| | ||         ||| | ||    ||| ||  |  | |               
+Reference       6084 -------------TTCTGCCCAGT------CTT---------CTTTTCTG---------CTGCCATCA---TTCGGAT-GCTCAA---------------   6127
+
+18              5240 CCAGGTGGAGCCAGAGCGCAGTGATGGATGCCACATCCCCGATAGACTAGGACAATAGCTGTGAGAGTGGTGGGAAGTGATTGGATCTGGAAGATATTTT   5339
+                                ||||| ||| |           | |||||   || |  |  ||                                              
+Reference       6128 -----------CAGAGGGCACT-----------CTTCCCCCGCAGGCCTGCCCA----------------------------------------------   6159
+
+18              5340 CATGCAGAATTGACAGAATTGCTAGATATGACTGCAAGGGGGTGGGAGAGGGGCAAGAGACTTCAAGGTTGCTCATCTGGAACAATCCTTCAGCAGCTGA   5439
+                     ||| |||                     | ||  ||                                 | |||||||||  | |   | |     ||  
+Reference       6160 CATCCAG---------------------TCACCCCA---------------------------------TCCTCATCTGGGGCCACTGTCC-----CTTC   6200
+
+18              5440 TGTGCCATTTCTTCGAG-CTGGGGAAA-ACATTGGGTGGGAGAGATCTGGAGGGAAAACCCAGAGTTCAGGTCGAACGGTGGTAGACGTTGGTAAGGTGG   5537
+                     | | ||   ||| || | | | ||||| | | ||| |  | || ||| |||    || ||| |  | |||  | | |  ||  |             |||
+Reference       6201 TCTCCC---TCTCCGTGGCAGTGGAAAGAAACTGGATTTG-GA-ATCAGGAC---AAGCCCGGCTTCCAGTCCCAGCCTTGCCAC------------TGG   6280
+
+18              5538 GGGGGTAGGATGGTATGAAACATCCAGTGGCGACCACGAATGGAGATGTACCAGTCTGAAGATTAGTGAAAAGGTTAGGGCTAGGGATATAAATTTGGGA   5637
+                      | ||        |||    ||||          |||  | |   || |  |  |||| | ||||   | || | |            || ||      |
+Reference       6281 AGTGGC-------TATTT--CATCT---------CACTGA-GCCTATTTCTCCTTCTGCAAATTA---AGAATGATG-----------ATCAA------A   6341
+
+18              5638 GGTGTGACAATACAGAGGGTGTTTTAAAGCCAGAGACCAAGGAGATCCTCAGGAGGTGAGGAAAGAGGATGGGAAGAAAGTATGAGGATGAGTCCTAGAC   5737
+                      || |  ||          ||||                 || | ||||               | ||||| ||||       ||| ||   |||||   
+Reference       6342 CGTATCCCA----------TGTT-----------------GGTG-TCCT---------------GGGGATGTGAAG-------GAGTATTCTTCCTAT--   6389
+
+18              5738 ACCCTGATTGCAGAGGCGGGACATGTGTAATGAGCCAGCAAATCTGGGGAGACAGAAGTGTGCTGGAGAGGCAGGGGAAGCCAGGAGAGCGTGAGGTCCG   5837
+                                     |||    |||||   |   || |||  ||||  | | ||||                       |||             ||| 
+Reference       6390 ----------------CGG----TGTGTCTAG---CACCAAGACTGGC-ACAAAGAA-----------------------CCAAC-----------TCCT   6431
+
+18              5838 GGAAGGCAAGGAAAAGAGAGGGCCCCAGGGGGGCTAAGGCTTCGGAGAGGTCAAGCGGAGAGGGCTGGGAAAGTAGGCCTTTGATTGACAAGGAGACCCT   5937
+                     |          |||||| |              |||                                        |||||  ||| |||     ||   
+Reference       6432 G----------AAAAGACA--------------CTA----------------------------------------GCCTT--ATTAACACTATTAC---   6462
+
+18              5938 TGGAATGCATGGTGGTAGAGGAGGATGAGCAAGCCTGGCTTGATGAATCAAGAGCAGGAGATGAGGAAAGTGTAGACCGCATGCAGGGGCACAGCCCTGC   6037
+                       || | | |  |      |    ||||||| ||                    ||||||  ||| ||| | |                           
+Reference       6463 --GATTCCTTCCTTCCCTTGACCAATGAGCATGCT-------------------CAGGAG--GAGAAAATTAT---------------------------   6512
+
+18              6038 CACGGACTTTGCTCTTAAAGGGGAACAGAGAAATGGAGGGAGAAGCCAGGAGGGCAATAATCCGAAGTAGAGGAAAAAATCTGATGATACAGAAGAGAGA   6137
+                            |||| |||| ||||                                                          ||| ||||| || || | | |
+Reference       6513 -------TTTGGTCTTGAAGGT---------------------------------------------------------TCTTATGATCCAAAAAAAAAA   6548
+
+18              6138 TGAAACTGCAAGAGTACACGCCTTGCGTGGAAAGCAGGAGTGGGATTGAGCACTGATACCTTTTAGCGATGCAGGGACAGTTCACTTTTAAAATTATTAT   6237
+                       ||| ||                                                ||| | | | | |      |||||   ||               
+Reference       6549 --AAAATG------------------------------------------------TACTTATGATCTA------GACAGGCTAC---------------   6577
+
+18              6238 TATTATACAACATTTTCTTAAAAAATTATTGCACAAGCATACATTTTCCCATTAGAGATTAACAGTGTGCGAAAAATAAAAATTGATTACTTATAGTTAT   6337
+                         ||||| |||                      ||| |                              |  || ||| |||  ||  ||    || ||
+Reference       6578 ----ATACACCATG---------------------AGCCT------------------------------GTCAACTAAGAAT--AT--CT----GTGAT   6614
+
+18              6338 ATTTGGAAGATGGTTTTAGAATCTAAGTAGGGAAGTACATTTGAGAATTAAAATCGAATGTTTACAATGGGTAATTTTTGATACGCTATGGGGAACTTGC   6437
+                     ||     | | || |          ||| |||   | |||| ||  |  | |                |||| ||         |||    |||      
+Reference       6615 ATC----ACAAGGCT----------AGTGGGG---TTCATTGGA--AGGAGA----------------GGGTGAT---------GCTGACTGGA------   6664
+
+18              6438 CCTTAAAGGAACCCTTCGTATTTCTGAAGGACCTCCAAGCGGTCTTCCTAGGATTTAGAAAGTTATAATATGAGATTTATGCAGCATTCCAATTTAAATT   6537
+                      ||||                   | | |||         || |||||| |     || ||||  || |  ||| |  |     || ||||         
+Reference       6665 -CTTA-------------------TCAGGGA---------GGACTTCCTGG-----AGGAAGTGGTACT--GAGCTGGA-----CAATCCA---------   6714
+
+18              6538 TCCTAGTCTATGGAACCATCGGTTAAGGTGGTATCTACGATAGAGAGGGAAGTTTTGAAATAAACACTGTCTAAATTTCTGCAAAGTTTGTATTCATGAA   6637
+                               ||||  ||||                                            || | ||       |||   || |||   || ||| 
+Reference       6715 ----------TGGA--CATC--------------------------------------------CAGTCTCCC-----CTGAGCAGCTTGC--TC-TGAG   6750
+
+18              6638 TTACGGGATTTCCCTTAGTCCAGTATTCCAAGGCAAATGATGGAAGTGGCTTAATAGTGCTATCATACTAAAGCTGGATTCTCTTAAGAGATTGAGAAAA   6737
+                       ||      |||||    ||     ||            ||| |||    ||||  ||  || || ||| | |                          
+Reference       6751 --AC------TCCCTCCTCCC-----TC------------TGGGAGT----TAATGATG--ATGATGCTACAACC-------------------------   6794
+
+18              6738 TTAAAGCAAAAGCTGATTATATAAGTTTAGGATACTGTGTTATGTATTTATATATGTATAAGGGGACCCTATCTGAAACCCCATATCCCGACACAGAACT   6837
+                       | ||||| || |||| |||                    ||| ||||||     |||||| | |   | | | ||||                     
+Reference       6795 --ACAGCAACAG-TGATGATA--------------------ATG-ATTTAT-----TATAAGAGCAT--TTTGTAAAAC---------------------   6842
+
+18              6838 CAGTCTCACATAAATATAATTCCTCTCAAACCTTCCTCAAAAGGAAATTCTGAAACAATATTGTGATTAAGAGAAGAAGGCTGT-CACAATGTTTTTGTT   6936
+                      || ||   |  |  || |  |||||      ||          ||||| |  |||  |||               |||||||  | || ||  |     
+Reference       6843 -AGGCTTGTAACAGCATCA--CCTCTT-----TT----------AAATTTT--AACCCTAT---------------AAGGCTGGGCGCAGTGGCT-----   6902
+
+18              6937 CGACTTATCTGTATATTTCTTCCTTATTGTGAGCTGAGTATGGCATGACAAAGCAGGGCAAAGAGGCATCATCAATTCTTCAAAGTGGAAGAGACAACAA   7036
+                        | |  |||||     || ||        |||  | | ||| | | ||| |||||       ||    |||| ||             ||| |  || 
+Reference       6903 ---CATGCCTGTA-----CTCCC--------AGC--ACTTTGGGAGGCCAAGGCAGGT------GG----ATCACTT-------------GAGGC--CAG   6959
+
+18              7037 GGTCAGAGTCCACAGAATGGCAACAGCTTTGCAGATGCCCACATCGTGAGAGTTGAAAATAGCAAGCCAGCAAGGTTAAAGCGAAAA   7123
+                     ||     || || ||| ||||                                         |  |||| || |||      |||| 
+Reference       6960 GG-----GTTCA-AGAGTGGC-----------------------------------------CTGGCCAACATGGT------GAAAC   6993
+
+
+#---------------------------------------
+#---------------------------------------
