@@ -31,7 +31,8 @@ output:
 
 ```{r global_setup, include=FALSE}
 name.yaml <- 'adjust_batch.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'sva', 'limma', 'RoCA', 'awsomics'); 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'sva', 'limma', 
+                   'RoCA', 'awsomics'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
 ## Default knitr parameters
@@ -57,6 +58,10 @@ prms <- yml$parameter;
 f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
 
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
@@ -112,13 +117,12 @@ A total of `r nrow(smp)` samples and `r ncol(smp)` sample features was provided 
   - Sample feature with potential batch effect: ***`r v1`***
   - All other known sample feature(s): ***`r paste(setdiff(colnames(smp), c(v0, v1)), collapse='; ')`*** 
 
-<div style="color:darkblue; padding:0 2cm">
-**Table 1** All sample features provided by the input data, which could include 1 or many variables of interest and 0 or 1 confounding variable known to be responsible for the batch effect in data. (**Sample_feature:** all sample features given in the input data; **Num_level:** number of unique values of each sample feature; **Variable_of_interest:** whether this sample feature is a variable of interest in this project; and **Batch_effect** whether this sample feature is a known source of batch effect)
+<div style="color:darkblue">
+`r OrderTable()` All sample features provided by the input data, which could include 1 or many variables of interest and 0 or 1 confounding variable known to be responsible for the batch effect in data. (**Sample_feature:** all sample features given in the input data; **Num_level:** number of unique values of each sample feature; **Variable_of_interest:** whether this sample feature is a variable of interest in this project; and **Batch_effect** whether this sample feature is a known source of batch effect)
 </div>
 
-<div align='center', style="padding:0 2cm">
-`r kable(tbl, row.names=FALSE, align=rep('c', ncol(tbl)))`
-</div>
+`r kable(tbl, row.names=FALSE, align=rep('c', ncol(tbl))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 `r home.url`
 
@@ -150,17 +154,15 @@ fn1<-paste(path, 'sample-sv.html', sep='/');
 
 The _sva()_ function was used to identify `r yml$parameter$n.sv` surrogate variables from the original data matrix. Each surrogate variable is responsible for part of the overall data variation, and may or may not be related to known sample features, such as any variables of interest or experiment batch. Since each sample was assigned a value of each surrogate variable by the _sva_ function, these values were used to evaluate the association between surrogate variables and sample features using ANOVA for categoral variables or Pearson's correlation for numeric variables.
 
-<div style="color:darkblue; padding:0 2cm">
-**Table 2** ANOVA p value for the association between surrogate variables and sample features. 
+<div style="color:darkblue">
+`r OrderTable()` ANOVA p value for the association between surrogate variables and sample features. 
 </div>
 
-<div align='center', style="padding:0 1cm">
-`r kable(t(FormatNumeric(p, 3)), align=rep('c', nrow(p)))`
-</div>
+`r kable(t(FormatNumeric(p, 3)), align=rep('c', nrow(p))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 The _f.pvalue()_ function was used to run ANOVA tests using the variable(s) of interest and original data matrix, so each gene got an ANOVA p value. The test was then run again after adjusting the data matrix for surrogate variables that were not significantly associated with the surrogate variables (p < `r yml$parameter$anova`). The goal is to evaluate if the global statistical power was improved after the confounding effect of surrogate variables was removed.
 
-<div align='center'>
 ```{r p_value_surrogate, fig.width=6, fig.height=6, out.width='640px'}
 sv0<-lapply(v0, function(v) rownames(p)[p[, v]<=yml$parameter$anova])
 sv0<-sort(unique(unlist(sv0, use.names=FALSE)));
@@ -183,10 +185,9 @@ abline(0, 1, col='darkblue', lty=2);
 out<-list(model=list(null=mod.nll, full=mod.int), surrogate=sv, anova=p, statistics=stat);
 saveRDS(out, file=paste(path.r, 'surrogate_variable.rds', sep='/')); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 1.** Comparison of the ANOVA p values obtained using the original data matrix and the matrix adjusted by surrogate variables not significantly associated with any variable(s) of interest. 
+<div style="color:darkblue">
+`r OrderFigure()` Comparison of the ANOVA p values obtained using the original data matrix and the matrix adjusted by surrogate variables not significantly associated with any variable(s) of interest. 
 </div>
 
 `r home.url`
@@ -244,7 +245,6 @@ out$adjusted<-adj;
 saveRDS(out, file=paste(path.r, 'surrogate_variable.rds', sep='/')); 
 ```
 
-<div align='center'> 
 ```{r p_value_adj, fig.width=6, fig.height=6, out.width='640px'}
 x<--1*log10(stat[, c(1, 5)]); 
 x[x==Inf]<-1+max(x[x<Inf]); 
@@ -257,10 +257,9 @@ l<-'the y-axis p values were based on the data adjusted by';
 if (length(v1)>0) l<- paste(l, 'the known batch effect variable using the _ComBat_ (categoral) or _limma_ (numeric) method.') else
   l<-paste(l, 'surrogate variables not siginicantly associated to variable(s) of interest using the _limma_ method.')
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 2.** Same plot as **Figure 1**, except that `r l`
+<div style="color:darkblue">
+`r OrderFigure()` Same plot as **Figure 1**, except that `r l`
 </div>
 
 `r home.url`
@@ -305,16 +304,14 @@ saveRDS(adj, paste(path.r, 'adjusted_all_variables.rds', sep='/'));
 saveRDS(ps, paste(path.r, 'adjusted_all_variables_pvalue.rds', sep='/')); 
 ```
 
-<div align='center'>
 ```{r all_variable_top_ratio, fig.width=1+0.25*ncol(cnt0), fig.height=1.5+0.25*nrow(cnt0), out.width='480px'}
 cnt0[cnt0==0]<-NA;
 c<-log10(cnt0);
 PlotColoredBlock(c, min=floor(min(c, na.rm=TRUE)-1), max=ceiling(max(c, na.rm=TRUE)+1), num.breaks = 127); 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 3.** After adjusting the original data for each of the sample features or surrogate variables, ANOVA p values were calculated again for each gene. The numbers of significant genes obtaining from each adjusted data matrix were compared to the numbers of genes obtained from the original matrix. The color in this plot represents relative frequency of genes (red = more). Clcik [here](table/gene_count_adjusted.html) to view table of gene counts.
+<div style="color:darkblue">
+`r OrderFigure()` After adjusting the original data for each of the sample features or surrogate variables, ANOVA p values were calculated again for each gene. The numbers of significant genes obtaining from each adjusted data matrix were compared to the numbers of genes obtained from the original matrix. The color in this plot represents relative frequency of genes (red = more). Clcik [here](table/gene_count_adjusted.html) to view table of gene counts.
 </div>
 
 `r home.url`
