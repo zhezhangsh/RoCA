@@ -21,7 +21,7 @@ output:
 
 ```{r global_setup, include=FALSE}
 name.yaml <- 'summarize_star.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'pander'); 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'pander'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
 ## Default knitr parameters
@@ -48,11 +48,13 @@ f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
 
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
 home.url <- Link2Home(yml$home);
-
-OrderFigure(reset=TRUE);
 ```
 
 `r home.url`
@@ -164,16 +166,16 @@ smm<-apply(stat, 2, summary);
 nms<-rownames(stat); 
 ```
 
-<div style="color:darkblue; padding:0 2cm">
-**Table 1.** Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. 
+<div style="color:darkblue">
+`r OrderTable()` Summary of the summary statistics of all libraries, including the total number of sequence reads, percent of uniquely mapped reads, etc. 
 </div>
 
-<div style="padding:0 2cm">
-`r kable(t(smm))`
-</div>
+`r kable(t(smm)) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 > [Summary statistics of individual libraries](table/percent_mapped.html).
 
+<p />
 
 ## Alignment rate
 
