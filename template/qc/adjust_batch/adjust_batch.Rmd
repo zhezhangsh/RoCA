@@ -219,7 +219,6 @@ if (length(v1)==0) {
 }
 ```
 
-`r home.url`
 
 ```{r remove_batch, include=FALSE}
 if (length(v1)>0) {

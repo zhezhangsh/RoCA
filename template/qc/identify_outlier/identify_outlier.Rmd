@@ -28,7 +28,7 @@ This procedure requires the following inputs:
 
 ```{r global_setup, include=FALSE}
 name.yaml <- 'identify_outlier.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'RoCA', 'awsomics', 'DEGandMore'); 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'RoCA', 'awsomics', 'DEGandMore'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # 
 
 ## Default knitr parameters
@@ -54,6 +54,10 @@ prms <- yml$parameter;
 f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
 
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
@@ -193,7 +197,6 @@ The following steps were applied to identify outlier samples:
 
 As a result, **_`r nrow(outliers)`_** outliers were identified: **_`r paste(unique(outliers$Sample), collapse=', ')`_**. Click [here](stat_table.html) to view full result table.
 
-<div align='center'>
 ```{r plot_nsd_mean, include=TRUE, fig.wid=8, fig.height=6, out.width='640px'}
 par(mar=c(5,5,2,2)); 
 col <- rep('#0000FF88', nrow(smm)); 
@@ -205,10 +208,9 @@ points(smm$Mean, smm$NSD, cex=.2);
 legend('topleft', pch=19, col=c('#0000FF88', '#FF000088', '#FFBBBB88'), bty='n',
        legend=c('Non-outlier', 'Outlier (group)', 'Outlier (global)'))
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 1** Each dot represents a sample. The x-axis is the average correlation correlation between each sample and other samples of the same group (larger groups) or the whole data set (smaller groups). The y-axis is the number of standard deviations of each sample away from the averages of the other samples. Red indicates ouliter samples (in larger groups) identified as outliers by comparing them to all the other samples in the same group. Pink indicates outlier samples (in smaller groups) identified as outliers by comparing them to the other samples in the whole data set. The within gorup comparison generally provides stronger evidence of determing outliers. On the other hand, depending on how the samples are grouped in the data set, the evidence supporting global outliers varies, and should be evaluated further before determining they are indeed outliers. The remaining analyses of this report will only be applied to outliers identified by within group comparison.  
+<div style="color:darkblue">
+`r OrderFigure()` Each dot represents a sample. The x-axis is the average correlation correlation between each sample and other samples of the same group (larger groups) or the whole data set (smaller groups). The y-axis is the number of standard deviations of each sample away from the averages of the other samples. Red indicates ouliter samples (in larger groups) identified as outliers by comparing them to all the other samples in the same group. Pink indicates outlier samples (in smaller groups) identified as outliers by comparing them to the other samples in the whole data set. The within gorup comparison generally provides stronger evidence of determing outliers. On the other hand, depending on how the samples are grouped in the data set, the evidence supporting global outliers varies, and should be evaluated further before determining they are indeed outliers. The remaining analyses of this report will only be applied to outliers identified by within group comparison.  
 </div>
 
 `r home.url`
@@ -265,7 +267,6 @@ Each outlier was compared to the average of non-outlier samples in the same grou
 
 `r lns`
 
-<div align='center'>
 ```{r cluster_outlier, include=TRUE, fig.width=8, fig.height=c(1,6)[as.integer(nrow(outliers)>=3)+1], out.width='640px'}
 if (nrow(outliers) < 3) { 
   if (nrow(outliers) == 0) lns<-'No outliers found' else lns<-'No enough outliers for clustering analysis'; 
@@ -288,10 +289,9 @@ if (nrow(outliers) < 3) {
   }
 }
 ```
-</div>
 
-<div style="color:darkblue; padding:0 2cm">
-**Figure 2** Clustering of outliers based on their difference with the non-outliers in the same group. If multiple outliers have similar global pattern of changes relative to their non-outliers, these outliers could be the consequence of the same systematic bias. With the cutoff of correlation coefficient equal to `r prms$cut.corr`, the following outliers are clustered together: 
+<div style="color:darkblue">
+`r OrderFigure()` Clustering of outliers based on their difference with the non-outliers in the same group. If multiple outliers have similar global pattern of changes relative to their non-outliers, these outliers could be the consequence of the same systematic bias. With the cutoff of correlation coefficient equal to `r prms$cut.corr`, the following outliers are clustered together: 
 
 `r lns`
 </div>
@@ -356,13 +356,14 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
 } 
 ```
 
-<div style="color:darkblue; padding:0 2cm">
-**Table 1.** The numbers of top genes selected from each outlier.
+<div style="color:darkblue">
+`r OrderTable()` The numbers of top genes selected from each outlier.
 </div>
 
-<div align='center', style="padding:0 2cm"> 
-`r lns`
-</div>
+`r lns %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+
+<p />
 
 ### Gene set enrichment analysis
 
@@ -406,21 +407,23 @@ if (nrow(outliers) == 0) ln.hi<-ln.lo<-'No outliers found' else {
 
 Enrichment of each gene set in top genes was tested by Hypergeometric test. 
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 2A.** The number of gene sets significantly enriched in top increasing genes of each outlier.
+<div style="color:darkblue">
+`r OrderTable()` The number of gene sets significantly enriched in top increasing genes of each outlier.
 </div>
 
-<div align='center', style="padding:0 1cm"> 
-`r ln.hi`
+`r ln.hi %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+
+<p />
+
+<div style="color:darkblue">
+`r OrderTable()` The number of gene sets significantly enriched in top decreasing genes of each outlier.
 </div>
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 2B.** The number of gene sets significantly enriched in top decreasing genes of each outlier.
-</div>
+`r ln.lo %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
-<div align='center', style="padding:0 1cm"> 
-`r ln.lo`
-</div>
+<p />
 
 `r home.url`
 
