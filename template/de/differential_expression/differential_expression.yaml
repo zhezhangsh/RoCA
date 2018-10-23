@@ -19,9 +19,9 @@
 ##### REQUIRED #####
 ####################
 # Required fields for generating any report using the RoCA::CreateReport() function
-#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/pairwise_comparison/differential_expression.Rmd
-template: differential_expression.Rmd
-output: examples/rnaseq                                                             # Where to write all the output files
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/differential_expression/differential_expression.Rmd
+#template: differential_expression.Rmd
+output: examples/rnaseq                                                                      # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                  # Name of the analyst
 zip: no                                                                             # Whether to zip all output files
@@ -52,10 +52,11 @@ input:
 parameter: # All parameters
   genome: human               # Name of the reference genome, in the form of "human", "hsa", or "hg38".
   entrez: 0                   # Column in the gene annotation table with Entrez gene ID. -1: not availabel; 0: row names; 1-n: column index
-  count: yes                   # Whether gene expression matrix is RNA-seq read counts or similar data type; if TRUE, matrix will be normalized using DESeq2 method 
+  count: yes                  # Whether gene expression matrix is RNA-seq read counts or similar data type; if TRUE, matrix will be normalized using DESeq2 method 
+  normalization: NormDESeq    # If known normalization method, normalize the data matrix before DE analysis
+  log: yes
   deg:                        # Options of selecting differentially expressed genes 
-    method: DeDeSeq             ## Statistical tests, use one of the returned values of DeMethods()
+    method: DeLimma             ## Statistical tests, use one of the returned values of DeMethods()
     paired: no                  ## Whether it's a paired comparison, if TRUE, the two sample ID vectors must have matched orders
     rank: both                  ## The method to pre-rank genes for GSEA ('p' = by p value only; 'fc' = by fold change only; 'both' = by combination of p value and fold change)
     num.top: 100                 ## Number of top ranked DEGs to be selected from both directions
-    

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2018-10-15" />
+
+<title>Summary of FLASH2 outputs</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Summary of FLASH2 outputs</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2018-10-15</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong> This analysis compares a set of paired end <strong>FASTQ</strong> files processed by the <strong><a href="https://github.com/dstreett/FLASH2">FLASH2</a></strong> program, which combines pairs of overlapping reads to generate longer, single-end reads. <strong>Flash2</strong> processes read pairs based on the following 3 scenarios:</p>
+<ul>
+<li>Non-overlapping. When the DNA fragments are longer than 2 times of the read length, the paired reads have no overlapping. Therefore, the paired reads will be written separately into 2 fastq files, just like the way they were saved in the original pair of fastq files.</li>
+<li>Innie merging. When the DNA fragments are longer than the read length, but shorter than 2 times of the read length, the paired reads are partially overlapped. The paired reads are merged into a longer read and saved to a different fastq file as a single-ended read. The new read includes the full sequences of both reads, with more or less overlapping in th middle. If the reads disagree on the overlapping sequence, the base call with higher quality score will be used.</li>
+<li>Outie merging. When the DNA fragments are short than the read length, the paired reads both sequenced the fragment and overlap to each other at the beginning of both reads. The overlapping part will be saved as a short, single-ended read in the same fastq file of the innie merging reads. The non-overlapping parts of the reads, including all or part of the adaptors, will be discarded. The disagreement within the overlapping sequence will also be determined by base call quality.</li>
+</ul>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>PRO-seq project</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.2</span> Analysis</h2>
+<p>FASTQ files of 16 PRO-seq libraries</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">2</span> Results</h1>
+<div id="summary-of-read-count" class="section level2">
+<h2><span class="header-section-number">2.1</span> Summary of read count</h2>
+<p>Total number of reads in different categories according to <strong>FLASH2</strong>.</p>
+<blockquote>
+<p>Click <a href="table/summary_count.html">here</a> to view summary table.</p>
+</blockquote>
+<div style="color:darkblue">
+<p><strong>Table 1.</strong> Percentages of read pairs in each <strong>FLASH2</strong> category. “<em>Combined</em>” equals to the sum of <strong><em>Innie</em></strong> and <strong><em>Outie</em></strong>.</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Total
+</th>
+<th style="text-align:right;">
+Discarded(%)
+</th>
+<th style="text-align:right;">
+Combined(%)
+</th>
+<th style="text-align:right;">
+Innie(%)
+</th>
+<th style="text-align:right;">
+Outie(%)
+</th>
+<th style="text-align:right;">
+Uncombined(%)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1501
+</td>
+<td style="text-align:right;">
+251532955
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+86.8824
+</td>
+<td style="text-align:right;">
+14.9425
+</td>
+<td style="text-align:right;">
+71.9399
+</td>
+<td style="text-align:right;">
+13.1176
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1502
+</td>
+<td style="text-align:right;">
+265217274
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+84.0776
+</td>
+<td style="text-align:right;">
+14.6011
+</td>
+<td style="text-align:right;">
+69.4764
+</td>
+<td style="text-align:right;">
+15.9224
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1662
+</td>
+<td style="text-align:right;">
+250176872
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+83.7626
+</td>
+<td style="text-align:right;">
+15.3823
+</td>
+<td style="text-align:right;">
+68.3803
+</td>
+<td style="text-align:right;">
+16.2374
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1663
+</td>
+<td style="text-align:right;">
+339852023
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+76.2419
+</td>
+<td style="text-align:right;">
+12.8144
+</td>
+<td style="text-align:right;">
+63.4275
+</td>
+<td style="text-align:right;">
+23.7581
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1664
+</td>
+<td style="text-align:right;">
+163419734
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+<td style="text-align:right;">
+83.0023
+</td>
+<td style="text-align:right;">
+9.1835
+</td>
+<td style="text-align:right;">
+73.8188
+</td>
+<td style="text-align:right;">
+16.9942
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1665
+</td>
+<td style="text-align:right;">
+168854587
+</td>
+<td style="text-align:right;">
+0.0036
+</td>
+<td style="text-align:right;">
+83.1048
+</td>
+<td style="text-align:right;">
+9.6775
+</td>
+<td style="text-align:right;">
+73.4273
+</td>
+<td style="text-align:right;">
+16.8916
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1666
+</td>
+<td style="text-align:right;">
+122163247
+</td>
+<td style="text-align:right;">
+0.0036
+</td>
+<td style="text-align:right;">
+83.6945
+</td>
+<td style="text-align:right;">
+11.2540
+</td>
+<td style="text-align:right;">
+72.4404
+</td>
+<td style="text-align:right;">
+16.3019
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1667
+</td>
+<td style="text-align:right;">
+121758864
+</td>
+<td style="text-align:right;">
+0.0035
+</td>
+<td style="text-align:right;">
+84.2893
+</td>
+<td style="text-align:right;">
+8.4905
+</td>
+<td style="text-align:right;">
+75.7988
+</td>
+<td style="text-align:right;">
+15.7072
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1696
+</td>
+<td style="text-align:right;">
+131335736
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+82.5836
+</td>
+<td style="text-align:right;">
+20.1907
+</td>
+<td style="text-align:right;">
+62.3929
+</td>
+<td style="text-align:right;">
+17.4164
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1697
+</td>
+<td style="text-align:right;">
+97979783
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+81.4929
+</td>
+<td style="text-align:right;">
+11.6126
+</td>
+<td style="text-align:right;">
+69.8803
+</td>
+<td style="text-align:right;">
+18.5071
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1698
+</td>
+<td style="text-align:right;">
+112550728
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+77.7007
+</td>
+<td style="text-align:right;">
+14.6833
+</td>
+<td style="text-align:right;">
+63.0174
+</td>
+<td style="text-align:right;">
+22.2993
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1699
+</td>
+<td style="text-align:right;">
+134887552
+</td>
+<td style="text-align:right;">
+0.0000
+</td>
+<td style="text-align:right;">
+83.7933
+</td>
+<td style="text-align:right;">
+14.2287
+</td>
+<td style="text-align:right;">
+69.5646
+</td>
+<td style="text-align:right;">
+16.2067
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1864
+</td>
+<td style="text-align:right;">
+462304566
+</td>
+<td style="text-align:right;">
+0.0004
+</td>
+<td style="text-align:right;">
+75.8410
+</td>
+<td style="text-align:right;">
+29.4268
+</td>
+<td style="text-align:right;">
+46.4142
+</td>
+<td style="text-align:right;">
+24.1586
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1865
+</td>
+<td style="text-align:right;">
+465041946
+</td>
+<td style="text-align:right;">
+0.0008
+</td>
+<td style="text-align:right;">
+75.7214
+</td>
+<td style="text-align:right;">
+29.5017
+</td>
+<td style="text-align:right;">
+46.2197
+</td>
+<td style="text-align:right;">
+24.2779
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1866
+</td>
+<td style="text-align:right;">
+467777889
+</td>
+<td style="text-align:right;">
+0.0001
+</td>
+<td style="text-align:right;">
+59.3598
+</td>
+<td style="text-align:right;">
+35.5292
+</td>
+<td style="text-align:right;">
+23.8306
+</td>
+<td style="text-align:right;">
+40.6401
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1867
+</td>
+<td style="text-align:right;">
+379659795
+</td>
+<td style="text-align:right;">
+0.0007
+</td>
+<td style="text-align:right;">
+66.7171
+</td>
+<td style="text-align:right;">
+33.5676
+</td>
+<td style="text-align:right;">
+33.1495
+</td>
+<td style="text-align:right;">
+33.2822
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="summary-of-read-length" class="section level2">
+<h2><span class="header-section-number">2.2</span> Summary of read length</h2>
+<p>Length of single end reads generated by <strong>FLASH2</strong>, subtracting the 6 base(s) of barcode.</p>
+<blockquote>
+<p>Click <a href="table/length_count.html">here</a> to view read counts by length table.</p>
+</blockquote>
+<blockquote>
+<p>Click <a href="table/length_percent.html">here</a> to view read percentages by length table.</p>
+</blockquote>
+<p><img src="index_files/figure-html/length_percent-1.png" width="960px" /></p>
+<p><strong>Figure 1.</strong> Average percentages of reads with given length among all merged reads.</p>
+<p><img src="index_files/figure-html/length_clustering-1.png" width="2100" /></p>
+<p><strong>Figure 2.</strong> Similarity of read length distribution.</p>
+</div>
+</div>
+<div id="session-information" class="section level1">
+<h1><span class="header-section-number">3</span> Session information</h1>
+<pre><code>## R version 3.3.3 (2017-03-06)
+## Platform: x86_64-apple-darwin13.4.0 (64-bit)
+## Running under: OS X Yosemite 10.10.5
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] kableExtra_0.9.0    PROseqR_0.0.0.9000  awsomics_0.0.0.9000
+##  [4] htmlwidgets_0.9     DT_0.2              yaml_2.1.16        
+##  [7] knitr_1.18          rmarkdown_1.10.3    RoCA_0.0.0.9000    
+## [10] RCurl_1.95-4.9      bitops_1.0-6        devtools_1.13.4    
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.14      pillar_1.1.0      plyr_1.8.4       
+##  [4] highr_0.6         tools_3.3.3       digest_0.6.13    
+##  [7] jsonlite_1.5      evaluate_0.10.1   memoise_1.1.0    
+## [10] tibble_1.4.2      viridisLite_0.2.0 pkgconfig_2.0.1  
+## [13] rlang_0.1.6       rstudioapi_0.7    withr_2.1.1      
+## [16] stringr_1.2.0     httr_1.3.1        xml2_1.1.1       
+## [19] hms_0.4.0         rprojroot_1.3-2   R6_2.2.2         
+## [22] readr_1.1.1       magrittr_1.5      backports_1.1.2  
+## [25] scales_0.5.0      htmltools_0.3.6   rsconnect_0.8.5  
+## [28] rvest_0.3.2       colorspace_1.3-2  stringi_1.1.6    
+## [31] munsell_0.4.3</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

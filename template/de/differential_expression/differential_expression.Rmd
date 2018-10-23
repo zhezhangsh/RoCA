@@ -97,6 +97,12 @@ res <- list(inputs=inputs);  # Result set
 ```
 
 ```{r analysis_deg, include=FALSE}
+norm <- prms$normalization[1];
+if (norm %in% NormMethods()) expr <- NormDESeq(expr);
+if (prms$log) {
+  expr[expr==0] <- min(expr[expr>0])/2;
+  expr <- log2(expr); 
+}
 de <- DeWrapper(mtrx=expr, grps=grps[1:2], mthd=prms$deg$method, paired=paired);
 stat <- de$results$stat[, 1:6];
 stat.table <- cbind(anno[rownames(stat), ], stat); 

@@ -4,14 +4,14 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
 
 <meta name="author" content="Jim Zhang" />
 
-<meta name="date" content="2017-03-13" />
+<meta name="date" content="2018-10-22" />
 
 <title>Select variables to plot a heatmap</title>
 
@@ -25,8 +25,8 @@
 <link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="index_files/navigation-1.1/tabsets.js"></script>
-<link href="index_files/highlightjs-1.1/default.css" rel="stylesheet" />
-<script src="index_files/highlightjs-1.1/highlight.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
@@ -35,10 +35,12 @@
   }
 </style>
 <script type="text/javascript">
-if (window.hljs && document.readyState && document.readyState === "complete") {
-   window.setTimeout(function() {
-      hljs.initHighlighting();
-   }, 0);
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
 }
 </script>
 
@@ -92,6 +94,9 @@ img {
 }
 .tabbed-pane {
   padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
 }
 button.code-folding-btn:focus {
   outline: none;
@@ -223,7 +228,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Select variables to plot a heatmap</h1>
 <h4 class="author"><em>Jim Zhang</em></h4>
-<h4 class="date"><em>2017-03-13</em></h4>
+<h4 class="date"><em>2018-10-22</em></h4>
 
 </div>
 
@@ -271,49 +276,16 @@ div.tocify {
 <div style="color:darkblue; padding:0 3cm">
 <p><strong>Table 1.</strong> The mean, standard deviation, and range of all variables.</p>
 </div>
-<div align="center" ,="" style="padding:0 3cm">
-<table>
-<thead>
-<tr class="header">
-<th></th>
-<th align="center">Min.</th>
-<th align="center">1st Qu.</th>
-<th align="center">Median</th>
-<th align="center">Mean</th>
-<th align="center">3rd Qu.</th>
-<th align="center">Max.</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Mean</td>
-<td align="center">2.274</td>
-<td align="center">4.3560</td>
-<td align="center">5.6260</td>
-<td align="center">5.6820</td>
-<td align="center">6.8810</td>
-<td align="center">12.160</td>
-</tr>
-<tr class="even">
-<td>SD</td>
-<td align="center">0.500</td>
-<td align="center">0.5625</td>
-<td align="center">0.6536</td>
-<td align="center">0.7684</td>
-<td align="center">0.8506</td>
-<td align="center">3.108</td>
-</tr>
-<tr class="odd">
-<td>Range</td>
-<td align="center">2.010</td>
-<td align="center">2.7500</td>
-<td align="center">3.2900</td>
-<td align="center">3.6180</td>
-<td align="center">4.2000</td>
-<td align="center">8.840</td>
-</tr>
-</tbody>
-</table>
+<div align='center', style="padding:0 3cm">
+
+
+         Min.     1st Qu.    Median     Mean     3rd Qu.     Max.  
+------  -------  ---------  --------  --------  ---------  --------
+Mean     2.274    4.3560     5.6260    5.6820    6.8810     12.160 
+SD       0.500    0.5625     0.6536    0.7684    0.8506     3.108  
+Range    2.010    2.7500     3.2900    3.6180    4.2000     8.840  
+
+
 </div>
 <div align="right">
 <em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
@@ -369,16 +341,16 @@ div.tocify {
 <p>To reproduce this report:</p>
 <ol style="list-style-type: decimal">
 <li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
-<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
-<ul>
-<li><em>output</em> : where you want to put the output files</li>
-<li><em>home</em> : the URL if you have a home page for your project</li>
-<li><em>analyst</em> : your name</li>
-<li><em>description</em> : background information about your project, analysis, etc.</li>
-<li><em>input</em> : where are your input data, read instruction for preparing them</li>
-<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
-</ul></li>
-<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<pre><code>- _output_        : where you want to put the output files
+- _home_          : the URL if you have a home page for your project
+- _analyst_       : your name
+- _description_   : background information about your project, analysis, etc.
+- _input_         : where are your input data, read instruction for preparing them
+- _parameter_     : parameters for this analysis; read instruction about how to prepare input data</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
 </ol>
 <pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
 if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
@@ -389,9 +361,9 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 </div>
 <div id="session-information" class="section level2">
 <h2><span class="header-section-number">5.2</span> Session information</h2>
-<pre><code>## R version 3.2.2 (2015-08-14)
+<pre><code>## R version 3.3.3 (2017-03-06)
 ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X 10.10.5 (Yosemite)
+## Running under: OS X Yosemite 10.10.5
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -400,20 +372,18 @@ CreateReport(filename.yaml);  # filename.yaml is the YAML file you just download
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] gplots_3.0.1        htmlwidgets_0.7     DT_0.2             
-##  [4] RoCA_0.0.0.9000     awsomics_0.0.0.9000 RCurl_1.95-4.8     
-##  [7] bitops_1.0-6        devtools_1.12.0     yaml_2.1.13        
-## [10] rmarkdown_1.3       knitr_1.14          shiny_0.13.2       
+##  [1] gplots_3.0.1        htmlwidgets_0.9     DT_0.2             
+##  [4] awsomics_0.0.0.9000 yaml_2.1.16         rmarkdown_1.10.3   
+##  [7] knitr_1.18          RoCA_0.0.0.9000     RCurl_1.95-4.9     
+## [10] bitops_1.0-6        devtools_1.13.4    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.6           magrittr_1.5          xtable_1.8-2         
-##  [4] R6_2.1.2              highr_0.6             stringr_1.0.0        
-##  [7] caTools_1.17.1        tools_3.2.2           KernSmooth_2.23-15   
-## [10] withr_1.0.2           gtools_3.5.0          htmltools_0.3.5      
-## [13] rprojroot_1.2         digest_0.6.10         formatR_1.4          
-## [16] memoise_1.0.0         evaluate_0.9          mime_0.5             
-## [19] gdata_2.17.0          stringi_1.1.1         backports_1.0.3      
-## [22] jsonlite_1.0          DEGandMore_0.0.0.9000 httpuv_1.3.3</code></pre>
+##  [1] Rcpp_0.12.14       magrittr_1.5       stringr_1.2.0     
+##  [4] highr_0.6          caTools_1.17.1     tools_3.3.3       
+##  [7] KernSmooth_2.23-15 withr_2.1.1        htmltools_0.3.6   
+## [10] gtools_3.5.0       rprojroot_1.3-2    digest_0.6.13     
+## [13] memoise_1.1.0      evaluate_0.10.1    gdata_2.18.0      
+## [16] stringi_1.1.6      backports_1.1.2    jsonlite_1.5</code></pre>
 <div align="right">
 <em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
 </div>
@@ -447,7 +417,7 @@ $(document).ready(function () {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
