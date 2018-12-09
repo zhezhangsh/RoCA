@@ -1,0 +1,291 @@
+---
+title: "Normalization with DESeq2"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+This procedure applies the [DESeq2](http://dx.doi.org/10.1186/s13059-014-0550-8) method to normalize RNA-seq read count data. It estimates size factors of RNA-seq samples based on a read count matrix and use the size factors to normalize and transform the matrix. Between-sample variance is compared between data before vs. after normalization. All samples are treated as one group during the normalization.
+</div>
+
+&nbsp;
+
+```{r global_setup, include=FALSE}
+name.yaml <- 'normalize_deseq2.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'MASS', 'gplots', 
+                   'colorspace', 'DESeq2', 'RoCA', 'awsomics'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table', 'path.deg'='deg');
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, fig.path='figure/');
+
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+## By default, before knitting this R Markdown file, the YAML file pairing it has been loaded.
+## But, the developer can also provide the option to load the YAML file on the fly.
+## So, the template can be run using the "Knit HTML" button in RStudio
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+  if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+    yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+```{r load_data, include=FALSE}
+ct1 <- ImportTable(DownloadFile(yml$input$count, path.input));
+dds <- DESeqDataSetFromMatrix(ct1, DataFrame(f=rep(1, ncol(ct1))), ~1);
+dds <- estimateSizeFactors(dds);
+ct2 <- counts(dds, normalized=TRUE);
+szf <- sizeFactors(dds);
+```
+
+`r home.url` 
+
+# Description
+  
+`r WriteDescription(yml$description)`
+
+`r home.url` 
+
+# Analysis and results
+
+## Summary
+
+The read count matrix includes **`r ncol(ct1)`** samples and **`r nrow(ct1)`** variables/genes. The average read count per sample is **`r format(round(mean(colMeans(ct1)), 1), scientific=FALSE, big.mark=',')`** and the average read count per variable/gene is **`r format(round(mean(rowMeans(ct1), 1)), scientific=FALSE, big.mark=',')`**
+
+<div style="color:darkblue">
+`r OrderTable()` Summary statistics of read counts per sample, before (**B**) and after (**A**) normalization by size factor. (_Total_: read count summation of all variables/genes; _Mean/Median_: read count mean/median of all variables/genes; and _Variance_: standard deviation of read counts after log2(count+1) transformation).
+</div>
+
+```{r summary, include=TRUE}
+tt1 <- round(colSums(ct1), 2);
+tt2 <- round(colSums(ct2), 2);
+mn1 <- round(colMeans(ct1), 2);
+mn2 <- round(colMeans(ct2), 2);
+md1 <- round(apply(ct1, 2, median), 2);
+md2 <- round(apply(ct2, 2, median), 2);
+sd1 <- round(apply(log2(ct1+1), 2, sd), 2);
+sd2 <- round(apply(log2(ct2+1), 2, sd), 2);
+
+smm <- cbind(tt1, tt2, mn1, mn2, md1, md2, sd1, sd2, round(szf, 3));
+colnames(smm) <- c(paste(rep(c('Total', 'Mean', 'Median', 'Variance'), each=2), 
+                       rep(c('B', 'A'), 4), sep='_'), 'Size_Factor');
+
+kable(smm) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+```
+
+<p />
+
+## Size factor
+
+The size factors of all samples range between **`r round(min(szf), 3)`** and **`r round(max(szf), 3)`** (geometric mean = **`r round(exp(mean(log(szf))), 3)`**). In general, we expect a positive correlation between total read count of a sample and its size factor, and their geometric mean is close to 1.0.
+
+```{r corr2factor, include=TRUE, fig.width=8, fig.height=4, out.width='800px'}
+par(mfrow=c(1, 2), mar=c(4,4,2,2));
+
+plot(smm[, 'Mean_B'], smm[, 'Size_Factor'], pch='*', col='darkblue', cex=2,
+     xlab='Mean read count', ylab='Size factor');
+plot(smm[, 'Median_B'], smm[, 'Size_Factor'], pch='*', col='darkblue', cex=2,
+     xlab='Median read count', ylab='Size factor');
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Relationship between read counts before normalization and size factors. Each point represents a samples.
+</div>
+
+<br />
+
+Variables/genes contribute to the calculation of size factors differently as those with higher read counts having more weight. In most RNA-seq data, rRNAs (ribosomal RNAs) and some 'housekeeping' genes have the highest read counts, but they are usually not the focus of research interest and often subjected to systemic bias not affecting most of the other genes, such as the efficiency of rRNA depletion. The actual impact of top variables/genes on the values of size factors can be evaluated by removing them from the calculation one-by-one.
+
+```{r step, include=FALSE}
+yml$parameter$top <- round(yml$parameter$top, 2);
+top <- min(0.25, max(0.01, yml$parameter$top));
+num <- ceiling(seq(1, ceiling(top*nrow(ct1)), length.out=10));
+rnk <- rank(-rowSums(ct1));
+sfs <- sapply(num, function(n) {
+  ct3 <- ct1[rnk>=n, , drop=FALSE]; 
+  ds0 <- DESeqDataSetFromMatrix(ct3, DataFrame(f=rep(1, ncol(ct3))), ~1);
+  ds0 <- estimateSizeFactors(ds0);
+  sizeFactors(ds0);
+});
+sfs <- cbind(szf, sfs);
+```
+
+<div style="color:darkblue">
+`r OrderTable()` Size factors after each step of removing top variables/genes. Click column names to view variables/genes removed at each step.
+</div>
+
+```{r size_factor_table, include=TRUE}
+fns <- sapply(1:10, function(i) {
+  rnm <- rownames(ct1)[rnk<=num[i]];
+  writeLines(rnm, paste0(yml$output, '/table/removed_step_', i, '.txt'));
+});
+tbl <- round(sfs, 3);
+colnames(tbl) <- paste0('[Step', 0:10, '](', 'table/removed_step_', 0:10, '.txt)');
+colnames(tbl)[1] <- 'Original';
+kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+```
+
+```{r size_factor_step, include=TRUE, fig.width=8, fig.height=6, out.width='800px'}
+par(mar=c(5,5,2,2));
+plot(1, type='n', ylim=c(min(sfs), max(sfs)), xlim=c(0, 12), axes=FALSE, cex.lab=1.5, log='y',
+     ylab='Size factor', xlab='Top variables removed (%)                    ');
+pch <- rep(1:15, ceiling(nrow(sfs)/15))[1:nrow(sfs)];
+col <- topo.colors(nrow(sfs));
+
+for (i in 1:nrow(sfs)) {
+  lines(0:10, sfs[i, ], col=col[i], lwd=2);
+  points(0:10, sfs[i, ], pch=pch[i], cex=0.8);
+};
+text(rep(10, nrow(sfs)), sfs[, ncol(sfs)], pos=4, rownames(sfs), cex=1.2);
+axis(2);
+axis(1, at=c(0:10), label=(0:10)/100/yml$parameter$top);
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` The change of size factor of individual samples, as the top **`r 100*yml$parameter$top`**% of the variables/genes were removed from calculation. 
+</div>
+
+## Before vs. after normalization
+
+Normalization generally reduces variance between samples, which can be measured by comparing data distribution and calculating sample-sample variance.
+
+```{r two_sample_scatter, include=TRUE, fig.width=9.6, fig.height=4.8, out.width='960px'}
+s1 <- rownames(smm)[which(smm[, 1]==min(smm[, 1]))[1]];
+s2 <- rownames(smm)[which(smm[, 1]==max(smm[, 1]))[1]];
+
+par(mfrow=c(1, 2), mar=c(4,4,2,2));
+PlotLogScatter(ct1[, s1], ct1[, s2], xlab = s1, ylab = s2, main = 'Before normalization');
+# abline(log10(szf[s2]/szf[s1]), 1);
+abline(0, 1, lty=2, col='darkblue');
+PlotLogScatter(ct2[, s1], ct2[, s2], xlab = s1, ylab = s2, main = 'After normalization');
+abline(0, 1, lty=2, col='darkblue');
+```
+
+<div style="color:darkblue">
+`r OrderFigure()` Comparison of two samples with the lowest (_`r s1`_) and the highest (_`r s2`_) total read counts, before vs. after normalization.
+</div>
+
+```{r all_sample_box, include=TRUE, fig.width=9.6, fig.height=3.6, out.width='960px'}
+par(mfrow=c(1, 2), mar=c(8, 4, 2, 2));
+boxplot(log2(ct1+1), las=3, col=col, ylab='log2(count+1)', main='Before normalization', pch=18, boxwex=0.6);
+boxplot(log2(ct2+1), las=3, col=col, ylab='log2(count+1)', main='After normalization', pch=18, boxwex=0.6);
+```
+<div style="color:darkblue">
+`r OrderFigure()` Distribution of read counts before and after normalization. Read counts were log2-transformed.
+</div>
+
+```{r count_variance, include=TRUE, fig.width=9.6, fig.height=3.6, out.width='960px'}
+sd1 <- apply(log2(ct1+1), 1, sd);
+sd2 <- apply(log2(ct2+1), 1, sd);
+mn1 <- rowMeans(log2(ct1+1));
+mn2 <- rowMeans(log2(ct2+1));
+
+par(mfrow=c(1, 2), mar=c(4, 4, 2, 2));
+plot(mn1, sd1, pch=19, cex=0.5, col='#88888888', main='Before normalization', xlim=c(0, max(c(mn1, mn2))), ylim=c(0, max(c(sd1, sd2))), 
+     xlab='Average of log2(count+1)', ylab='Standard deviation');
+lines(lowess(mn1, sd1), lty=2, col='darkblue', lwd=2);
+# abline(h=mean(sd1));
+plot(mn2, sd2, pch=19, cex=0.5, col='#88888888', main='After normalization', xlim=c(0, max(c(mn1, mn2))), ylim=c(0, max(c(sd1, sd2))), 
+     xlab='Average of log2(count+1)', ylab='Standard deviation');
+lines(lowess(mn2, sd2), lty=2, col='darkblue', lwd=2); 
+# abline(h=mean(sd2));
+```
+<div style="color:darkblue">
+`r OrderFigure()` Relationship between mean read count (log2-transformed) and between-sample variance. 
+</div>
+
+# Download
+
+```{r download, include=FALSE}
+write.csv(smm, paste0(yml$output, '/table/summary.csv'));
+write.csv(ct1, paste0(yml$output, '/table/count_before.csv'));
+write.csv(ct2, paste0(yml$output, '/table/count_after.csv'));
+
+saveRDS(smm, paste0(yml$output, '/R/summary.rds'));
+saveRDS(ct1, paste0(yml$output, '/R/count_before.rds'));
+saveRDS(ct2, paste0(yml$output, '/R/count_after.rds'));
+```
+
+  - **Summary statistics**: [tab-delimited text file](table/summary.csv); [R object](R/summary.rds)
+  - **Read count before normalization**: [tab-delimited text file](table/count_before.csv); [R object](R/count_before.rds)
+  - **Read count after normalization**: [tab-delimited text file](table/count_after.csv); [R object](R/count_after.rds)
+
+
+
+# References
+
+  - **R:** R Development Core Team, 2011. _R: A Language and Environment for Statistical Computing._ ISBN 3-900051-07-0. [Home page](http://www.R-project.org).
+  - **Bioconductor:** Gentleman RC et al., 2004. _Bioconductor: open software development for computational biology and bioinformatics._ Genome Biology. [ Home page](http://www.bioconductor.org).
+  - **Biclustering:** Ihmels J, Bergmann S, Barkai N, 2004 _Defining transcription modules using large-scale gene expression data._ Bioinformatics. [Home page](http://www2.unil.ch/cbg/index.php?title=ISA). 
+  - **GSEA:** Subramanian A et al. 2005 _Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles_ PNAS. [Home page](http://software.broadinstitute.org/gsea/index.jsp)
+  - **[RoCA](http://zhezhangsh.github.io/RoCA)** 
+  - **[Awsomics](awsomics.org)**
+
+# Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - **output**        : where you want to put the output files
+    - **home**          : the URL if you have a home page for your project
+    - **analyst**       : your name
+    - **description**   : background information about your project, analysis, etc.
+    - **input**         : where are your input data, read instruction for preparing them
+    - **parameter**     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+# Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_
+
+

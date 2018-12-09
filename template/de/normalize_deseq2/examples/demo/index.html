@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Zhe Zhang" />
+
+<meta name="date" content="2018-12-08" />
+
+<title>Normalization with DESeq2</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Normalization with DESeq2</h1>
+<h4 class="author"><em>Zhe Zhang</em></h4>
+<h4 class="date"><em>2018-12-08</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This procedure applies the <a href="http://dx.doi.org/10.1186/s13059-014-0550-8">DESeq2</a> method to normalize RNA-seq read count data. It estimates size factors of RNA-seq samples based on a read count matrix and use the size factors to normalize and transform the matrix. Between-sample variance is compared between data before vs. after normalization. All samples are treated as one group during the normalization.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Demo data of DESeq2 normalization</p>
+</div>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">1.2</span> Data</h2>
+<p>Ranbomly generated</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>This is a demo.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="analysis-and-results" class="section level1">
+<h1><span class="header-section-number">2</span> Analysis and results</h1>
+<div id="summary" class="section level2">
+<h2><span class="header-section-number">2.1</span> Summary</h2>
+<p>The read count matrix includes <strong>4</strong> samples and <strong>1000</strong> variables/genes. The average read count per sample is <strong>56.3</strong> and the average read count per variable/gene is <strong>24</strong></p>
+<div style="color:darkblue">
+<p><strong>Table 1.</strong> Summary statistics of read counts per sample, before (<strong>B</strong>) and after (<strong>A</strong>) normalization by size factor. (<em>Total</em>: read count summation of all variables/genes; <em>Mean/Median</em>: read count mean/median of all variables/genes; and <em>Variance</em>: standard deviation of read counts after log2(count+1) transformation).</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Total_B
+</th>
+<th style="text-align:right;">
+Total_A
+</th>
+<th style="text-align:right;">
+Mean_B
+</th>
+<th style="text-align:right;">
+Mean_A
+</th>
+<th style="text-align:right;">
+Median_B
+</th>
+<th style="text-align:right;">
+Median_A
+</th>
+<th style="text-align:right;">
+Variance_B
+</th>
+<th style="text-align:right;">
+Variance_A
+</th>
+<th style="text-align:right;">
+Size_Factor
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+sample1
+</td>
+<td style="text-align:right;">
+39563
+</td>
+<td style="text-align:right;">
+52108.53
+</td>
+<td style="text-align:right;">
+39.56
+</td>
+<td style="text-align:right;">
+52.11
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+19.76
+</td>
+<td style="text-align:right;">
+2.11
+</td>
+<td style="text-align:right;">
+2.21
+</td>
+<td style="text-align:right;">
+0.759
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sample2
+</td>
+<td style="text-align:right;">
+60312
+</td>
+<td style="text-align:right;">
+54469.38
+</td>
+<td style="text-align:right;">
+60.31
+</td>
+<td style="text-align:right;">
+54.47
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+19.87
+</td>
+<td style="text-align:right;">
+2.24
+</td>
+<td style="text-align:right;">
+2.21
+</td>
+<td style="text-align:right;">
+1.107
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sample3
+</td>
+<td style="text-align:right;">
+48843
+</td>
+<td style="text-align:right;">
+52005.92
+</td>
+<td style="text-align:right;">
+48.84
+</td>
+<td style="text-align:right;">
+52.01
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+22.36
+</td>
+<td style="text-align:right;">
+2.24
+</td>
+<td style="text-align:right;">
+2.26
+</td>
+<td style="text-align:right;">
+0.939
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sample4
+</td>
+<td style="text-align:right;">
+76336
+</td>
+<td style="text-align:right;">
+54832.88
+</td>
+<td style="text-align:right;">
+76.34
+</td>
+<td style="text-align:right;">
+54.83
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+21.55
+</td>
+<td style="text-align:right;">
+2.34
+</td>
+<td style="text-align:right;">
+2.23
+</td>
+<td style="text-align:right;">
+1.392
+</td>
+</tr>
+</tbody>
+</table>
+<p />
+</div>
+<div id="size-factor" class="section level2">
+<h2><span class="header-section-number">2.2</span> Size factor</h2>
+<p>The size factors of all samples range between <strong>0.759</strong> and <strong>1.392</strong> (geometric mean = <strong>1.024</strong>). In general, we expect a positive correlation between total read count of a sample and its size factor, and their geometric mean is close to 1.0.</p>
+<p><img src="figure/corr2factor-1.png" width="800px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 1.</strong> Relationship between read counts before normalization and size factors. Each point represents a samples.</p>
+</div>
+<p><br /></p>
+<p>Variables/genes contribute to the calculation of size factors differently as those with higher read counts having more weight. In most RNA-seq data, rRNAs (ribosomal RNAs) and some ‘housekeeping’ genes have the highest read counts, but they are usually not the focus of research interest and often subjected to systemic bias not affecting most of the other genes, such as the efficiency of rRNA depletion. The actual impact of top variables/genes on the values of size factors can be evaluated by removing them from the calculation one-by-one.</p>
+<div style="color:darkblue">
+<p><strong>Table 2.</strong> Size factors after each step of removing top variables/genes. Click column names to view variables/genes removed at each step.</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Original
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_1.txt">Step1</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_2.txt">Step2</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_3.txt">Step3</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_4.txt">Step4</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_5.txt">Step5</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_6.txt">Step6</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_7.txt">Step7</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_8.txt">Step8</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_9.txt">Step9</a>
+</th>
+<th style="text-align:right;">
+<a href="table/removed_step_10.txt">Step10</a>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+sample1
+</td>
+<td style="text-align:right;">
+0.759
+</td>
+<td style="text-align:right;">
+0.759
+</td>
+<td style="text-align:right;">
+0.760
+</td>
+<td style="text-align:right;">
+0.761
+</td>
+<td style="text-align:right;">
+0.761
+</td>
+<td style="text-align:right;">
+0.762
+</td>
+<td style="text-align:right;">
+0.761
+</td>
+<td style="text-align:right;">
+0.766
+</td>
+<td style="text-align:right;">
+0.770
+</td>
+<td style="text-align:right;">
+0.769
+</td>
+<td style="text-align:right;">
+0.771
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sample2
+</td>
+<td style="text-align:right;">
+1.107
+</td>
+<td style="text-align:right;">
+1.107
+</td>
+<td style="text-align:right;">
+1.110
+</td>
+<td style="text-align:right;">
+1.107
+</td>
+<td style="text-align:right;">
+1.107
+</td>
+<td style="text-align:right;">
+1.093
+</td>
+<td style="text-align:right;">
+1.101
+</td>
+<td style="text-align:right;">
+1.092
+</td>
+<td style="text-align:right;">
+1.092
+</td>
+<td style="text-align:right;">
+1.092
+</td>
+<td style="text-align:right;">
+1.090
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sample3
+</td>
+<td style="text-align:right;">
+0.939
+</td>
+<td style="text-align:right;">
+0.939
+</td>
+<td style="text-align:right;">
+0.940
+</td>
+<td style="text-align:right;">
+0.939
+</td>
+<td style="text-align:right;">
+0.940
+</td>
+<td style="text-align:right;">
+0.944
+</td>
+<td style="text-align:right;">
+0.948
+</td>
+<td style="text-align:right;">
+0.948
+</td>
+<td style="text-align:right;">
+0.948
+</td>
+<td style="text-align:right;">
+0.949
+</td>
+<td style="text-align:right;">
+0.948
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+sample4
+</td>
+<td style="text-align:right;">
+1.392
+</td>
+<td style="text-align:right;">
+1.392
+</td>
+<td style="text-align:right;">
+1.389
+</td>
+<td style="text-align:right;">
+1.389
+</td>
+<td style="text-align:right;">
+1.390
+</td>
+<td style="text-align:right;">
+1.390
+</td>
+<td style="text-align:right;">
+1.389
+</td>
+<td style="text-align:right;">
+1.389
+</td>
+<td style="text-align:right;">
+1.388
+</td>
+<td style="text-align:right;">
+1.387
+</td>
+<td style="text-align:right;">
+1.388
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="figure/size_factor_step-1.png" width="800px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 2.</strong> The change of size factor of individual samples, as the top <strong>5</strong>% of the variables/genes were removed from calculation.</p>
+</div>
+</div>
+<div id="before-vs.after-normalization" class="section level2">
+<h2><span class="header-section-number">2.3</span> Before vs. after normalization</h2>
+<p>Normalization generally reduces variance between samples, which can be measured by comparing data distribution and calculating sample-sample variance.</p>
+<p><img src="figure/two_sample_scatter-1.png" width="960px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 3.</strong> Comparison of two samples with the lowest (<em>sample1</em>) and the highest (<em>sample4</em>) total read counts, before vs. after normalization.</p>
+</div>
+<img src="figure/all_sample_box-1.png" width="960px" />
+<div style="color:darkblue">
+<p><strong>Figure 4.</strong> Distribution of read counts before and after normalization. Read counts were log2-transformed.</p>
+</div>
+<img src="figure/count_variance-1.png" width="960px" />
+<div style="color:darkblue">
+<p><strong>Figure 5.</strong> Relationship between mean read count (log2-transformed) and between-sample variance.</p>
+</div>
+</div>
+</div>
+<div id="download" class="section level1">
+<h1><span class="header-section-number">3</span> Download</h1>
+<ul>
+<li><strong>Summary statistics</strong>: <a href="table/summary.csv">tab-delimited text file</a>; <a href="R/summary.rds">R object</a></li>
+<li><strong>Read count before normalization</strong>: <a href="table/count_before.csv">tab-delimited text file</a>; <a href="R/count_before.rds">R object</a></li>
+<li><strong>Read count after normalization</strong>: <a href="table/count_after.csv">tab-delimited text file</a>; <a href="R/count_after.rds">R object</a></li>
+</ul>
+</div>
+<div id="references" class="section level1">
+<h1><span class="header-section-number">4</span> References</h1>
+<ul>
+<li><strong>R:</strong> R Development Core Team, 2011. <em>R: A Language and Environment for Statistical Computing.</em> ISBN 3-900051-07-0. <a href="http://www.R-project.org">Home page</a>.</li>
+<li><strong>Bioconductor:</strong> Gentleman RC et al., 2004. <em>Bioconductor: open software development for computational biology and bioinformatics.</em> Genome Biology. <a href="http://www.bioconductor.org">Home page</a>.</li>
+<li><strong>Biclustering:</strong> Ihmels J, Bergmann S, Barkai N, 2004 <em>Defining transcription modules using large-scale gene expression data.</em> Bioinformatics. <a href="http://www2.unil.ch/cbg/index.php?title=ISA">Home page</a>.</li>
+<li><strong>GSEA:</strong> Subramanian A et al. 2005 <em>Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles</em> PNAS. <a href="http://software.broadinstitute.org/gsea/index.jsp">Home page</a></li>
+<li><strong><a href="http://zhezhangsh.github.io/RoCA">RoCA</a></strong></li>
+<li><strong><a href="awsomics.org">Awsomics</a></strong></li>
+</ul>
+</div>
+<div id="reproduce-this-report" class="section level1">
+<h1><span class="header-section-number">5</span> Reproduce this report</h1>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><strong>output</strong> : where you want to put the output files</li>
+<li><strong>home</strong> : the URL if you have a home page for your project</li>
+<li><strong>analyst</strong> : your name</li>
+<li><strong>description</strong> : background information about your project, analysis, etc.</li>
+<li><strong>input</strong> : where are your input data, read instruction for preparing them</li>
+<li><strong>parameter</strong> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level1">
+<h1><span class="header-section-number">6</span> Session information</h1>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.6
+## 
+## Matrix products: default
+## BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] DEGandMore_0.0.0.9000       snow_0.4-3                 
+##  [3] rchive_0.0.0.9000           awsomics_0.0.0.9000        
+##  [5] colorspace_1.3-2            gplots_3.0.1               
+##  [7] MASS_7.3-51.1               htmlwidgets_1.3            
+##  [9] DT_0.5                      yaml_2.2.0                 
+## [11] kableExtra_0.9.0            knitr_1.20                 
+## [13] rmarkdown_1.10              RoCA_0.0.0.9000            
+## [15] RCurl_1.95-4.11             bitops_1.0-6               
+## [17] usethis_1.4.0               devtools_2.0.1             
+## [19] DESeq2_1.22.1               SummarizedExperiment_1.12.0
+## [21] DelayedArray_0.8.0          BiocParallel_1.16.2        
+## [23] matrixStats_0.54.0          Biobase_2.42.0             
+## [25] GenomicRanges_1.34.0        GenomeInfoDb_1.18.1        
+## [27] IRanges_2.16.0              S4Vectors_0.20.1           
+## [29] BiocGenerics_0.28.0        
+## 
+## loaded via a namespace (and not attached):
+##  [1] fs_1.2.6               bit64_0.9-7            httr_1.3.1            
+##  [4] RColorBrewer_1.1-2     rprojroot_1.3-2        tools_3.5.1           
+##  [7] backports_1.1.2        R6_2.3.0               KernSmooth_2.23-15    
+## [10] rpart_4.1-13           Hmisc_4.1-1            DBI_1.0.0             
+## [13] lazyeval_0.2.1         nnet_7.3-12            withr_2.1.2           
+## [16] gridExtra_2.3          prettyunits_1.0.2      processx_3.2.0        
+## [19] bit_1.1-14             compiler_3.5.1         rvest_0.3.2           
+## [22] cli_1.0.1              htmlTable_1.12         xml2_1.2.0            
+## [25] desc_1.2.0             caTools_1.17.1.1       scales_1.0.0          
+## [28] checkmate_1.8.5        readr_1.2.1            genefilter_1.64.0     
+## [31] callr_3.0.0            stringr_1.3.1          digest_0.6.18         
+## [34] foreign_0.8-71         XVector_0.22.0         pkgconfig_2.0.2       
+## [37] base64enc_0.1-3        htmltools_0.3.6        sessioninfo_1.1.1     
+## [40] highr_0.7              rlang_0.3.0.1          rstudioapi_0.8        
+## [43] RSQLite_2.1.1          gtools_3.8.1           acepack_1.4.1         
+## [46] magrittr_1.5           GenomeInfoDbData_1.2.0 Formula_1.2-3         
+## [49] Matrix_1.2-15          Rcpp_1.0.0             munsell_0.5.0         
+## [52] stringi_1.2.4          zlibbioc_1.28.0        pkgbuild_1.0.2        
+## [55] plyr_1.8.4             grid_3.5.1             blob_1.1.1            
+## [58] gdata_2.18.0           crayon_1.3.4           lattice_0.20-38       
+## [61] splines_3.5.1          annotate_1.60.0        hms_0.4.2             
+## [64] locfit_1.5-9.1         ps_1.2.1               pillar_1.3.0          
+## [67] geneplotter_1.60.0     pkgload_1.0.2          XML_3.98-1.16         
+## [70] glue_1.3.0             evaluate_0.12          latticeExtra_0.6-28   
+## [73] data.table_1.11.8      remotes_2.0.2          gtable_0.2.0          
+## [76] assertthat_0.2.0       ggplot2_3.1.0          xtable_1.8-3          
+## [79] viridisLite_0.3.0      survival_2.43-3        tibble_1.4.2          
+## [82] AnnotationDbi_1.44.0   memoise_1.1.0          cluster_2.0.7-1</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
