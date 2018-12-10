@@ -38,4 +38,4 @@ input:
 ######################
 # Parameters to run this analysis
 parameter: # All parameters
-  top: 0.05             ## Portion of top variables/genes to be removed to test their impact on size factors
+  top: 0.01             ## Portion of top variables/genes to be removed to test their impact on size factors

@@ -167,7 +167,7 @@ for (i in 1:nrow(sfs)) {
 };
 text(rep(10, nrow(sfs)), sfs[, ncol(sfs)], pos=4, rownames(sfs), cex=1.2);
 axis(2);
-axis(1, at=c(0:10), label=(0:10)/100/yml$parameter$top);
+axis(1, at=c(0:10), label=(0:10)/10/100/yml$parameter$top);
 ```
 
 <div style="color:darkblue">

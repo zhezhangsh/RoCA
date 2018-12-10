@@ -1,12 +1,3 @@
-gene17
-gene172
-gene202
-gene215
-gene302
-gene446
-gene625
 gene829
-gene848
-gene853
 gene899
 gene900
