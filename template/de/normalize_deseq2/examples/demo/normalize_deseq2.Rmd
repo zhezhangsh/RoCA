@@ -212,11 +212,11 @@ mn2 <- rowMeans(log2(ct2+1));
 par(mfrow=c(1, 2), mar=c(4, 4, 2, 2));
 plot(mn1, sd1, pch=19, cex=0.5, col='#88888888', main='Before normalization', xlim=c(0, max(c(mn1, mn2))), ylim=c(0, max(c(sd1, sd2))), 
      xlab='Average of log2(count+1)', ylab='Standard deviation');
-lines(lowess(mn1, sd1), lty=2, col='darkblue', lwd=2);
+lines(lowess(mn1, sd1, f=1/3), lty=2, col='darkblue', lwd=2);
 # abline(h=mean(sd1));
 plot(mn2, sd2, pch=19, cex=0.5, col='#88888888', main='After normalization', xlim=c(0, max(c(mn1, mn2))), ylim=c(0, max(c(sd1, sd2))), 
      xlab='Average of log2(count+1)', ylab='Standard deviation');
-lines(lowess(mn2, sd2), lty=2, col='darkblue', lwd=2); 
+lines(lowess(mn2, sd2, f=1/3), lty=2, col='darkblue', lwd=2); 
 # abline(h=mean(sd2));
 ```
 <div style="color:darkblue">
