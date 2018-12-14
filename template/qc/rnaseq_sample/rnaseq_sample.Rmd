@@ -309,7 +309,7 @@ if (length(count.all) > 1) {
 # Dispersion and normalization
 
 ```{r normalization, include=FALSE}
-norm <- NormalizeRNAseq(ct, gn.len); 
+norm <- NormalizeRNAseq(ct, gn.len);
 
 mns <- sapply(norm, function(x) rowMeans(x, na.rm=TRUE)); 
 ind <- which(rowSums(ct)>0); 
@@ -434,7 +434,7 @@ This section uses read count data to perform several sample-level analyses. The 
 ## Gender prediction
 
 ```{r gender_pred, include=TRUE, fig.width=6, fig.height=6}
-ct1 <- norm[length(norm)][[1]]+1; 
+ct1 <- norm$Loess+1; 
 
 chrx <- prms$chromosome$f;
 chry <- prms$chromosome$m;
