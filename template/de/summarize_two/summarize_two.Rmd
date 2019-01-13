@@ -152,10 +152,16 @@ deg<-lapply(de, function(de) de$DEG);
 anno<-lapply(res, function(res) res$input$anno); 
 gid<-lapply(stat, rownames); 
 if (setequal(rownames(stat[[1]]), rownames(stat[[2]]))) gid<-rownames(stat[[1]]) else {
-  if (prms$gene$union) gid<-Reduce('union', lapply(stat, rownames)) else gid<-Reduce('intersect', lapply(stat, rownames)) 
+  if (prms$gene$union) {
+    gid<-Reduce('union', lapply(stat, rownames));
+    anno[[2]]<-anno[[2]][!(rownames(anno[[2]]) %in% rownames(anno[[1]])), , drop=FALSE];
+    anno<-rbind(anno[[1]], anno[[2]])[gid, , drop=FALSE]; 
+  }
+  else {
+    gid<-Reduce('intersect', lapply(stat, rownames));
+    anno <- anno[[1]][gid, , drop=FALSE];
+  }
 }
-anno[[2]]<-anno[[2]][!(rownames(anno[[2]]) %in% rownames(anno[[1]])), , drop=FALSE];
-anno<-rbind(anno[[1]], anno[[2]])[gid, , drop=FALSE]; 
 names(stat)<-names(de)<-comp; 
 
 l2r <- sapply(stat, function(stat) as.matrix(stat)[, 'LogFC'][gid]); 
