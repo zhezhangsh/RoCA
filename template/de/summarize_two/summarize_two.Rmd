@@ -160,6 +160,7 @@ if (setequal(rownames(stat[[1]]), rownames(stat[[2]]))) gid<-rownames(stat[[1]])
   else {
     gid<-Reduce('intersect', lapply(stat, rownames));
     anno <- anno[[1]][gid, , drop=FALSE];
+    stat <- lapply(stat, function(s) s[gid, , drop=FALSE]); 
   }
 }
 names(stat)<-names(de)<-comp; 
