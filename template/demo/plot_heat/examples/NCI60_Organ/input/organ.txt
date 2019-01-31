@@ -1,1 +1,0 @@
-Breast	Breast	Breast	Breast	Breast	CNS	CNS	CNS	CNS	CNS	CNS	Colon	Colon	Colon	Colon	Colon	Colon	Colon	Blood	Blood	Blood	Blood	Blood	Blood	Skin	Skin	Skin	Skin	Skin	Skin	Skin	Skin	Skin	Skin	Lung	Lung	Lung	Lung	Lung	Lung	Lung	Lung	Lung	Ovary	Ovary	Ovary	Ovary	Ovary	Ovary	Ovary	Prostate	Prostate	Kidney	Kidney	Kidney	Kidney	Kidney	Kidney	Kidney	Kidney
