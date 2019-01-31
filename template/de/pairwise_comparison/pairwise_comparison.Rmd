@@ -1028,8 +1028,12 @@ if (nrow(kegg.stat) == 0) {
   kegg.dff <- kegg.dff[names(kegg.dff)!='' & !is.na(names(kegg.dff))];
   
   fn.kegg<-sapply(kegg.id, function(id) {
-    capture.output(kegg <- pathview(kegg.dff, pathway.id=id, species = GetGenomeAlias(genome, "code"), 
-                                  low = list(gene = "blue"), kegg.dir=dir.kegg))->x; 
+    try({
+      capture.output(
+        kegg <- pathview(
+          kegg.dff, pathway.id=id, species = GetGenomeAlias(genome, "code"), 
+          low = list(gene = "blue"), kegg.dir=dir.kegg))->x; 
+    });
     fn <- paste(id, '.pathview.png', sep='');
     if (file.exists(fn)) file.rename(fn, paste(path.temp, fn, sep='/')); 
     paste(path.temp, fn, sep='/')
