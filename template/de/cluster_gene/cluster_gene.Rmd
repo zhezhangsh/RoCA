@@ -422,6 +422,8 @@ write.csv2(tbl2, paste(path.tbl, 'clustered_stat.csv', sep='/'));
 CreateDatatable(tbl1, paste(path.tbl, 'clustered_data.html', sep='/')); 
 CreateDatatable(tbl2, paste(path.tbl, 'clustered_stat.html', sep='/')); 
 
+saveRDS(stat, paste(path.r, 'stat.rds', sep='/'));
+saveRDS(mns,  paste(path.r, 'clustered_mean.rds', sep='/'));
 saveRDS(tbl1, paste(path.r, 'clustered_data.rds', sep='/')); 
 saveRDS(tbl2, paste(path.r, 'clustered_stat.rds', sep='/')); 
 ```
