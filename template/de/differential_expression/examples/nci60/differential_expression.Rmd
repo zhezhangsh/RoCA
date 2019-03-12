@@ -143,7 +143,12 @@ This section analyzes the samples by summarizing their global expression pattern
 Distribution of average expression level and between-sample variance. 
 
 ```{r data_distribution, include=TRUE, fig.width=4.8, fig.height=7.2, out.width='480px'}
-if (prms$count) nrm <- NormalizeRNAseq(round(e1.2), methods = 'NormDESeq')$DESeq else nrm <- e1.2;
+if (prms$count) {
+  nrm <- NormalizeRNAseq(round(e1.2), methods = 'NormDESeq')$DESeq;
+  nrm[nrm<=1/3] <- 1/3;
+  nrm <- log2(nrm); 
+} else nrm <- e1.2;
+
 par(mfrow=c(3,1), mar=c(4,5,2,2));
 
 # Distribution of average expression level
@@ -273,7 +278,7 @@ text(rep(5, length(labels)), 100-(1:length(X))*4.0*cex, labels=1:length(X), col=
 par(mai=c(0.4, 0.5, 0.3, 0.05), mfrow=c(2,2));
 
 # M-A Plot
-x <- rowMeans(stat[, 1:2]); 
+x <- rowMeans(nrm[, g1.ind, drop=FALSE])/2 + rowMeans(nrm[, g2.ind, drop=FALSE])/2; 
 y <- stat[, 4];
 plot(x, y, main='A. M-A Plot', pch=19, col='#2471A3',  cex=.25, xlab='', ylab='', cex.axis=.75);
 abline(h=0, lwd=1, col=1);
@@ -400,7 +405,7 @@ up.tbl <- data.frame(anno[rownames(up), , drop=FALSE], up, rep('Figure', nrow(up
 colnames(up.tbl) <- cnm;
 xls$Up <- up.tbl;
 up.tbl$Samples   <- AddHref(up.tbl$Samples, paste('bars/', rownames(up), '.pdf', sep='')); 
-if (ind > 0) up.tbl <- cbind('Entrez_ID'=up.tbl[, ind], up.tbl[, -ind]);
+if (ind > 0) up.tbl <- cbind('Entrez_ID'=up.tbl[, ind], ID=rownames(up.tbl), up.tbl[, -ind]);
 up.formatted     <- GeneList2Datatable(FormatNumeric(up.tbl), fn=paste(path.deg1, 'index.html', sep='/'), 
                                        col.entrez=as.integer(prms$entrez>0), genome=prms$genome, 
                                        title=paste('Genes with higher expression in', g2.name));
@@ -409,13 +414,14 @@ dn.tbl <- data.frame(anno[rownames(dn), , drop=FALSE], dn, rep('Figure', nrow(dn
 colnames(dn.tbl) <- cnm;
 xls$Down <- dn.tbl;
 dn.tbl$Samples   <- AddHref(dn.tbl$Samples, paste('bars/', rownames(dn), '.pdf', sep='')); 
-if (ind > 0) dn.tbl <- cbind('Entrez_ID'=dn.tbl[, ind], dn.tbl[, -ind]);
+if (ind > 0) dn.tbl <- cbind('Entrez_ID'=dn.tbl[, ind], ID=rownames(dn.tbl), dn.tbl[, -ind]);
 dn.formatted     <- GeneList2Datatable(FormatNumeric(dn.tbl), paste(path.deg2, 'index.html', sep='/'), 
                                        col.entrez=as.integer(prms$entrez>0), genome=prms$genome, 
                                        title=paste('Genes with lower expression in', g2.name));
 names(xls)[-1] <- deg.sub;
 xls <- lapply(xls, function(x) {
-  for (i in 1:ncol(x)) x[[i]] <- CleanHtmlTags(x[[i]]); 
+  for (i in 1:ncol(x)) x[[i]] <- CleanHtmlTags(x[[i]], FALSE);
+  for (i in 1:ncol(stat)) x[, colnames(stat)[i]] <- as.numeric(x[, colnames(stat)[i]]);
   FormatNumeric(x);
 }); 
 WriteExcel(xls, fileName = paste(path.deg, 'deg', sep='/'));
@@ -461,9 +467,9 @@ zip(paste(path.r, 'R.zip', sep='/'), path.r, zip = 'zip');
 
 **Click links below to view table or download files:**
 
-  - [Differential expression of all genes](DEG/all_genes.html)
-    - [`r nrow(up)` DEGs with higher expression in `r g2.name`](`r paste('DEG', deg.sub[1], 'index.html', sep='/')`)
-    - [`r nrow(dn)` DEGs with lower expression in `r g2.name`](`r paste('DEG', deg.sub[2], 'index.html', sep='/')`)
+  - [Differential expression of all genes](deg/all_genes.html)
+    - [`r nrow(up)` DEGs with higher expression in `r g2.name`](`r paste('deg', deg.sub[1], 'index.html', sep='/')`)
+    - [`r nrow(dn)` DEGs with lower expression in `r g2.name`](`r paste('deg', deg.sub[2], 'index.html', sep='/')`)
 
   - **Download:**
     - [DEG tables and figures](deg/deg.zip)
@@ -543,12 +549,12 @@ To reproduce this report:
 
   2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
 
-    - _output_        : where you want to put the output files
-    - _home_          : the URL if you have a home page for your project
-    - _analyst_       : your name
-    - _description_   : background information about your project, analysis, etc.
-    - _input_         : where are your input data, read instruction for preparing them
-    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+    - **output**        : where you want to put the output files
+    - **home**          : the URL if you have a home page for your project
+    - **analyst**       : your name
+    - **description**   : background information about your project, analysis, etc.
+    - **input**         : where are your input data, read instruction for preparing them
+    - **parameter**     : parameters for this analysis; read instruction about how to prepare input data
 
   3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
 
