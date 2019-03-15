@@ -254,7 +254,7 @@ if (shp=='square') pch <- 15 else if (shp=='triangle') pch <- 17 else if (shp=='
 
 fns <- sapply(colnames(smp), function(nm) { 
   fn <- paste(path.fig, paste('pca_', nm, '.png', sep=''), sep='/');
-  png(fn, w=800, h=600); 
+  png(fn, w=1600, h=1200); 
   cex <- min(4, max(0.5, 256/nrow(smp))); 
   cnm <- length(unique(smp[, nm]));
   if (cnm==1) col <- col[1] else 
