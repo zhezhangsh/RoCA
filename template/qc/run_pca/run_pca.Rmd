@@ -263,7 +263,7 @@ fns <- sapply(colnames(smp), function(nm) {
   names(col) <- unique(smp[, nm]); 
   col <- col[as.character(smp[, nm])]; 
   PlotPCA(pca, groups=smp[, nm], new.window = FALSE, cex=cex, col=col, label=1:nrow(smp), 
-          legend=TRUE, legend.single = TRUE, dimensions = c(plt$dimension[1], plt$dimension[2])); 
+          legend=TRUE, legend.single = identical('ID', nm), dimensions = c(plt$dimension[1], plt$dimension[2])); 
   if (dev.cur()!=1) dev.off(); 
   fn; 
 }); 
