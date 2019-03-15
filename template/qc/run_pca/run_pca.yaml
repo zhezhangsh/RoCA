@@ -15,8 +15,7 @@
 ##### REQUIRED #####
 ####################
 # Required by the RoCA framework to generate a reproducible report
-#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/adjust_batch/adjust_batch.Rmd      
-template: run_pca.Rmd      
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/run_pca/run_pca.Rmd      
 output: examples/circadian_rhythm/                                                                                # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                                                            # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                                                # Name of the analyst

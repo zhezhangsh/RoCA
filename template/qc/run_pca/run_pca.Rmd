@@ -88,7 +88,7 @@ if (!is.null(fil.mn) & length(fil.mn)>0) if (!is.na(fil.mn))
 # Filter by nsd/outlier
 fil.sd <- as.numeric(prms$filter$nsd);
 if (!is.null(fil.sd) & length(fil.sd)>0) if (!is.na(fil.sd)) {
-  nsd <- sapply(1:ncol(mtrx), function(i) abs(mtrx[, i]/apply(mtrx[, -i, drop=FALSE], 1, sd)));
+  nsd <- sapply(1:ncol(mtrx), function(i) abs(mtrx[, i]-mean(mtrx[, -i]))/apply(mtrx[, -i, drop=FALSE], 1, sd));
   mtrx <- mtrx[apply(nsd, 1, max)<=fil.sd, , drop=FALSE];
 }; 
 
@@ -240,7 +240,8 @@ CreateDatatable(tbl, paste(path.tbl, 'download.html', sep='/'), caption = 'Click
 Plot covariance of **`r paste0('PC', prms$plot$dimension[1])`** and **`r paste0('PC', prms$plot$dimension[2])`** and color samples by their characteristics.
 
 ```{r plot_pca, include=FALSE}
-smp <- smpl[, !(colnames(smpl) %in% names(prms$exclude)), drop=FALSE];
+smp <- smpl[, !(colnames(smpl) %in% prms$exclude), drop=FALSE];
+smp <- cbind(ID=rownames(smp), smp); 
 
 plt <- prms$plot;
 col <- plt$color;
@@ -261,8 +262,8 @@ fns <- sapply(colnames(smp), function(nm) {
       col <- colorpanel(length(unique(smp[, nm])), col[1], col[2], col[3]);
   names(col) <- unique(smp[, nm]); 
   col <- col[as.character(smp[, nm])]; 
-  PlotPCA(pca, groups=rownames(smp), new.window = FALSE, cex=cex, col=col, label=1:nrow(smp), 
-          legend=TRUE, legend.single = TRUE, dimensions = c(plt$dimension[1], plt$dimension[2])); 
+  PlotPCA(pca, groups=smp[, nm], new.window = FALSE, cex=cex, col=col, label=1:nrow(smp), 
+          legend=TRUE, legend.single = FALSE, dimensions = c(plt$dimension[1], plt$dimension[2])); 
   if (dev.cur()!=1) dev.off(); 
   fn; 
 }); 
