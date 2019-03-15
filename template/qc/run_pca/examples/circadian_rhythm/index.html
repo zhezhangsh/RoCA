@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Zhe Zhang" />
+
+<meta name="date" content="2019-03-15" />
+
+<title>Run Principal Components Analysis (PCA) and plot results</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Run Principal Components Analysis (PCA) and plot results</h1>
+<h4 class="author"><em>Zhe Zhang</em></h4>
+<h4 class="date"><em>2019-03-15</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This procedure runs Principal Components Analysis (PCA) for quality control and sample analysis purposes. It uses a data matrix of variables (rows) and samples (columns), such as a normalized transcriptome data set, as input, and plots results based on one or multipel sample characteristics, .</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1 tabset">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. (<strong><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">GSE67426</a></strong>)</p>
+</div>
+<div id="pubmed" class="section level2">
+<h2><span class="header-section-number">1.2</span> PubMed</h2>
+<p>Jouffe C, Gobet C, Martin E, Métairon S et al. Perturbed rhythmic activation of signaling pathways in mice deficient for Sterol Carrier Protein 2-dependent diurnal lipid transport and metabolism. Sci Rep 2016 Apr 21;6:24631. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/27097688">27097688</a>.</p>
+</div>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">1.3</span> Experimental design</h2>
+<p>Comparison of liver mRNA expression from Scp2 KO and wild-type mice harvested every 2 hours during 3 consecutive days.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.4</span> Analysis</h2>
+<p>This analysis runs PCA using the data of wild type mice and a subset of genes with high between sample variance.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="analysis-and-results" class="section level1">
+<h1><span class="header-section-number">2</span> Analysis and results</h1>
+<div id="run-pca" class="section level2">
+<h2><span class="header-section-number">2.1</span> Run PCA</h2>
+<p>Principal Components Analysis is run on <strong>2577</strong> variables and <strong>36</strong> samples.</p>
+<div id="variance-proportion" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Variance proportion</h3>
+<p>Total variance contributed by each PC.</p>
+<p><img src="figure/variance_proportion-1.png" width="800px" /></p>
+<p><strong>Figure 1.</strong> Cummulative variance contributed by ordered PCs. Click link below to view full table:</p>
+<blockquote>
+<p><a href="table/pca_summary.html">PCA summary</a> (<a href="table/pca_summary.csv">Download</a>)</p>
+</blockquote>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="sample-covariance" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Sample covariance</h3>
+<p>Covariance of each PC by samples.</p>
+<p><strong>Table 1.</strong> Sample covariance of first 8 PCs. Click link below to view all PCs.</p>
+<blockquote>
+<p><a href="table/pca_covariance.html">Full covariance table</a> (<a href="table/pca_covariance.csv">Download</a>)</p>
+</blockquote>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+PC1
+</th>
+<th style="text-align:right;">
+PC2
+</th>
+<th style="text-align:right;">
+PC3
+</th>
+<th style="text-align:right;">
+PC4
+</th>
+<th style="text-align:right;">
+PC5
+</th>
+<th style="text-align:right;">
+PC6
+</th>
+<th style="text-align:right;">
+PC7
+</th>
+<th style="text-align:right;">
+PC8
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+WT_00Hr_1
+</td>
+<td style="text-align:right;">
+-5.3653
+</td>
+<td style="text-align:right;">
+0.4297
+</td>
+<td style="text-align:right;">
+-0.3260
+</td>
+<td style="text-align:right;">
+2.9211
+</td>
+<td style="text-align:right;">
+-1.0051
+</td>
+<td style="text-align:right;">
+0.5299
+</td>
+<td style="text-align:right;">
+-2.5754
+</td>
+<td style="text-align:right;">
+1.0975
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_00Hr_2
+</td>
+<td style="text-align:right;">
+-5.5159
+</td>
+<td style="text-align:right;">
+1.1305
+</td>
+<td style="text-align:right;">
+-0.3443
+</td>
+<td style="text-align:right;">
+1.6171
+</td>
+<td style="text-align:right;">
+-2.6989
+</td>
+<td style="text-align:right;">
+2.0381
+</td>
+<td style="text-align:right;">
+3.4381
+</td>
+<td style="text-align:right;">
+-0.4878
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_00Hr_3
+</td>
+<td style="text-align:right;">
+-5.5803
+</td>
+<td style="text-align:right;">
+0.7641
+</td>
+<td style="text-align:right;">
+-2.2733
+</td>
+<td style="text-align:right;">
+-5.0217
+</td>
+<td style="text-align:right;">
+0.4280
+</td>
+<td style="text-align:right;">
+-0.0552
+</td>
+<td style="text-align:right;">
+-0.4308
+</td>
+<td style="text-align:right;">
+0.3637
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_02Hr_1
+</td>
+<td style="text-align:right;">
+-6.2424
+</td>
+<td style="text-align:right;">
+-2.0961
+</td>
+<td style="text-align:right;">
+0.5513
+</td>
+<td style="text-align:right;">
+2.1851
+</td>
+<td style="text-align:right;">
+-2.1005
+</td>
+<td style="text-align:right;">
+0.4040
+</td>
+<td style="text-align:right;">
+-1.5719
+</td>
+<td style="text-align:right;">
+1.1051
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_02Hr_2
+</td>
+<td style="text-align:right;">
+-6.2833
+</td>
+<td style="text-align:right;">
+-1.0597
+</td>
+<td style="text-align:right;">
+-1.1712
+</td>
+<td style="text-align:right;">
+2.1795
+</td>
+<td style="text-align:right;">
+0.7454
+</td>
+<td style="text-align:right;">
+1.8716
+</td>
+<td style="text-align:right;">
+-3.5054
+</td>
+<td style="text-align:right;">
+0.9653
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_02Hr_3
+</td>
+<td style="text-align:right;">
+-6.6739
+</td>
+<td style="text-align:right;">
+-1.4789
+</td>
+<td style="text-align:right;">
+-0.7135
+</td>
+<td style="text-align:right;">
+-3.6441
+</td>
+<td style="text-align:right;">
+-2.4900
+</td>
+<td style="text-align:right;">
+-2.9372
+</td>
+<td style="text-align:right;">
+2.4520
+</td>
+<td style="text-align:right;">
+-2.2807
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_04Hr_1
+</td>
+<td style="text-align:right;">
+-6.2174
+</td>
+<td style="text-align:right;">
+-3.0287
+</td>
+<td style="text-align:right;">
+-0.1887
+</td>
+<td style="text-align:right;">
+3.0080
+</td>
+<td style="text-align:right;">
+-2.6233
+</td>
+<td style="text-align:right;">
+1.0742
+</td>
+<td style="text-align:right;">
+-2.7248
+</td>
+<td style="text-align:right;">
+1.6584
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_04Hr_2
+</td>
+<td style="text-align:right;">
+-3.5803
+</td>
+<td style="text-align:right;">
+-7.1737
+</td>
+<td style="text-align:right;">
+-1.3746
+</td>
+<td style="text-align:right;">
+1.1111
+</td>
+<td style="text-align:right;">
+2.8587
+</td>
+<td style="text-align:right;">
+2.4888
+</td>
+<td style="text-align:right;">
+-2.4172
+</td>
+<td style="text-align:right;">
+0.6770
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_04Hr_3
+</td>
+<td style="text-align:right;">
+-5.6291
+</td>
+<td style="text-align:right;">
+-2.9376
+</td>
+<td style="text-align:right;">
+-3.7645
+</td>
+<td style="text-align:right;">
+-0.9480
+</td>
+<td style="text-align:right;">
+-4.9302
+</td>
+<td style="text-align:right;">
+0.1865
+</td>
+<td style="text-align:right;">
+-0.9530
+</td>
+<td style="text-align:right;">
+-0.6430
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_06Hr_1
+</td>
+<td style="text-align:right;">
+-2.7732
+</td>
+<td style="text-align:right;">
+-7.7162
+</td>
+<td style="text-align:right;">
+1.2366
+</td>
+<td style="text-align:right;">
+1.6612
+</td>
+<td style="text-align:right;">
+2.0917
+</td>
+<td style="text-align:right;">
+-2.4826
+</td>
+<td style="text-align:right;">
+0.4154
+</td>
+<td style="text-align:right;">
+0.7859
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_06Hr_2
+</td>
+<td style="text-align:right;">
+-2.7276
+</td>
+<td style="text-align:right;">
+-6.2334
+</td>
+<td style="text-align:right;">
+-0.7832
+</td>
+<td style="text-align:right;">
+0.1404
+</td>
+<td style="text-align:right;">
+1.8661
+</td>
+<td style="text-align:right;">
+2.9411
+</td>
+<td style="text-align:right;">
+-0.6162
+</td>
+<td style="text-align:right;">
+2.4746
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_06Hr_3
+</td>
+<td style="text-align:right;">
+-1.4733
+</td>
+<td style="text-align:right;">
+-5.6720
+</td>
+<td style="text-align:right;">
+0.0014
+</td>
+<td style="text-align:right;">
+-3.0785
+</td>
+<td style="text-align:right;">
+-3.6296
+</td>
+<td style="text-align:right;">
+-0.4545
+</td>
+<td style="text-align:right;">
+2.2566
+</td>
+<td style="text-align:right;">
+1.8753
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_08Hr_1
+</td>
+<td style="text-align:right;">
+3.3669
+</td>
+<td style="text-align:right;">
+-7.9168
+</td>
+<td style="text-align:right;">
+5.1325
+</td>
+<td style="text-align:right;">
+1.8984
+</td>
+<td style="text-align:right;">
+-0.6489
+</td>
+<td style="text-align:right;">
+-0.9367
+</td>
+<td style="text-align:right;">
+4.4768
+</td>
+<td style="text-align:right;">
+1.0138
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_08Hr_2
+</td>
+<td style="text-align:right;">
+2.5534
+</td>
+<td style="text-align:right;">
+-7.5441
+</td>
+<td style="text-align:right;">
+2.6989
+</td>
+<td style="text-align:right;">
+-0.2472
+</td>
+<td style="text-align:right;">
+0.2528
+</td>
+<td style="text-align:right;">
+1.5924
+</td>
+<td style="text-align:right;">
+0.1400
+</td>
+<td style="text-align:right;">
+0.0760
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_08Hr_3
+</td>
+<td style="text-align:right;">
+3.4187
+</td>
+<td style="text-align:right;">
+-8.0227
+</td>
+<td style="text-align:right;">
+1.0088
+</td>
+<td style="text-align:right;">
+-3.7609
+</td>
+<td style="text-align:right;">
+3.0087
+</td>
+<td style="text-align:right;">
+-0.8807
+</td>
+<td style="text-align:right;">
+-1.1447
+</td>
+<td style="text-align:right;">
+1.6713
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_10Hr_1
+</td>
+<td style="text-align:right;">
+7.0086
+</td>
+<td style="text-align:right;">
+-2.3789
+</td>
+<td style="text-align:right;">
+4.4519
+</td>
+<td style="text-align:right;">
+-0.5140
+</td>
+<td style="text-align:right;">
+-0.0560
+</td>
+<td style="text-align:right;">
+-0.5030
+</td>
+<td style="text-align:right;">
+1.1038
+</td>
+<td style="text-align:right;">
+1.1676
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_10Hr_2
+</td>
+<td style="text-align:right;">
+6.0623
+</td>
+<td style="text-align:right;">
+-5.6915
+</td>
+<td style="text-align:right;">
+5.0846
+</td>
+<td style="text-align:right;">
+0.0447
+</td>
+<td style="text-align:right;">
+0.5605
+</td>
+<td style="text-align:right;">
+3.8388
+</td>
+<td style="text-align:right;">
+-2.1658
+</td>
+<td style="text-align:right;">
+-10.3869
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_10Hr_3
+</td>
+<td style="text-align:right;">
+5.6923
+</td>
+<td style="text-align:right;">
+-3.8802
+</td>
+<td style="text-align:right;">
+2.1214
+</td>
+<td style="text-align:right;">
+-2.2565
+</td>
+<td style="text-align:right;">
+1.7470
+</td>
+<td style="text-align:right;">
+-2.8569
+</td>
+<td style="text-align:right;">
+-1.5845
+</td>
+<td style="text-align:right;">
+-0.0495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_12Hr_1
+</td>
+<td style="text-align:right;">
+7.0959
+</td>
+<td style="text-align:right;">
+-3.1205
+</td>
+<td style="text-align:right;">
+5.2216
+</td>
+<td style="text-align:right;">
+2.5552
+</td>
+<td style="text-align:right;">
+-1.8742
+</td>
+<td style="text-align:right;">
+-1.7857
+</td>
+<td style="text-align:right;">
+4.1083
+</td>
+<td style="text-align:right;">
+1.0528
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_12Hr_2
+</td>
+<td style="text-align:right;">
+13.8210
+</td>
+<td style="text-align:right;">
+-4.3316
+</td>
+<td style="text-align:right;">
+-19.9750
+</td>
+<td style="text-align:right;">
+2.7597
+</td>
+<td style="text-align:right;">
+-2.2019
+</td>
+<td style="text-align:right;">
+-1.9665
+</td>
+<td style="text-align:right;">
+-0.3363
+</td>
+<td style="text-align:right;">
+-1.0988
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_12Hr_3
+</td>
+<td style="text-align:right;">
+8.9042
+</td>
+<td style="text-align:right;">
+1.7038
+</td>
+<td style="text-align:right;">
+2.4947
+</td>
+<td style="text-align:right;">
+-2.7234
+</td>
+<td style="text-align:right;">
+1.5983
+</td>
+<td style="text-align:right;">
+-2.0569
+</td>
+<td style="text-align:right;">
+-1.0050
+</td>
+<td style="text-align:right;">
+1.9138
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_14Hr_1
+</td>
+<td style="text-align:right;">
+6.6249
+</td>
+<td style="text-align:right;">
+5.3288
+</td>
+<td style="text-align:right;">
+3.9825
+</td>
+<td style="text-align:right;">
+0.7294
+</td>
+<td style="text-align:right;">
+-0.4218
+</td>
+<td style="text-align:right;">
+1.2382
+</td>
+<td style="text-align:right;">
+-3.6207
+</td>
+<td style="text-align:right;">
+2.0477
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_14Hr_2
+</td>
+<td style="text-align:right;">
+6.2264
+</td>
+<td style="text-align:right;">
+5.3059
+</td>
+<td style="text-align:right;">
+2.7643
+</td>
+<td style="text-align:right;">
+0.2601
+</td>
+<td style="text-align:right;">
+-3.3886
+</td>
+<td style="text-align:right;">
+3.3259
+</td>
+<td style="text-align:right;">
+-0.3437
+</td>
+<td style="text-align:right;">
+0.3636
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_14Hr_3
+</td>
+<td style="text-align:right;">
+6.2558
+</td>
+<td style="text-align:right;">
+5.6946
+</td>
+<td style="text-align:right;">
+0.9185
+</td>
+<td style="text-align:right;">
+-1.7285
+</td>
+<td style="text-align:right;">
+-2.1836
+</td>
+<td style="text-align:right;">
+0.0007
+</td>
+<td style="text-align:right;">
+-2.8577
+</td>
+<td style="text-align:right;">
+1.7289
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_16Hr_1
+</td>
+<td style="text-align:right;">
+1.0736
+</td>
+<td style="text-align:right;">
+7.5955
+</td>
+<td style="text-align:right;">
+1.3889
+</td>
+<td style="text-align:right;">
+5.4132
+</td>
+<td style="text-align:right;">
+2.2498
+</td>
+<td style="text-align:right;">
+-2.3144
+</td>
+<td style="text-align:right;">
+-2.2245
+</td>
+<td style="text-align:right;">
+-0.4224
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_16Hr_2
+</td>
+<td style="text-align:right;">
+2.6759
+</td>
+<td style="text-align:right;">
+8.9629
+</td>
+<td style="text-align:right;">
+0.2309
+</td>
+<td style="text-align:right;">
+2.3421
+</td>
+<td style="text-align:right;">
+-1.1684
+</td>
+<td style="text-align:right;">
+1.8990
+</td>
+<td style="text-align:right;">
+1.9425
+</td>
+<td style="text-align:right;">
+-0.1360
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_16Hr_3
+</td>
+<td style="text-align:right;">
+2.2867
+</td>
+<td style="text-align:right;">
+7.8590
+</td>
+<td style="text-align:right;">
+0.3350
+</td>
+<td style="text-align:right;">
+-2.5114
+</td>
+<td style="text-align:right;">
+-0.5044
+</td>
+<td style="text-align:right;">
+1.0376
+</td>
+<td style="text-align:right;">
+-1.6665
+</td>
+<td style="text-align:right;">
+0.4380
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_18Hr_1
+</td>
+<td style="text-align:right;">
+-0.6720
+</td>
+<td style="text-align:right;">
+6.9389
+</td>
+<td style="text-align:right;">
+1.0837
+</td>
+<td style="text-align:right;">
+2.8253
+</td>
+<td style="text-align:right;">
+2.5081
+</td>
+<td style="text-align:right;">
+-4.0850
+</td>
+<td style="text-align:right;">
+0.6424
+</td>
+<td style="text-align:right;">
+-0.4941
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_18Hr_2
+</td>
+<td style="text-align:right;">
+-0.6742
+</td>
+<td style="text-align:right;">
+5.9112
+</td>
+<td style="text-align:right;">
+-0.2043
+</td>
+<td style="text-align:right;">
+3.0885
+</td>
+<td style="text-align:right;">
+-2.6176
+</td>
+<td style="text-align:right;">
+3.3454
+</td>
+<td style="text-align:right;">
+5.1242
+</td>
+<td style="text-align:right;">
+-0.0099
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_18Hr_3
+</td>
+<td style="text-align:right;">
+-1.3937
+</td>
+<td style="text-align:right;">
+7.4054
+</td>
+<td style="text-align:right;">
+-1.5594
+</td>
+<td style="text-align:right;">
+-4.6959
+</td>
+<td style="text-align:right;">
+0.3105
+</td>
+<td style="text-align:right;">
+-0.7569
+</td>
+<td style="text-align:right;">
+-1.1090
+</td>
+<td style="text-align:right;">
+-0.9206
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_20Hr_1
+</td>
+<td style="text-align:right;">
+-4.7818
+</td>
+<td style="text-align:right;">
+2.1605
+</td>
+<td style="text-align:right;">
+0.5838
+</td>
+<td style="text-align:right;">
+2.8258
+</td>
+<td style="text-align:right;">
+1.5735
+</td>
+<td style="text-align:right;">
+-4.0793
+</td>
+<td style="text-align:right;">
+1.9793
+</td>
+<td style="text-align:right;">
+-2.0699
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_20Hr_2
+</td>
+<td style="text-align:right;">
+-0.6059
+</td>
+<td style="text-align:right;">
+2.9931
+</td>
+<td style="text-align:right;">
+-5.4097
+</td>
+<td style="text-align:right;">
+0.1671
+</td>
+<td style="text-align:right;">
+10.3066
+</td>
+<td style="text-align:right;">
+4.2656
+</td>
+<td style="text-align:right;">
+4.7302
+</td>
+<td style="text-align:right;">
+0.6877
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_20Hr_3
+</td>
+<td style="text-align:right;">
+-1.1810
+</td>
+<td style="text-align:right;">
+4.8705
+</td>
+<td style="text-align:right;">
+-1.4282
+</td>
+<td style="text-align:right;">
+-6.4638
+</td>
+<td style="text-align:right;">
+0.8340
+</td>
+<td style="text-align:right;">
+0.9059
+</td>
+<td style="text-align:right;">
+1.5513
+</td>
+<td style="text-align:right;">
+-0.0407
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_22Hr_1
+</td>
+<td style="text-align:right;">
+-5.8241
+</td>
+<td style="text-align:right;">
+2.0295
+</td>
+<td style="text-align:right;">
+0.7671
+</td>
+<td style="text-align:right;">
+1.8468
+</td>
+<td style="text-align:right;">
+2.1727
+</td>
+<td style="text-align:right;">
+-5.7238
+</td>
+<td style="text-align:right;">
+-2.1027
+</td>
+<td style="text-align:right;">
+-1.7066
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_22Hr_2
+</td>
+<td style="text-align:right;">
+-4.5364
+</td>
+<td style="text-align:right;">
+0.6434
+</td>
+<td style="text-align:right;">
+-1.2366
+</td>
+<td style="text-align:right;">
+-0.5499
+</td>
+<td style="text-align:right;">
+0.9017
+</td>
+<td style="text-align:right;">
+3.1030
+</td>
+<td style="text-align:right;">
+-1.3984
+</td>
+<td style="text-align:right;">
+-0.7756
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_22Hr_3
+</td>
+<td style="text-align:right;">
+-5.3357
+</td>
+<td style="text-align:right;">
+2.5554
+</td>
+<td style="text-align:right;">
+-1.3061
+</td>
+<td style="text-align:right;">
+-3.4362
+</td>
+<td style="text-align:right;">
+-1.4713
+</td>
+<td style="text-align:right;">
+-2.2116
+</td>
+<td style="text-align:right;">
+1.9933
+</td>
+<td style="text-align:right;">
+-1.6417
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="figure/sample_covariance-1.png" width="800px" /></p>
+<p><strong>Figure 2.</strong> Distribution of sample covariance by PCs. Outliers were drawn beyond the boxes. Click link below to see individual outliers.</p>
+<blockquote>
+<p><a href="table/download.html">Download outlier samples</a></p>
+</blockquote>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="variable-loading" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> Variable loading</h3>
+<p>Loading (weight) of variables on each PC.</p>
+<blockquote>
+<p><a href="table/pca_loading.html">Full variable loading table</a> (<a href="table/pca_loading.csv">Download</a>)</p>
+</blockquote>
+<p><img src="figure/variable_loading-1.png" width="800px" /></p>
+<p><strong>Figure 3.</strong> Distribution of variable loading by PCs. Outliers drawn beyond the boxes are variables with high contribution to each PC. Click link below to see individual outliers.</p>
+<blockquote>
+<p><a href="table/download.html">Downlaod high loading variables</a></p>
+</blockquote>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="remove-pc" class="section level3">
+<h3><span class="header-section-number">2.1.4</span> Remove PC</h3>
+<p>In case a PC is obviously related to a confounder, such as batch effect and gender, its impact can be removed by calculating the residuals of a linear fitting between each variable and each PC. A residual matrix is generated corresponding to the removal of each PC.</p>
+<blockquote>
+<p><a href="table/download.html">Download residual matrix</a></p>
+</blockquote>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="plot-pca" class="section level2 tabset">
+<h2><span class="header-section-number">2.2</span> Plot PCA</h2>
+<p>Plot covariance of <strong>PC1</strong> and <strong>PC2</strong> and color samples by their characteristics.</p>
+<div id="id" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> ID</h3>
+<div class="figure">
+<img src="figure/pca_ID.png" />
+
+</div>
+</div>
+<div id="group" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Group</h3>
+<div class="figure">
+<img src="figure/pca_Group.png" />
+
+</div>
+</div>
+<div id="replicate" class="section level3">
+<h3><span class="header-section-number">2.2.3</span> Replicate</h3>
+<div class="figure">
+<img src="figure/pca_Replicate.png" />
+
+</div>
+</div>
+<div id="hour" class="section level3">
+<h3><span class="header-section-number">2.2.4</span> Hour</h3>
+<div class="figure">
+<img src="figure/pca_Hour.png" />
+
+</div>
+</div>
+</div>
+<div id="sample-characteristics" class="section level2">
+<h2><span class="header-section-number">2.3</span> Sample characteristics</h2>
+<p><strong>Table 2.</strong> Full sample characteristics (<a href="table/sample.csv">download</a>).</p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Group
+</th>
+<th style="text-align:left;">
+Replicate
+</th>
+<th style="text-align:right;">
+Hour
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+WT_00Hr_1
+</td>
+<td style="text-align:left;">
+WT_00Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_00Hr_2
+</td>
+<td style="text-align:left;">
+WT_00Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_00Hr_3
+</td>
+<td style="text-align:left;">
+WT_00Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_02Hr_1
+</td>
+<td style="text-align:left;">
+WT_02Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_02Hr_2
+</td>
+<td style="text-align:left;">
+WT_02Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_02Hr_3
+</td>
+<td style="text-align:left;">
+WT_02Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_04Hr_1
+</td>
+<td style="text-align:left;">
+WT_04Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_04Hr_2
+</td>
+<td style="text-align:left;">
+WT_04Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_04Hr_3
+</td>
+<td style="text-align:left;">
+WT_04Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_06Hr_1
+</td>
+<td style="text-align:left;">
+WT_06Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_06Hr_2
+</td>
+<td style="text-align:left;">
+WT_06Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_06Hr_3
+</td>
+<td style="text-align:left;">
+WT_06Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_08Hr_1
+</td>
+<td style="text-align:left;">
+WT_08Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_08Hr_2
+</td>
+<td style="text-align:left;">
+WT_08Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_08Hr_3
+</td>
+<td style="text-align:left;">
+WT_08Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_10Hr_1
+</td>
+<td style="text-align:left;">
+WT_10Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_10Hr_2
+</td>
+<td style="text-align:left;">
+WT_10Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_10Hr_3
+</td>
+<td style="text-align:left;">
+WT_10Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_12Hr_1
+</td>
+<td style="text-align:left;">
+WT_12Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_12Hr_2
+</td>
+<td style="text-align:left;">
+WT_12Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_12Hr_3
+</td>
+<td style="text-align:left;">
+WT_12Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+12
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_14Hr_1
+</td>
+<td style="text-align:left;">
+WT_14Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_14Hr_2
+</td>
+<td style="text-align:left;">
+WT_14Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_14Hr_3
+</td>
+<td style="text-align:left;">
+WT_14Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_16Hr_1
+</td>
+<td style="text-align:left;">
+WT_16Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_16Hr_2
+</td>
+<td style="text-align:left;">
+WT_16Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_16Hr_3
+</td>
+<td style="text-align:left;">
+WT_16Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+16
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_18Hr_1
+</td>
+<td style="text-align:left;">
+WT_18Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_18Hr_2
+</td>
+<td style="text-align:left;">
+WT_18Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_18Hr_3
+</td>
+<td style="text-align:left;">
+WT_18Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_20Hr_1
+</td>
+<td style="text-align:left;">
+WT_20Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_20Hr_2
+</td>
+<td style="text-align:left;">
+WT_20Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_20Hr_3
+</td>
+<td style="text-align:left;">
+WT_20Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_22Hr_1
+</td>
+<td style="text-align:left;">
+WT_22Hr
+</td>
+<td style="text-align:left;">
+Rep1
+</td>
+<td style="text-align:right;">
+22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_22Hr_2
+</td>
+<td style="text-align:left;">
+WT_22Hr
+</td>
+<td style="text-align:left;">
+Rep2
+</td>
+<td style="text-align:right;">
+22
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WT_22Hr_3
+</td>
+<td style="text-align:left;">
+WT_22Hr
+</td>
+<td style="text-align:left;">
+Rep3
+</td>
+<td style="text-align:right;">
+22
+</td>
+</tr>
+</tbody>
+</table>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">3</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">3.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">3.2</span> Session information</h2>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.6
+## 
+## Matrix products: default
+## BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] gplots_3.0.1        htmlwidgets_1.3     DT_0.5             
+##  [4] kableExtra_0.9.0    awsomics_0.0.0.9000 yaml_2.2.0         
+##  [7] rmarkdown_1.10      knitr_1.20          RoCA_0.0.0.9000    
+## [10] RCurl_1.95-4.11     bitops_1.0-6        usethis_1.4.0      
+## [13] devtools_2.0.1     
+## 
+## loaded via a namespace (and not attached):
+##  [1] gtools_3.8.1       remotes_2.0.2      colorspace_1.3-2  
+##  [4] htmltools_0.3.6    viridisLite_0.3.0  base64enc_0.1-3   
+##  [7] rlang_0.3.0.1      pkgbuild_1.0.2     later_0.7.5       
+## [10] pillar_1.3.0       glue_1.3.0         withr_2.1.2       
+## [13] sessioninfo_1.1.1  stringr_1.3.1      munsell_0.5.0     
+## [16] rvest_0.3.2        caTools_1.17.1.1   evaluate_0.12     
+## [19] memoise_1.1.0      callr_3.0.0        httpuv_1.4.5      
+## [22] crosstalk_1.0.0    ps_1.2.1           highr_0.7         
+## [25] Rcpp_1.0.0         xtable_1.8-3       KernSmooth_2.23-15
+## [28] readr_1.2.1        promises_1.0.1     backports_1.1.2   
+## [31] scales_1.0.0       gdata_2.18.0       desc_1.2.0        
+## [34] pkgload_1.0.2      jsonlite_1.5       mime_0.6          
+## [37] fs_1.2.6           hms_0.4.2          digest_0.6.18     
+## [40] stringi_1.2.4      shiny_1.2.0        processx_3.2.0    
+## [43] rprojroot_1.3-2    cli_1.0.1          tools_3.5.1       
+## [46] magrittr_1.5       tibble_1.4.2       crayon_1.3.4      
+## [49] pkgconfig_2.0.2    xml2_1.2.0         prettyunits_1.0.2 
+## [52] assertthat_0.2.0   httr_1.3.1         rstudioapi_0.8    
+## [55] R6_2.3.0           compiler_3.5.1</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
