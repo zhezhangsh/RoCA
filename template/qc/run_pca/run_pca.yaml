@@ -15,8 +15,8 @@
 ##### REQUIRED #####
 ####################
 # Required by the RoCA framework to generate a reproducible report
-#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/run_pca/run_pca.Rmd      
-template: run_pca.Rmd      
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/run_pca/run_pca.Rmd      
+#template: run_pca.Rmd      
 output: examples/circadian_rhythm/                                                                                # Where to write all the output files
 home: http://zhezhangsh.github.io/RoCA                                                                            # URL or path to the project home page. Leave it empty if the page doesn't exist.
 analyst: Zhe Zhang                                                                                                # Name of the analyst
@@ -61,13 +61,13 @@ parameter:
     color:  ## values betrwen 0 and 1
       red:  
       - 1.0 # Low color
-      - 0.8 # Mid color
-      - 0.1 # High color
+      - 0.4 # Mid color
+      - 0.0 # High color
       green:
       - 0.4
-      - 0.8
+      - 1.0
       - 0.6
       blue:
       - 0.1
-      - 0.8
+      - 0.3
       - 1.0
