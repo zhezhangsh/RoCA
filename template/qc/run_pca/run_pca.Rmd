@@ -257,7 +257,7 @@ pch <- 19;
 if (shp=='square') pch <- 15 else if (shp=='triangle') pch <- 17 else if (shp=='diamond') pch <- 18;
 
 fns <- sapply(colnames(smp), function(nm) { 
-  if (!identical('ID', nm)) smp <- smp[order(smp[, nm]), , drop=FALSE];
+  # if (!identical('ID', nm)) smp <- smp[order(smp[, nm]), , drop=FALSE];
   fn <- paste(path.fig, paste('pca_', nm, '.png', sep=''), sep='/');
   png(fn, w=1000, h=750); 
   cex <- min(5, max(0.5, 200/nrow(smp))); 
@@ -284,7 +284,7 @@ fns <- sapply(colnames(smp), function(nm) {
     grp <- paste0('[', lbl, '] - ', smp[, nm]);
   } 
   
-  PlotPCA(prcomp(t(mtrx[, rownames(smp)])), groups=grp, new.window = FALSE, cex=cex, col=col, label=lbl, legend=TRUE, 
+  PlotPCA(pca, groups=grp, new.window = FALSE, cex=cex, col=col, label=lbl, legend=TRUE, 
           legend.single = identical('ID', nm), dimensions = c(plt$dimension[1], plt$dimension[2])); 
   if (dev.cur()!=1) dev.off(); 
   fn; 
