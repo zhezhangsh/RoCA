@@ -53,6 +53,7 @@ parameter:
     mean:         # null: no filtering; otherwise, filter by given value of variable mean
     nsd:          # null: no filtering; otherwise, filter by given value of NSD of outliers
   exclude:        ## Sample characteristics, or value of a characteristics, to be excluded from PCA plots
+    - Hour
   plot:
     shape: circle   # circle, square, triangle, diamond
     dimension:

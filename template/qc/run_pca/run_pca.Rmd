@@ -68,6 +68,8 @@ smpl <- ImportTable(DownloadFile(yml$input$sample, path.input));
 smpl <- smpl[rownames(smpl) %in% colnames(mtrx), , drop=FALSE];
 mtrx <- mtrx[, rownames(smpl), drop=FALSE];
 
+for (i in 1:ncol(smpl)) smpl[[i]] <- as.vector(smpl[[i]]);
+
 write.csv(smpl, paste(path.tbl, 'sample.csv', sep='/'));
 
 # Filter by missing values
@@ -275,11 +277,14 @@ fns <- sapply(colnames(smp), function(nm) {
     lbl <- 1:nrow(smp);
     grp <- smp[, nm]; 
   } else {
-    lbl <- as.integer(as.factor(smp[, nm]));
+    uni <- smp[!duplicated(smp[, nm]), nm];
+    lbl <- 1:length(uni);
+    names(lbl) <- uni;
+    lbl <- lbl[as.character(smp[, nm])];
     grp <- paste0('[', lbl, '] - ', smp[, nm]);
   } 
   
-  PlotPCA(pca, groups=grp, new.window = FALSE, cex=cex, col=col, label=lbl, legend=TRUE, 
+  PlotPCA(prcomp(t(mtrx[, rownames(smp)])), groups=grp, new.window = FALSE, cex=cex, col=col, label=lbl, legend=TRUE, 
           legend.single = identical('ID', nm), dimensions = c(plt$dimension[1], plt$dimension[2])); 
   if (dev.cur()!=1) dev.off(); 
   fn; 
