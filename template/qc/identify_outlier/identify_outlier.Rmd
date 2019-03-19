@@ -305,8 +305,13 @@ Top genes having the biggest difference between outlier and corresponding non-ou
   - From the remaining genes, pick the top `r prms$difference$max` with the largest changes in the outlier.
   - From the remaining genes, pick those with changes greater than `r prms$difference$mean`, or the top `r prms$difference$min` genes having the largest changes, which ever gives more genes.
 
-```{r top_gene, include=FALSE}
-if (nrow(outliers) == 0) lns<-'No outliers found' else {
+
+<div style="color:darkblue">
+`r OrderTable()` The numbers of top genes selected from each outlier.
+</div>
+
+```{r top_gene, include=TRUE}
+if (nrow(outliers) == 0) 'No outliers found' else {
   # select DEGs
   tops<-lapply(1:nrow(outliers), function(i) {
     dff<-d1[[i]]-rowMeans(d0[[i]]);
@@ -352,16 +357,10 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
   colnames(n)<-colnames(fn)<-c('Higher in outlier', 'Low in outlier'); 
   tbl<-t(sapply(rownames(n), function(nm) paste('[', n[nm, ], '](', fn[nm, ], ')', sep='')));
   dimnames(tbl)<-dimnames(n);
-  lns<-kable(tbl, row.names=TRUE, align=c('c', 'c'));
+  kable(tbl, row.names=TRUE, align=c('c', 'c')) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
 } 
 ```
-
-<div style="color:darkblue">
-`r OrderTable()` The numbers of top genes selected from each outlier.
-</div>
-
-`r kable(tbl, row.names=TRUE, align=c('c', 'c')) %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 <p />
 
