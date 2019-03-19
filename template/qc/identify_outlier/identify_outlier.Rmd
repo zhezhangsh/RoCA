@@ -360,7 +360,7 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
 `r OrderTable()` The numbers of top genes selected from each outlier.
 </div>
 
-`r lns %>% kable_styling(
+`r kable(tbl, row.names=TRUE, align=c('c', 'c')) %>% kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 <p />
