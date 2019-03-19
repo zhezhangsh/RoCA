@@ -410,8 +410,12 @@ Enrichment of each gene set in top genes was tested by Hypergeometric test.
 `r OrderTable()` The number of gene sets significantly enriched in top increasing genes of each outlier.
 </div>
 
-`r ln.hi %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+```{r gsea_hi, include=TRUE}
+if (nrow(outliers) == 0) 'No outliers found' else {
+  kable(tbl.hi, align = rep('c', ncol(tbl.hi))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+}
+```
 
 <p />
 
@@ -419,8 +423,12 @@ Enrichment of each gene set in top genes was tested by Hypergeometric test.
 `r OrderTable()` The number of gene sets significantly enriched in top decreasing genes of each outlier.
 </div>
 
-`r ln.lo %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+```{r gsea_lo, include=TRUE}
+if (nrow(outliers) == 0) 'No outliers found' else {
+  kable(tbl.lo, align = rep('c', ncol(tbl.lo))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+}
+```
 
 <p />
 
