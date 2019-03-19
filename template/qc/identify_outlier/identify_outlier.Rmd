@@ -424,11 +424,13 @@ if (nrow(outliers) == 0) 'No outliers found' else {
 </div>
 
 ```{r gsea_lo, include=TRUE}
-if (nrow(outliers) == 0) 'No outliers found' else {
-  kable(tbl.lo, align = rep('c', ncol(tbl.lo))) %>% kable_styling(
+if (nrow(outliers) == 0) lns <- 'No outliers found' else {
+  lns <- kable(tbl.lo, align = rep('c', ncol(tbl.lo))) %>% kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
 }
 ```
+
+`r lns`
 
 <p />
 
