@@ -284,7 +284,7 @@ ngh <- sapply(rownames(smm), function(id) {
   abline(0, 1);
   try(dev.off());
   
-  cbind(paste0('[', mx, '](figure/', f1, ')'), paste0('[', mx, '](figure/', f2, ')'));
+  cbind(paste0('[', mx, '](figure/', f1, ')'), paste0('[', mn, '](figure/', f2, ')'));
 });
 smm$Nearest  <- ngh[1, ];
 smm$Farthest <- ngh[2, ];
