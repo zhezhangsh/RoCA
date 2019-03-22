@@ -305,8 +305,8 @@ Top genes having the biggest difference between outlier and corresponding non-ou
   - From the remaining genes, pick the top `r prms$difference$max` with the largest changes in the outlier.
   - From the remaining genes, pick those with changes greater than `r prms$difference$mean`, or the top `r prms$difference$min` genes having the largest changes, which ever gives more genes.
 
-```{r top_gene, include=FALSE}
-if (nrow(outliers) == 0) lns<-'No outliers found' else {
+```{r top_gene, include=TRUE}
+if (nrow(outliers) == 0) lns <- 'No outliers found' else {
   # select DEGs
   tops<-lapply(1:nrow(outliers), function(i) {
     dff<-d1[[i]]-rowMeans(d0[[i]]);
@@ -352,7 +352,8 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
   colnames(n)<-colnames(fn)<-c('Higher in outlier', 'Low in outlier'); 
   tbl<-t(sapply(rownames(n), function(nm) paste('[', n[nm, ], '](', fn[nm, ], ')', sep='')));
   dimnames(tbl)<-dimnames(n);
-  lns<-kable(tbl, row.names=TRUE, align=c('c', 'c'));
+  lns <- kable(tbl, row.names=TRUE, align=c('c', 'c')) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
 } 
 ```
 
@@ -360,8 +361,7 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
 `r OrderTable()` The numbers of top genes selected from each outlier.
 </div>
 
-`r lns %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+`r lns`
 
 <p />
 
@@ -407,21 +407,33 @@ if (nrow(outliers) == 0) ln.hi<-ln.lo<-'No outliers found' else {
 
 Enrichment of each gene set in top genes was tested by Hypergeometric test. 
 
+```{r gsea_hi, include=FALSE}
+if (nrow(outliers) == 0) lns <- 'No outliers found' else {
+  lns <- kable(tbl.hi, align = rep('c', ncol(tbl.hi))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+}
+```
+
 <div style="color:darkblue">
 `r OrderTable()` The number of gene sets significantly enriched in top increasing genes of each outlier.
 </div>
 
-`r ln.hi %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+`r lns`
 
 <p />
+
+```{r gsea_lo, include=FALSE}
+if (nrow(outliers) == 0) lns <- 'No outliers found' else {
+  lns <- kable(tbl.lo, align = rep('c', ncol(tbl.lo))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)
+}
+```
 
 <div style="color:darkblue">
 `r OrderTable()` The number of gene sets significantly enriched in top decreasing genes of each outlier.
 </div>
 
-`r ln.lo %>% kable_styling(
-    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+`r lns`
 
 <p />
 

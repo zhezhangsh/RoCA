@@ -114,7 +114,7 @@ tbl<-data.frame(Sample_feature=colnames(smp), Type=clss, Num_level=nlvl, Variabl
 A total of `r nrow(smp)` samples and `r ncol(smp)` sample features was provided by the input data. Click [here](table/sample.html) to see a full list of samples and samples features. 
 
   - Sample feature(s) to be studied by this project (variables of interest): ***`r paste(v0, collapse='; ')`***
-  - Sample feature with potential batch effect: ***`r v1`***
+  - Sample feature with potential batch effect: ***`r if (length(v1)>0) v1 else 'None'`***
   - All other known sample feature(s): ***`r paste(setdiff(colnames(smp), c(v0, v1)), collapse='; ')`*** 
 
 <div style="color:darkblue">
