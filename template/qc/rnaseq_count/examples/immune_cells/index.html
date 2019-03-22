@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2019-03-22" />
+
+<title>Analysis of RNA-seq samples using read count matrix</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Analysis of RNA-seq samples using read count matrix</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2019-03-22</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This procedure analyzes the read counts of multiple RNA-seq samples for quality control purposes. It ususally takes an integer matrix of gene-level read counts as input. It is a simplified version of the <a href="https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_sample/rnaseq_sample.Rmd">rnaseq_sample</a> procedure, which also performs sample analysis based on the read count matrix. Instead, this procedure focuses only on the contents of the read count matrix itself.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1 tabset">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Transcriptome in immune cells of control-patient samples</p>
+</div>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">1.2</span> Data</h2>
+<p>Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. Raw data was processed to get gene-level read counts.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>This is a demo.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">2</span> Results</h1>
+<ul>
+<li>Number of samples: <strong><em>18</em></strong></li>
+<li>Number of genes: <strong><em>25,207</em></strong></li>
+<li>Average number of total reads per gene: <strong><em>6,328.839</em></strong></li>
+<li>Average number of total reads per sample: <strong><em>8,862,836</em></strong></li>
+</ul>
+<p>The total read counts of all genes are compared between RNA-seq samples. <em>Shapiro-Wilk</em> normality test shows that the total read counts of all samples <strong>is normally distributed</strong> (p = 0.21) in this data set.</p>
+<ul>
+<li>Outlier samples with low total read count: <strong><em>none</em></strong></li>
+<li>Outlier samples with high total read count: <strong><em>none</em></strong></li>
+</ul>
+<p><img src="figure/sample_hist-1.png" width="600px" /></p>
+<p><strong>Figure 1.</strong> Distribution of total read counts of all samples.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<div id="gene-read-counts" class="section level2">
+<h2><span class="header-section-number">2.1</span> Gene read counts</h2>
+<p>As genes have different length and expression level, reads are unevenly distributed across genes. Usually, a small portion of the genes contribute most of the total reads, while a large portion of the genes have no or few reads mapped to them</p>
+<p><img src="figure/gene_cumulative_total-1.png" width="720px" /></p>
+<p><strong>Figure 2.</strong> Genes are sorted by their total read counts of all samples, along the X-axis. The cumulative percentages of total reads contributed by the top genes are plotted along the Y-axis.</p>
+<p> </p>
+<p><img src="figure/gene_cumulative_single-1.png" width="720px" /></p>
+<p><strong>Figure 3.</strong> Same plot as the last one, but showing individual samples and their cumulative percent of read counts contributed by sorted genes.</p>
+<p> </p>
+<p><img src="figure/gene_top-1.png" width="720px" /></p>
+<p><strong>Figure 4.</strong> The percent of total read counts per sample contributed by its <a href="table/top_gene_id.html">top 10 genes</a>. Samples are sorted by the percents from low to high along the X-axis. The cumulative percents of all samples are then compared to each other to identify samples with extremely lower or higher percents than the other samples:</p>
+<ul>
+<li>Outlier samples with low percent of reads contributed by the top 10 genes: <strong><em>none</em></strong></li>
+<li>Outlier samples with high percent of reads contributed by the top 10 genes: <strong><em>none</em></strong></li>
+</ul>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="between-sample-dispersion" class="section level2">
+<h2><span class="header-section-number">2.2</span> Between-sample dispersion</h2>
+<p>Gene-specific dispersion of RNA-seq read counts is commonly used to evaluate between-sample variance of a data set. Here, the dispersion is estimated by the overall pattern of coefficient of variation (standard deviation devided by average read count) of all genes.</p>
+<p><img src="figure/dispersion-1.png" width="720px" /></p>
+<p><strong>Figure 5.</strong> The dispersion of gene expression level between samples, measured as the coefficient of variation (CV). Genes with lower read counts have generally higher CV.</p>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="sample-sample-correlation" class="section level2">
+<h2><span class="header-section-number">2.3</span> Sample-sample correlation</h2>
+<p>Similarity between samples can be evaluated by their correlation of read counts.</p>
+<p><img src="figure/correlation-1.png" width="600px" /></p>
+<p><strong>Figure 6.</strong> Correlation between all pairs of RNA-seq samples.</p>
+<p><img src="figure/scatter-1.png" width="800px" /></p>
+<p><strong>Figure 7.</strong> The two pairs of samples with the best and worst correlation of read counts.</p>
+</div>
+<div id="summary" class="section level2">
+<h2><span class="header-section-number">2.4</span> Summary</h2>
+<p><strong>Table 1.</strong> Sample summary.</p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Total
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+ZeroRead
+</th>
+<th style="text-align:right;">
+Top10_Pct
+</th>
+<th style="text-align:left;">
+Top_Gene
+</th>
+<th style="text-align:left;">
+Nearest
+</th>
+<th style="text-align:left;">
+Farthest
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+B_Control_A
+</td>
+<td style="text-align:right;">
+10193126
+</td>
+<td style="text-align:right;">
+404.38
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8462
+</td>
+<td style="text-align:right;">
+43.9
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Control_A_B_Control_B.png">B_Control_B</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Control_A_T_Patient_E.png">B_Control_B</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M_Control_A
+</td>
+<td style="text-align:right;">
+11035413
+</td>
+<td style="text-align:right;">
+437.79
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9288
+</td>
+<td style="text-align:right;">
+48.1
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Control_A_M_Control_B.png">M_Control_B</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Control_A_T_Patient_E.png">M_Control_B</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T_Control_A
+</td>
+<td style="text-align:right;">
+8643786
+</td>
+<td style="text-align:right;">
+342.91
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+8642
+</td>
+<td style="text-align:right;">
+49.5
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Control_A_T_Control_B.png">T_Control_B</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Control_A_M_Patient_F.png">T_Control_B</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B_Control_B
+</td>
+<td style="text-align:right;">
+8648253
+</td>
+<td style="text-align:right;">
+343.09
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8275
+</td>
+<td style="text-align:right;">
+50.4
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Control_B_B_Control_A.png">B_Control_A</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Control_B_T_Patient_E.png">B_Control_A</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M_Control_B
+</td>
+<td style="text-align:right;">
+12373914
+</td>
+<td style="text-align:right;">
+490.89
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9507
+</td>
+<td style="text-align:right;">
+51.2
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Control_B_M_Control_A.png">M_Control_A</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Control_B_T_Patient_E.png">M_Control_A</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T_Control_B
+</td>
+<td style="text-align:right;">
+6446099
+</td>
+<td style="text-align:right;">
+255.73
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+8549
+</td>
+<td style="text-align:right;">
+54.9
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Control_B_T_Control_A.png">T_Control_A</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Control_B_M_Patient_F.png">T_Control_A</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B_Control_C
+</td>
+<td style="text-align:right;">
+7679538
+</td>
+<td style="text-align:right;">
+304.66
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8597
+</td>
+<td style="text-align:right;">
+55.5
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Control_C_B_Control_A.png">B_Control_A</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Control_C_M_Patient_F.png">B_Control_A</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M_Control_C
+</td>
+<td style="text-align:right;">
+9619600
+</td>
+<td style="text-align:right;">
+381.62
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+8578
+</td>
+<td style="text-align:right;">
+55.7
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Control_C_M_Control_A.png">M_Control_A</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Control_C_T_Patient_E.png">M_Control_A</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T_Control_C
+</td>
+<td style="text-align:right;">
+6773444
+</td>
+<td style="text-align:right;">
+268.71
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+9741
+</td>
+<td style="text-align:right;">
+57.0
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Control_C_T_Control_B.png">T_Control_B</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Control_C_M_Patient_F.png">T_Control_B</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B_Patient_D
+</td>
+<td style="text-align:right;">
+8554657
+</td>
+<td style="text-align:right;">
+339.38
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+8767
+</td>
+<td style="text-align:right;">
+57.6
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Patient_D_B_Patient_F.png">B_Patient_F</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Patient_D_T_Control_C.png">B_Patient_F</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M_Patient_D
+</td>
+<td style="text-align:right;">
+7480648
+</td>
+<td style="text-align:right;">
+296.77
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+9426
+</td>
+<td style="text-align:right;">
+59.1
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Patient_D_M_Patient_F.png">M_Patient_F</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Patient_D_T_Patient_E.png">M_Patient_F</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T_Patient_D
+</td>
+<td style="text-align:right;">
+10217085
+</td>
+<td style="text-align:right;">
+405.33
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8671
+</td>
+<td style="text-align:right;">
+68.0
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Patient_D_T_Patient_F.png">T_Patient_F</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Patient_D_T_Control_C.png">T_Patient_F</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B_Patient_E
+</td>
+<td style="text-align:right;">
+7323204
+</td>
+<td style="text-align:right;">
+290.52
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+8970
+</td>
+<td style="text-align:right;">
+69.2
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Patient_E_B_Patient_F.png">B_Patient_F</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Patient_E_M_Control_B.png">B_Patient_F</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M_Patient_E
+</td>
+<td style="text-align:right;">
+7520193
+</td>
+<td style="text-align:right;">
+298.34
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+10105
+</td>
+<td style="text-align:right;">
+69.3
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Patient_E_M_Patient_F.png">M_Patient_F</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Patient_E_T_Patient_E.png">M_Patient_F</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T_Patient_E
+</td>
+<td style="text-align:right;">
+7373900
+</td>
+<td style="text-align:right;">
+292.53
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+9613
+</td>
+<td style="text-align:right;">
+69.9
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Patient_E_T_Control_A.png">T_Control_A</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Patient_E_M_Patient_F.png">T_Control_A</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B_Patient_F
+</td>
+<td style="text-align:right;">
+9016678
+</td>
+<td style="text-align:right;">
+357.71
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+9442
+</td>
+<td style="text-align:right;">
+74.6
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Patient_F_B_Patient_D.png">B_Patient_D</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/B_Patient_F_T_Control_C.png">B_Patient_D</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+M_Patient_F
+</td>
+<td style="text-align:right;">
+8555748
+</td>
+<td style="text-align:right;">
+339.42
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8993
+</td>
+<td style="text-align:right;">
+79.9
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Patient_F_M_Patient_D.png">M_Patient_D</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/M_Patient_F_T_Patient_E.png">M_Patient_D</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+T_Patient_F
+</td>
+<td style="text-align:right;">
+12075769
+</td>
+<td style="text-align:right;">
+479.06
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+8245
+</td>
+<td style="text-align:right;">
+83.3
+</td>
+<td style="text-align:left;">
+RNR2
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Patient_F_T_Patient_D.png">T_Patient_D</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/scatter/T_Patient_F_M_Control_B.png">T_Patient_D</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="download" class="section level1">
+<h1><span class="header-section-number">3</span> Download</h1>
+<blockquote>
+<p><a href="table/summary.csv">Sample summary</a></p>
+</blockquote>
+<blockquote>
+<p><a href="table/count.csv">Read count matrix</a></p>
+</blockquote>
+<blockquote>
+<p><a href="table/correlation.csv">Sample-sample correlation</a></p>
+</blockquote>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">4</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">4.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p></li>
+</ol>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">4.2</span> Session information</h2>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.6
+## 
+## Matrix products: default
+## BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] gplots_3.0.1          DEGandMore_0.0.0.9000 snow_0.4-3           
+##  [4] awsomics_0.0.0.9000   Rnaseq_0.0.0.9000     GenomicRanges_1.34.0 
+##  [7] GenomeInfoDb_1.18.1   IRanges_2.16.0        S4Vectors_0.20.1     
+## [10] BiocGenerics_0.28.0   vioplot_0.3.0         zoo_1.8-4            
+## [13] sm_2.2-5.4            htmlwidgets_1.3       DT_0.5               
+## [16] yaml_2.2.0            kableExtra_0.9.0      knitr_1.20           
+## [19] rmarkdown_1.10        RoCA_0.0.0.9000       RCurl_1.95-4.11      
+## [22] bitops_1.0-6          usethis_1.4.0         devtools_2.0.1       
+## 
+## loaded via a namespace (and not attached):
+##  [1] httr_1.3.1             pkgload_1.0.2          jsonlite_1.5          
+##  [4] viridisLite_0.3.0      gtools_3.8.1           shiny_1.2.0           
+##  [7] assertthat_0.2.0       highr_0.7              GenomeInfoDbData_1.2.0
+## [10] remotes_2.0.2          sessioninfo_1.1.1      pillar_1.3.0          
+## [13] backports_1.1.2        lattice_0.20-38        glue_1.3.0            
+## [16] digest_0.6.18          promises_1.0.1         XVector_0.22.0        
+## [19] rvest_0.3.2            colorspace_1.3-2       htmltools_0.3.6       
+## [22] httpuv_1.4.5           pkgconfig_2.0.2        zlibbioc_1.28.0       
+## [25] xtable_1.8-3           scales_1.0.0           gdata_2.18.0          
+## [28] processx_3.2.0         later_0.7.5            tibble_1.4.2          
+## [31] withr_2.1.2            cli_1.0.1              magrittr_1.5          
+## [34] crayon_1.3.4           mime_0.6               memoise_1.1.0         
+## [37] evaluate_0.12          ps_1.2.1               fs_1.2.6              
+## [40] xml2_1.2.0             pkgbuild_1.0.2         tools_3.5.1           
+## [43] prettyunits_1.0.2      hms_0.4.2              stringr_1.3.1         
+## [46] munsell_0.5.0          callr_3.0.0            compiler_3.5.1        
+## [49] caTools_1.17.1.1       rlang_0.3.0.1          grid_3.5.1            
+## [52] rstudioapi_0.8         crosstalk_1.0.0        base64enc_0.1-3       
+## [55] R6_2.3.0               rprojroot_1.3-2        KernSmooth_2.23-15    
+## [58] readr_1.2.1            desc_1.2.0             stringi_1.2.4         
+## [61] Rcpp_1.0.0</code></pre>
+<div align="right">
+<em><a href="http://zhezhangsh.github.io/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

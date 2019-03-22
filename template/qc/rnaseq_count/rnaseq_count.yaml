@@ -19,7 +19,7 @@
 ##### REQUIRED #####
 ####################
 # Required by the RoCA framework to generate a reproducible report
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_sample/rnaseq_count.Rmd
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/qc/rnaseq_count/rnaseq_count.Rmd
 output: examples/immune_cells       	  # Where to save the output files
 home: http://zhezhangsh.github.io/RoCA	# Location to project home (URL or local file)
 analyst: Jim Zhang              		    # Name of the analyst who runs this analysis
