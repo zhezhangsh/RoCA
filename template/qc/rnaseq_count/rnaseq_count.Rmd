@@ -279,7 +279,7 @@ ngh <- sapply(rownames(smm), function(id) {
   mn <- names(srt[[id]])[1];
   f2 <- paste0('scatter/', id, '_', mn, '.png');
   png(paste(path.fig, f2, sep='/'), width = 800, height = 800);
-  PlotLogScatter(cnt[, id], cnt[, mn], xlab=id, ylab=mx, col="#E74C3C",
+  PlotLogScatter(cnt[, id], cnt[, mn], xlab=id, ylab=mn, col="#E74C3C",
                main=paste('Correlation =', round(crr[id, mn], 4)));
   abline(0, 1);
   try(dev.off());
