@@ -247,7 +247,7 @@ par(mfrow=c(1, 2));
 PlotLogScatter(cnt[, p1[1]], cnt[, p1[2]], xlab=p1[1], ylab=p1[2], col="#E74C3C",
                main=paste('Highest Correlation =', round(crr[p1[1], p1[2]], 4)));
 abline(0, 1);
-PlotLogScatter(cnt[, p2[1]], cnt[, p2[2]], xlab=p1[1], ylab=p1[2], col="#1ABC9C",
+PlotLogScatter(cnt[, p2[1]], cnt[, p2[2]], xlab=p2[1], ylab=p2[2], col="#1ABC9C",
                main=paste('Lowest Correlation =', round(crr[p2[1], p2[2]], 4)));
 abline(0, 1);
 ```
@@ -271,7 +271,7 @@ ngh <- sapply(rownames(smm), function(id) {
   mx <- names(rev(srt[[id]]))[1];
   f1 <- paste0('scatter/', id, '_', mx, '.png');
   png(paste(path.fig, f1, sep='/'), width = 800, height = 800);
-  PlotLogScatter(cnt[, id], cnt[, mx], xlab=id, ylab=mx, col="#1ABC9C",
+  PlotLogScatter(cnt[, id], cnt[, mx], xlab=id, ylab=mx, col="#E74C3C",
                main=paste('Correlation =', round(crr[id, mx], 4)));
   abline(0, 1);
   try(dev.off());
@@ -279,7 +279,7 @@ ngh <- sapply(rownames(smm), function(id) {
   mn <- names(srt[[id]])[1];
   f2 <- paste0('scatter/', id, '_', mn, '.png');
   png(paste(path.fig, f2, sep='/'), width = 800, height = 800);
-  PlotLogScatter(cnt[, id], cnt[, mn], xlab=id, ylab=mn, col="#E74C3C",
+  PlotLogScatter(cnt[, id], cnt[, mn], xlab=id, ylab=mn, col="#1ABC9C",
                main=paste('Correlation =', round(crr[id, mn], 4)));
   abline(0, 1);
   try(dev.off());

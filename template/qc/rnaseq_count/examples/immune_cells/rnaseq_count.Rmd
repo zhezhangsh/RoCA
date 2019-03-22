@@ -247,7 +247,7 @@ par(mfrow=c(1, 2));
 PlotLogScatter(cnt[, p1[1]], cnt[, p1[2]], xlab=p1[1], ylab=p1[2], col="#E74C3C",
                main=paste('Highest Correlation =', round(crr[p1[1], p1[2]], 4)));
 abline(0, 1);
-PlotLogScatter(cnt[, p2[1]], cnt[, p2[2]], xlab=p1[1], ylab=p1[2], col="#1ABC9C",
+PlotLogScatter(cnt[, p2[1]], cnt[, p2[2]], xlab=p2[1], ylab=p2[2], col="#1ABC9C",
                main=paste('Lowest Correlation =', round(crr[p2[1], p2[2]], 4)));
 abline(0, 1);
 ```
