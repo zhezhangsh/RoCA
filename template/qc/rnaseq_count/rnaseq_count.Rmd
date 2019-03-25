@@ -208,7 +208,7 @@ logged[logged==-Inf] <- 0;
 mn <- rowMeans(logged);
 cv <- apply(logged, 1, sd)/mn;
 
-plot(mn, cv, pch=19, cex=.5, xaxt='n', cex.lab=1.5, col='#88888888', xaxs='i', yaxs='i',
+plot(mn, cv, pch=19, cex=.5, xaxt='n', cex.lab=1.5, col='#88888888', xaxs='i', yaxs='i', xlim=c(0, max(mn)),
      xlab='Average read count of all samples', ylab='Coefficient of variation', ylim=c(0, min(max(cv, na.rm=TRUE), 6))); 
 axis(1, at=0:ceiling(max(mn)), label=10^(0:ceiling(max(mn)))); 
 # lines(lowess(cv~mn), col=4);
