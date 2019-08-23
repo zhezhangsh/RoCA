@@ -129,7 +129,7 @@ The analysis results below were based upon the following:
     - **Column names:** `r paste(colnames(anno), collapse='; ')`
   - **Comparison:** 
     - **Group0, `r g1.name`:** `r paste(colnames(e1), collapse='; ')` (n=`r ncol(e1)`)
-    - **Group1, `r g2.name`:** `r paste(colnames(e2), collapse='; ')` (n=`r ncol(e1)`)
+    - **Group1, `r g2.name`:** `r paste(colnames(e2), collapse='; ')` (n=`r ncol(e2)`)
     - **Paired:** `r paired`
     - **Method:** `r sub('^De', '', prms$deg$method)`
   - **Location of outputs:** `r path`
