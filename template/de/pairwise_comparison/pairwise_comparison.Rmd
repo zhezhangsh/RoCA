@@ -317,7 +317,7 @@ This report is generated based on the following inputs:
     - **Genome:** `r prms$genome`
   - **Comparison:** 
     - **Group0, `r g1.name`:** `r paste(colnames(e1), collapse='; ')` (n=`r ncol(e1)`)
-    - **Group1, `r g2.name`:** `r paste(colnames(e2), collapse='; ')` (n=`r ncol(e1)`)
+    - **Group1, `r g2.name`:** `r paste(colnames(e2), collapse='; ')` (n=`r ncol(e2)`)
     - **Paired:** `r prms$paired`
   - **Differential gene expression:** 
     - **Statistical method:** `r sub('^De', '', prms$deg$method)`
