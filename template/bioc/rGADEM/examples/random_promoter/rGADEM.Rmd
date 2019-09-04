@@ -1,7 +1,7 @@
 ---
-title: "Package wrapper: ***rGADEM***, de novo motif discovery"
+title: "De novo motif discovery with ***rGADEM***, "
 author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
-date: "`r Sys.Date()`"
+date: "2019-08-31"
 output:
   html_document:
     number_sections: yes
@@ -15,15 +15,15 @@ output:
 
 **Introduction** 
 
-This is an R markdown template that implements main functionality of Bioconductor package ***rGADEM***. Please read the package [manual](https://www.bioconductor.org/packages/devel/bioc/vignettes/rGADEM/inst/doc/rGADEM.pdf) first for the background information and parameter options of using this package.
+This analysis performs the main functionality of Bioconductor package **rGADEM** to discover de novo motif(s) over-represented in a set of DNA sequences. Please read the package [manual](https://www.bioconductor.org/packages/devel/bioc/vignettes/rGADEM/inst/doc/rGADEM.pdf) first for background about **GADEM** algorithm and how to choose its parameters.
 
-The main input data to this analysis is a set of DNA sequences, within which de novo motifs and their position weighted matrix (PWM) will be discovered. The DNA sequences can be provided as named character vector, an _DNAStringSet_ object, or a set of genomic locations with their reference genome, such as _[BSgenome.Hsapiens.NCBI.GRCh38](http://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.NCBI.GRCh38.html)_.
+The set of DNA sequences, within which de novo motifs and their position weighted matrix (PWM) will be discovered, can be provided as a named character vector, an _DNAStringSet_ object, or a set of genomic loci within a reference genome, such as _[BSgenome.Hsapiens.NCBI.GRCh38](http://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.NCBI.GRCh38.html)_.
 
 This analysis includes three major steps:
 
-  1. The **GADEM {rGADEM}** function is used to discover de novo motifs from the DNA sequences and report the matches to the motifs
-  2. The motifs and matches are summarized and visualized
-  3. The motifs are re-matched to the DNA sequences using the **matchPWM {Biostrings}** function and a p value cutoff, to identify extra matches
+  1. The ***GADEM {rGADEM}*** is called using given parameters to discover over-presented de novo motifs from a set of DNA sequences.
+  2. The motifs and their matches in the DNA sequences are summarized and visualized.
+  3. The motifs are searched again within the DNA sequences using the ***matchPWM {Biostrings}*** function and a p value cutoff, to identify report all matches and their matching scores. 
 
 </div>
 
@@ -31,7 +31,7 @@ This analysis includes three major steps:
 
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'rGADEM.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'GenomicFeatures', 'rGADEM', 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'GenomicFeatures', 'rGADEM', 
                    'RoCA', 'awsomics', 'Agri'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
@@ -55,6 +55,10 @@ prms <- yml$parameter;
 f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
 
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
@@ -104,45 +108,71 @@ wid <- width(seq);
 names(wid) <- names(seq);
 ```
 
-# Motif discovery
+# Results
+
+## Summarize sequences
+
+**GADEM** discovers de novo motifs in a given set of DNA sequences. The length, number, base frequency, and complexity of the sequences could all impact the output of GADEM, such as the specificity of motifs and the significance of matches. It's preferable to exclude outliers from the analysis, and strong overall bias of any characteristics could be a concern for follow-up analysis.
 
 ```{r summary_seq, include=FALSE}
 frq <- alphabetFrequency(seq)[, 1:4];
 gc  <- round(100*rowSums(frq[, 2:3])/rowSums(frq), 2);
-len <- summary(wid); 
-pct <- summary(gc); 
-tbl <- rbind(len, pct); 
-rownames(tbl) <- c('Length (bp)', 'GC (%)');
+cg1 <- sapply(gregexpr2('CG', seq), function(ind) length(ind[ind>0]));
+cg2 <- sapply(gregexpr2('GC', seq), function(ind) length(ind[ind>0]));
+cpg <- 100*(cg1+cg2)/(seqlengths(seq)-1);
+dup <- sapply(c('AA', 'CC', 'GG' ,'TT'), function(x) sapply(gregexpr2(x, seq), function(ind) length(ind[ind>0])));
+di  <- 100*(rowSums(dup))/(seqlengths(seq)-1);
+tbl <- rbind(round(summary(wid), 1), round(summary(gc), 2), round(summary(cpg), 2), round(summary(di), 2)); 
+rownames(tbl) <- c('Length (bp)', 'GC (%)', 'CpG (%)', 'Duplex (%)');
+
+tbl1 <- data.frame(rng, stringsAsFactors = FALSE);
+colnames(tbl1)[1:5] <- c('Chromosome', 'Start', 'End', 'Length', 'Strand');
+tbl1 <- cbind(ID=names(rng), tbl1);
+tbl1 <- tbl1[, c(1, 2, 3, 4, 6, 5)];
+colnames(dup) <- c('AA%', 'CC%', 'GG%', 'TT%');
+pct <- round(apply(frq, 2, function(x) 100*x/seqlengths(seq)),2 );
+colnames(pct) <- c('A%', 'C%', 'G%', 'T%');
+tbl1 <- cbind(tbl1, pct, 'CpG%'=round(cpg, 2), dup);
+for (i in 1:ncol(tbl1)) tbl1[[i]] <- as.vector(tbl1[[i]]);
+CreateDatatable(tbl1, rownames = FALSE, paste0(path.tbl, '/sequence_summary'));
+write.table(tbl1, row.names = FALSE, col.names = TRUE, sep='\t', qu=FALSE, paste0(path.tbl, '/sequence_summary.csv'))
 ```
 
-```{r motif_discovery, include=FALSE}
+**`r length(seq)`** sequences are analyzed by the ***GADEM {rGADEM}*** function to discover de novo motifs, using the following parameters:
+
+  - Seed PWM: _Spwm_ = no
+  - Number of EM step: _numEM_ = `r prms$GADEM$numEM`
+  - P value cutoff of matches: _pValue_ = `r format(prms$GADEM$pValue)`
+  - Mask low-complexity sequences: _maskR_ = `r c('no', 'yes')[1+prms$GADEM$maskR]`
+  - Maximal number of motifs allowed: _nmotifs_ = `r prms$GADEM$nmotifs`
+
+`r OrderTable()` Summary of DNA sequences.
+
+  - ***Length (bp)***: full length of DNA sequences
+  - ***GC (%)***: frequency of G and C
+  - ***CpG (%)***: frequency of CG or GC sites
+  - ***Duplex (%)***: frequency of duplexes (AA, CC, GG, or TT)
+
+Click [here](table/sequence_summary.html) to view details of individual sequences.
+
+`r kable(tbl, align=rep('c', ncol(tbl))) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
+
+`r home.url` 
+
+## Discover motifs
+
+**GADEM** is run using given parameters to discover motifs from DNA sequences. It reports the consensus sequence and PWM of each motif, as well as the most significant matches that the consensus and PWM are based upon.
+
+```{r run_gadem, include=FALSE}
 gadem <- GADEM(seq, 
+               genome  = gnm,
                numEM   = prms$GADEM$numEM,
                pValue  = prms$GADEM$pValue, 
                maskR   = prms$GADEM$maskR,
                nmotifs = prms$GADEM$nmotifs); 
 ```
 
-
-A total of **`r length(seq)`** sequences are used by the **GADEM {rGADEM}** function to discovery de novo motifs (see **Table 1**). The function call uses the following parameters:
-
-  - Seed PWM (_Spwm_): no
-  - Number of EM steps (_numEM_): `r prms$GADEM$numEM`
-  - P value cutoff of matches (_pValue_): `r format(prms$GADEM$pValue)`
-  - Mask low-complexity sequences (_maskR_): `r c('no', 'yes')[1+prms$GADEM$maskR]`
-  - Maximal number of motifs allowed (_nmotifs_): `r prms$GADEM$nmotifs`
-
-<div style="color:darkblue; padding:0 2cm">
-**Table 1** Length and GC content of the sequences.
-</div>
-
-<div align='center', style="padding:0 2cm">
-`r kable(tbl, align=c('c'))`
-</div>
-  
-`r home.url` 
-
-# Motif summary
 
 ```{r motif_summary, include=FALSE}
 res <- RetrieveGadem(gadem);
@@ -154,6 +184,7 @@ res <- lapply(res, function(x) { print(x[[2]]);
     tbl$seqStart  <- start(rng)[tbl$seqID];
     tbl$seqEnd    <- end(rng)[tbl$seqID];
     tbl$seqStrand <- as.vector(strand(rng))[tbl$seqID];
+    tbl$seqLength <- tbl$seqEnd - tbl$seqStart + 1;
   };
   x[[3]] <- tbl;
   x; 
@@ -172,12 +203,12 @@ if (num == 0) {
   # Plot Logo
   sapply(1:num, function(i) {
     png(paste(path.fig, '/Logo_', names(res)[i], '.png', sep=''), width = 640, height = 320, res = 100);
-    plot(gadem[i], main=names(res)[i]); 
-    dev.off(); 
+    plot(gadem[i], main=names(res)[i]);
+    dev.off();
     pdf(paste(path.fig, '/Logo_', names(res)[i], '.pdf', sep=''), width = 6, height = 4);
     plot(gadem[i]); 
     dev.off(); 
-  }); 
+  }) -> x; 
   logo <- paste(' ![](figure/Logo_', names(res), '.png)', sep='');
   ################################################################
   
@@ -189,12 +220,13 @@ if (num == 0) {
     str <- as.vector(mtch$strand);
     pos[str=='+'] <- pos[str=='+'] + len[i]/2;
     pos[str=='-'] <- pos[str=='-'] - len[i]/2;
-    pos <- 100*pos/wid[mtch$seqID] 
+    pos <- 100*pos/(wid[mtch$seqID] - len[i]/2);
+    pos[mtch$seqStrand=='-'] <- 100 - pos[mtch$seqStrand=='-']
      
     png(paste(path.fig, '/Position_', names(res)[i], '.png', sep=''), width = 480, height = 320, res = 100);
-    par(mar=c(5, 5, 3, 1)); 
-    hist(pos, breaks=seq(0, 100, 5+(nrow(mtch)<50)*5), xaxt='n', xlab='Position', ylab='# of matches', cex.lab=1.5, 
-         col='lightgrey', main=names(res)[i], cex.main=2); 
+    par(mar=c(5, 5, 3, 1));
+    hist(pos, breaks=seq(0, 100, 5+(nrow(mtch)<50)*5), xaxt='n', xlab='Position', ylab='# of matches', cex.lab=1.5,
+         col='lightgrey', main=names(res)[i], cex.main=2);
     axis(1, at=c(0, 50, 100), label=c('Start', 'Center', 'End'));
     dev.off();
     pdf(paste(path.fig, '/Position_', names(res)[i], '.pdf', sep=''), width = 4.8, height = 3.2);
@@ -203,10 +235,10 @@ if (num == 0) {
          col='lightgrey', main=names(res)[i], cex.main=2); 
     axis(1, at=c(0, 50, 100), label=c('Start', 'Center', 'End'));
     dev.off();
-  }); 
+  }) -> x; 
   posi <- paste(' ![](figure/Position_', names(res), '.png)', sep='');
   ################################################################
-  fig  <- cbind("Matching position"=posi, "PWM Logo"=logo); 
+  fig  <- cbind("PWM Logo"=logo, "Matching position"=posi); 
 
   ################################################################
   fn  <- sapply(1:num, function(i) {
@@ -216,107 +248,120 @@ if (num == 0) {
                     rownames = FALSE, caption = paste(names(res)[i], con[i], sep=': '));   
     write.table(res[[i]][[3]], paste(path.tbl, '/Match_', names(res)[i], '.txt', sep=''), row.names = FALSE, 
                 sep='\t', qu=FALSE); 
+    write.table(round(res[[i]][[1]], 3), paste(path.tbl, '/PWM_', names(res)[i], '.txt', sep=''), row.names = FALSE, 
+                sep='\t', qu=FALSE); 
   });
 
   gc  <- sapply(res, function(x) round(mean(100*colSums(x[[1]][c('C', 'G'), ])), 2));
+  rev <- sapply(res, function(x) 100*nrow(x[[3]][x[[3]]$strand=='-', , drop=FALSE])/nrow(x[[3]]));
   tbl <- data.frame(Name = names(res), Consensus = con, 'GC_Percent' = gc, Num_Base = nchar(con), 
                     Num_Match = nOccurrences(gadem), 
-                    Num_Seq = sapply(res, function(x) length(unique(x[[3]]$seqID))), stringsAsFactors = FALSE); 
+                    Num_Seq = sapply(res, function(x) length(unique(x[[3]]$seqID))), 
+                    Rev_Comp = round(rev, 1),  stringsAsFactors = FALSE); 
   tbl[[1]] <- paste('[', tbl[[1]], '](table/Match_', names(res), '.html)', sep='');
   tbl[[2]] <- paste('[', tbl[[2]], '](table/PWM_', names(res), '.html)', sep='');
-  ################################################################
-}
+  colnames(tbl)[3] <- c('GC (%)');
+  colnames(tbl)[7] <- c('RevComp (%)');
+};
 ```
 
+`r OrderTable()` Summary of motifs found from sequences. Click motif name to see full list of matches to each motif and their details. Click consensus sequence to see its PWM. 
 
-The **GADEM {rGADEM}** function discovers **`r nMotifs(gadem)`** motif(s) from the DNA sequences. For each motif, the output includes reports its consensus sequence, PWM, and detailed information about all matches. 
+  - ***GC (%):*** average GC frequency at all position in PWM.
+  - ***Num_Base:*** length of the motif.
+  - ***Num_Match:*** total number of matches to the motif reported by GADEM in any sequences.
+  - ***Num_Seq:*** number of sequences including one or more matches to the motif
+  - ***RevComp (%):*** percent of matches on the reversed direction
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 2** Summary of motifs found from sequences. Click motif name to see full list of matches to each motif and consensus sequence to see its PWM. (***GC_Percent:*** average G/C percent in PWM;  ***Num_Base:*** number of bases of the motif; ***Num_Match:*** total number of matches to the motif in all sequences; and ***Num_Seq:*** number of sequences including one or more matches to the motif.)
-</div>
-
-<div align='center', style="padding:0 1cm">
-`r kable(tbl, row.names=FALSE, align=c('c', 'l', 'r', 'r', 'r'))`
-</div>
+`r kable(tbl, row.names=FALSE, align=c('c', 'l', 'r', 'r', 'r')) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 &nbsp;
 
-<div align='center'>
 `r kable(fig,  row.names=FALSE, align='c')`
-</div>
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 1.** Motif visualization. The right panel shows the logo of the consensus sequence and the left panel shows the relative positions of the matches to the motif within the sequences. 
-</div>
+`r OrderFigure()` Motif visualization. The right panel shows the logo of the consensus sequences based on their PWM. The y-axis represents the frequency of nucleotides at each position. The left panel shows the relative positions of the matches to the motif within the sequences. The positions are directional based on the strand of the matches and the sequences in genomne. 
 
 `r home.url` 
 
-# Motif re-match
+## Search motifs
+
+The following steps are applied to identify more matches to the motifs discovered by **GADEM** and properly evaluate their significance:
+
+  - Calculate overall base frequency in all DNA sequences.
+  - For each motif, draw `r prms$rematch$sampling` random sequences if the same length based on overall base frequency.
+  - Get the background distribution of matching scores based on the agreement between all random sequences and the motif.
+  - Obtain a cutoff matching score based on the background distribution with an empirical p value less than `r prms$rematch$pvalue`
+  - Search and report matches to the motif in DNA sequences using the cutoff matching score, using the ***matchPWM {Biostrings}** function.
+
 
 ```{r motif_rematch, include=FALSE}
 if (length(res) == 0) {
   stat <- matrix('**No motif found**', dimnames = list('', ''));
 } else {
   # Re-match
-  pwm.set <- lapply(res, function(x) x[[3]][[1]]); 
+  pwm.set <- lapply(res, function(x) as.vector(x[[3]][[1]])); 
   matches <- ScorePWMWrapper(pwm.set, seq, num.cluster = prms$rematch$cluster, both.strand = TRUE, local.max = TRUE, 
                            sampling = prms$rematch$sampling, pvalue = prms$rematch$pvalue);
   
   fn <- sapply(1:length(matches), function(i) {
     tbl <- matches[[i]]; 
+    tbl <- tbl[, c(7, 2:6, 1)];
+    colnames(tbl)[1] <- 'match';
     if (exists('rng')) {
-      tbl$seqChr    <- as.vector(seqnames(rng))[tbl$seqID];
-      tbl$seqStart  <- start(rng)[tbl$seqID];
-      tbl$seqEnd    <- end(rng)[tbl$seqID];
-      tbl$seqStrand <- as.vector(strand(rng))[tbl$seqID];
+      tbl$seqChr    <- as.vector(seqnames(rng[tbl$seqID]));
+      tbl$seqStart  <- start(rng[tbl$seqID]);
+      tbl$seqEnd    <- end(rng[tbl$seqID]);
+      tbl$seqStrand <- as.vector(strand(rng[tbl$seqID]));
     };
-    CreateDatatable(matches[[i]], paste(path.tbl, '/Rematch_', names(res)[i], '.html', sep=''), 
+    CreateDatatable(tbl, paste(path.tbl, '/Rematch_', names(matches)[i], '.html', sep=''), 
                     caption = paste(names(res)[i], con[i], sep=': ')); 
+    write.table(tbl, paste(path.tbl, '/Rematch_', names(matches)[i], '.txt', sep=''), sep='\t', qu=FALSE); 
   });
    
   # summarize
   stat <- sapply(matches, function(t) {
     ns <- c(nrow(t), length(unique(t[, 1]))); 
     ln <- max(t[,3]-t[,2]+1, na.rm=TRUE);
-    sc <- c(min(t$score), mean(t$score), max(t$score));
-    fq <- ns[1]/(sum(wid)/1000);
-    sr <- round(100*nrow(t[t$strand==1, , drop=FALSE])/nrow(t), 2);
+    sc <- round(c(min(t$score), mean(t$score), max(t$score)), 2);
+    fq <- round(ns[1]/(sum(wid-ln)/1000), 3);
+    sr <- round(100*nrow(t[t$strand==-1, , drop=FALSE])/nrow(t), 2);
     c(ln, fq, ns, sr, sc); 
   }); 
   stat <- t(stat); 
-  dimnames(stat) <- list(names(res), c('Len_Motif', 'Match_Per_Kb', 'Num_Match', 'Num_Seq', 'Strand(%)',
-                                       'Min_Score', 'Mean_Score', 'Max_Score'));
-  lnk <- paste('[', rownames(stat), '](', paste('table/Rematch_', names(res), '.html', sep=''), ')', sep='');
+  lnk  <- paste('[', rownames(stat), '](', paste('table/Rematch_', names(res), '.html', sep=''), ')', sep='');
   stat <- data.frame(Motif=lnk, stat, stringsAsFactors = FALSE);
+  dimnames(stat) <- list(names(res), c('Motif', 'Len_Motif', 'Match_Per_Kb', 'Num_Match', 'Num_Seq', 'RevComp (%)',
+                                       'Min_Score', 'Mean_Score', 'Max_Score'));
 }
 ```
 
-The motifs discovered previously are re-matched to the DNA sequences by applying the following steps on each motif:
+`r OrderTable()` Summary of matches to the motifs: 
 
-  - Calculate average base frequency of all DNA sequences
-  - Draw `r prms$rematch$sampling` random sequences of the same length as the motif
-  - Calculate the matching scores of the random sequences to get a background distribution
-  - Use the cutoff of empirical p value (`r prms$rematch$pvalue`) to the cutoff of matching score
-  - Re-match the motif to the sequences using the cutoff of matching score from the last step
+  - ***Motif:*** nanme of motifs, click to view full list of matches
+  - ***Len_Motif:*** length of motifs
+  - ***Match_Per_Kb:*** number of matches in each kilobase of DNA sequences
+  - ***Num_Match:*** total number of matches
+  - ***Num_Seq:*** number of sequences containing one or more matches
+  - ***RevComp (%):*** percent of matches on the opposite direction
+  - ***Min_Score, Mean_Score, Max_Score:*** range of matching scores (0 - 100)
 
-<div style="color:darkblue; padding:0 2cm">
-**Table 3** Summary of re-matching result. The columns are: _motif length, number of matches per kilobases, number of total matches, number of sequences including one or more matches, as well as the minimal, average, and maximal matching scores (highest = 100)_. Click on motif names to see the full lists of matches
-</div>
-
-<div align='center', style="padding:0 1cm">
-`r kable(FormatNumeric(stat), row.names=FALSE)`
-</div>
+`r kable(FormatNumeric(stat), row.names=FALSE) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width=FALSE)`
 
 &nbsp;
 
-<div align='center'>
-```{r rematch_position, include=TRUE, fig.width=9.6, fig.height=max(1.2, 3.6*round(length(res)/2)), out.width='960px'}
+```{r rematch_position, include=FALSE}
+fn <- paste(path.fig, 'rematch_position.png', sep='/'); 
 if (length(res) == 0) {
+  png(fn, width = 640, height = 120);
   par(mar=c(1,1,1,1));
   frame();
   text(0.5, 0, pos=3, label='No motif found', cex=2);
+  dev.off();
 } else {
-  par(mfrow=c(round(length(res)/2), 2));
+  png(fn, width = 960, height = 360*ceiling(length(res)/2));
+  par(mfrow=c(ceiling(length(res)/2), 2));
   sapply(names(matches), function(nm) {
     m   <- matches[[nm]]; 
     pos <- m$start;
@@ -326,16 +371,45 @@ if (length(res) == 0) {
     PlotPWMMatchPosition(pos, ttl, pvl, len);
     title(main=nm, cex=2);
   }) -> x;
+  dev.off();
+  
+  pdf(sub('.png$', '.pdf', fn), width = 9.6, height = 3.6*ceiling(length(res)/2));
+  par(mfrow=c(ceiling(length(res)/2), 2));
+  sapply(names(matches), function(nm) {
+    m   <- matches[[nm]]; 
+    pos <- m$start;
+    ttl <- wid[m$seqID];
+    pvl <- m$pvalue;
+    len <- max(nchar(m$seq));
+    PlotPWMMatchPosition(pos, ttl, pvl, len);
+    title(main=nm, cex=2);
+  }) -> x;
+  dev.off();
 }
 
 ```
-</div>
 
-<div style="color:darkblue; padding:0 1cm">
-**Figure 2.** Distribution of relative positions of motif matches within the DNA sequences. Grey bar is the number of matches within each interval and blue star is the average P values (-log10 transformed) of matches within the interval. 
-</div>
+![](figure/rematch_position.png)
+
+`r OrderFigure()` Distribution of relative positions of motif matches within the DNA sequences. Grey bar is the number of matches within each 5% interval and blue star is the average Phred score (-log10 transformed p value) of matches within the interval. 
 
 `r home.url`
+
+# Download
+
+```{r download, include=FALSE}
+lns <- sapply(names(res), function(nm) {
+  ln <- paste0('[', c('PWM', 'GADEM hits', 'All matches'), '](table/', c('PWM', 'Match', 'Rematch'), '_', nm, '.txt)')
+  ln <- paste(ln, collapse=' **|** ');
+  paste0('  - **', nm, ':** ', ln);
+});
+lns <- as.vector(lns);
+l   <- paste(lns, collapse='\n');
+l   <- paste0('\n', l);
+```
+
+
+`r l`
 
 ***
 

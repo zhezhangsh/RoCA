@@ -23,8 +23,8 @@
 #########################    REQUIRED    ##########################
 ###################################################################
 # Required by the RoCA framework to generate a reproducible report
-template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/rGADEM/rGADEM.Rmd
-#template: rGADEM.Rmd
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/rGADEM/rGADEM.Rmd
+template: rGADEM.Rmd
 output: examples/random_promoter # Where to save the output files
 home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
 analyst: Jim Zhang                        # Name of the analyst who runs this analysis
