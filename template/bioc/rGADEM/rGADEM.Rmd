@@ -178,7 +178,7 @@ gadem <- GADEM(seq,
 
 ```{r motif_summary, include=FALSE}
 res <- RetrieveGadem(gadem);
-res <- lapply(res, function(x) { print(x[[2]]);
+res <- lapply(res, function(x) { 
   tbl <- x[[3]][, c(1, 7, 5, 8, 6)]; 
   tbl$seqName <- names(seq)[tbl$seqID];
   if (exists('rng')) {
@@ -188,19 +188,24 @@ res <- lapply(res, function(x) { print(x[[2]]);
     tbl$seqStrand <- as.vector(strand(rng))[tbl$seqID];
     tbl$seqLength <- tbl$seqEnd - tbl$seqStart + 1;
   };
+  tbl[[1]] <- as.vector(tbl[[1]]);
+  tbl <- tbl[tbl[[1]]!='', , drop=FALSE];
   x[[3]] <- tbl;
   x; 
 });
-names(res) <- paste('Motif', 1:length(res), sep='_');
-saveRDS(res, paste(path.r, 'GADEM.rds', sep='/')); 
+cnt <- sapply(res, function(x) nrow(x[[3]]));
+res <- res[cnt>0];
 
-num <- length(res); 
-con <- consensus(gadem); 
-len <- nchar(con);
-
-if (num == 0) {
+if (length(res) == 0) {
   fig <- tbl <- matrix('**No motif found**', dimnames = list('', ''));
 } else {
+  names(res) <- paste('Motif', 1:length(res), sep='_');
+  saveRDS(res, paste(path.r, 'GADEM.rds', sep='/')); 
+
+  num <- length(res); 
+  con <- consensus(gadem)[cnt>0]; 
+  len <- nchar(con);
+  
   ################################################################
   # Plot Logo
   sapply(1:num, function(i) {
