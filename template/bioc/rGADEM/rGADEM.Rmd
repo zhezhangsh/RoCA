@@ -123,7 +123,7 @@ cpg <- 100*(cg1+cg2)/(width(seq)-1);
 dup <- sapply(c('AA', 'CC', 'GG' ,'TT'), function(x) sapply(gregexpr2(x, seq), function(ind) length(ind[ind>0])));
 di  <- 100*(rowSums(dup))/(width(seq)-1);
 tbl <- rbind(round(summary(wid), 1), round(summary(gc), 2), round(summary(cpg), 2), round(summary(di), 2)); 
-rownames(tbl) <- c('Length (bp)', 'GC (%)', 'CpG (%)', 'Duplex (%)');
+rownames(tbl) <- c('Length (bp)', 'GC (%)', 'CpG (%)', 'Dimer (%)');
 
 tbl1 <- data.frame(rng, stringsAsFactors = FALSE);
 colnames(tbl1)[1:5] <- c('Chromosome', 'Start', 'End', 'Length', 'Strand');
@@ -151,7 +151,7 @@ write.table(tbl1, row.names = FALSE, col.names = TRUE, sep='\t', qu=FALSE, paste
   - ***Length (bp)***: full length of DNA sequences
   - ***GC (%)***: frequency of G and C
   - ***CpG (%)***: frequency of CG or GC sites
-  - ***Duplex (%)***: frequency of duplexes (AA, CC, GG, or TT)
+  - ***Dimer (%)***: frequency of dimers (AA, CC, GG, or TT)
 
 Click [here](table/sequence_summary.html) to view details of individual sequences.
 
