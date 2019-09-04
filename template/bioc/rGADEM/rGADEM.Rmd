@@ -106,6 +106,8 @@ if (exists('rng')) names(rng) <- names(seq);
 
 wid <- width(seq);
 names(wid) <- names(seq);
+
+saveRDS(seq, paste0(path.r, '/sequence.rds'));
 ```
 
 # Results
