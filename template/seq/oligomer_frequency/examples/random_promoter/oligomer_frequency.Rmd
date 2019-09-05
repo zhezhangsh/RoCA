@@ -155,7 +155,7 @@ smm <- sapply(fll, function(x) {
   c <- rowSums(x$count);
   s <- x$stat; 
   r <- cor(s[, 2], s[, 3]);
-  p <- shapiro.test(s[, 4])$p.value[[1]];
+  p <- shapiro.test(sample(s[, 4], min(5000, nrow(s))))$p.value[[1]];
   c(length(c), length(c[c>0]), nrow(s[s[, 5]<=prms$selection$pvalue, , drop=FALSE]), r, p);
 });
 smm <- t(smm);
