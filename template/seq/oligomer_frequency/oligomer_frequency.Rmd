@@ -26,7 +26,7 @@ This analysis reports of the frequency of oligomers in DNA sequences and compare
 
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'oligomer_frequency.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'arrangements', 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 
                    'Biostrings', 'GenomicRanges', 'RoCA', 'awsomics'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # 
 
@@ -115,8 +115,9 @@ compareFreq <- function(seq, len) {
   bas <- c('A', 'C', 'G', 'T');
   frq <- alphabetFrequency(seq)[, bas];
   prb <- colSums(frq)/sum(frq);
-  
-  cmb <- apply(arrangements::permutations(bas, k=len, replace=TRUE), 1, function(x) paste(x, collapse=''));
+
+  cmb <- sapply(1:len, function(l) rep(rep(bas, each=4^(len-l)), 4^(l-1)));
+  cmb <- apply(cmb, 1, function(x) paste(x, collapse=''));
   exp <- 2^(rowSums(log2(arrangements::permutations(prb, k=len, replace=TRUE)))); # expected frequency
   cnt <- vcountPDict(PDict(cmb), seq); 
   ttl <- sum(cnt);
