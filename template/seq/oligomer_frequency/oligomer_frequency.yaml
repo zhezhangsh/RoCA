@@ -1,0 +1,38 @@
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+template: oligomer_frequency.Rmd
+output: examples/random_promoter            # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+# Analyst describes the analysis to run, such as project title
+description:    
+  Project: rGADAM wrapper
+  Analysis: Search for DNA motifs around TSS of a few random genes.
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
+  seq: ../../../data/sequence.read/sequence.rds
+
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+# Parameters to run this analysis
+parameter:
+  length: # Range of oligomer length
+    min: 2 # 2 or higher
+    max: 6 # 8 or lower
+  selection: # selection strategy to report top oligomer in summary table 
+    number: 2  # number of most over-represented oligomer to report (no more than 5)
+    pvalue: 0.01 # p value cutoff required for selected oligomers
+    
+######################    END OF DOCUMENT    ######################
+

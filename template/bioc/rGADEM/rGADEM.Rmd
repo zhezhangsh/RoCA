@@ -13,8 +13,6 @@ output:
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
 
-**Introduction** 
-
 This analysis performs the main functionality of Bioconductor package **rGADEM** to discover de novo motif(s) over-represented in a set of DNA sequences. Please read the package [manual](https://www.bioconductor.org/packages/devel/bioc/vignettes/rGADEM/inst/doc/rGADEM.pdf) first for background about **GADEM** algorithm and how to choose its parameters.
 
 The set of DNA sequences, within which de novo motifs and their position weighted matrix (PWM) will be discovered, can be provided as a named character vector, an _DNAStringSet_ object, or a set of genomic loci within a reference genome, such as _[BSgenome.Hsapiens.NCBI.GRCh38](http://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.NCBI.GRCh38.html)_.
