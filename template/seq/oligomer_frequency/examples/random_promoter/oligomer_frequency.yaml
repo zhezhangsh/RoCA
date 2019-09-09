@@ -13,7 +13,7 @@ zip: no                                   # Whether to zip the output folder
 ###################################################################
 # Analyst describes the analysis to run, such as project title
 description:    
-  Project: rGADAM wrapper
+  Project: RoCA for oligomer frequency 
   Analysis: Search for DNA motifs around TSS of a few random genes.
 
 ###################################################################

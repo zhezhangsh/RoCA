@@ -1,0 +1,35 @@
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+template: motif_frequency.Rmd
+output: examples/random_promoter            # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+# Analyst describes the analysis to run, such as project title
+description:    
+  Project: RoCA for motif frequency in a set of DNA sequences
+  Analysis: Search for GATA1 motif (GATA) around TSS of a few random genes.
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+input:    # These are examples of different types of data saved in different types of files. They will not be used for the skeleton.Rmd template for any analysis.
+  seq: ../../../data/sequence.read/sequence.rds
+
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+# Parameters to run this analysis
+parameter:
+  motif: AAAG  # unambiguous DNA sequence of the motif to search
+  reverse: yes # Whether to include reverse-complement of the motif
+  plot:
+    pvalue: 0.05
+######################    END OF DOCUMENT    ######################
+

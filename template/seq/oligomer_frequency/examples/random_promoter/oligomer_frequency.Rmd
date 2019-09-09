@@ -17,8 +17,7 @@ This analysis reports of the frequency of oligomers in DNA sequences and compare
   - Oligomers of the same length are analyzed together.
   - The length of the oligomers can range from 2 to 8, depending on the user-specified values. 
   - The expected frequency will be calculated according to the overall base frequency in DNA sequences (A, C, G, or T only).
-  - Over- or under-representation of oligomers is calculated as the ratio of their observed frequency over expected frequency, and tested by Fisher's exact test.
-  - For each oligomer, skewness of its occurances at relative positions of DNA sequences is tested by Kolmogorov-Smirnov test, and its enrichment with the center or both ends of the sequences is tested by Fisher's exact test.
+  - Over- or under-representation of oligomers is calculated as the ratio of their observed frequency over expected frequency, and tested by comparing two proportions. (Wilson, E.B. (1927). Probable inference, the law of succession, and statistical inference. Journal of the American Statistical Association, 22, 209–212.)
 </div>
 
 &nbsp;
