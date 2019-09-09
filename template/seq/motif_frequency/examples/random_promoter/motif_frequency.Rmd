@@ -174,7 +174,7 @@ if (prms$reverse)
 ```{r plot_position, include=TRUE, fig.width=6.4, fig.height=4.8, out.width='640px'}
 loc <- hit[[2]];
 len <- rep(stat[, 'length'], sapply(loc, length));
-pos <- (abs(unlist(loc))-1)/(len-len0);
+pos <- (abs(unlist(loc))-1)/(len-length(mtf));
 
 brk <- c(5, 10, 20, 50, 100);
 brk <- min(brk[brk>=(min(length(pos), 10*max(brk))/10)]);
