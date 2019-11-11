@@ -1,0 +1,83 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <target> a 3-column table saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the row names are the names of targeted regions
+#   - the 3 columns are sequentially chromosome name, start location, and end location of regions
+# <alignment> a named list of tables saved in a .rdata, .rda, or .rds file
+#   - the length and element names of this list must match row names of the <target> object
+#   - each of the element must a table of alignments with the following 12 columns
+# 1. library ID
+# 2. read ID
+# 3. subread start (actual base - 1)
+# 4. subread end
+# 5. query start
+# 6. query end
+# 7. reference start
+# 8. reference end
+# 9. reference chromosome
+#10. reference strand: "1/-1"
+#11. primary or secondary alignment: "p/s"
+#12. blasr score (negative integer)
+#############################################################################################################################
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+template: target_alignment.Rmd
+output: demo  # Where to save the output files
+home: https://github.com/zhezhangsh/RoCA  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+description:    
+  Project: Genotyping of RH genes
+  Experiment: "PacBio technology was used to run whole genome sequencing while designed 25-mer primers were used to enrich 2 RH genes and 10 other genes."
+  Analysis: "Summary of subread alignment of 12 targeted genes in 11 targeted regions"
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+input:    
+  target: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/misc/pacbio/target.rds # 3-column (chr, start, end) of targeted regions
+  alignment: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/target_alignment.rds   # List with matching names as <target>
+#### each element of the list of the list should be a data.frame with the following columns:
+
+
+###################################################################
+########################    PARAMETERS    #########################
+###################################################################
+parameter: 
+  sample_name: Demo
+  filter:   ## Strategy to filter alignment
+    length:   400     # Minimal length of alignment on reference
+    score:    -1200   # Worst score of Blasr alignment (the lower the better)
+    ratio:    -3      # Worst score/length ratio (the lower the better)
+    difference: 0.15  # Percentage of length difference on query and reference sequences
+  selection: difference ## Strategy to select best alignment of all subreads of the same full read
+    # score:      best Blasr score
+    # length:     longest alignment length
+    # ratio:      best score/length ratio
+    # difference: smallest percentage difference between query and reference length
+  long: 5000  ## Cutoff values of long alignment
+  palindrome: ## Parameters related to palindrome repeats
+    overlap: 60 # 0-100; percentage of alignment overlap to the selected alignment for a palindrome
+    count:      # Cutoff values of summarize number of palindrome per full read
+      - 3 
+      - 6
+      - 12
+  coverage:   ## Cutoff values of summarize sequencing coverage at targeted regions
+    - 1
+    - 3
+    - 6
+    - 10
+    - 20
+    - 30
+    - 60
+    - 120
+######################    END OF DOCUMENT    ######################
+
+
