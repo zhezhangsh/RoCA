@@ -1,0 +1,428 @@
+---
+title: "Blasr alignment of targeted regions"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+This procedure summarizes the [Blasr](https://github.com/PacificBiosciences/blasr) alignment of PacBio subreads to targeted regions.
+
+  - Sequencing coverage of the targeted regions
+  - Duplicated alignment of subreads from the same full read
+  - Length of the alignment
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'target_alignment.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'Biostrings', 
+                   'GenomicRanges', 'RoCA', 'awsomics'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); 
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, fig.path = 'figure/');
+
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+		yml <- yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+```{r load_data, include=FALSE}
+tgt <- ImportTable(DownloadFile(yml$input$target, path.input));
+aln <- ImportList(DownloadFile(yml$input$alignment, path.input));
+
+tgt <- tgt[rownames(tgt) %in% names(aln), , drop=FALSE];
+aln <- aln[rownames(tgt)]; 
+
+fil <- lapply(aln, function(a) a[(a[,8]-a[,7]+1)>=prms$filter$length & a[,12]<=prms$filter$score, , drop=FALSE]);
+fil <- lapply(fil, function(a) a[abs(a[,12]/(a[,8]-a[,7]+1))>=abs(prms$filter$ratio), , drop=FALSE]);
+fil <- lapply(fil, function(a) a[abs(1-(a[,8]-a[,7]+1)/(a[,6]-a[,5]+1))<=prms$filter$difference, , drop=FALSE]);
+pri <- lapply(fil, function(a) a[a[, 11]==1, , drop=FALSE]);
+lng <- lapply(pri, function(a) a[(a[,8]-a[,7]+1)>=prms$long, , drop=FALSE]);
+```
+
+`r home.url`
+
+# Input
+
+ - Sample name: **`r prms$sample_name`**
+ - Number of targeted regions: **`r nrow(tgt)`**
+ - Total length of targeted regions: **`r format(sum(tgt[,3]-tgt[,2]+1), big.mark = ',', scientific = FALSE)`**
+ - Total number of subread alignment: **`r format(sum(sapply(aln, nrow)), big.mark = ',', scientific = FALSE)`**
+
+# Results
+
+## Summary
+
+Overall summary of subread alignment.
+
+```{r summary, include=FALSE}
+tbl <- data.frame(tgt, length=tgt[,3]-tgt[,2]+1, total=sapply(aln, nrow), filtered=sapply(fil, nrow), 
+                  primary=sapply(pri, nrow), long=sapply(lng, nrow), stringsAsFactors = FALSE);
+tbl$fullread    <- sapply(pri, function(x) length(unique(paste(x[, 1], x[, 2]))));
+tbl$mean_length <- round(sapply(pri, function(x) mean(x[, 8]-x[, 7])+1));
+tbl$mean_score  <- round(sapply(pri, function(x) mean(x[, 12])));
+colnames(tbl)[1] <- 'chr';
+
+saveRDS(tbl, paste0(path.r, '/summary_target.rds'));
+```
+
+`r OrderTable()` Summary of alignment within targeted regions: _location and length of targets; total number of alignment by all subreads; number of alignment after filtering; number of primary alignment after filtering; number of primary long alignment (>=`r prms$long` bases); number of unique full reads; average length of alignment; and average Blasr score of alignment_. Alignment filtering was performed based on the following strategy:
+
+  - Minimum length on reference sequence: **`r prms$filter$length`**
+  - Worst Blasr score: **`r prms$filter$score`** (the lower, the better)
+  - Worst score/length ratio: **`r prms$filter$ratio`** (the lower, the better)
+  - Maximum difference allowed between alignment length on query and reference sequences: **`r round(100*prms$filter$difference)`%**
+
+`r kable(tbl) %>% 
+    kable_styling(bootstrap_options = c("hover", "condensed", "responsive"), full_width=FALSE)`
+
+`r home.url`
+
+## Alignment selection
+
+
+```{r fullread, include=FALSE}
+smm <- lapply(pri, function(a) { 
+  spl <- split(a, paste(a[, 1], a[, 2], sep='/'));
+  len <- lapply(spl, function(x) x[, 8] - x[, 7] + 1);
+  scr <- lapply(spl, function(x) x[, 12]);
+  rat <- lapply(spl, function(x) x[, 12]/(x[,8] - x[,7]+1));
+  dff <- lapply(spl, function(x) 100*abs(1-(x[,8]-x[,7]+1)/(x[,6]-x[,5]+1)));
+  
+  bst <- a[rev(order(a[, 8] - a[, 7])), , drop=FALSE];
+  bst <- bst[order(bst[, 12]), , drop=FALSE];
+  bst <- bst[!duplicated(paste(bst[, 1], bst[, 2])), , drop=FALSE];
+  bst.scr <- bst[, 12];
+  if (tolower(prms$selection[1])=='length') bst.sel <- bst;
+  
+  bst <- a[order(a[, 12]), , drop=FALSE];
+  bst <- bst[rev(order(bst[, 8] - bst[, 7])), , drop=FALSE];
+  bst <- bst[!duplicated(paste(bst[, 1], bst[, 2])), , drop=FALSE];
+  bst.len <- bst[, 8] - bst[, 7] + 1;
+  if (tolower(prms$selection[1])=='score') bst.sel <- bst;
+
+  bst <- a[rev(order(a[, 8] - a[, 7])), , drop=FALSE];
+  bst <- bst[order(bst[, 12]), , drop=FALSE];
+  bst <- bst[order(bst[, 12]/(bst[, 8]-bst[, 7]+1)), , drop=FALSE];
+  bst <- bst[!duplicated(paste(bst[, 1], bst[, 2])), , drop=FALSE];
+  bst.rat <- bst[, 12]/(bst[, 8]-bst[, 7]+1); 
+  if (tolower(prms$selection[1])=='ratio') bst.sel <- bst;
+  
+  bst <- a[rev(order(a[, 8] - a[, 7])), , drop=FALSE];
+  bst <- bst[order(bst[, 12]), , drop=FALSE];
+  bst <- bst[order(abs(1-(bst[, 6]-bst[, 5]+1)/(bst[, 8]-bst[, 7]+1))), , drop=FALSE];
+  bst <- bst[!duplicated(paste(bst[, 1], bst[, 2])), , drop=FALSE];
+  bst.dff <- 100*abs(1-(bst[, 6]-bst[, 5]+1)/(bst[, 8]-bst[, 7]+1));
+  if (tolower(prms$selection[1])=='difference' | !exists('bst.sel')) bst.sel <- bst;
+
+  smm <- cbind(count=sapply(spl, nrow), all_len=sapply(len, mean), all_score=sapply(scr, mean), 
+               all_ratio=sapply(rat, mean), all_diff=sapply(dff, mean), best_len=bst.len,
+               best_score=bst.scr, best_ratio=bst.rat, best_diff=bst.dff);
+  data.frame(bst.sel, smm, stringsAsFactors = FALSE);             
+}); 
+saveRDS(smm, paste0(path.r, '/summary_fullread.rds'));
+
+sel <- lapply(smm, function(s) {
+  gr <- GRanges(s$chromosome, IRanges(s$ref_start, s$ref_end), strand=c('+', '-')[1.5-s$strand/2]);
+  gr$score <- s$score;
+  names(gr) <- rownames(s);
+  gr; 
+}); 
+
+if (tolower(prms$selection[1])=='score') dsc <- 'longest alignment length' else 
+  if (tolower(prms$selection[1])=='score') dsc <- 'lowest Blasr score' else
+    if (tolower(prms$selection[1])=='ratio') dsc <- 'lowest Blasr score to alignment length ratio' else
+      dsc <- 'lowest percentage difference of alignment length between query and reference';
+```
+
+Due to palindromes, only one alignment should be selected for each full read. The alignment can be selected based on one of the following statistics:
+
+  - **Length**: length of alignment (positive integer: the longer, the better)
+  - **Score**: Blasr score of alignmetn (negative integer: the lower, the better)
+  - **Ratio**: score/length ratio (negative number: the lower, the better)
+  - **Difference**: percent of difference between query and reference of alignment (number between 0 and 100: the lower, the better)
+
+```{r fullread_dist, include=TRUE, fig.width=12, fig.height=8, out.width='800px'}
+sel_len   <- lapply(smm, function(s) s[, 8]-s[, 7] + 1); 
+sel_score <- lapply(smm, function(s) s[, 12]);
+sel_ratio <- lapply(smm, function(s) s[, 12]/(s[, 8]-s[, 7] + 1));
+sel_diff  <- lapply(smm, function(s) 100*abs(1 - (s[, 6] - s[, 5] + 1)/(s[, 8] - s[, 7] + 1)));
+
+stat <- list("Alignment length"=sel_len, "Blasr score"=sel_score, 
+             "Score/Length ratio"=sel_ratio, "Query vs. reference difference (%)"=sel_diff);
+
+par(mfrow=c(2, 2), mar=c(8, 5, 1, 1)); 
+for (i in 1:4) {
+  boxplot(stat[[i]], las=3, col=rainbow(length(stat[[i]])), boxwex=0.6, pch=18, ylab=names(stat)[i],
+          cex.lab=1.5);
+}; 
+```
+
+`r OrderFigure()` The alignment having **the `r dsc`** was selected for each full read. The statistics of selected alignment are summarized in the figure, and compared between targeted regions. 
+
+```{r fullread_summary, include=FALSE}
+tbl <- t(sapply(smm, function(s) colMeans(s[, (ncol(s)-8):ncol(s)])));
+tbl <- cbind(tbl, sel_len=sapply(smm, function(s) mean(s[,8]-s[,7]+1)), 
+             sel_score=sapply(smm, function(s) mean(s[, 12])),
+             sel_ratio=sapply(smm, function(s) mean(s[,12]/(s[,8]-s[,7]+1))),
+             sel_diff =sapply(smm, function(s) mean(100*abs(1-(s[, 6]-s[, 5]+1)/(s[, 8]-s[, 7]+1)))));
+saveRDS(tbl, paste0(path.r, '/summary_target_fullread.rds'));
+
+fns <- sapply(names(smm), function(nm) {
+  fn <- paste0('fullread_', nm, '.html');
+  CreateDatatable(FormatNumeric(smm[[nm]]), paste0(path.tbl, '/', fn)) -> x;
+  fn;
+});
+
+tbl <- data.frame('Target'=paste0('[', rownames(tbl), '](table/', fns, ')'), 
+                  round(tbl, 1), stringsAsFactors = FALSE);
+```
+
+`r OrderTable()` This table summarizes the averages of all full reads aligned to targeted regions. The first column is the number of alignments per full read. The following 4 columns are the average of 4 statistics: alignment length, Blasr score, score/length ratio, and query vs. reference length difference. The next 4 columns are the best of the same statistics. The last 4 columns are the same statistics of the selected alignment of all full reads. 
+
+`r kable(tbl, row.names=FALSE) %>% 
+    kable_styling(bootstrap_options = c("hover", "condensed", "responsive"), full_width=FALSE)`
+
+## Palindrome frequency
+
+When the same full read has multiple alignments to the same location on reference sequence, it is assumed to be caused by palindrome repeats. This section summarizes the frequency of palindromes, in relationship to alignment length.
+
+```{r palindrome, include=FALSE}
+sel <- lapply(rownames(tgt), function(nm) { 
+  s <- sel[[nm]];
+  a <- pri[[nm]];
+  g <- GRanges(a$chromosome, IRanges(a$ref_start, a$ref_end), strand=a$strand);
+  o <- as.matrix(findOverlaps(s, g, ignore.strand=TRUE));
+  o <- o[a[names(s), 1][o[, 1]]==a[, 1][o[, 2]], , drop=FALSE];
+  o <- o[a[names(s), 2][o[, 1]]==a[, 2][o[, 2]], , drop=FALSE];
+  o <- cbind(o, stt1=start(s)[o[, 1]], end1=end(s)[o[, 1]], stt2=start(g)[o[, 2]], end2=end(g)[o[, 2]]);
+  o <- cbind(o, stt=pmax(o[, 'stt1'], o[, 'stt2']), end=pmin(o[, 'end1'], o[, 'end2']));
+  o <- cbind(o, pct=100*(o[,'end']-o[,'stt']+1)/(o[,'end1']-o[,'stt1']+1));
+  o <- o[o[, 'pct']>=prms$palindrome$overlap, , drop=FALSE];
+  o <- cbind(o, score=a[, 'score'][o[, 2]]);
+  n <- sapply(split(o[, 1], o[, 1]), length);
+  names(n) <- names(s)[as.integer(names(n))];
+  n <- n[names(s)];
+  n[is.na(n)] <- 0;
+  s$palindrome <- n;
+  s;
+});
+names(sel) <- rownames(tgt);
+saveRDS(sel, paste0(path.r, '/selected_alignment.rds'));
+
+cff <- sort(unique(round(c(0, 1, 2, prms$palindrome$count))));
+cnt <- sapply(cff, function(c) sapply(sel, function(s) length(s[s$palindrome>=c])));
+bst <- sapply(sel, function(s) length(s[s$palindrome>=max(cff) & width(s)>=prms$long]));
+colnames(cnt)[1:length(cff)] <- paste0('Num>=', cff);
+colnames(cnt)[ncol(cnt)] <- paste0('Num>=', cff[length(cff)], '&Long');
+saveRDS(cnt, paste0(path.r, '/summary_palindrome.rds'));
+
+fns <- sapply(names(sel), function(nm) { print(nm);
+  s <- sel[[nm]];
+  f <- paste0('palin_', nm, '.png');
+
+  png(paste0(path.fig, '/', f), w=1200, h=900, res=150);
+  par(mar=c(5, 5, 2, 2));
+  plot(width(s), s$palindrome, xlab='Palindrome length', ylab='Palindrome count', cex.lab=1.5,
+       pch='|', col='#F83557', cex=0.5, main=nm, cex.main=1.5, xaxs='i', yaxs='i', 
+       ylim=c(0, 1.05*max(s$palindrome)));
+  abline(v=prms$long, h=max(cff), col='lightgrey');
+  try(dev.off());
+  
+  pdf(paste0(path.fig, '/', sub('.png$', '.pdf', f)), w=12, h=9);
+  par(mar=c(5, 5, 2, 2));
+  plot(width(s), s$palindrome, xlab='Palindrome length', ylab='Palindrome count', cex.lab=1.5,
+       pch='|', col='#F83557', cex=0.5, main=nm, cex.main=1.5, xaxs='i', yaxs='i', 
+       ylim=c(1, 1.05*max(s$palindrome)));
+  abline(v=prms$long, h=max(cff), col='lightgrey');
+  try(dev.off());
+  f;
+});
+
+tbl <- data.frame(Target=paste0('[', rownames(cnt), '](figure/', fns, ')'), cnt, 
+                  stringsAsFactors = FALSE);
+colnames(tbl)[-1] <- colnames(cnt); 
+```
+
+`r OrderTable()` Number of total full reads and full reads with given number of palindrome repeats per targeted region. 
+
+`r kable(FormatNumeric(tbl), row.names=FALSE) %>% 
+    kable_styling(bootstrap_options = c("hover", "condensed", "responsive"), full_width=FALSE)`
+
+
+## Sequencing coverage
+
+Sequencing coverage of targeted regions via selected alignment of all full reads.
+
+```{r coverage, include=FALSE}
+cov <- lapply(rownames(tgt), function(nm) {
+  c <- coverage(sel[[nm]], width=tgt[nm, 3])[tgt[nm, 1]][[1]];
+  as.vector(c[tgt[nm, 2]:tgt[nm, 3]]);
+});
+lng <- lapply(rownames(tgt), function(nm) {
+  s <- sel[[nm]];
+  c <- coverage(s[width(s)>=prms$long, ], width=tgt[nm, 3])[tgt[nm, 1]][[1]];
+  as.vector(c[tgt[nm, 2]:tgt[nm, 3]]);
+});
+pac <- lapply(rownames(tgt), function(nm) {
+  s <- sel[[nm]];
+  c <- coverage(s[s$palin_num>=6 & width(s)>=5000], width=tgt[nm, 3])[tgt[nm, 1]][[1]];
+  as.vector(c[tgt[nm, 2]:tgt[nm, 3]]);
+});
+names(cov) <- names(lng) <- names(pac) <- rownames(tgt);
+
+#######################################################################################
+pltC <- function (cv, lg, lc, nm, cf) {
+  col1 <- '#F5B041';
+  col2 <- '#884EA0';
+  
+  par(mfcol=c(2, 2), mar=c(2.5, 5, 2, 2));
+
+  if (max(cv)==0) ylm <- c(0, 1) else ylm <- c(0, max(cv));
+  plot(lc:(lc+length(cv)-1), cv, type='n', cex.lab=1.5,  xlab='', ylab='Coverage', yaxs='i', 
+       ylim=ylm, xaxs='i', yaxt='n');
+  abline(h=cf, col='grey', lwd=0.5);
+  polygon(c(lc, lc:(lc+length(cv)-1), (lc+length(cv)-1)), c(0, cv, 0), col=col1, border=NA);
+  axis(2, las=2);
+  title(main=paste0(nm, '; All reads'), cex.main=1.5);
+  
+  plot(sort(cv), type='n', cex.lab=1.5, xlab='', ylab='Coverage', yaxs='i', ylim=ylm, 
+       xaxs='i', xaxt='n', yaxt='n');
+  abline(h=cf, col='grey', lwd=0.5);
+  polygon(c(1, 1:length(cv), length(cv)), c(0, sort(cv), 0), col=col2, border=NA);
+  axis(1, at=seq(1, length(cv), length.out = 5), label=paste0(seq(0, 100, 25), '%'));
+  axis(2, las=2);
+
+  
+  #################
+  if (max(lg)==0) ylm <- c(0, 1) else ylm <- c(0, max(lg));
+  plot(lc:(lc+length(cv)-1), lg, type='n', cex.lab=1.5,  xlab='', ylab='Coverage', yaxs='i', 
+       ylim=ylm, xaxs='i', yaxt='n');
+  abline(h=cf, col='grey', lwd=0.5);
+  polygon(c(lc, lc:(lc+length(cv)-1), (lc+length(cv)-1)), c(0, lg, 0), col=col1, border=NA);
+  axis(2, las=2);
+  title(main=paste0(nm, '; Long reads (', prms$long, '+)'), cex.main=1.5);
+  
+  plot(sort(cv), type='n', cex.lab=1.5, xlab='', ylab='Coverage', yaxs='i', ylim=ylm, 
+       xaxs='i', xaxt='n', yaxt='n');
+  abline(h=cf, col='grey', lwd=0.5);
+  polygon(c(1, 1:length(cv), length(cv)), c(0, sort(lg), 0), col=col2, border=NA);
+  axis(1, at=seq(1, length(cv), length.out = 5), label=paste0(seq(0, 100, 25), '%'));
+  axis(2, las=2);
+}
+
+fns <- sapply(names(cov), function(nm) {
+  fn <- paste0('coverage_', nm, '.png');
+  png(paste0(path.fig, '/', fn), w=1500, h=600, res=150);
+  pltC(cov[[nm]], lng[[nm]], tgt[nm, 2], nm, prms$coverage);
+  try(dev.off());
+  pdf(paste0(path.fig, '/', sub('.png$', '.pdf', fn)), w=15, h=6);
+  pltC(cov[[nm]], lng[[nm]], tgt[nm, 2], nm, prms$coverage);
+  try(dev.off());
+  fn;
+}); 
+#######################################################################################
+
+cff <- prms$coverage
+cnt <- sapply(cff, function(f) sapply(cov, function(c) length(c[c>=f])));
+pct <- 100*cnt/sapply(cov, length);
+colnames(cnt) <- colnames(pct) <- paste0('Dep>=', cff);
+stat <- cbind(Mean_All=sapply(cov, mean), Mean_Long=sapply(lng, mean), pct);
+
+saveRDS(cov, paste0(path.r, '/coverage_target.rds'));
+saveRDS(stat, paste0(path.r, '/coverage_target_stat.rds'));
+
+tbl <- data.frame(paste0('[', rownames(stat), '](figure/', fns, ')'), stat, stringsAsFactors = FALSE);
+colnames(tbl) <- c('Target', colnames(stat));
+```
+
+`r OrderTable()` The first 2 columns are the average coverage of targeted regions using all selected alignment and long selected alignment (`r prms$long` bases or more) of all full reads. The following columns are the percentage of targeted regions with given sequencing coverage. Click links to view landscape of coverage. 
+
+`r kable(FormatNumeric(tbl), row.names=FALSE) %>% 
+    kable_styling(bootstrap_options = c("hover", "condensed", "responsive"), full_width=FALSE)`
+
+
+`r home.url`
+
+***
+
+<!-- Keep this section unchanged for all RoCA templates -->
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

@@ -248,7 +248,7 @@ sel <- lapply(rownames(tgt), function(nm) {
 names(sel) <- rownames(tgt);
 saveRDS(sel, paste0(path.r, '/selected_alignment.rds'));
 
-cff <- sort(unique(round(c(0, 1, 2, prms$palindrome$count))));
+cff <- sort(unique(round(c(1, 2, prms$palindrome$count))));
 cnt <- sapply(cff, function(c) sapply(sel, function(s) length(s[s$palindrome>=c])));
 bst <- sapply(sel, function(s) length(s[s$palindrome>=max(cff) & width(s)>=prms$long]));
 cnt <- cbind(cnt, bst);

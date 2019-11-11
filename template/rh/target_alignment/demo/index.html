@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2019-11-11" />
+
+<title>Blasr alignment of targeted regions</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Blasr alignment of targeted regions</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2019-11-11</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This procedure summarizes the <a href="https://github.com/PacificBiosciences/blasr">Blasr</a> alignment of PacBio subreads to targeted regions.</p>
+<ul>
+<li>Sequencing coverage of the targeted regions</li>
+<li>Duplicated alignment of subreads from the same full read</li>
+<li>Length of the alignment</li>
+</ul>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Genotyping of RH genes</p>
+</div>
+<div id="experiment" class="section level2">
+<h2><span class="header-section-number">1.2</span> Experiment</h2>
+<p>PacBio technology was used to run whole genome sequencing while designed 25-mer primers were used to enrich 2 RH genes and 10 other genes.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>Summary of subread alignment of 12 targeted genes in 11 targeted regions</p>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="input" class="section level1">
+<h1><span class="header-section-number">2</span> Input</h1>
+<ul>
+<li>Sample name: <strong>Demo</strong></li>
+<li>Number of targeted regions: <strong>11</strong></li>
+<li>Total length of targeted regions: <strong>546,296</strong></li>
+<li>Total number of subread alignment: <strong>212,662</strong></li>
+</ul>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">3</span> Results</h1>
+<div id="summary" class="section level2">
+<h2><span class="header-section-number">3.1</span> Summary</h2>
+<p>Overall summary of subread alignment.</p>
+<p><strong>Table 1.</strong> Summary of alignment within targeted regions: <em>location and length of targets; total number of alignment by all subreads; number of alignment after filtering; number of primary alignment after filtering; number of primary long alignment (&gt;=5000 bases); number of unique full reads; average length of alignment; and average Blasr score of alignment</em>. Alignment filtering was performed based on the following strategy:</p>
+<ul>
+<li>Minimum length on reference sequence: <strong>400</strong></li>
+<li>Worst Blasr score: <strong>-1200</strong> (the lower, the better)</li>
+<li>Worst score/length ratio: <strong>-3</strong> (the lower, the better)</li>
+<li>Maximum difference allowed between alignment length on query and reference sequences: <strong>15%</strong></li>
+</ul>
+<table class="table table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+chr
+</th>
+<th style="text-align:right;">
+start
+</th>
+<th style="text-align:right;">
+end
+</th>
+<th style="text-align:right;">
+length
+</th>
+<th style="text-align:right;">
+total
+</th>
+<th style="text-align:right;">
+filtered
+</th>
+<th style="text-align:right;">
+primary
+</th>
+<th style="text-align:right;">
+long
+</th>
+<th style="text-align:right;">
+fullread
+</th>
+<th style="text-align:right;">
+mean_length
+</th>
+<th style="text-align:right;">
+mean_score
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+RH
+</td>
+<td style="text-align:left;">
+chr1
+</td>
+<td style="text-align:right;">
+25258883
+</td>
+<td style="text-align:right;">
+25434470
+</td>
+<td style="text-align:right;">
+175588
+</td>
+<td style="text-align:right;">
+95921
+</td>
+<td style="text-align:right;">
+85912
+</td>
+<td style="text-align:right;">
+85093
+</td>
+<td style="text-align:right;">
+12865
+</td>
+<td style="text-align:right;">
+19836
+</td>
+<td style="text-align:right;">
+3332
+</td>
+<td style="text-align:right;">
+-13524
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ABO
+</td>
+<td style="text-align:left;">
+chr9
+</td>
+<td style="text-align:right;">
+133240400
+</td>
+<td style="text-align:right;">
+133285210
+</td>
+<td style="text-align:right;">
+44811
+</td>
+<td style="text-align:right;">
+10994
+</td>
+<td style="text-align:right;">
+9510
+</td>
+<td style="text-align:right;">
+9509
+</td>
+<td style="text-align:right;">
+1386
+</td>
+<td style="text-align:right;">
+2305
+</td>
+<td style="text-align:right;">
+3233
+</td>
+<td style="text-align:right;">
+-12908
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ACKR1
+</td>
+<td style="text-align:left;">
+chr1
+</td>
+<td style="text-align:right;">
+159193310
+</td>
+<td style="text-align:right;">
+159216500
+</td>
+<td style="text-align:right;">
+23191
+</td>
+<td style="text-align:right;">
+7129
+</td>
+<td style="text-align:right;">
+6356
+</td>
+<td style="text-align:right;">
+6353
+</td>
+<td style="text-align:right;">
+1295
+</td>
+<td style="text-align:right;">
+1598
+</td>
+<td style="text-align:right;">
+3558
+</td>
+<td style="text-align:right;">
+-14474
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BCAM
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+44799059
+</td>
+<td style="text-align:right;">
+44831420
+</td>
+<td style="text-align:right;">
+32362
+</td>
+<td style="text-align:right;">
+6961
+</td>
+<td style="text-align:right;">
+6013
+</td>
+<td style="text-align:right;">
+6011
+</td>
+<td style="text-align:right;">
+836
+</td>
+<td style="text-align:right;">
+1357
+</td>
+<td style="text-align:right;">
+3176
+</td>
+<td style="text-align:right;">
+-12739
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FUT1
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+48738011
+</td>
+<td style="text-align:right;">
+48765390
+</td>
+<td style="text-align:right;">
+27380
+</td>
+<td style="text-align:right;">
+3920
+</td>
+<td style="text-align:right;">
+3405
+</td>
+<td style="text-align:right;">
+3404
+</td>
+<td style="text-align:right;">
+547
+</td>
+<td style="text-align:right;">
+792
+</td>
+<td style="text-align:right;">
+3374
+</td>
+<td style="text-align:right;">
+-13598
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FUT2
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+48685971
+</td>
+<td style="text-align:right;">
+48715950
+</td>
+<td style="text-align:right;">
+29980
+</td>
+<td style="text-align:right;">
+4117
+</td>
+<td style="text-align:right;">
+3653
+</td>
+<td style="text-align:right;">
+3653
+</td>
+<td style="text-align:right;">
+641
+</td>
+<td style="text-align:right;">
+926
+</td>
+<td style="text-align:right;">
+3452
+</td>
+<td style="text-align:right;">
+-13753
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FUT3
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+5832888
+</td>
+<td style="text-align:right;">
+5861474
+</td>
+<td style="text-align:right;">
+28587
+</td>
+<td style="text-align:right;">
+4064
+</td>
+<td style="text-align:right;">
+3719
+</td>
+<td style="text-align:right;">
+3719
+</td>
+<td style="text-align:right;">
+585
+</td>
+<td style="text-align:right;">
+911
+</td>
+<td style="text-align:right;">
+3391
+</td>
+<td style="text-align:right;">
+-13693
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GYPA
+</td>
+<td style="text-align:left;">
+chr4
+</td>
+<td style="text-align:right;">
+144099300
+</td>
+<td style="text-align:right;">
+144150750
+</td>
+<td style="text-align:right;">
+51451
+</td>
+<td style="text-align:right;">
+23230
+</td>
+<td style="text-align:right;">
+20893
+</td>
+<td style="text-align:right;">
+20890
+</td>
+<td style="text-align:right;">
+3339
+</td>
+<td style="text-align:right;">
+5018
+</td>
+<td style="text-align:right;">
+3344
+</td>
+<td style="text-align:right;">
+-13704
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GYPB
+</td>
+<td style="text-align:left;">
+chr4
+</td>
+<td style="text-align:right;">
+143986100
+</td>
+<td style="text-align:right;">
+144029340
+</td>
+<td style="text-align:right;">
+43241
+</td>
+<td style="text-align:right;">
+19225
+</td>
+<td style="text-align:right;">
+17265
+</td>
+<td style="text-align:right;">
+17257
+</td>
+<td style="text-align:right;">
+2676
+</td>
+<td style="text-align:right;">
+4198
+</td>
+<td style="text-align:right;">
+3363
+</td>
+<td style="text-align:right;">
+-13717
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEL
+</td>
+<td style="text-align:left;">
+chr7
+</td>
+<td style="text-align:right;">
+142931110
+</td>
+<td style="text-align:right;">
+142972420
+</td>
+<td style="text-align:right;">
+41311
+</td>
+<td style="text-align:right;">
+25243
+</td>
+<td style="text-align:right;">
+22499
+</td>
+<td style="text-align:right;">
+22496
+</td>
+<td style="text-align:right;">
+3085
+</td>
+<td style="text-align:right;">
+5328
+</td>
+<td style="text-align:right;">
+3207
+</td>
+<td style="text-align:right;">
+-13129
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SLC14A1
+</td>
+<td style="text-align:left;">
+chr18
+</td>
+<td style="text-align:right;">
+45714127
+</td>
+<td style="text-align:right;">
+45762520
+</td>
+<td style="text-align:right;">
+48394
+</td>
+<td style="text-align:right;">
+11858
+</td>
+<td style="text-align:right;">
+10530
+</td>
+<td style="text-align:right;">
+10526
+</td>
+<td style="text-align:right;">
+1953
+</td>
+<td style="text-align:right;">
+2548
+</td>
+<td style="text-align:right;">
+3469
+</td>
+<td style="text-align:right;">
+-14180
+</td>
+</tr>
+</tbody>
+</table>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+</div>
+<div id="alignment-selection" class="section level2">
+<h2><span class="header-section-number">3.2</span> Alignment selection</h2>
+<p>Due to palindromes, only one alignment should be selected for each full read. The alignment can be selected based on one of the following statistics:</p>
+<ul>
+<li><strong>Length</strong>: length of alignment (positive integer: the longer, the better)</li>
+<li><strong>Score</strong>: Blasr score of alignmetn (negative integer: the lower, the better)</li>
+<li><strong>Ratio</strong>: score/length ratio (negative number: the lower, the better)</li>
+<li><strong>Difference</strong>: percent of difference between query and reference of alignment (number between 0 and 100: the lower, the better)</li>
+</ul>
+<p><img src="figure/fullread_dist-1.png" width="800px" /></p>
+<p><strong>Figure 1.</strong> The alignment having <strong>the lowest percentage difference of alignment length between query and reference</strong> was selected for each full read. The statistics of selected alignment are summarized in the figure, and compared between targeted regions.</p>
+<p><strong>Table 2.</strong> This table summarizes the averages of all full reads aligned to targeted regions. The first column is the number of alignments per full read. The following 4 columns are the average of 4 statistics: alignment length, Blasr score, score/length ratio, and query vs. reference length difference. The next 4 columns are the best of the same statistics. The last 4 columns are the same statistics of the selected alignment of all full reads.</p>
+<table class="table table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Target
+</th>
+<th style="text-align:right;">
+count
+</th>
+<th style="text-align:right;">
+all_len
+</th>
+<th style="text-align:right;">
+all_score
+</th>
+<th style="text-align:right;">
+all_ratio
+</th>
+<th style="text-align:right;">
+all_diff
+</th>
+<th style="text-align:right;">
+best_len
+</th>
+<th style="text-align:right;">
+best_score
+</th>
+<th style="text-align:right;">
+best_ratio
+</th>
+<th style="text-align:right;">
+best_diff
+</th>
+<th style="text-align:right;">
+sel_len
+</th>
+<th style="text-align:right;">
+sel_score
+</th>
+<th style="text-align:right;">
+sel_ratio
+</th>
+<th style="text-align:right;">
+sel_diff
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_RH.html">RH</a>
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+3311.8
+</td>
+<td style="text-align:right;">
+-13284.9
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+3612.6
+</td>
+<td style="text-align:right;">
+-14529.2
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+3316.2
+</td>
+<td style="text-align:right;">
+-13472.7
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_ABO.html">ABO</a>
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+3171.8
+</td>
+<td style="text-align:right;">
+-12540.2
+</td>
+<td style="text-align:right;">
+-3.9
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+3457.0
+</td>
+<td style="text-align:right;">
+-13727.3
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+<td style="text-align:right;">
+3142.5
+</td>
+<td style="text-align:right;">
+-12572.9
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_ACKR1.html">ACKR1</a>
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+3492.5
+</td>
+<td style="text-align:right;">
+-14043.0
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+3796.8
+</td>
+<td style="text-align:right;">
+-15369.6
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+3504.6
+</td>
+<td style="text-align:right;">
+-14258.1
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_BCAM.html">BCAM</a>
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+3386.3
+</td>
+<td style="text-align:right;">
+-13438.8
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+4.0
+</td>
+<td style="text-align:right;">
+3763.2
+</td>
+<td style="text-align:right;">
+-14938.5
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+3363.7
+</td>
+<td style="text-align:right;">
+-13539.4
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_FUT1.html">FUT1</a>
+</td>
+<td style="text-align:right;">
+4.3
+</td>
+<td style="text-align:right;">
+3328.2
+</td>
+<td style="text-align:right;">
+-13197.4
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+3599.9
+</td>
+<td style="text-align:right;">
+-14343.2
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+<td style="text-align:right;">
+3334.2
+</td>
+<td style="text-align:right;">
+-13390.2
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_FUT2.html">FUT2</a>
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+3337.8
+</td>
+<td style="text-align:right;">
+-13145.1
+</td>
+<td style="text-align:right;">
+-3.9
+</td>
+<td style="text-align:right;">
+4.4
+</td>
+<td style="text-align:right;">
+3673.8
+</td>
+<td style="text-align:right;">
+-14380.6
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+<td style="text-align:right;">
+3340.2
+</td>
+<td style="text-align:right;">
+-13329.4
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_FUT3.html">FUT3</a>
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+3285.4
+</td>
+<td style="text-align:right;">
+-13110.8
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+3588.0
+</td>
+<td style="text-align:right;">
+-14319.6
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+<td style="text-align:right;">
+3273.2
+</td>
+<td style="text-align:right;">
+-13215.0
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_GYPA.html">GYPA</a>
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+3232.8
+</td>
+<td style="text-align:right;">
+-13093.3
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+3498.0
+</td>
+<td style="text-align:right;">
+-14267.8
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+3232.8
+</td>
+<td style="text-align:right;">
+-13258.4
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_GYPB.html">GYPB</a>
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+3250.5
+</td>
+<td style="text-align:right;">
+-13062.5
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+3506.8
+</td>
+<td style="text-align:right;">
+-14195.2
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+3252.2
+</td>
+<td style="text-align:right;">
+-13216.8
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_KEL.html">KEL</a>
+</td>
+<td style="text-align:right;">
+4.2
+</td>
+<td style="text-align:right;">
+3154.1
+</td>
+<td style="text-align:right;">
+-12744.6
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.9
+</td>
+<td style="text-align:right;">
+3429.6
+</td>
+<td style="text-align:right;">
+-13941.5
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+<td style="text-align:right;">
+3162.8
+</td>
+<td style="text-align:right;">
+-12929.6
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+3.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="table/fullread_SLC14A1.html">SLC14A1</a>
+</td>
+<td style="text-align:right;">
+4.1
+</td>
+<td style="text-align:right;">
+3443.1
+</td>
+<td style="text-align:right;">
+-13907.9
+</td>
+<td style="text-align:right;">
+-4.0
+</td>
+<td style="text-align:right;">
+3.8
+</td>
+<td style="text-align:right;">
+3751.7
+</td>
+<td style="text-align:right;">
+-15244.9
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+<td style="text-align:right;">
+3438.1
+</td>
+<td style="text-align:right;">
+-14061.8
+</td>
+<td style="text-align:right;">
+-4.1
+</td>
+<td style="text-align:right;">
+2.9
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="palindrome-frequency" class="section level2">
+<h2><span class="header-section-number">3.3</span> Palindrome frequency</h2>
+<p>When the same full read has multiple alignments to the same location on reference sequence, it is assumed to be caused by palindrome repeats. This section summarizes the frequency of palindromes, in relationship to alignment length.</p>
+<p><strong>Table 3.</strong> Number of total full reads and full reads with given number of palindrome repeats per targeted region.</p>
+<table class="table table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Target
+</th>
+<th style="text-align:right;">
+Total
+</th>
+<th style="text-align:right;">
+Num&gt;=1
+</th>
+<th style="text-align:right;">
+Num&gt;=2
+</th>
+<th style="text-align:right;">
+Num&gt;=3
+</th>
+<th style="text-align:right;">
+Num&gt;=6
+</th>
+<th style="text-align:right;">
+Num&gt;=12
+</th>
+<th style="text-align:right;">
+Num&gt;=12&amp;Long
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_RH.png">RH</a>
+</td>
+<td style="text-align:right;">
+19836
+</td>
+<td style="text-align:right;">
+19836
+</td>
+<td style="text-align:right;">
+12391
+</td>
+<td style="text-align:right;">
+8495
+</td>
+<td style="text-align:right;">
+4009
+</td>
+<td style="text-align:right;">
+1157
+</td>
+<td style="text-align:right;">
+137
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_ABO.png">ABO</a>
+</td>
+<td style="text-align:right;">
+2305
+</td>
+<td style="text-align:right;">
+2305
+</td>
+<td style="text-align:right;">
+1489
+</td>
+<td style="text-align:right;">
+1047
+</td>
+<td style="text-align:right;">
+508
+</td>
+<td style="text-align:right;">
+122
+</td>
+<td style="text-align:right;">
+18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_ACKR1.png">ACKR1</a>
+</td>
+<td style="text-align:right;">
+1598
+</td>
+<td style="text-align:right;">
+1598
+</td>
+<td style="text-align:right;">
+1006
+</td>
+<td style="text-align:right;">
+704
+</td>
+<td style="text-align:right;">
+299
+</td>
+<td style="text-align:right;">
+84
+</td>
+<td style="text-align:right;">
+14
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_BCAM.png">BCAM</a>
+</td>
+<td style="text-align:right;">
+1357
+</td>
+<td style="text-align:right;">
+1357
+</td>
+<td style="text-align:right;">
+838
+</td>
+<td style="text-align:right;">
+578
+</td>
+<td style="text-align:right;">
+267
+</td>
+<td style="text-align:right;">
+81
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_FUT1.png">FUT1</a>
+</td>
+<td style="text-align:right;">
+792
+</td>
+<td style="text-align:right;">
+792
+</td>
+<td style="text-align:right;">
+482
+</td>
+<td style="text-align:right;">
+344
+</td>
+<td style="text-align:right;">
+179
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_FUT2.png">FUT2</a>
+</td>
+<td style="text-align:right;">
+926
+</td>
+<td style="text-align:right;">
+926
+</td>
+<td style="text-align:right;">
+540
+</td>
+<td style="text-align:right;">
+388
+</td>
+<td style="text-align:right;">
+183
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_FUT3.png">FUT3</a>
+</td>
+<td style="text-align:right;">
+911
+</td>
+<td style="text-align:right;">
+911
+</td>
+<td style="text-align:right;">
+583
+</td>
+<td style="text-align:right;">
+410
+</td>
+<td style="text-align:right;">
+192
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_GYPA.png">GYPA</a>
+</td>
+<td style="text-align:right;">
+5018
+</td>
+<td style="text-align:right;">
+5018
+</td>
+<td style="text-align:right;">
+3298
+</td>
+<td style="text-align:right;">
+2271
+</td>
+<td style="text-align:right;">
+1082
+</td>
+<td style="text-align:right;">
+291
+</td>
+<td style="text-align:right;">
+42
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_GYPB.png">GYPB</a>
+</td>
+<td style="text-align:right;">
+4198
+</td>
+<td style="text-align:right;">
+4198
+</td>
+<td style="text-align:right;">
+2706
+</td>
+<td style="text-align:right;">
+1915
+</td>
+<td style="text-align:right;">
+901
+</td>
+<td style="text-align:right;">
+256
+</td>
+<td style="text-align:right;">
+39
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_KEL.png">KEL</a>
+</td>
+<td style="text-align:right;">
+5328
+</td>
+<td style="text-align:right;">
+5328
+</td>
+<td style="text-align:right;">
+3404
+</td>
+<td style="text-align:right;">
+2407
+</td>
+<td style="text-align:right;">
+1109
+</td>
+<td style="text-align:right;">
+331
+</td>
+<td style="text-align:right;">
+38
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/palin_SLC14A1.png">SLC14A1</a>
+</td>
+<td style="text-align:right;">
+2548
+</td>
+<td style="text-align:right;">
+2548
+</td>
+<td style="text-align:right;">
+1714
+</td>
+<td style="text-align:right;">
+1178
+</td>
+<td style="text-align:right;">
+499
+</td>
+<td style="text-align:right;">
+138
+</td>
+<td style="text-align:right;">
+19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="sequencing-coverage" class="section level2">
+<h2><span class="header-section-number">3.4</span> Sequencing coverage</h2>
+<p>Sequencing coverage of targeted regions via selected alignment of all full reads.</p>
+<p><strong>Table 4.</strong> The first 2 columns are the average coverage of targeted regions using all selected alignment and long selected alignment (5000 bases or more) of all full reads. The following columns are the percentage of targeted regions with given sequencing coverage. Click links to view landscape of coverage.</p>
+<table class="table table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Target
+</th>
+<th style="text-align:right;">
+Mean_All
+</th>
+<th style="text-align:right;">
+Mean_Long
+</th>
+<th style="text-align:right;">
+Dep&gt;=1
+</th>
+<th style="text-align:right;">
+Dep&gt;=3
+</th>
+<th style="text-align:right;">
+Dep&gt;=6
+</th>
+<th style="text-align:right;">
+Dep&gt;=10
+</th>
+<th style="text-align:right;">
+Dep&gt;=20
+</th>
+<th style="text-align:right;">
+Dep&gt;=30
+</th>
+<th style="text-align:right;">
+Dep&gt;=60
+</th>
+<th style="text-align:right;">
+Dep&gt;=120
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_RH.png">RH</a>
+</td>
+<td style="text-align:right;">
+370.9885
+</td>
+<td style="text-align:right;">
+111.4466
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+97.1558
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_ABO.png">ABO</a>
+</td>
+<td style="text-align:right;">
+148.7849
+</td>
+<td style="text-align:right;">
+38.5544
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+97.1369
+</td>
+<td style="text-align:right;">
+53.6118
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_ACKR1.png">ACKR1</a>
+</td>
+<td style="text-align:right;">
+210.7180
+</td>
+<td style="text-align:right;">
+68.5504
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_BCAM.png">BCAM</a>
+</td>
+<td style="text-align:right;">
+125.0967
+</td>
+<td style="text-align:right;">
+38.6108
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+98.7547
+</td>
+<td style="text-align:right;">
+97.3827
+</td>
+<td style="text-align:right;">
+84.7475
+</td>
+<td style="text-align:right;">
+49.7435
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_FUT1.png">FUT1</a>
+</td>
+<td style="text-align:right;">
+81.2291
+</td>
+<td style="text-align:right;">
+23.1905
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+94.5727
+</td>
+<td style="text-align:right;">
+75.4456
+</td>
+<td style="text-align:right;">
+15.1570
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_FUT2.png">FUT2</a>
+</td>
+<td style="text-align:right;">
+93.8641
+</td>
+<td style="text-align:right;">
+28.7268
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+91.5977
+</td>
+<td style="text-align:right;">
+23.0821
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_FUT3.png">FUT3</a>
+</td>
+<td style="text-align:right;">
+93.1514
+</td>
+<td style="text-align:right;">
+24.3088
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+69.1083
+</td>
+<td style="text-align:right;">
+26.8898
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_GYPA.png">GYPA</a>
+</td>
+<td style="text-align:right;">
+300.2858
+</td>
+<td style="text-align:right;">
+86.9932
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_GYPB.png">GYPB</a>
+</td>
+<td style="text-align:right;">
+286.6534
+</td>
+<td style="text-align:right;">
+81.7975
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_KEL.png">KEL</a>
+</td>
+<td style="text-align:right;">
+388.2747
+</td>
+<td style="text-align:right;">
+100.2291
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<a href="figure/coverage_SLC14A1.png">SLC14A1</a>
+</td>
+<td style="text-align:right;">
+167.5854
+</td>
+<td style="text-align:right;">
+53.6360
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+100.0000
+</td>
+<td style="text-align:right;">
+97.7787
+</td>
+<td style="text-align:right;">
+92.0176
+</td>
+</tr>
+</tbody>
+</table>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<!-- Keep this section unchanged for all RoCA templates -->
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">4</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">4.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">4.2</span> Session information</h2>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.6
+## 
+## Matrix products: default
+## BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] GenomicRanges_1.34.0 GenomeInfoDb_1.18.1  Biostrings_2.50.1   
+##  [4] XVector_0.22.0       IRanges_2.16.0       S4Vectors_0.20.1    
+##  [7] BiocGenerics_0.28.0  htmlwidgets_1.3      DT_0.5              
+## [10] kableExtra_0.9.0     awsomics_0.0.0.9000  yaml_2.2.0          
+## [13] rmarkdown_1.10       knitr_1.20           RoCA_0.0.0.9000     
+## [16] RCurl_1.95-4.11      bitops_1.0-6         usethis_1.4.0       
+## [19] devtools_2.0.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.0             prettyunits_1.0.2      ps_1.2.1              
+##  [4] assertthat_0.2.0       rprojroot_1.3-2        digest_0.6.18         
+##  [7] mime_0.6               R6_2.3.0               backports_1.1.2       
+## [10] evaluate_0.12          httr_1.3.1             highr_0.7             
+## [13] pillar_1.3.0           zlibbioc_1.28.0        rlang_0.4.0           
+## [16] rstudioapi_0.8         callr_3.0.0            desc_1.2.0            
+## [19] readr_1.3.1            stringr_1.3.1          munsell_0.5.0         
+## [22] shiny_1.2.0            compiler_3.5.1         httpuv_1.4.5          
+## [25] pkgconfig_2.0.2        base64enc_0.1-3        pkgbuild_1.0.2        
+## [28] htmltools_0.3.6        tibble_1.4.2           GenomeInfoDbData_1.2.0
+## [31] viridisLite_0.3.0      crayon_1.3.4           withr_2.1.2           
+## [34] later_0.7.5            jsonlite_1.5           xtable_1.8-3          
+## [37] magrittr_1.5           scales_1.0.0           cli_1.0.1             
+## [40] stringi_1.2.4          fs_1.2.6               promises_1.0.1        
+## [43] remotes_2.0.2          testthat_2.2.1         xml2_1.2.0            
+## [46] tools_3.5.1            glue_1.3.0             hms_0.4.2             
+## [49] crosstalk_1.0.0        processx_3.2.0         pkgload_1.0.2         
+## [52] colorspace_1.3-2       sessioninfo_1.1.1      rvest_0.3.2           
+## [55] memoise_1.1.0</code></pre>
+<div align="right">
+<em><a href="https://github.com/zhezhangsh/RoCA">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
