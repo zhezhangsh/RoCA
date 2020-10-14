@@ -63,6 +63,7 @@ expr    <- ImportTable(DownloadFile(inputs$expr, path.input));
 grps    <- ImportR(DownloadFile(inputs$comparison, path.input));
 anno    <- expr[, 1]
 expr    <- as.matrix(expr[, -1, drop=FALSE]);
+names(anno) <- rownames(expr);
 g1.ind  <- intersect(colnames(expr), grps[[1]]);
 g2.ind  <- intersect(colnames(expr), grps[[2]]);
 g1.name <- gsub('-', '_', names(grps)[1]);
@@ -205,9 +206,11 @@ gns <- names(gns[gns>1]);
 
 tbl <- matrix(0, nc=length(gns), nr=nrow(top), dimnames = list(top$Gene_set, gns));
 for (i in 1:nrow(top)) tbl[i, colnames(tbl) %in% lst[[i]]] <- 1;
-tbl <- tbl[, hclust(as.dist(1-cor(tbl)))$order];
+tbl <- tbl[, hclust(as.dist(1-cor(tbl)))$order, drop=FALSE];
 tbl <- tbl[rowSums(tbl)>0, , drop=FALSE];
-tbl <- tbl[hclust(as.dist(1-cor(t(tbl))))$order, ];
+crr <- cor(t(tbl));
+crr[is.na(crr)] <- 0;
+tbl <- tbl[hclust(as.dist(1-crr))$order, , drop=FALSE];
 
 hgt2 <- min(8, 2+0.1*nrow(tbl));
 wid2 <- min(9.6, 3+0.15*ncol(tbl));
