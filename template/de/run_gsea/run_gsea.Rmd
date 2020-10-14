@@ -59,7 +59,7 @@ home.url <- Link2Home(yml$home);
 inputs<-yml$input;
 
 # All input variables
-expr    <- as.matrix(ImportTable(DownloadFile(inputs$expr, path.input)));
+expr    <- ImportTable(DownloadFile(inputs$expr, path.input));
 grps    <- ImportR(DownloadFile(inputs$comparison, path.input));
 anno    <- expr[, 1]
 expr    <- as.matrix(expr[, -1, drop=FALSE]);
