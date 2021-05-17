@@ -101,7 +101,7 @@ de <- DeWrapper(mtrx=expr, grps=grps[1:2], mthd=prms$deg$method, paired=paired);
 stat <- de$results$stat[, 1:6];
 stat.table <- cbind(anno[rownames(stat), ], stat); 
 stat.formatted <- FormatNumeric(cbind(ID=rownames(stat.table), stat.table));
-stat.formatted[, prms$entrez+1] <- 
+if (prms$entrez >= 0) stat.formatted[, prms$entrez+1] <- 
   AddHref(stat.formatted[, prms$entrez+1], UrlEntrezGene(stat.formatted[, prms$entrez+1]));
 CreateDatatable(stat.formatted, fn = paste(path.deg, 'all_genes.html', sep='/'), 
                 rownames = FALSE, caption = "Differential expression of all genes");
