@@ -429,12 +429,12 @@ rownames(tbl) <- NULL;
 
 # Sample analysis
 
-This section uses read count data to perform several sample-level analyses. The results can be used to identify potential mislabeling, outlier, confounding variable, etc. Read counts normalized by the _Loess_ method are used for all analyses in this section. 
+This section uses read count data to perform several sample-level analyses. The results can be used to identify potential mislabeling, outlier, confounding variable, etc. Read counts normalized by the _Rlog_ method are used for all analyses in this section. 
 
 ## Gender prediction
 
 ```{r gender_pred, include=TRUE, fig.width=6, fig.height=6}
-ct1 <- norm$Loess+1; 
+ct1 <- norm$Rlog; 
 
 chrx <- prms$chromosome$f;
 chry <- prms$chromosome$m;
@@ -457,7 +457,7 @@ if (nrow(ct.x)>=5 & nrow(ct.y)>=5) {
 #     msg <- 'Samples can be classified into 2 groups only by X genes.' else if (nc.y==2)
 #       msg <- 'Samples can be classified into 2 groups only by Y genes.' else
 #         msg <- 'Samples cannot be classified into 2 groups by neither X nor Y genes.'
-  km.xy <- pamk(cbind(colMeans(log2(ct.x+1)), colMeans(log2(ct.y+1))), krange=1:min(5, ncol(ct.x)));
+  km.xy <- pamk(cbind(colMeans(ct.x), colMeans(ct.y)), krange=1:min(5, ncol(ct.x)));
   nc.xy <- km.xy$nc;
   if (nc.xy == 2) msg <- 'Samples can be classified into 2 groups by X/Y genes.' else 
     msg <- 'Samples cannot be classified into 2 groups by X/Y genes.'
