@@ -1,0 +1,76 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <data> a table including rows of genomic loci, unique row names and at the least the following columns
+#   - the chromosome of the loci
+#   - the start/end position of the loci (can be just one column if the loci are single bases)
+#   - a numeric variable used for the segmentation (copy number, fold change, etc.)
+#############################################################################################################################
+
+###################################################################
+#########################    REQUIRED    ##########################
+###################################################################
+# Required by the RoCA framework to generate a reproducible report
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/bioc/rGADEM/rGADEM.Rmd
+template: /Users/zhangz/Development/RoCA/template/bioc/fastseg/fastseg.Rmd
+output: /Users/zhangz/Development/RoCA/template/bioc/fastseg/example/rpkm_twin0 # Where to save the output files
+home: https://mybic.chop.edu/labs/chous_lab/Trisomy21_TMD  # Location to project home (URL or local file)
+analyst: Jim Zhang                        # Name of the analyst who runs this analysis
+zip: no                                   # Whether to zip the output folder
+
+###################################################################
+##########################    ABOUT    ############################
+###################################################################
+description:    
+  Project: "Genetic Modifiers in Trisomy 21 Leukemogenesis."
+  Data: "GEO public data set. RPKM and log2FC values are download from [GSE55504](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE55504)."
+  Analysis: "Log2-fold change between one pair of monozygotic twins (T2N_Rep0 vs. T1DS_Rep0). Goal is to regenerate figure 1a in the original paper."
+
+###################################################################
+########################    INPUT DATA    #########################
+###################################################################
+# Location (local or URL) of files with formatted input data
+input:    
+  data: /Users/zhangz/Development/RoCA/data/misc/fastseg/rpkm_twin0.rds
+  
+###################################################################
+########################    PARAMETER    ##########################
+###################################################################
+# Location (local or URL) of files with formatted input data
+parameter:
+  variable: log_rpkm_T2N_Rep0    ## Name of the numeric variable
+  chromosome: [ chr1, chr2, chr3, chr4, chr5, chr6, chr7, chr8, chr9, chr10,  ## Order and name of chromosomes to be segmentated
+                chr11, chr12, chr13, chr14, chr15, chr16, chr17, chr18, chr19, 
+                chr20, chr21, chr22, chrX ]
+  sorting:                ## Specify how to sort rows
+    column: [ 2, 3 ]      # Column(s) used for sorting
+    direction: 1          # 1: increasing sorting; -1 decreasing sorting 
+    position: sequential  # genomic: use genomic position; sequential: use sequential order to indicate position
+  column:                 ## Specify columns to used in the input table
+    variable: 34           # Column of numeric variable used for the segmentation
+    chromosome: 1         # Column with choromosome info in the input table
+    start: 2              # Column with choromosomal start position in the input table; must exist if sorting$position is "genomic"
+    end: 3                # Column with choromosomal end position in the input table; same as 'start' column if single base
+    strand: 0             # Column with strand info in the input table, 0 if not available
+  smoothing:              ## Smoothing of the values
+    lowess: true          # Whether to run lowess smoothing
+    span: 0.1             # The smoother span
+    iter: 10               # Number of interation
+  selection:              ## Selection of segments to report
+    size: 1               # Smallest segments to select
+    min: [ 0 ]           # Minimum of segment mean 
+    max: [ .inf ]         # Maximum of segment mean
+    negpos: 0             # 1 or -1 if only select segments with positive or negatvie mean; 0 if select both
+    top: 3                # Applicable only if fewer than this number of segments were selected using other criteria
+  call:                   ## Run time parameters of the fastseg() function (for advanced users only) 
+    minSeg: 3             # minimum size of segment
+    type: 1               # =1 if test to compare adjacent regions; =2 if also test against global mean
+    alpha: 0.1            # Value between 0 and 1; higher value lead to more segments
+    delta: 5              # Segment extension parameter. 
+    squashing: 0          # Degree of value squashing; no squashin if equal to 0
+    cyberWeight: 10       # The nu parameter of the cyber t-test; higher value lead to more small segments (default=10)
+  randomization:          ## Randomize values to generate background distribution of segments 
+    round: 10              # Recommend values 10-25; rounds of randomized runs as a control for background noise
+    chromosome: 1         # 1 if randomize values within chromosome; 0 if randomize values globally
+######################    END OF DOCUMENT    ######################
+
+

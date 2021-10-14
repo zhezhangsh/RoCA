@@ -1,0 +1,66 @@
+#############################################################################################################################
+# Prepare the following data objects in text, Excel or R files to run this analysis
+# <count> integer matrix of full transcriptome data set saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - commonly number of unique RNA-seq reads mapped to known genes
+#   - the first column or the row name of an R object must be unique gene IDs
+#   - the first row or the column name of an R object is unique sample IDs
+# <anno> a table of gene annotation saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds file
+#   - the first column or the row name matches row name of the read count matrix
+# <sample> a table of samples with 2 or more columns saved in a .txt, .tab, .csv, .xlxs, .xls, .rdata, .rda, or .rds
+#   - the first row or the column name matches the column name of the read count matrix
+#############################################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for generating any report using the RoCA::CreateReport() function
+#template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/de/deseq2_multivariate.Rmd/deseq2_multivariate.Rmd.Rmd
+template: deseq2_multivariate.Rmd
+output: examples/immune_cells                                                                      # Where to write all the output files
+home: http://zhezhangsh.github.io/RoCA                                              # URL or path to the project home page. Leave it empty if the page doesn't exist.
+analyst: Zhe Zhang                                                                  # Name of the analyst
+zip: no                                                                             # Whether to zip all output files
+
+#################
+##### ABOUT #####
+#################
+# Description of this analysis, could be any name/text pairs
+description:      
+  Project: "Transcriptome in immune cells of control-patient samples"
+  Data: "Rna-seq data was generated from of 3 types of immune cells of 3 controls and 3 patients. 
+        Raw data was processed to get gene-level read counts."
+  Analysis: "This is a demo."
+  
+##################
+##### INPUTS #####
+##################
+# Prepared input data, saved in .rds format using the saveRDS() function
+input:
+  anno: /Users/zhangz/Development/RoCA/data/gex/immune_cells_rnaseq/anno.rds    ## a data frame of gene annotation, row names match the row names of the data matrix, the first column is optimally official gene symbol
+  count: /Users/zhangz/Development/RoCA/data/gex/immune_cells_rnaseq/count_unique.rds     ## a matrix of data, row=gene, column=sample, row names must be unique NCBI Entrez gene IDs
+  sample: /Users/zhangz/Development/RoCA/data/gex/immune_cells_rnaseq/sample.rds   ## a list of 2 named character vectors of sample IDs, matching column names of the data matrix, vector names are names of the 2 groups to be compared
+  
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter: # All parameters
+  formula: ~ Cell + Disease
+  comparison: 
+    condition: Cell
+    group0: B
+    group1: M
+  count:
+    total: 12
+    mean: 1
+  normalization:
+    column: 4
+  top:
+    number: 100
+    rank: both
+  genome: human
+  anno:
+    symbol: 0
+    entrez: -1
+    ensembl: -1
+    description: -1

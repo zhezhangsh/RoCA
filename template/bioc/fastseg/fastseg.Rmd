@@ -1,0 +1,463 @@
+---
+title: "Segmentation of chromosomes with the ***fastseg*** package"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    self_contained: no
+    number_sections: yes
+    toc: yes
+    toc_float: 
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+
+This analysis applies the Bioconductor package **fastseg** to segment chromosomes based on numeric variable, such as DNA copy number and fold change of RNA transcription. Please refer to package  [manual](https://bioconductor.org/packages/release/bioc/vignettes/fastseg/inst/doc/fastseg.pdf) for full package description. 
+In summary, the **fastseg** package implements a fast and efficient segmentation algorithm, which is based on the cyber t-test (Baldi and Long, 2001). Segments identified by the algorithm are then summarized and compared to segments derived from randomized data, in terms of their frequency, length, size, and mean of the numeric variable (copy number, fold change, etc.).  
+
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'fastseg.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 
+                   'RoCA', 'awsomics', 'DEGandMore', 'GenomicRanges', 'fastseg', 'vioplot'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+		yml<-yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
+## URL to project home
+## Use this line to add a link to project home in the report: `r home.url`
+home.url <- Link2Home(yml$home);
+```
+
+`r home.url` 
+
+# Description
+
+`r WriteDescription(yml$description)`
+
+`r home.url`
+
+```{r function, include=FALSE}
+# Prepare inputs
+prepareTable <- function(data, prms) {
+  for (i in 1:ncol(data)) data[[i]] <- as.vector(data[[i]]);
+
+  d <- split(data, data[, prms$column$chromosome]);
+  c <- prms$chromosome;
+  c <- c[c %in% names(d)];
+  d <- d[c];
+  
+  grs <- lapply(d, function(x) {
+    x <- x[order(rowMeans(x[, prms$sorting$column, drop=FALSE])), , drop=FALSE];
+    
+    v <- x[, prms$column$variable, drop=FALSE];
+    if (prms$smoothing$lowess) v[[1]] <- lowess(v[[1]], f=prms$smoothing$span, iter=prms$smoothing$iter)$y;
+    if (prms$sorting$direction == -1) x <- x[nrow(x):1, , drop=FALSE];
+    if (prms$sorting$position == 'sequential') l <- 1:nrow(x) else l <- round(x[, prms$column$start]/2+x[, prms$column$end]/2);
+    if (prms$column$strand>0) str <- x[, prms$column$strand] else str <- '*';
+    
+    gr <- GRanges(x[, prms$column$chromosome], IRanges(l, width=1), strand = str);
+    mcols(gr) <- v;
+    names(gr) <- rownames(x);
+    
+    gr;
+  });
+
+  gr0 <- suppressWarnings(Reduce('c', grs));
+  names(gr0) <- unlist(lapply(grs, names));
+
+  gr0;
+};
+```
+
+```{r load_data, include=FALSE}
+data <- ImportTable(DownloadFile(yml$input$data, path.input));
+gr0  <- prepareTable(data, prms);
+
+# Randomization
+chrs <- unique(as.vector(seqnames(gr0)));
+inds <- lapply(chrs, function(c) which(as.vector(seqnames(gr0))==c));
+vals <- mcols(gr0)[[1]];
+gr1  <- lapply(1:prms$randomization$round, function(i) {
+  g <- gr0;
+  if (prms$randomization$chromosome == 1) {
+    for (i in 1:length(chrs)) vals[inds[[i]]] <- sample(vals[inds[[i]]], length(inds[[i]]));
+    mcols(g)[[1]] <- vals;
+    g; 
+  } else {
+    mcols(g)[[1]] <- sample(vals, length(vals));
+    g;
+  };
+});
+names(gr1) <- paste0('random_', 1:length(gr1));
+
+# Segmentation
+rprm <- prms$call;
+segs <- lapply(prms$chromosome, function(chr) {
+  fastseg(gr0[seqnames(gr0)==chr], minSeg=rprm$minSeg, type=rprm$type, alpha=rprm$alpha, delta=rprm$delta,
+          squashing=rprm$squashing, cyberWeight=rprm$cyberWeight);
+});
+seg0 <- suppressWarnings(Reduce('c', segs));
+names(seg0) <- 1:length(seg0);
+
+seg1 <- lapply(gr1, function(g) {gr1
+  seg <- fastseg(g, minSeg=rprm$minSeg, type=rprm$type, alpha=rprm$alpha, delta=rprm$delta,
+                 squashing=rprm$squashing, cyberWeight=rprm$cyberWeight);
+  names(seg) <- 1:length(seg);
+  seg;
+});
+  
+pdf(paste0(path.fig, '/chrom_plot.pdf'), w=9.6, h=4.8);
+segPlot(gr0, seg0);
+try(dev.off());
+```
+
+# Results
+
+## Summary
+
+**Parameters:**
+
+  - **Variable name: `r prms$variable`**
+```{r include=FALSE}
+l <- paste0('    - ', names(prms$column), ': ', unlist(prms$column, use.names = FALSE));
+l1<- paste(l, collapse='\n');
+
+l <- paste0('    - ', names(prms$randomization), ': ', unlist(prms$randomization, use.names = FALSE));
+l2 <- paste(l, collapse='\n');
+
+l <- paste0('    - ', names(prms$call), ': ', unlist(prms$call, use.names = FALSE));
+l3 <- paste(l, collapse='\n');
+
+l <- paste0('    - ', names(prms$selection), ': ', unlist(prms$selection, use.names = FALSE));
+l4 <- paste(l, collapse='\n');
+```
+  - **Data columns**
+`r l1`
+  - **Randomization**
+`r l2`
+  - **Runtime options**
+`r l3`
+  - **Segment selection**
+`r l4`
+
+```{r summary, include=FALSE}
+smm <- list('Total number of loci'=length(gr0), 'Total number chromosomes'=length(chrs));
+smm$`Range of values` = paste0(format(min(vals)), ' to ', format(max(vals)), ' (mean=', format(mean(vals)), ')');
+smm$`Number of segments` = length(seg0);
+
+sz <- seg0$num.mark + 1;
+wd <- width(seg0);
+mn <- seg0$seg.mean;
+smm$`Length of segments` = paste0(min(wd), ' to ', max(wd), ' (mean=', format(mean(wd)), ')');
+smm$`Size of segments` = paste0(min(sz), ' to ', max(sz), ' (mean=', format(mean(sz)), ')');
+smm$`Mean of segments` = paste0(format(min(mn)), ' to ', format(max(mn)), ' (mean=', format(mean(mn)), ')');
+
+smm <- data.frame(Description=names(smm), Value=as.vector(unlist(smm)), stringsAsFactors = FALSE);
+```
+
+`r OrderTable()` Brief summary of inputs and outputs.
+
+`r kable(smm, align=c('l', 'r'), row.names = FALSE) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), position='left', font=13, full_width=FALSE)`
+
+## Segmentation
+
+```{r segplot, include=TRUE, fig.width=9.6, fig.height=4.8, out.width='960px'}
+len <- sapply(prms$chromosome, function(c) max(end(gr0[seqnames(gr0)==c])));
+ttl <- sapply(1:length(len), function(i) sum(len[1:i]));
+mid <- (ttl + c(0, ttl[-length(ttl)]))/2;
+segPlot(gr0, seg0, plot.type = 'w', pt.cex=0.75);
+title(ylab=prms$variable);
+axis(3, at=mid, labels=sub('chr', '', prms$chromosome, ignore.case = TRUE), tick = FALSE, line=-1, cex.axis=0.5);
+abline(v=c(0, ttl), col='grey');
+```
+
+`r OrderFigure()` Global view of segmentation across all chromosomes (in alternative colors). Red lines indicate segment locations. Click [here](figure/chrom_plot.pdf) to download figures by individual chromosomes.
+
+```{r dist, include=TRUE, fig.width=6.4, fig.height=4, out.width='640px'}
+dst1 <- density(vals);
+dst2 <- density(mn);
+
+xlim <- range(c(dst1$x, dst2$x));
+ylim <- 1.1*c(0, max(c(dst1$y, dst2$y)));
+cols <- c('#5DADE2', '#CB4335');
+par(mar=c(5, 5, 2, 2));
+plot(0, type='n', xlab=prms$variable, ylab='Frequency', cex.lab=1, xlim=xlim, ylim=ylim, yaxs='i');
+lines(dst1, lwd=1, col=cols[1]);
+lines(dst2, lwd=2, col=cols[2]);
+legend('topleft', cex=1, lwd=1:2, col=cols, bty='n', legend=c('Individual loci', 'Segment means'));
+```
+
+`r OrderFigure()` Distribution of `r prms$variable`: original values at all individual loci vs. segment means.
+
+## Segment selection
+
+Selection of significant segments using given criteria. 
+
+```{r selection, include=FALSE}
+sprm <- prms$selection;
+segs <- append(seg1, seg0);
+
+sels <- lapply(segs, function(seg) {
+  rng <- cbind(sprm$min, sprm$max);
+  seg <- seg[(seg$num.mark+1)>=sprm$size];
+  if (sprm$negpos==1) seg <- seg[seg$seg.mean>0];
+  if (sprm$negpos==-1) seg <- seg[seg$seg.mean<0];
+  mns <- seg$seg.mean;
+  if (sprm$negpos==0) mns <- abs(mns);
+  ind <- apply(rng, 1, function(r) which(mns>=r[1] & mns<=r[2]));
+  sel <- seg[sort(unique(unlist(ind)))];
+  
+  if (length(sel) < sprm$top) {
+    if (sprm$negpos == 0) sel <- seg[rev(order(abs(seg$seg.mean)))] else 
+      if (sprm$negpos == 1) sel <- seg[rev(order(seg$seg.mean))] else sel <- seg[order(seg$seg.mean)];
+    sel <- sel[1:min(nrow(sel), sprm$top)];
+    sel <- seg[names(seg) %in% names(sel)];
+  };
+  sel;
+}); 
+
+# Summary selected 
+sel0 <- sels[[length(sels)]];
+names(sel0) <- paste0('segment_', 1:length(sel0));
+
+fig0 <- sapply(1:length(sel0), function(i) {
+  s0 <- gr0[as.vector(seqnames(gr0))==as.vector(seqnames(sel0))[i]];
+  s1 <- s0[sel0$startRow[i]:sel0$endRow[i]];
+  
+  i1 <- max(1, 2*sel0$startRow[i]-sel0$endRow[i]-1);
+  i2 <- min(length(s0), 2*sel0$endRow[i]-sel0$startRow[i]+1);
+  s2 <- s0[i1:i2];
+
+  g0 <- seg0[as.vector(seqnames(seg0))==as.vector(seqnames(sel0))[i]];  
+  fn <- paste0(path.fig, '/', names(sel0)[i], '.pdf');
+
+  pdf(fn, w=8, h=3.6);
+  par(mar=c(5, 5, 2, 2));
+  plot(start(s2), mcols(s2)[[1]], main=paste('Chromosome:', seqnames(sel0)[i]), xlab='Position', ylab=prms$variable, 
+       pch=18, cex=1, col='#88888888');
+  abline(h=0, col='#888844', lwd=0.5, lty=2);
+  points(start(s1), mcols(s1)[[1]], pch=18, col='green');
+  for (j in 1:length(g0)) segments(start(g0)[j], g0$seg.mean[j], end(g0)[j], g0$seg.mean[j], col='blue', lwd=2);
+  segments(start(sel0)[i], sel0$seg.mean[i], end(sel0)[i], sel0$seg.mean[i], col='red', lwd=2);
+  try(dev.off());
+  
+  paste0('figure/', names(sel0)[i], '.pdf');
+});
+dat0 <- lapply(1:length(sel0), function(i) {
+  sel <- gr0[as.vector(seqnames(gr0))==as.vector(seqnames(sel0))[i]];
+  sel <- sel[sel0$startRow[i]:sel0$endRow[i]];
+  sel <- data[names(sel), , drop=FALSE];
+  CreateDatatable(sel, paste0(path.tbl, '/', names(sel0)[i]))->x;
+  sel;
+});
+tbl0 <- lapply(dat0, function(sel) {
+  stt <- min(sel[, prms$column$start]);
+  end <- max(sel[, prms$column$end]);
+  val <- sel[, prms$column$variable];
+  c(stt, end, end-stt+1, nrow(sel), mean(val), min(val), max(val), sd(val))
+}); 
+tbl0 <- do.call('rbind', tbl0);
+tbl0 <- data.frame(as.vector(seqnames(sel0)), tbl0, stringsAsFactors = FALSE);
+rownames(tbl0) <- names(dat0) <- names(sel0);
+colnames(tbl0) <- c('chromosome', 'start', 'end', 'length', 'size', 'mean', 'minimum', 'maximum', 'variance');
+
+tbl0$loci <- paste0('[table](table/', names(sel0), '.html)');
+tbl0$segmentation <- paste0('[figure](figure/', names(sel0), '.pdf)');
+```
+
+`r OrderTable()` Summary of selected segments: location, length, size, and `r prms$variable` at individual loci. Click links to get full list of loci within each segment and visualization of segmentation via Manhattan plot. 
+
+`r kable(FormatNumeric(tbl0)) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), position='left', font=13, full_width=FALSE)`
+
+## Randomization
+
+Repetitively use the same criteria to identify and select segments from `r prms$randomization$round` sets of randomized data and compare the summary statistics of selected segments.
+
+```{r random, include=FALSE}
+tbl1 <- lapply(1:length(sels[-length(sels)]), function(j) { 
+  sel1 <- sels[[j]];
+  tbl <- lapply(1:length(sel1), function(i) {
+    sel <- gr1[[j]][as.vector(seqnames(gr1[[j]]))==as.vector(seqnames(sel1))[i]];
+    sel <- sel[sel1$startRow[i]:sel1$endRow[i]];
+    sel <- data[names(sel), , drop=FALSE];
+
+    stt <- min(sel[, prms$column$start]);
+    end <- max(sel[, prms$column$end]);
+    val <- mcols(gr1[[j]][rownames(sel)])[[1]];
+    c(stt, end, end-stt+1, nrow(sel), mean(val), min(val), max(val), sd(val))
+  });
+  tbl <- do.call('rbind', tbl);
+  tbl <- data.frame(as.vector(seqnames(sel1)), tbl, stringsAsFactors = FALSE);
+  rownames(tbl) <- names(sel1);
+  colnames(tbl) <- c('chromosome', 'start', 'end', 'length', 'size', 'mean', 'minimum', 'maximum', 'variance');
+  tbl;
+});
+names(tbl1) <- names(gr1);
+tbls <- list(original=tbl0);
+tbls <- append(tbls, tbl1);
+
+sizs <- lapply(tbls, function(s) s[, 'size']);
+lens <- lapply(tbls, function(s) s[, 'length']);
+mns0 <- lapply(tbls, function(s) s[, 'mean']);
+vars <- lapply(tbls, function(s) s[, 'variance']);
+
+if (prms$selection$negpos == 0) mns1 <- lapply(mns0, abs) else mns1 <- mns0;
+
+smms <- data.frame(size=sapply(sizs, mean), length=sapply(lens, mean), mean=sapply(mns1, mean), variance=sapply(vars, mean));
+smms <- FormatNumeric(smms);
+```
+
+`r OrderTable()` Means of summary statistics of segments identified and selected original data vs. multiple sets of randomized data: number of loci, segment length, mean and standard deviation of `r prms$variable` of segments. If mean `r prms$variable` of selected segments can be both positive and negative, their absolute values are used in this table.
+
+`r kable(smms) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), position='left', font=13, full_width=FALSE)`
+
+```{r size_mean, include=TRUE, fig.height=6.4, fig.width=8, out.width='640px'}
+x <- as.vector(unlist(sizs));
+y <- as.vector(unlist(mns0));
+
+par(mar=c(5,5,2,2))
+plot(x, y, pch=19, cex=0.75, col='grey', xlab='Segment size', ylab=paste('Mean', prms$variable));
+points(sizs[[1]], mns0[[1]], pch=19, cex=1, col='blue');
+# legend('bottomright', bty='n', pch=19, col=c('blue', 'grey'), legend=c('Original', 'Randomized'));
+abline(h=0, col='grey');
+```
+
+`r OrderFigure()` Relationship between segment size and segment mean `r prms$variable`. Each dot represents a segment derived from the original real data (blue) and randomized data (grey). 
+
+```{r violin_size, include=TRUE, fig.width=8, fig.height=4, out.width='800px'}
+par(mar=c(6, 4, 2, 2));
+cols <- c('#CB4335', rep('grey', length(tbls)-1));
+vioplot(sizs, names=rep('', length(tbls)), col=cols);
+axis(1, at=1:length(tbls), labels=names(tbls), las=3);
+title(ylab='Segment size');
+```
+
+`r OrderFigure()` Distribution of segment size compared between original and randomized data.
+
+
+```{r violin_length, include=TRUE, fig.width=8, fig.height=4, out.width='800px'}
+par(mar=c(6, 4, 2, 2));
+cols <- c('#CB4335', rep('grey', length(tbls)-1));
+vioplot(lens, names=rep('', length(tbls)), col=cols);
+axis(1, at=1:length(tbls), labels=names(tbls), las=3);
+title(ylab='Segment length');
+```
+
+`r OrderFigure()` Distribution of segment length compared between original and randomized data.
+
+
+```{r violin_mean, include=TRUE, fig.width=8, fig.height=4, out.width='800px'}
+par(mar=c(6, 4, 2, 2));
+cols <- c('#CB4335', rep('grey', length(tbls)-1));
+vioplot(mns0, names=rep('', length(tbls)), col=cols);
+axis(1, at=1:length(tbls), labels=names(tbls), las=3);
+title(ylab=paste(prms$variable, 'mean'));
+```
+
+`r OrderFigure()` Distribution of `r prms$variable` mean of segments compared between original and randomized data.
+
+
+```{r violin_sd, include=TRUE, fig.width=8, fig.height=4, out.width='800px'}
+par(mar=c(6, 4, 2, 2));
+cols <- c('#CB4335', rep('grey', length(tbls)-1));
+vioplot(vars, names=rep('', length(tbls)), col=cols);
+axis(1, at=1:length(tbls), labels=names(tbls), las=3);
+title(ylab=paste(prms$variable, 'standard deviation'));
+```
+
+`r OrderFigure()` Distribution of `r prms$variable` standard deviation of segments compared between original and randomized data.
+
+<p />
+
+# Download
+
+  - [Segments in Excel](table/segment.xlsx)
+  - [All figures](figure/figure.zip)
+  
+```{r download, include=FALSE}
+saveRDS(gr1, paste0(path.r, '/randomized.rds'));
+saveRDS(seg0, paste0(path.r, '/segment.rds'));
+saveRDS(sel0, paste0(path.r, '/segment_selected.rds'));
+
+zip(paste0(path.fig, '.zip'), path.fig, zip='zip');
+file.rename(paste0(path.fig, '.zip'), paste0(path.fig, '/figure.zip'));
+
+xls <- list(all=data.frame(seg0), summary=tbl0[, 1:9]);
+xls <- append(xls, dat0);
+WriteExcel(xls, paste0(path.tbl, '/segment'));
+```
+
+***
+
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

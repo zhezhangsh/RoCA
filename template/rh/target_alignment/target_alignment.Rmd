@@ -12,11 +12,7 @@ output:
 ---
 
 <div style="border:black 1px solid; padding: 0.5cm 0.5cm">
-This procedure summarizes the [Blasr](https://github.com/PacificBiosciences/blasr) alignment of PacBio subreads to targeted regions.
-
-  - Sequencing coverage of the targeted regions
-  - Duplicated alignment of subreads from the same full read
-  - Length of the alignment
+This report summarizes non-synonymous SNPs and small INDELs identified from trio samples. Variants are selected based on genetic models, such as de novo, autosomal recessive, and X-linked; as well as their features, such as impact, allele frequency, and known disease association. 
 </div>
 
 &nbsp;

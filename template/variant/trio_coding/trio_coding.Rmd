@@ -1,0 +1,230 @@
+---
+title: "Coding variants in trio samples"
+author: "`r if (exists('yml')) yml$analyst else 'Jim Zhang'`"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: lumen
+    number_sections: yes
+    self_contained: no
+    toc: yes
+    toc_float:
+      collapsed: no
+---
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+This report summarizes SNPs and small INDELs identified in coding regions from trio samples. Variants are selected based on genetic models, such as de novo, autosomal recessive, and compound het; as well as their features, such as impact, allele frequency, and known disease association. 
+</div>
+
+&nbsp;
+
+```{r global_setup, eval=TRUE, include=FALSE}
+name.yaml <- 'trio_coding.yaml'; 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'vcfR'); 
+name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); 
+
+## Default knitr parameters
+knitr::opts_chunk$set(dpi=300, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE, fig.path = 'figure/');
+
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+## Load required R packages
+loaded <- LoadPackage(name.packages);
+if (length(loaded[!loaded])) stop('Error: failed to load package(s) ', paste(names(loaded[!loaded]), collapse=', '));
+
+if (!exists('yml'))                   # if the 'yml' variable doesn't exist yet, create it by loading the YAML file
+	if (file.exists(name.yaml))         # assume the pairing YAML file exists in the current folder with the same name
+		yml <- yaml.load_file(name.yaml);   # rename the YAML file to fit this template
+prms <- yml$parameter;
+
+## Generate directory and sub-directories where the output files will be
+f <- GenerateFolder(yml$output, name.subfolders);
+path <- yml$output;
+for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
+
+## URL to project home
+home.url <- Link2Home(yml$home);
+```
+
+# Introduction
+
+## Trio subjects
+
+```{r parse_vcf, include=FALSE}
+# fvcf <- '../../../data/variant/trio1_exon.vcf.gz';
+# 
+# vcf  <- read.vcfR(fvcf);
+# vcf  <- vcf[1:10000];
+
+meta <- vcf@meta;
+fix  <- vcf@fix;
+gt   <- vcf@gt
+
+## Parse info in meta data
+info.meta <- meta[grep('^##INFO=', meta)];
+info.meta <- sub('^##INFO=<', '', sub('>$', '', gsub('\"', '', info.meta)));
+info.meta <- strsplit(info.meta, "(?<=^ID=|,Number=|,Type=|,Description=)", perl=TRUE);
+info.meta <- sapply(info.meta, function(g) sub(',Number=$', '', sub(',Type=$', '', sub(',Description=$', '', g)))[-1]);
+info.meta <- t(info.meta);
+colnames(info.meta) <- c('ID', 'Number', 'Type', 'Description');
+
+############################################################################
+## Parse fixed fields
+chr <- fix[, 1];
+pos <- as.integer(fix[, 2]);
+id  <- as.vector(fix[, 3]);
+ref <- fix[, 4];
+alt <- fix[, 5];
+qul <- as.integer(fix[, 6]);
+fil <- fix[, 7];
+
+info <- fix[, 8];
+info <- strsplit(info, ';');
+indx <- rep(1:length(info), sapply(info, length));
+info <- unlist(info);
+info <- strsplit(info, '=');
+info <- do.call('rbind', info);
+
+## Info matrix
+val  <- info[, 2];
+names(val) <- info[, 1];
+val  <- split(val, indx);
+num  <- sapply(val, length);
+whh  <- which(num==max(num))[1];
+ordr <- names(val[[whh]]); # Order of field names
+info <- t(sapply(val, function(v) v[ordr]));
+info[is.na(info)] <- '';
+
+## Mapping column names
+id1 <- info.meta[, 1];
+names(id1) <- toupper(id1);
+id2 <- id1[toupper(ordr)];
+colnames(info) <- id2;
+
+##################################
+## ANN field from snpEff
+ann.meta <- info.meta[info.meta[, 1]=='ANN', 4];
+ann.meta <- sub("Functional annotations: ", '', gsub("'", '', ann.meta));
+ann.meta <- gsub(' ', '', strsplit(ann.meta, ' \\| ')[[1]]);
+ann0 <- info[, 'ANN'];
+ann1 <- strsplit(ann0, ',');
+ann2 <- unlist(ann1);
+ann2 <- strsplit(ann2, '\\|');
+ann  <- sapply(ann2, function(a) a[1:length(ann.meta)]);
+ann  <- t(ann);
+ann[is.na(ann)] <- '';
+ann  <- data.frame(ann, stringsAsFactors = FALSE);
+names(ann) <- ann.meta;
+ann$Variant_Index <- rep(1:length(ann0), sapply(ann1, length));
+ann <- ann[, c(ncol(ann), 1:(ncol(ann)-1))];
+rownames(ann) <- 1:nrow(ann);
+# saveRDS(ann, paste0(path.r, '/sndEff_anno.rds'));
+
+## go back to info
+info <- info[, colnames(info)!='ANN'];
+info <- data.frame(info, stringsAsFactors = FALSE);
+for (i in 1:ncol(info)) {
+  typ <- info.meta[info.meta[, 1]==colnames(info)[i], 1];
+  if (typ=='Float' | typ=='Integer') info[[i]] <- as.numeric(info[[i]]); 
+}
+sub  <- c(ExAC='exac_', gnomAD='^gnomAD_', dbNSFP='^dbNSFP_');
+sub1 <- lapply(sub, function(s) info[, grep(s, colnames(info))]);
+sub0 <- info[, !(colnames(info) %in% unlist(lapply(sub1, colnames)))];
+############################################################################
+
+############################################################################
+## Parse genotype fields
+geno.meta <- meta[grep('^##FORMAT=', meta)];
+geno.meta <- sub("##FORMAT=<", '', gsub('[\">]', '', geno.meta));
+geno.meta <- strsplit(geno.meta, "(?<=^ID=|,Number=|,Type=|,Description=)", perl=TRUE)
+geno.meta <- sapply(geno.meta, function(g) sub(',Number=$', '', sub(',Type=$', '', sub(',Description=$', '', g)))[-1]);
+geno.meta <- t(geno.meta);
+colnames(geno.meta) <- c('ID', 'Number', 'Type', 'Description');
+
+gt1  <- strsplit(gt[, 1], ':');
+indx <- rep(1:nrow(gt), sapply(gt1, length));
+gt1  <- unlist(gt1);
+geno <- lapply(2:ncol(gt), function(i) {
+  g <- unlist(strsplit(gt[, i], ':'));
+  names(g) <- gt1;
+  g <- split(g, indx);
+  g <- sapply(g, function(g) g[geno.meta[, 1]]);
+  g <- t(g);
+  g[is.na(g)] <- ''; 
+  colnames(g) <- geno.meta[, 1];
+  ad <- do.call('rbind', strsplit(g[, 'AD'], ','));
+  ad0 <- as.integer(ad[, 1]);
+  ad1 <- as.integer(ad[, 2]);
+  data.frame(GT=g[, 'GT'], DP=as.integer(g[, 'DP']), AD0=ad0, AD1=ad1, GQ=as.integer(g[, 'GQ']), stringsAsFactors = FALSE);
+}); 
+names(geno) <- colnames(gt)[-1];
+############################################################################
+
+fix0 <- data.frame(fix[, c('CHROM', 'POS', 'REF', 'ALT', 'QUAL', 'FILTER')], stringsAsFactors = FALSE);
+fix0$POS <- as.integer(fix0$POS);
+fix0$QUAL <- as.integer(fix0$QUAL);
+
+info <- list(Basic=sub0);
+info <- append(info, sub1);
+pvcf <- list(fix=fix0, info=info, genotype=geno, anno=ann);
+saveRDS(pvcf, paste0(path.r, '/vcf_parsed.rds'));
+```
+
+# Reports
+
+## Autosomal recessive 
+
+
+
+`r home.url`
+
+***
+
+<!-- Keep this section unchanged for all RoCA templates -->
+# Appendix 
+
+Check out the **[RoCA home page](http://zhezhangsh.github.io/RoCA)** for more information.  
+
+## Reproduce this report
+
+To reproduce this report: 
+
+  1. Find the data analysis template you want to use and an example of its pairing YAML file  [here](https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples) and download the YAML example to your working directory
+
+  2. To generate a new report using your own input data and parameter, edit the following items in the YAML file:
+
+    - _output_        : where you want to put the output files
+    - _home_          : the URL if you have a home page for your project
+    - _analyst_       : your name
+    - _description_   : background information about your project, analysis, etc.
+    - _input_         : where are your input data, read instruction for preparing them
+    - _parameter_     : parameters for this analysis; read instruction about how to prepare input data
+
+  3. Run the code below within ***R Console*** or ***RStudio***, preferablly with a new R session:
+
+```{r reproduce_report, eval=FALSE, echo=TRUE}
+if (!require(devtools)) { install.packages('devtools'); require(devtools); }
+if (!require(RCurl)) { install.packages('RCurl'); require(RCurl); }
+if (!require(RoCA)) { install_github('zhezhangsh/RoCAR'); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited
+```
+
+If there is no complaint, go to the _output_ folder and open the ***index.html*** file to view report. 
+
+## Session information
+
+```{r session_info, echo=FALSE}
+sessionInfo(); 
+```
+
+`r home.url`
+
+***
+_END OF DOCUMENT_

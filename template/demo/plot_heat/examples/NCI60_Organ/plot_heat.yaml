@@ -1,0 +1,44 @@
+####################################################################################################
+# Developer describes hwo to specify each run using the pairing R Markdown template, 
+# especially the content and format of input data
+####################################################################################################
+
+####################
+##### REQUIRED #####
+####################
+# Required fields for using the RoCA::CreateReport() function
+template: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/template/demo/plot_heat/plot_heat.Rmd  # Location of the .Rmd template (URL or local file)
+output: examples/NCI60_Organ                                                                              # Where to save the output files
+home: http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426                                          # Location to project home (URL or local file)
+analyst: Jim Zhang                                                                                        # Name of the analyst who runs this analysis
+zip: no                                                                                                   # Whether to zip the output folder
+
+#################
+##### ABOUT #####
+#################
+# Analyst provides background description about this analysis, such as project title
+description:    
+  Project: Comparison between cell lines from 9 different cancer tissues (NCI-60); **[GSE5949](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949)**
+  PubMed: "Reinhold WC, Reimers MA, Lorenzi P, Ho J et al. **Multifactorial regulation of E-cadherin expression: an integrative study.**
+          Mol Cancer Ther 2010 Jan;9(1):1-16. PMID: [20053763](http://www.ncbi.nlm.nih.gov/pubmed/20053763)."
+  Experimental design: Comparison between cell lines from 9 different cancer tissue of origin types 
+          (Breast, Central Nervous System, Colon, Leukemia, Melanoma, Non-Small Cell Lung, Ovarian, Prostate, Renal) from NCI-60 panel
+  Analysis: Cluster genes co-expressed acroo 9 tissues/organs
+  
+######################
+##### INPUT DATA #####
+######################
+# Prepared input data, with contents and format specified by the developer
+input:
+  data: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/expr_demo.txt
+  group: https://raw.githubusercontent.com/zhezhangsh/RoCA/master/data/gex/NCI60/organ.txt
+
+######################
+##### PARAMETERS #####
+######################
+# Parameters to run this analysis
+parameter:
+  min: 100
+  max: 2000
+  pvalue: 0.00001
+  rescale: yes

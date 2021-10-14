@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2021-01-15" />
+
+<title>Select variables to plot a heatmap</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Select variables to plot a heatmap</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2021-01-15</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p><strong>Introduction</strong> This analysis runs a simple procedure that identifies variables significantly different across sample groups via ANOVA and then plots a heatmap of these variables.</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Comparison between cell lines from 9 different cancer tissues (NCI-60); <strong><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE5949">GSE5949</a></strong></p>
+</div>
+<div id="pubmed" class="section level2">
+<h2><span class="header-section-number">1.2</span> PubMed</h2>
+<p>Reinhold WC, Reimers MA, Lorenzi P, Ho J et al. <strong>Multifactorial regulation of E-cadherin expression: an integrative study.</strong> Mol Cancer Ther 2010 Jan;9(1):1-16. PMID: <a href="http://www.ncbi.nlm.nih.gov/pubmed/20053763">20053763</a>.</p>
+</div>
+<div id="experimental-design" class="section level2">
+<h2><span class="header-section-number">1.3</span> Experimental design</h2>
+<p>Comparison between cell lines from 9 different cancer tissue of origin types (Breast, Central Nervous System, Colon, Leukemia, Melanoma, Non-Small Cell Lung, Ovarian, Prostate, Renal) from NCI-60 panel</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.4</span> Analysis</h2>
+<p>Cluster genes co-expressed acroo 9 tissues/organs</p>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">2</span> Results</h1>
+<div id="summary-statistics" class="section level2">
+<h2><span class="header-section-number">2.1</span> Summary statistics</h2>
+<p>The input data includes:</p>
+<ul>
+<li><strong>9</strong> sample groups</li>
+<li><strong>60</strong> total samples</li>
+<li><strong>3105</strong> total variables
+<ul>
+<li>there are no variables including missing values.</li>
+</ul></li>
+</ul>
+<div style="color:darkblue">
+<p><strong>Table 1.</strong> The mean, standard deviation, and range of all variables.</p>
+</div>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Mean
+</td>
+<td style="text-align:right;">
+2.2745
+</td>
+<td style="text-align:right;">
+4.3560
+</td>
+<td style="text-align:right;">
+5.6257
+</td>
+<td style="text-align:right;">
+5.6819
+</td>
+<td style="text-align:right;">
+6.8808
+</td>
+<td style="text-align:right;">
+12.1627
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SD
+</td>
+<td style="text-align:right;">
+0.5000
+</td>
+<td style="text-align:right;">
+0.5625
+</td>
+<td style="text-align:right;">
+0.6536
+</td>
+<td style="text-align:right;">
+0.7684
+</td>
+<td style="text-align:right;">
+0.8506
+</td>
+<td style="text-align:right;">
+3.1082
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Range
+</td>
+<td style="text-align:right;">
+2.0100
+</td>
+<td style="text-align:right;">
+2.7500
+</td>
+<td style="text-align:right;">
+3.2900
+</td>
+<td style="text-align:right;">
+3.6183
+</td>
+<td style="text-align:right;">
+4.2000
+</td>
+<td style="text-align:right;">
+8.8400
+</td>
+</tr>
+</tbody>
+</table>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+</div>
+<div id="variable-selection" class="section level2">
+<h2><span class="header-section-number">2.2</span> Variable selection</h2>
+<p>Run 1-way ANOVA on each variable to identify those significantly different across all sample groups.</p>
+<p><img src="figure/hist_p-1.png" width="600px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 1.</strong> Distribution of ANOVA p values. Number of variables with p values within each 0.01 interval.</p>
+</div>
+<p>Significant variables were selected using the following criteria:</p>
+<ul>
+<li>Select variables with ANOVA p values less than <strong>10^{-5}</strong></li>
+<li>Stop if the number of remaining variables is between <strong>100</strong> and <strong>2000</strong>, else
+<ul>
+<li>if the number remaining variable is less than 100, select the top 100 variables with the smallest p values</li>
+<li>if the number remaining variable is greater than 2000, select the top 2000 variables with the smallest p values</li>
+</ul></li>
+</ul>
+<p>As a result, <strong>396</strong> variables were selected. Click <a href="table/selected.html">here</a> to view these variables.</p>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+</div>
+<div id="heatmap" class="section level2">
+<h2><span class="header-section-number">2.3</span> Heatmap</h2>
+<p><img src="figure/heatmap-1.png" width="720px" /></p>
+<div style="color:darkblue">
+<p><strong>Figure 2.</strong> Color-coded data of selected variables different across sample groups (red = higher). Variables (rows) were clustered based on their correlation to each other and samples were arranged by groups.</p>
+</div>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+<hr />
+</div>
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">3</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">3.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited for your analysis</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">3.2</span> Session information</h2>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.6
+## 
+## Matrix products: default
+## BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] gplots_3.0.1        htmlwidgets_1.5.1   DT_0.15            
+##  [4] kableExtra_0.9.0    awsomics_0.0.0.9000 yaml_2.2.1         
+##  [7] rmarkdown_1.10      knitr_1.20          RoCA_0.0.0.9000    
+## [10] RCurl_1.95-4.11     bitops_1.0-6        devtools_2.3.1     
+## [13] usethis_1.6.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] gtools_3.8.1       remotes_2.2.0      colorspace_1.4-1  
+##  [4] testthat_2.3.2     htmltools_0.4.0    viridisLite_0.3.0 
+##  [7] rlang_0.4.5        pkgbuild_1.1.0     pillar_1.4.6      
+## [10] glue_1.3.2         withr_2.2.0        sessioninfo_1.1.1 
+## [13] lifecycle_0.2.0    stringr_1.3.1      munsell_0.5.0     
+## [16] rvest_0.3.2        caTools_1.17.1.1   evaluate_0.14     
+## [19] memoise_1.1.0      callr_3.4.3        crosstalk_1.1.0.1 
+## [22] ps_1.3.2           fansi_0.4.1        highr_0.7         
+## [25] Rcpp_1.0.4         KernSmooth_2.23-15 readr_1.3.1       
+## [28] backports_1.1.5    scales_1.1.1       gdata_2.18.0      
+## [31] desc_1.2.0         pkgload_1.0.2      jsonlite_1.6.1    
+## [34] fs_1.3.2           hms_0.4.2          digest_0.6.25     
+## [37] stringi_1.2.4      processx_3.4.2     rprojroot_1.3-2   
+## [40] cli_2.0.2          tools_3.5.1        magrittr_1.5      
+## [43] tibble_2.1.3       crayon_1.3.4       pkgconfig_2.0.3   
+## [46] ellipsis_0.3.0     xml2_1.2.0         prettyunits_1.1.1 
+## [49] assertthat_0.2.1   httr_1.4.2         rstudioapi_0.11   
+## [52] R6_2.4.1           compiler_3.5.1</code></pre>
+<div align="right">
+<em><a href="http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE67426">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

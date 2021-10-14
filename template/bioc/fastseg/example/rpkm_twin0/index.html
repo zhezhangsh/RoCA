@@ -1,0 +1,3928 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Jim Zhang" />
+
+<meta name="date" content="2021-09-24" />
+
+<title>Segmentation of chromosomes with the fastseg package</title>
+
+<script src="index_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="index_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="index_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="index_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="index_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="index_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="index_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="index_files/navigation-1.1/tabsets.js"></script>
+<link href="index_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="index_files/highlightjs-9.12.0/highlight.js"></script>
+<script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Segmentation of chromosomes with the <strong><em>fastseg</em></strong> package</h1>
+<h4 class="author"><em>Jim Zhang</em></h4>
+<h4 class="date"><em>2021-09-24</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<p>This analysis applies the Bioconductor package <strong>fastseg</strong> to segment chromosomes based on numeric variable, such as DNA copy number and fold change of RNA transcription. Please refer to package <a href="https://bioconductor.org/packages/release/bioc/vignettes/fastseg/inst/doc/fastseg.pdf">manual</a> for full package description. In summary, the <strong>fastseg</strong> package implements a fast and efficient segmentation algorithm, which is based on the cyber t-test (Baldi and Long, 2001). Segments identified by the algorithm are then summarized and compared to segments derived from randomized data, in terms of their frequency, length, size, and mean of the numeric variable (copy number, fold change, etc.).</p>
+</div>
+<p> </p>
+<div align="right">
+<em><a href="https://mybic.chop.edu/labs/chous_lab/Trisomy21_TMD">Go to project home</a></em>
+</div>
+<div id="description" class="section level1">
+<h1><span class="header-section-number">1</span> Description</h1>
+<div id="project" class="section level2">
+<h2><span class="header-section-number">1.1</span> Project</h2>
+<p>Genetic Modifiers in Trisomy 21 Leukemogenesis.</p>
+</div>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">1.2</span> Data</h2>
+<p>GEO public data set. RPKM and log2FC values are download from <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE55504">GSE55504</a>.</p>
+</div>
+<div id="analysis" class="section level2">
+<h2><span class="header-section-number">1.3</span> Analysis</h2>
+<p>Log2-fold change between one pair of monozygotic twins (T2N_Rep0 vs. T1DS_Rep0). Goal is to regenerate figure 1a in the original paper.</p>
+<div align="right">
+<em><a href="https://mybic.chop.edu/labs/chous_lab/Trisomy21_TMD">Go to project home</a></em>
+</div>
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">2</span> Results</h1>
+<div id="summary" class="section level2">
+<h2><span class="header-section-number">2.1</span> Summary</h2>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><p><strong>Variable name: log_rpkm_T2N_Rep0</strong></p></li>
+<li><strong>Data columns</strong>
+<ul>
+<li>variable: 34</li>
+<li>chromosome: 1</li>
+<li>start: 2</li>
+<li>end: 3</li>
+<li>strand: 0</li>
+</ul></li>
+<li><strong>Randomization</strong>
+<ul>
+<li>round: 10</li>
+<li>chromosome: 1</li>
+</ul></li>
+<li><strong>Runtime options</strong>
+<ul>
+<li>minSeg: 3</li>
+<li>type: 1</li>
+<li>alpha: 0.1</li>
+<li>delta: 5</li>
+<li>squashing: 0</li>
+<li>cyberWeight: 10</li>
+</ul></li>
+<li><strong>Segment selection</strong>
+<ul>
+<li>size: 1</li>
+<li>min: 0</li>
+<li>max: Inf</li>
+<li>negpos: 0</li>
+<li>top: 3</li>
+</ul></li>
+</ul>
+<p><strong>Table 1.</strong> Brief summary of inputs and outputs.</p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 13px; width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+Description
+</th>
+<th style="text-align:right;">
+Value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Total number of loci
+</td>
+<td style="text-align:right;">
+13130
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total number chromosomes
+</td>
+<td style="text-align:right;">
+23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Range of values
+</td>
+<td style="text-align:right;">
+-2.69857 to 3.942649 (mean=-0.04061339)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Number of segments
+</td>
+<td style="text-align:right;">
+83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Length of segments
+</td>
+<td style="text-align:right;">
+6 to 939 (mean=158.1928)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Size of segments
+</td>
+<td style="text-align:right;">
+6 to 939 (mean=158.1928)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mean of segments
+</td>
+<td style="text-align:right;">
+-1.457923 to 3.446533 (mean=0.1998589)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="segmentation" class="section level2">
+<h2><span class="header-section-number">2.2</span> Segmentation</h2>
+<p><img src="index_files/figure-html/segplot-1.png" width="960px" /></p>
+<p><strong>Figure 1.</strong> Global view of segmentation across all chromosomes (in alternative colors). Red lines indicate segment locations. Click <a href="figure/chrom_plot.pdf">here</a> to download figures by individual chromosomes.</p>
+<p><img src="index_files/figure-html/dist-1.png" width="640px" /></p>
+<p><strong>Figure 2.</strong> Distribution of log_rpkm_T2N_Rep0: original values at all individual loci vs. segment means.</p>
+</div>
+<div id="segment-selection" class="section level2">
+<h2><span class="header-section-number">2.3</span> Segment selection</h2>
+<p>Selection of significant segments using given criteria.</p>
+<p><strong>Table 2.</strong> Summary of selected segments: location, length, size, and log_rpkm_T2N_Rep0 at individual loci. Click links to get full list of loci within each segment and visualization of segmentation via Manhattan plot.</p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 13px; width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+chromosome
+</th>
+<th style="text-align:right;">
+start
+</th>
+<th style="text-align:right;">
+end
+</th>
+<th style="text-align:right;">
+length
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+minimum
+</th>
+<th style="text-align:right;">
+maximum
+</th>
+<th style="text-align:right;">
+variance
+</th>
+<th style="text-align:left;">
+loci
+</th>
+<th style="text-align:left;">
+segmentation
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+segment_1
+</td>
+<td style="text-align:left;">
+chr1
+</td>
+<td style="text-align:right;">
+11869
+</td>
+<td style="text-align:right;">
+1297157
+</td>
+<td style="text-align:right;">
+1285289
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+1.8237
+</td>
+<td style="text-align:right;">
+-2.9879
+</td>
+<td style="text-align:right;">
+7.7200
+</td>
+<td style="text-align:right;">
+2.8884
+</td>
+<td style="text-align:left;">
+<a href="table/segment_1.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_1.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_2
+</td>
+<td style="text-align:left;">
+chr1
+</td>
+<td style="text-align:right;">
+1309110
+</td>
+<td style="text-align:right;">
+151138424
+</td>
+<td style="text-align:right;">
+149829315
+</td>
+<td style="text-align:right;">
+939
+</td>
+<td style="text-align:right;">
+0.1195
+</td>
+<td style="text-align:right;">
+-3.3195
+</td>
+<td style="text-align:right;">
+9.7265
+</td>
+<td style="text-align:right;">
+2.3538
+</td>
+<td style="text-align:left;">
+<a href="table/segment_2.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_2.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_3
+</td>
+<td style="text-align:left;">
+chr1
+</td>
+<td style="text-align:right;">
+151138498
+</td>
+<td style="text-align:right;">
+161332984
+</td>
+<td style="text-align:right;">
+10194487
+</td>
+<td style="text-align:right;">
+167
+</td>
+<td style="text-align:right;">
+1.6856
+</td>
+<td style="text-align:right;">
+-3.2377
+</td>
+<td style="text-align:right;">
+9.3922
+</td>
+<td style="text-align:right;">
+2.4026
+</td>
+<td style="text-align:left;">
+<a href="table/segment_3.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_3.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_4
+</td>
+<td style="text-align:left;">
+chr1
+</td>
+<td style="text-align:right;">
+161334521
+</td>
+<td style="text-align:right;">
+249231242
+</td>
+<td style="text-align:right;">
+87896722
+</td>
+<td style="text-align:right;">
+388
+</td>
+<td style="text-align:right;">
+-0.4992
+</td>
+<td style="text-align:right;">
+-3.3104
+</td>
+<td style="text-align:right;">
+7.4969
+</td>
+<td style="text-align:right;">
+2.1171
+</td>
+<td style="text-align:left;">
+<a href="table/segment_4.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_4.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_5
+</td>
+<td style="text-align:left;">
+chr2
+</td>
+<td style="text-align:right;">
+217730
+</td>
+<td style="text-align:right;">
+73302747
+</td>
+<td style="text-align:right;">
+73085018
+</td>
+<td style="text-align:right;">
+277
+</td>
+<td style="text-align:right;">
+-0.2305
+</td>
+<td style="text-align:right;">
+-3.3173
+</td>
+<td style="text-align:right;">
+9.4369
+</td>
+<td style="text-align:right;">
+2.5590
+</td>
+<td style="text-align:left;">
+<a href="table/segment_5.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_5.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_6
+</td>
+<td style="text-align:left;">
+chr2
+</td>
+<td style="text-align:right;">
+73300510
+</td>
+<td style="text-align:right;">
+85824736
+</td>
+<td style="text-align:right;">
+12524227
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:right;">
+1.2180
+</td>
+<td style="text-align:right;">
+-3.1117
+</td>
+<td style="text-align:right;">
+10.6000
+</td>
+<td style="text-align:right;">
+2.6672
+</td>
+<td style="text-align:left;">
+<a href="table/segment_6.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_6.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_7
+</td>
+<td style="text-align:left;">
+chr2
+</td>
+<td style="text-align:right;">
+85825671
+</td>
+<td style="text-align:right;">
+217071026
+</td>
+<td style="text-align:right;">
+131245356
+</td>
+<td style="text-align:right;">
+420
+</td>
+<td style="text-align:right;">
+-0.6368
+</td>
+<td style="text-align:right;">
+-3.3177
+</td>
+<td style="text-align:right;">
+10.5159
+</td>
+<td style="text-align:right;">
+2.1969
+</td>
+<td style="text-align:left;">
+<a href="table/segment_7.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_7.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_8
+</td>
+<td style="text-align:left;">
+chr2
+</td>
+<td style="text-align:right;">
+217122588
+</td>
+<td style="text-align:right;">
+223809357
+</td>
+<td style="text-align:right;">
+6686770
+</td>
+<td style="text-align:right;">
+56
+</td>
+<td style="text-align:right;">
+1.0739
+</td>
+<td style="text-align:right;">
+-2.9800
+</td>
+<td style="text-align:right;">
+8.5067
+</td>
+<td style="text-align:right;">
+2.5086
+</td>
+<td style="text-align:left;">
+<a href="table/segment_8.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_8.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_9
+</td>
+<td style="text-align:left;">
+chr2
+</td>
+<td style="text-align:right;">
+223782105
+</td>
+<td style="text-align:right;">
+239077541
+</td>
+<td style="text-align:right;">
+15295437
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:right;">
+-0.4999
+</td>
+<td style="text-align:right;">
+-3.0342
+</td>
+<td style="text-align:right;">
+6.8650
+</td>
+<td style="text-align:right;">
+2.1584
+</td>
+<td style="text-align:left;">
+<a href="table/segment_9.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_9.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_10
+</td>
+<td style="text-align:left;">
+chr2
+</td>
+<td style="text-align:right;">
+239072633
+</td>
+<td style="text-align:right;">
+242708231
+</td>
+<td style="text-align:right;">
+3635599
+</td>
+<td style="text-align:right;">
+38
+</td>
+<td style="text-align:right;">
+0.7064
+</td>
+<td style="text-align:right;">
+-2.9968
+</td>
+<td style="text-align:right;">
+5.5398
+</td>
+<td style="text-align:right;">
+2.1500
+</td>
+<td style="text-align:left;">
+<a href="table/segment_10.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_10.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_11
+</td>
+<td style="text-align:left;">
+chr3
+</td>
+<td style="text-align:right;">
+3168600
+</td>
+<td style="text-align:right;">
+48542259
+</td>
+<td style="text-align:right;">
+45373660
+</td>
+<td style="text-align:right;">
+211
+</td>
+<td style="text-align:right;">
+-0.3001
+</td>
+<td style="text-align:right;">
+-3.3113
+</td>
+<td style="text-align:right;">
+7.6221
+</td>
+<td style="text-align:right;">
+2.2196
+</td>
+<td style="text-align:left;">
+<a href="table/segment_11.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_11.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_12
+</td>
+<td style="text-align:left;">
+chr3
+</td>
+<td style="text-align:right;">
+48555117
+</td>
+<td style="text-align:right;">
+52740048
+</td>
+<td style="text-align:right;">
+4184932
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+1.3100
+</td>
+<td style="text-align:right;">
+-3.2285
+</td>
+<td style="text-align:right;">
+8.0900
+</td>
+<td style="text-align:right;">
+2.6327
+</td>
+<td style="text-align:left;">
+<a href="table/segment_12.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_12.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_13
+</td>
+<td style="text-align:left;">
+chr3
+</td>
+<td style="text-align:right;">
+52738971
+</td>
+<td style="text-align:right;">
+197766105
+</td>
+<td style="text-align:right;">
+145027135
+</td>
+<td style="text-align:right;">
+431
+</td>
+<td style="text-align:right;">
+-0.3900
+</td>
+<td style="text-align:right;">
+-3.3180
+</td>
+<td style="text-align:right;">
+9.3609
+</td>
+<td style="text-align:right;">
+2.3013
+</td>
+<td style="text-align:left;">
+<a href="table/segment_13.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_13.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_14
+</td>
+<td style="text-align:left;">
+chr4
+</td>
+<td style="text-align:right;">
+53179
+</td>
+<td style="text-align:right;">
+8442450
+</td>
+<td style="text-align:right;">
+8389272
+</td>
+<td style="text-align:right;">
+67
+</td>
+<td style="text-align:right;">
+0.8188
+</td>
+<td style="text-align:right;">
+-3.0207
+</td>
+<td style="text-align:right;">
+6.4850
+</td>
+<td style="text-align:right;">
+2.1142
+</td>
+<td style="text-align:left;">
+<a href="table/segment_14.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_14.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_15
+</td>
+<td style="text-align:left;">
+chr4
+</td>
+<td style="text-align:right;">
+8437867
+</td>
+<td style="text-align:right;">
+190884359
+</td>
+<td style="text-align:right;">
+182446493
+</td>
+<td style="text-align:right;">
+294
+</td>
+<td style="text-align:right;">
+-0.8525
+</td>
+<td style="text-align:right;">
+-3.3022
+</td>
+<td style="text-align:right;">
+8.8853
+</td>
+<td style="text-align:right;">
+2.1151
+</td>
+<td style="text-align:left;">
+<a href="table/segment_15.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_15.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_16
+</td>
+<td style="text-align:left;">
+chr5
+</td>
+<td style="text-align:right;">
+140373
+</td>
+<td style="text-align:right;">
+172462448
+</td>
+<td style="text-align:right;">
+172322076
+</td>
+<td style="text-align:right;">
+458
+</td>
+<td style="text-align:right;">
+-0.2548
+</td>
+<td style="text-align:right;">
+-3.3203
+</td>
+<td style="text-align:right;">
+8.9192
+</td>
+<td style="text-align:right;">
+2.3591
+</td>
+<td style="text-align:left;">
+<a href="table/segment_16.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_16.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_17
+</td>
+<td style="text-align:left;">
+chr5
+</td>
+<td style="text-align:right;">
+172571445
+</td>
+<td style="text-align:right;">
+178510538
+</td>
+<td style="text-align:right;">
+5939094
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+1.5140
+</td>
+<td style="text-align:right;">
+-3.2982
+</td>
+<td style="text-align:right;">
+7.0060
+</td>
+<td style="text-align:right;">
+2.9276
+</td>
+<td style="text-align:left;">
+<a href="table/segment_17.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_17.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_18
+</td>
+<td style="text-align:left;">
+chr5
+</td>
+<td style="text-align:right;">
+178537852
+</td>
+<td style="text-align:right;">
+180699168
+</td>
+<td style="text-align:right;">
+2161317
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+0.7783
+</td>
+<td style="text-align:right;">
+-2.7938
+</td>
+<td style="text-align:right;">
+7.1790
+</td>
+<td style="text-align:right;">
+2.9103
+</td>
+<td style="text-align:left;">
+<a href="table/segment_18.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_18.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_19
+</td>
+<td style="text-align:left;">
+chr6
+</td>
+<td style="text-align:right;">
+142272
+</td>
+<td style="text-align:right;">
+30032686
+</td>
+<td style="text-align:right;">
+29890415
+</td>
+<td style="text-align:right;">
+164
+</td>
+<td style="text-align:right;">
+-0.6928
+</td>
+<td style="text-align:right;">
+-3.3009
+</td>
+<td style="text-align:right;">
+9.4131
+</td>
+<td style="text-align:right;">
+2.2918
+</td>
+<td style="text-align:left;">
+<a href="table/segment_19.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_19.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_20
+</td>
+<td style="text-align:left;">
+chr6
+</td>
+<td style="text-align:right;">
+30034486
+</td>
+<td style="text-align:right;">
+34712450
+</td>
+<td style="text-align:right;">
+4677965
+</td>
+<td style="text-align:right;">
+132
+</td>
+<td style="text-align:right;">
+1.8960
+</td>
+<td style="text-align:right;">
+-3.1708
+</td>
+<td style="text-align:right;">
+10.4208
+</td>
+<td style="text-align:right;">
+2.6767
+</td>
+<td style="text-align:left;">
+<a href="table/segment_20.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_20.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_21
+</td>
+<td style="text-align:left;">
+chr6
+</td>
+<td style="text-align:right;">
+34725183
+</td>
+<td style="text-align:right;">
+170893780
+</td>
+<td style="text-align:right;">
+136168598
+</td>
+<td style="text-align:right;">
+397
+</td>
+<td style="text-align:right;">
+-0.2978
+</td>
+<td style="text-align:right;">
+-3.3127
+</td>
+<td style="text-align:right;">
+10.0683
+</td>
+<td style="text-align:right;">
+2.5031
+</td>
+<td style="text-align:left;">
+<a href="table/segment_21.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_21.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_22
+</td>
+<td style="text-align:left;">
+chr7
+</td>
+<td style="text-align:right;">
+182935
+</td>
+<td style="text-align:right;">
+75115548
+</td>
+<td style="text-align:right;">
+74932614
+</td>
+<td style="text-align:right;">
+314
+</td>
+<td style="text-align:right;">
+-0.1027
+</td>
+<td style="text-align:right;">
+-3.3166
+</td>
+<td style="text-align:right;">
+10.3223
+</td>
+<td style="text-align:right;">
+2.4028
+</td>
+<td style="text-align:left;">
+<a href="table/segment_22.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_22.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_23
+</td>
+<td style="text-align:left;">
+chr7
+</td>
+<td style="text-align:right;">
+75123401
+</td>
+<td style="text-align:right;">
+97528427
+</td>
+<td style="text-align:right;">
+22405027
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:right;">
+-0.8639
+</td>
+<td style="text-align:right;">
+-3.3109
+</td>
+<td style="text-align:right;">
+10.4613
+</td>
+<td style="text-align:right;">
+2.9438
+</td>
+<td style="text-align:left;">
+<a href="table/segment_23.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_23.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_24
+</td>
+<td style="text-align:left;">
+chr7
+</td>
+<td style="text-align:right;">
+97576299
+</td>
+<td style="text-align:right;">
+99753567
+</td>
+<td style="text-align:right;">
+2177269
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+0.7271
+</td>
+<td style="text-align:right;">
+-3.0820
+</td>
+<td style="text-align:right;">
+5.9881
+</td>
+<td style="text-align:right;">
+2.3753
+</td>
+<td style="text-align:left;">
+<a href="table/segment_24.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_24.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_25
+</td>
+<td style="text-align:left;">
+chr7
+</td>
+<td style="text-align:right;">
+99752043
+</td>
+<td style="text-align:right;">
+102184211
+</td>
+<td style="text-align:right;">
+2432169
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:right;">
+1.2903
+</td>
+<td style="text-align:right;">
+-2.9637
+</td>
+<td style="text-align:right;">
+9.7112
+</td>
+<td style="text-align:right;">
+2.9970
+</td>
+<td style="text-align:left;">
+<a href="table/segment_25.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_25.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_26
+</td>
+<td style="text-align:left;">
+chr7
+</td>
+<td style="text-align:right;">
+102178365
+</td>
+<td style="text-align:right;">
+158622944
+</td>
+<td style="text-align:right;">
+56444580
+</td>
+<td style="text-align:right;">
+229
+</td>
+<td style="text-align:right;">
+-0.0874
+</td>
+<td style="text-align:right;">
+-3.2913
+</td>
+<td style="text-align:right;">
+9.8935
+</td>
+<td style="text-align:right;">
+2.5625
+</td>
+<td style="text-align:left;">
+<a href="table/segment_26.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_26.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_27
+</td>
+<td style="text-align:left;">
+chr8
+</td>
+<td style="text-align:right;">
+163251
+</td>
+<td style="text-align:right;">
+144380231
+</td>
+<td style="text-align:right;">
+144216981
+</td>
+<td style="text-align:right;">
+318
+</td>
+<td style="text-align:right;">
+-0.5191
+</td>
+<td style="text-align:right;">
+-3.3051
+</td>
+<td style="text-align:right;">
+7.7725
+</td>
+<td style="text-align:right;">
+2.1373
+</td>
+<td style="text-align:left;">
+<a href="table/segment_27.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_27.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_28
+</td>
+<td style="text-align:left;">
+chr8
+</td>
+<td style="text-align:right;">
+144386554
+</td>
+<td style="text-align:right;">
+145583036
+</td>
+<td style="text-align:right;">
+1196483
+</td>
+<td style="text-align:right;">
+41
+</td>
+<td style="text-align:right;">
+2.0250
+</td>
+<td style="text-align:right;">
+-2.4528
+</td>
+<td style="text-align:right;">
+7.4860
+</td>
+<td style="text-align:right;">
+2.9499
+</td>
+<td style="text-align:left;">
+<a href="table/segment_28.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_28.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_29
+</td>
+<td style="text-align:left;">
+chr8
+</td>
+<td style="text-align:right;">
+145577795
+</td>
+<td style="text-align:right;">
+146281416
+</td>
+<td style="text-align:right;">
+703622
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+1.2915
+</td>
+<td style="text-align:right;">
+-3.0405
+</td>
+<td style="text-align:right;">
+9.4505
+</td>
+<td style="text-align:right;">
+3.1229
+</td>
+<td style="text-align:left;">
+<a href="table/segment_29.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_29.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_30
+</td>
+<td style="text-align:left;">
+chr9
+</td>
+<td style="text-align:right;">
+14511
+</td>
+<td style="text-align:right;">
+130210909
+</td>
+<td style="text-align:right;">
+130196399
+</td>
+<td style="text-align:right;">
+403
+</td>
+<td style="text-align:right;">
+-0.4408
+</td>
+<td style="text-align:right;">
+-3.3189
+</td>
+<td style="text-align:right;">
+9.7481
+</td>
+<td style="text-align:right;">
+2.3412
+</td>
+<td style="text-align:left;">
+<a href="table/segment_30.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_30.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_31
+</td>
+<td style="text-align:left;">
+chr9
+</td>
+<td style="text-align:right;">
+130209953
+</td>
+<td style="text-align:right;">
+132484875
+</td>
+<td style="text-align:right;">
+2274923
+</td>
+<td style="text-align:right;">
+70
+</td>
+<td style="text-align:right;">
+1.8107
+</td>
+<td style="text-align:right;">
+-3.2933
+</td>
+<td style="text-align:right;">
+6.0126
+</td>
+<td style="text-align:right;">
+2.0579
+</td>
+<td style="text-align:left;">
+<a href="table/segment_31.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_31.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_32
+</td>
+<td style="text-align:left;">
+chr9
+</td>
+<td style="text-align:right;">
+132500610
+</td>
+<td style="text-align:right;">
+136522435
+</td>
+<td style="text-align:right;">
+4021826
+</td>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:right;">
+0.7512
+</td>
+<td style="text-align:right;">
+-3.3005
+</td>
+<td style="text-align:right;">
+10.5682
+</td>
+<td style="text-align:right;">
+2.7385
+</td>
+<td style="text-align:left;">
+<a href="table/segment_32.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_32.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_33
+</td>
+<td style="text-align:left;">
+chr9
+</td>
+<td style="text-align:right;">
+136528682
+</td>
+<td style="text-align:right;">
+140764468
+</td>
+<td style="text-align:right;">
+4235787
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+1.7690
+</td>
+<td style="text-align:right;">
+-3.3116
+</td>
+<td style="text-align:right;">
+9.4640
+</td>
+<td style="text-align:right;">
+2.7151
+</td>
+<td style="text-align:left;">
+<a href="table/segment_33.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_33.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_34
+</td>
+<td style="text-align:left;">
+chr10
+</td>
+<td style="text-align:right;">
+180405
+</td>
+<td style="text-align:right;">
+74114988
+</td>
+<td style="text-align:right;">
+73934584
+</td>
+<td style="text-align:right;">
+222
+</td>
+<td style="text-align:right;">
+-0.6039
+</td>
+<td style="text-align:right;">
+-3.2854
+</td>
+<td style="text-align:right;">
+11.3180
+</td>
+<td style="text-align:right;">
+2.1665
+</td>
+<td style="text-align:left;">
+<a href="table/segment_34.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_34.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_35
+</td>
+<td style="text-align:left;">
+chr10
+</td>
+<td style="text-align:right;">
+74127098
+</td>
+<td style="text-align:right;">
+79689582
+</td>
+<td style="text-align:right;">
+5562485
+</td>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:right;">
+0.2808
+</td>
+<td style="text-align:right;">
+-3.2488
+</td>
+<td style="text-align:right;">
+4.0006
+</td>
+<td style="text-align:right;">
+2.1597
+</td>
+<td style="text-align:left;">
+<a href="table/segment_35.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_35.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_36
+</td>
+<td style="text-align:left;">
+chr10
+</td>
+<td style="text-align:right;">
+79729008
+</td>
+<td style="text-align:right;">
+97416463
+</td>
+<td style="text-align:right;">
+17687456
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+-0.4830
+</td>
+<td style="text-align:right;">
+-3.1955
+</td>
+<td style="text-align:right;">
+6.8894
+</td>
+<td style="text-align:right;">
+2.2848
+</td>
+<td style="text-align:left;">
+<a href="table/segment_36.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_36.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_37
+</td>
+<td style="text-align:left;">
+chr10
+</td>
+<td style="text-align:right;">
+97423153
+</td>
+<td style="text-align:right;">
+104498951
+</td>
+<td style="text-align:right;">
+7075799
+</td>
+<td style="text-align:right;">
+77
+</td>
+<td style="text-align:right;">
+0.7405
+</td>
+<td style="text-align:right;">
+-3.2661
+</td>
+<td style="text-align:right;">
+10.7612
+</td>
+<td style="text-align:right;">
+2.5309
+</td>
+<td style="text-align:left;">
+<a href="table/segment_37.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_37.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_38
+</td>
+<td style="text-align:left;">
+chr10
+</td>
+<td style="text-align:right;">
+104503727
+</td>
+<td style="text-align:right;">
+135516024
+</td>
+<td style="text-align:right;">
+31012298
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+-0.9591
+</td>
+<td style="text-align:right;">
+-3.2428
+</td>
+<td style="text-align:right;">
+5.9188
+</td>
+<td style="text-align:right;">
+1.9194
+</td>
+<td style="text-align:left;">
+<a href="table/segment_38.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_38.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_39
+</td>
+<td style="text-align:left;">
+chr11
+</td>
+<td style="text-align:right;">
+127115
+</td>
+<td style="text-align:right;">
+64139687
+</td>
+<td style="text-align:right;">
+64012573
+</td>
+<td style="text-align:right;">
+339
+</td>
+<td style="text-align:right;">
+1.1132
+</td>
+<td style="text-align:right;">
+-3.2791
+</td>
+<td style="text-align:right;">
+9.5353
+</td>
+<td style="text-align:right;">
+2.7856
+</td>
+<td style="text-align:left;">
+<a href="table/segment_39.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_39.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_40
+</td>
+<td style="text-align:left;">
+chr11
+</td>
+<td style="text-align:right;">
+64532078
+</td>
+<td style="text-align:right;">
+66104311
+</td>
+<td style="text-align:right;">
+1572234
+</td>
+<td style="text-align:right;">
+61
+</td>
+<td style="text-align:right;">
+3.6046
+</td>
+<td style="text-align:right;">
+-2.3831
+</td>
+<td style="text-align:right;">
+10.1488
+</td>
+<td style="text-align:right;">
+2.5706
+</td>
+<td style="text-align:left;">
+<a href="table/segment_40.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_40.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_41
+</td>
+<td style="text-align:left;">
+chr11
+</td>
+<td style="text-align:right;">
+66104804
+</td>
+<td style="text-align:right;">
+134135749
+</td>
+<td style="text-align:right;">
+68030946
+</td>
+<td style="text-align:right;">
+289
+</td>
+<td style="text-align:right;">
+0.3603
+</td>
+<td style="text-align:right;">
+-3.2895
+</td>
+<td style="text-align:right;">
+10.7152
+</td>
+<td style="text-align:right;">
+2.6900
+</td>
+<td style="text-align:left;">
+<a href="table/segment_41.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_41.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_42
+</td>
+<td style="text-align:left;">
+chr12
+</td>
+<td style="text-align:right;">
+73725
+</td>
+<td style="text-align:right;">
+52585784
+</td>
+<td style="text-align:right;">
+52512060
+</td>
+<td style="text-align:right;">
+231
+</td>
+<td style="text-align:right;">
+0.0779
+</td>
+<td style="text-align:right;">
+-3.2991
+</td>
+<td style="text-align:right;">
+11.5443
+</td>
+<td style="text-align:right;">
+2.6470
+</td>
+<td style="text-align:left;">
+<a href="table/segment_42.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_42.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_43
+</td>
+<td style="text-align:left;">
+chr12
+</td>
+<td style="text-align:right;">
+52626304
+</td>
+<td style="text-align:right;">
+58019934
+</td>
+<td style="text-align:right;">
+5393631
+</td>
+<td style="text-align:right;">
+99
+</td>
+<td style="text-align:right;">
+1.8729
+</td>
+<td style="text-align:right;">
+-2.7807
+</td>
+<td style="text-align:right;">
+8.9971
+</td>
+<td style="text-align:right;">
+2.4733
+</td>
+<td style="text-align:left;">
+<a href="table/segment_43.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_43.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_44
+</td>
+<td style="text-align:left;">
+chr12
+</td>
+<td style="text-align:right;">
+58017193
+</td>
+<td style="text-align:right;">
+133684130
+</td>
+<td style="text-align:right;">
+75666938
+</td>
+<td style="text-align:right;">
+302
+</td>
+<td style="text-align:right;">
+0.0833
+</td>
+<td style="text-align:right;">
+-3.3154
+</td>
+<td style="text-align:right;">
+10.4853
+</td>
+<td style="text-align:right;">
+2.4093
+</td>
+<td style="text-align:left;">
+<a href="table/segment_44.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_44.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_45
+</td>
+<td style="text-align:left;">
+chr13
+</td>
+<td style="text-align:right;">
+19271143
+</td>
+<td style="text-align:right;">
+103528345
+</td>
+<td style="text-align:right;">
+84257203
+</td>
+<td style="text-align:right;">
+172
+</td>
+<td style="text-align:right;">
+-0.9196
+</td>
+<td style="text-align:right;">
+-3.3218
+</td>
+<td style="text-align:right;">
+7.0206
+</td>
+<td style="text-align:right;">
+2.1967
+</td>
+<td style="text-align:left;">
+<a href="table/segment_45.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_45.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_46
+</td>
+<td style="text-align:left;">
+chr13
+</td>
+<td style="text-align:right;">
+107028911
+</td>
+<td style="text-align:right;">
+111373421
+</td>
+<td style="text-align:right;">
+4344511
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+0.8679
+</td>
+<td style="text-align:right;">
+-2.5207
+</td>
+<td style="text-align:right;">
+6.2899
+</td>
+<td style="text-align:right;">
+2.6676
+</td>
+<td style="text-align:left;">
+<a href="table/segment_46.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_46.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_47
+</td>
+<td style="text-align:left;">
+chr13
+</td>
+<td style="text-align:right;">
+111530887
+</td>
+<td style="text-align:right;">
+114116670
+</td>
+<td style="text-align:right;">
+2585784
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+-0.5090
+</td>
+<td style="text-align:right;">
+-3.1502
+</td>
+<td style="text-align:right;">
+4.7364
+</td>
+<td style="text-align:right;">
+2.4184
+</td>
+<td style="text-align:left;">
+<a href="table/segment_47.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_47.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_48
+</td>
+<td style="text-align:left;">
+chr13
+</td>
+<td style="text-align:right;">
+114110134
+</td>
+<td style="text-align:right;">
+115092796
+</td>
+<td style="text-align:right;">
+982663
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.9738
+</td>
+<td style="text-align:right;">
+-2.1502
+</td>
+<td style="text-align:right;">
+5.8303
+</td>
+<td style="text-align:right;">
+2.6760
+</td>
+<td style="text-align:left;">
+<a href="table/segment_48.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_48.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_49
+</td>
+<td style="text-align:left;">
+chr14
+</td>
+<td style="text-align:right;">
+20724717
+</td>
+<td style="text-align:right;">
+21945132
+</td>
+<td style="text-align:right;">
+1220416
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0.9554
+</td>
+<td style="text-align:right;">
+-1.5697
+</td>
+<td style="text-align:right;">
+5.5552
+</td>
+<td style="text-align:right;">
+1.8794
+</td>
+<td style="text-align:left;">
+<a href="table/segment_49.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_49.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_50
+</td>
+<td style="text-align:left;">
+chr14
+</td>
+<td style="text-align:right;">
+21944756
+</td>
+<td style="text-align:right;">
+24910540
+</td>
+<td style="text-align:right;">
+2965785
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+1.6351
+</td>
+<td style="text-align:right;">
+-3.2699
+</td>
+<td style="text-align:right;">
+6.9609
+</td>
+<td style="text-align:right;">
+2.1987
+</td>
+<td style="text-align:left;">
+<a href="table/segment_50.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_50.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_51
+</td>
+<td style="text-align:left;">
+chr14
+</td>
+<td style="text-align:right;">
+24908972
+</td>
+<td style="text-align:right;">
+103049514
+</td>
+<td style="text-align:right;">
+78140543
+</td>
+<td style="text-align:right;">
+264
+</td>
+<td style="text-align:right;">
+-0.4405
+</td>
+<td style="text-align:right;">
+-3.3166
+</td>
+<td style="text-align:right;">
+9.4866
+</td>
+<td style="text-align:right;">
+2.2408
+</td>
+<td style="text-align:left;">
+<a href="table/segment_51.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_51.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_52
+</td>
+<td style="text-align:left;">
+chr14
+</td>
+<td style="text-align:right;">
+103058998
+</td>
+<td style="text-align:right;">
+106445233
+</td>
+<td style="text-align:right;">
+3386236
+</td>
+<td style="text-align:right;">
+38
+</td>
+<td style="text-align:right;">
+1.2308
+</td>
+<td style="text-align:right;">
+-2.8784
+</td>
+<td style="text-align:right;">
+6.0088
+</td>
+<td style="text-align:right;">
+2.1180
+</td>
+<td style="text-align:left;">
+<a href="table/segment_52.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_52.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_53
+</td>
+<td style="text-align:left;">
+chr15
+</td>
+<td style="text-align:right;">
+20587869
+</td>
+<td style="text-align:right;">
+72672051
+</td>
+<td style="text-align:right;">
+52084183
+</td>
+<td style="text-align:right;">
+235
+</td>
+<td style="text-align:right;">
+-0.2409
+</td>
+<td style="text-align:right;">
+-3.2961
+</td>
+<td style="text-align:right;">
+10.1781
+</td>
+<td style="text-align:right;">
+2.6687
+</td>
+<td style="text-align:left;">
+<a href="table/segment_53.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_53.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_54
+</td>
+<td style="text-align:left;">
+chr15
+</td>
+<td style="text-align:right;">
+72766667
+</td>
+<td style="text-align:right;">
+76005189
+</td>
+<td style="text-align:right;">
+3238523
+</td>
+<td style="text-align:right;">
+35
+</td>
+<td style="text-align:right;">
+1.0646
+</td>
+<td style="text-align:right;">
+-3.2145
+</td>
+<td style="text-align:right;">
+6.0009
+</td>
+<td style="text-align:right;">
+2.3475
+</td>
+<td style="text-align:left;">
+<a href="table/segment_54.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_54.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_55
+</td>
+<td style="text-align:left;">
+chr15
+</td>
+<td style="text-align:right;">
+76135622
+</td>
+<td style="text-align:right;">
+85682376
+</td>
+<td style="text-align:right;">
+9546755
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+-0.3636
+</td>
+<td style="text-align:right;">
+-3.2050
+</td>
+<td style="text-align:right;">
+6.7080
+</td>
+<td style="text-align:right;">
+2.1414
+</td>
+<td style="text-align:left;">
+<a href="table/segment_55.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_55.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_56
+</td>
+<td style="text-align:left;">
+chr15
+</td>
+<td style="text-align:right;">
+85923802
+</td>
+<td style="text-align:right;">
+91506349
+</td>
+<td style="text-align:right;">
+5582548
+</td>
+<td style="text-align:right;">
+33
+</td>
+<td style="text-align:right;">
+1.1943
+</td>
+<td style="text-align:right;">
+-3.1240
+</td>
+<td style="text-align:right;">
+7.5430
+</td>
+<td style="text-align:right;">
+2.4806
+</td>
+<td style="text-align:left;">
+<a href="table/segment_56.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_56.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_57
+</td>
+<td style="text-align:left;">
+chr15
+</td>
+<td style="text-align:right;">
+91509270
+</td>
+<td style="text-align:right;">
+102516768
+</td>
+<td style="text-align:right;">
+11007499
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+-0.9622
+</td>
+<td style="text-align:right;">
+-3.3060
+</td>
+<td style="text-align:right;">
+3.2547
+</td>
+<td style="text-align:right;">
+1.8334
+</td>
+<td style="text-align:left;">
+<a href="table/segment_57.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_57.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_58
+</td>
+<td style="text-align:left;">
+chr16
+</td>
+<td style="text-align:right;">
+64043
+</td>
+<td style="text-align:right;">
+70285833
+</td>
+<td style="text-align:right;">
+70221791
+</td>
+<td style="text-align:right;">
+477
+</td>
+<td style="text-align:right;">
+0.9841
+</td>
+<td style="text-align:right;">
+-3.3210
+</td>
+<td style="text-align:right;">
+9.2451
+</td>
+<td style="text-align:right;">
+2.4721
+</td>
+<td style="text-align:left;">
+<a href="table/segment_58.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_58.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_59
+</td>
+<td style="text-align:left;">
+chr16
+</td>
+<td style="text-align:right;">
+70286293
+</td>
+<td style="text-align:right;">
+84220669
+</td>
+<td style="text-align:right;">
+13934377
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+-0.4343
+</td>
+<td style="text-align:right;">
+-3.3201
+</td>
+<td style="text-align:right;">
+3.9921
+</td>
+<td style="text-align:right;">
+1.8463
+</td>
+<td style="text-align:left;">
+<a href="table/segment_59.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_59.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_60
+</td>
+<td style="text-align:left;">
+chr16
+</td>
+<td style="text-align:right;">
+84511681
+</td>
+<td style="text-align:right;">
+90114181
+</td>
+<td style="text-align:right;">
+5602501
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:right;">
+1.2604
+</td>
+<td style="text-align:right;">
+-3.0606
+</td>
+<td style="text-align:right;">
+8.7869
+</td>
+<td style="text-align:right;">
+2.5420
+</td>
+<td style="text-align:left;">
+<a href="table/segment_60.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_60.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_61
+</td>
+<td style="text-align:left;">
+chr17
+</td>
+<td style="text-align:right;">
+254326
+</td>
+<td style="text-align:right;">
+78451643
+</td>
+<td style="text-align:right;">
+78197318
+</td>
+<td style="text-align:right;">
+763
+</td>
+<td style="text-align:right;">
+0.8129
+</td>
+<td style="text-align:right;">
+-3.3143
+</td>
+<td style="text-align:right;">
+12.2915
+</td>
+<td style="text-align:right;">
+2.6102
+</td>
+<td style="text-align:left;">
+<a href="table/segment_61.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_61.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_62
+</td>
+<td style="text-align:left;">
+chr17
+</td>
+<td style="text-align:right;">
+78518619
+</td>
+<td style="text-align:right;">
+81052864
+</td>
+<td style="text-align:right;">
+2534246
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:right;">
+2.4043
+</td>
+<td style="text-align:right;">
+-2.5788
+</td>
+<td style="text-align:right;">
+11.4107
+</td>
+<td style="text-align:right;">
+2.8363
+</td>
+<td style="text-align:left;">
+<a href="table/segment_62.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_62.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_63
+</td>
+<td style="text-align:left;">
+chr18
+</td>
+<td style="text-align:right;">
+158383
+</td>
+<td style="text-align:right;">
+45457515
+</td>
+<td style="text-align:right;">
+45299133
+</td>
+<td style="text-align:right;">
+79
+</td>
+<td style="text-align:right;">
+-0.7207
+</td>
+<td style="text-align:right;">
+-3.2021
+</td>
+<td style="text-align:right;">
+7.7021
+</td>
+<td style="text-align:right;">
+2.2806
+</td>
+<td style="text-align:left;">
+<a href="table/segment_63.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_63.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_64
+</td>
+<td style="text-align:left;">
+chr18
+</td>
+<td style="text-align:right;">
+46065417
+</td>
+<td style="text-align:right;">
+47920543
+</td>
+<td style="text-align:right;">
+1855127
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+0.9350
+</td>
+<td style="text-align:right;">
+-1.2943
+</td>
+<td style="text-align:right;">
+3.7130
+</td>
+<td style="text-align:right;">
+1.7185
+</td>
+<td style="text-align:left;">
+<a href="table/segment_64.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_64.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_65
+</td>
+<td style="text-align:left;">
+chr18
+</td>
+<td style="text-align:right;">
+48405419
+</td>
+<td style="text-align:right;">
+77905406
+</td>
+<td style="text-align:right;">
+29499988
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+-0.9610
+</td>
+<td style="text-align:right;">
+-3.2691
+</td>
+<td style="text-align:right;">
+5.2022
+</td>
+<td style="text-align:right;">
+1.6438
+</td>
+<td style="text-align:left;">
+<a href="table/segment_65.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_65.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_66
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+197124
+</td>
+<td style="text-align:right;">
+19312678
+</td>
+<td style="text-align:right;">
+19115555
+</td>
+<td style="text-align:right;">
+396
+</td>
+<td style="text-align:right;">
+1.6494
+</td>
+<td style="text-align:right;">
+-3.2818
+</td>
+<td style="text-align:right;">
+9.8794
+</td>
+<td style="text-align:right;">
+2.5766
+</td>
+<td style="text-align:left;">
+<a href="table/segment_66.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_66.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_67
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+19312218
+</td>
+<td style="text-align:right;">
+36036218
+</td>
+<td style="text-align:right;">
+16724001
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:right;">
+-0.1551
+</td>
+<td style="text-align:right;">
+-3.2600
+</td>
+<td style="text-align:right;">
+4.4556
+</td>
+<td style="text-align:right;">
+2.0650
+</td>
+<td style="text-align:left;">
+<a href="table/segment_67.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_67.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_68
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+36031640
+</td>
+<td style="text-align:right;">
+50980010
+</td>
+<td style="text-align:right;">
+14948371
+</td>
+<td style="text-align:right;">
+277
+</td>
+<td style="text-align:right;">
+1.5884
+</td>
+<td style="text-align:right;">
+-3.2356
+</td>
+<td style="text-align:right;">
+11.0569
+</td>
+<td style="text-align:right;">
+2.4361
+</td>
+<td style="text-align:left;">
+<a href="table/segment_68.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_68.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_69
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+50979657
+</td>
+<td style="text-align:right;">
+54635140
+</td>
+<td style="text-align:right;">
+3655484
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+-0.6264
+</td>
+<td style="text-align:right;">
+-3.2650
+</td>
+<td style="text-align:right;">
+7.0602
+</td>
+<td style="text-align:right;">
+3.0636
+</td>
+<td style="text-align:left;">
+<a href="table/segment_69.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_69.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_70
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+54641444
+</td>
+<td style="text-align:right;">
+56729146
+</td>
+<td style="text-align:right;">
+2087703
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+1.6853
+</td>
+<td style="text-align:right;">
+-2.8288
+</td>
+<td style="text-align:right;">
+6.4297
+</td>
+<td style="text-align:right;">
+2.5702
+</td>
+<td style="text-align:left;">
+<a href="table/segment_70.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_70.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_71
+</td>
+<td style="text-align:left;">
+chr19
+</td>
+<td style="text-align:right;">
+56879468
+</td>
+<td style="text-align:right;">
+59111168
+</td>
+<td style="text-align:right;">
+2231701
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:right;">
+-0.5435
+</td>
+<td style="text-align:right;">
+-2.7289
+</td>
+<td style="text-align:right;">
+7.9051
+</td>
+<td style="text-align:right;">
+2.2058
+</td>
+<td style="text-align:left;">
+<a href="table/segment_71.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_71.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_72
+</td>
+<td style="text-align:left;">
+chr20
+</td>
+<td style="text-align:right;">
+251504
+</td>
+<td style="text-align:right;">
+4040760
+</td>
+<td style="text-align:right;">
+3789257
+</td>
+<td style="text-align:right;">
+56
+</td>
+<td style="text-align:right;">
+0.9768
+</td>
+<td style="text-align:right;">
+-3.2685
+</td>
+<td style="text-align:right;">
+8.9238
+</td>
+<td style="text-align:right;">
+2.6908
+</td>
+<td style="text-align:left;">
+<a href="table/segment_72.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_72.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_73
+</td>
+<td style="text-align:left;">
+chr20
+</td>
+<td style="text-align:right;">
+4101627
+</td>
+<td style="text-align:right;">
+19804587
+</td>
+<td style="text-align:right;">
+15702961
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+-0.7004
+</td>
+<td style="text-align:right;">
+-3.1188
+</td>
+<td style="text-align:right;">
+3.6852
+</td>
+<td style="text-align:right;">
+1.6596
+</td>
+<td style="text-align:left;">
+<a href="table/segment_73.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_73.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_74
+</td>
+<td style="text-align:left;">
+chr20
+</td>
+<td style="text-align:right;">
+19867165
+</td>
+<td style="text-align:right;">
+62731996
+</td>
+<td style="text-align:right;">
+42864832
+</td>
+<td style="text-align:right;">
+305
+</td>
+<td style="text-align:right;">
+0.5528
+</td>
+<td style="text-align:right;">
+-3.2053
+</td>
+<td style="text-align:right;">
+10.9322
+</td>
+<td style="text-align:right;">
+2.3615
+</td>
+<td style="text-align:left;">
+<a href="table/segment_74.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_74.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_75
+</td>
+<td style="text-align:left;">
+chr21
+</td>
+<td style="text-align:right;">
+11180920
+</td>
+<td style="text-align:right;">
+45182188
+</td>
+<td style="text-align:right;">
+34001269
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-0.4948
+</td>
+<td style="text-align:right;">
+-3.2444
+</td>
+<td style="text-align:right;">
+9.7711
+</td>
+<td style="text-align:right;">
+2.1644
+</td>
+<td style="text-align:left;">
+<a href="table/segment_75.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_75.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_76
+</td>
+<td style="text-align:left;">
+chr21
+</td>
+<td style="text-align:right;">
+45192393
+</td>
+<td style="text-align:right;">
+46221934
+</td>
+<td style="text-align:right;">
+1029542
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+1.2117
+</td>
+<td style="text-align:right;">
+-3.3131
+</td>
+<td style="text-align:right;">
+5.1460
+</td>
+<td style="text-align:right;">
+2.2903
+</td>
+<td style="text-align:left;">
+<a href="table/segment_76.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_76.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_77
+</td>
+<td style="text-align:left;">
+chr21
+</td>
+<td style="text-align:right;">
+46225532
+</td>
+<td style="text-align:right;">
+46646478
+</td>
+<td style="text-align:right;">
+420947
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.8318
+</td>
+<td style="text-align:right;">
+-1.6462
+</td>
+<td style="text-align:right;">
+3.4426
+</td>
+<td style="text-align:right;">
+2.1148
+</td>
+<td style="text-align:left;">
+<a href="table/segment_77.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_77.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_78
+</td>
+<td style="text-align:left;">
+chr21
+</td>
+<td style="text-align:right;">
+46683843
+</td>
+<td style="text-align:right;">
+47679304
+</td>
+<td style="text-align:right;">
+995462
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+2.5220
+</td>
+<td style="text-align:right;">
+-2.2295
+</td>
+<td style="text-align:right;">
+9.1911
+</td>
+<td style="text-align:right;">
+3.1769
+</td>
+<td style="text-align:left;">
+<a href="table/segment_78.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_78.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_79
+</td>
+<td style="text-align:left;">
+chr21
+</td>
+<td style="text-align:right;">
+47655047
+</td>
+<td style="text-align:right;">
+48111157
+</td>
+<td style="text-align:right;">
+456111
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+-0.3383
+</td>
+<td style="text-align:right;">
+-2.6454
+</td>
+<td style="text-align:right;">
+1.8682
+</td>
+<td style="text-align:right;">
+1.4941
+</td>
+<td style="text-align:left;">
+<a href="table/segment_79.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_79.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_80
+</td>
+<td style="text-align:left;">
+chr22
+</td>
+<td style="text-align:right;">
+16122720
+</td>
+<td style="text-align:right;">
+51239737
+</td>
+<td style="text-align:right;">
+35117018
+</td>
+<td style="text-align:right;">
+407
+</td>
+<td style="text-align:right;">
+0.4632
+</td>
+<td style="text-align:right;">
+-3.2973
+</td>
+<td style="text-align:right;">
+10.3852
+</td>
+<td style="text-align:right;">
+2.4520
+</td>
+<td style="text-align:left;">
+<a href="table/segment_80.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_80.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_81
+</td>
+<td style="text-align:left;">
+chrX
+</td>
+<td style="text-align:right;">
+220013
+</td>
+<td style="text-align:right;">
+152865500
+</td>
+<td style="text-align:right;">
+152645488
+</td>
+<td style="text-align:right;">
+421
+</td>
+<td style="text-align:right;">
+0.1594
+</td>
+<td style="text-align:right;">
+-3.2978
+</td>
+<td style="text-align:right;">
+10.8871
+</td>
+<td style="text-align:right;">
+2.5949
+</td>
+<td style="text-align:left;">
+<a href="table/segment_81.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_81.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_82
+</td>
+<td style="text-align:left;">
+chrX
+</td>
+<td style="text-align:right;">
+152869952
+</td>
+<td style="text-align:right;">
+153719016
+</td>
+<td style="text-align:right;">
+849065
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+2.6375
+</td>
+<td style="text-align:right;">
+-3.2218
+</td>
+<td style="text-align:right;">
+10.1131
+</td>
+<td style="text-align:right;">
+3.0795
+</td>
+<td style="text-align:left;">
+<a href="table/segment_82.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_82.pdf">figure</a>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+segment_83
+</td>
+<td style="text-align:left;">
+chrX
+</td>
+<td style="text-align:right;">
+153733350
+</td>
+<td style="text-align:right;">
+154688276
+</td>
+<td style="text-align:right;">
+954927
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+0.0335
+</td>
+<td style="text-align:right;">
+-3.2665
+</td>
+<td style="text-align:right;">
+5.8921
+</td>
+<td style="text-align:right;">
+2.6093
+</td>
+<td style="text-align:left;">
+<a href="table/segment_83.html">table</a>
+</td>
+<td style="text-align:left;">
+<a href="figure/segment_83.pdf">figure</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="randomization" class="section level2">
+<h2><span class="header-section-number">2.4</span> Randomization</h2>
+<p>Repetitively use the same criteria to identify and select segments from 10 sets of randomized data and compare the summary statistics of selected segments.</p>
+<p><strong>Table 3.</strong> Means of summary statistics of segments identified and selected original data vs. multiple sets of randomized data: number of loci, segment length, mean and standard deviation of log_rpkm_T2N_Rep0 of segments. If mean log_rpkm_T2N_Rep0 of selected segments can be both positive and negative, their absolute values are used in this table.</p>
+<table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 13px; width: auto !important; ">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+size
+</th>
+<th style="text-align:right;">
+length
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+variance
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+original
+</td>
+<td style="text-align:right;">
+158.1928
+</td>
+<td style="text-align:right;">
+35301623
+</td>
+<td style="text-align:right;">
+0.92
+</td>
+<td style="text-align:right;">
+2.4152
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_1
+</td>
+<td style="text-align:right;">
+59.1441
+</td>
+<td style="text-align:right;">
+13102549
+</td>
+<td style="text-align:right;">
+0.68
+</td>
+<td style="text-align:right;">
+0.8142
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_2
+</td>
+<td style="text-align:right;">
+57.5877
+</td>
+<td style="text-align:right;">
+12668005
+</td>
+<td style="text-align:right;">
+0.68
+</td>
+<td style="text-align:right;">
+0.8420
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_3
+</td>
+<td style="text-align:right;">
+64.0488
+</td>
+<td style="text-align:right;">
+14184075
+</td>
+<td style="text-align:right;">
+0.70
+</td>
+<td style="text-align:right;">
+0.8490
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_4
+</td>
+<td style="text-align:right;">
+61.6432
+</td>
+<td style="text-align:right;">
+13616218
+</td>
+<td style="text-align:right;">
+0.70
+</td>
+<td style="text-align:right;">
+0.8017
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_5
+</td>
+<td style="text-align:right;">
+76.7836
+</td>
+<td style="text-align:right;">
+17051403
+</td>
+<td style="text-align:right;">
+0.68
+</td>
+<td style="text-align:right;">
+0.8363
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_6
+</td>
+<td style="text-align:right;">
+65.3234
+</td>
+<td style="text-align:right;">
+14364656
+</td>
+<td style="text-align:right;">
+0.67
+</td>
+<td style="text-align:right;">
+0.8387
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_7
+</td>
+<td style="text-align:right;">
+58.0973
+</td>
+<td style="text-align:right;">
+12853151
+</td>
+<td style="text-align:right;">
+0.69
+</td>
+<td style="text-align:right;">
+0.8366
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_8
+</td>
+<td style="text-align:right;">
+58.3556
+</td>
+<td style="text-align:right;">
+12899710
+</td>
+<td style="text-align:right;">
+0.75
+</td>
+<td style="text-align:right;">
+0.8600
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_9
+</td>
+<td style="text-align:right;">
+64.0488
+</td>
+<td style="text-align:right;">
+14032478
+</td>
+<td style="text-align:right;">
+0.71
+</td>
+<td style="text-align:right;">
+0.8151
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+random_10
+</td>
+<td style="text-align:right;">
+61.3551
+</td>
+<td style="text-align:right;">
+13552694
+</td>
+<td style="text-align:right;">
+0.68
+</td>
+<td style="text-align:right;">
+0.8291
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="index_files/figure-html/size_mean-1.png" width="640px" /></p>
+<p><strong>Figure 3.</strong> Relationship between segment size and segment mean log_rpkm_T2N_Rep0. Each dot represents a segment derived from the original real data (blue) and randomized data (grey).</p>
+<p><img src="index_files/figure-html/violin_size-1.png" width="800px" /></p>
+<p><strong>Figure 4.</strong> Distribution of segment size compared between original and randomized data.</p>
+<p><img src="index_files/figure-html/violin_length-1.png" width="800px" /></p>
+<p><strong>Figure 5.</strong> Distribution of segment length compared between original and randomized data.</p>
+<p><img src="index_files/figure-html/violin_mean-1.png" width="800px" /></p>
+<p><strong>Figure 6.</strong> Distribution of log_rpkm_T2N_Rep0 mean of segments compared between original and randomized data.</p>
+<p><img src="index_files/figure-html/violin_sd-1.png" width="800px" /></p>
+<p><strong>Figure 7.</strong> Distribution of log_rpkm_T2N_Rep0 standard deviation of segments compared between original and randomized data.</p>
+<p />
+</div>
+</div>
+<div id="download" class="section level1">
+<h1><span class="header-section-number">3</span> Download</h1>
+<ul>
+<li><a href="table/segment.xlsx">Segments in Excel</a></li>
+<li><a href="figure/figure.zip">All figures</a></li>
+</ul>
+<hr />
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">4</span> Appendix</h1>
+<p>Check out the <strong><a href="http://zhezhangsh.github.io/RoCA">RoCA home page</a></strong> for more information.</p>
+<div id="reproduce-this-report" class="section level2">
+<h2><span class="header-section-number">4.1</span> Reproduce this report</h2>
+<p>To reproduce this report:</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the data analysis template you want to use and an example of its pairing YAML file <a href="https://github.com/zhezhangsh/RoCA/wiki/Templates-and-examples">here</a> and download the YAML example to your working directory</p></li>
+<li><p>To generate a new report using your own input data and parameter, edit the following items in the YAML file:</p>
+<ul>
+<li><em>output</em> : where you want to put the output files</li>
+<li><em>home</em> : the URL if you have a home page for your project</li>
+<li><em>analyst</em> : your name</li>
+<li><em>description</em> : background information about your project, analysis, etc.</li>
+<li><em>input</em> : where are your input data, read instruction for preparing them</li>
+<li><em>parameter</em> : parameters for this analysis; read instruction about how to prepare input data</li>
+</ul></li>
+<li><p>Run the code below within <strong><em>R Console</em></strong> or <strong><em>RStudio</em></strong>, preferablly with a new R session:</p></li>
+</ol>
+<pre class="r"><code>if (!require(devtools)) { install.packages(&#39;devtools&#39;); require(devtools); }
+if (!require(RCurl)) { install.packages(&#39;RCurl&#39;); require(RCurl); }
+if (!require(RoCA)) { install_github(&#39;zhezhangsh/RoCAR&#39;); require(RoCA); }
+
+CreateReport(filename.yaml);  # filename.yaml is the YAML file you just downloaded and edited</code></pre>
+<p>If there is no complaint, go to the <em>output</em> folder and open the <strong><em>index.html</em></strong> file to view report.</p>
+</div>
+<div id="session-information" class="section level2">
+<h2><span class="header-section-number">4.2</span> Session information</h2>
+<pre><code>## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS High Sierra 10.13.6
+## 
+## Matrix products: default
+## BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
+## [8] methods   base     
+## 
+## other attached packages:
+##  [1] xlsx_0.6.1            vioplot_0.3.0         zoo_1.8-4            
+##  [4] sm_2.2-5.6            fastseg_1.28.0        Biobase_2.42.0       
+##  [7] GenomicRanges_1.34.0  GenomeInfoDb_1.18.1   IRanges_2.16.0       
+## [10] S4Vectors_0.20.1      BiocGenerics_0.28.0   DEGandMore_0.0.0.9000
+## [13] snow_0.4-3            htmlwidgets_1.5.1     DT_0.15              
+## [16] kableExtra_0.9.0      awsomics_0.0.0.9000   yaml_2.2.1           
+## [19] rmarkdown_1.10        knitr_1.20            RoCA_0.0.0.9000      
+## [22] RCurl_1.95-4.11       bitops_1.0-6          devtools_2.3.1       
+## [25] usethis_1.6.1        
+## 
+## loaded via a namespace (and not attached):
+##  [1] httr_1.4.2             pkgload_1.0.2          jsonlite_1.6.1        
+##  [4] viridisLite_0.3.0      assertthat_0.2.1       highr_0.7             
+##  [7] xlsxjars_0.6.1         GenomeInfoDbData_1.2.0 remotes_2.2.0         
+## [10] sessioninfo_1.1.1      pillar_1.4.6           backports_1.1.5       
+## [13] lattice_0.20-38        glue_1.3.2             digest_0.6.25         
+## [16] XVector_0.22.0         rvest_0.3.2            colorspace_1.4-1      
+## [19] htmltools_0.4.0        pkgconfig_2.0.3        zlibbioc_1.28.0       
+## [22] scales_1.1.1           processx_3.4.2         tibble_2.1.3          
+## [25] ellipsis_0.3.0         withr_2.2.0            cli_2.0.2             
+## [28] magrittr_1.5           crayon_1.3.4           memoise_1.1.0         
+## [31] evaluate_0.14          ps_1.3.2               fs_1.3.2              
+## [34] fansi_0.4.1            xml2_1.2.0             pkgbuild_1.1.0        
+## [37] tools_3.5.1            prettyunits_1.1.1      hms_0.4.2             
+## [40] lifecycle_0.2.0        stringr_1.3.1          munsell_0.5.0         
+## [43] callr_3.4.3            compiler_3.5.1         rlang_0.4.5           
+## [46] grid_3.5.1             rstudioapi_0.11        crosstalk_1.1.0.1     
+## [49] tcltk_3.5.1            testthat_2.3.2         R6_2.4.1              
+## [52] rprojroot_1.3-2        readr_1.3.1            desc_1.2.0            
+## [55] rJava_0.9-11           stringi_1.2.4          Rcpp_1.0.5</code></pre>
+<div align="right">
+<em><a href="https://mybic.chop.edu/labs/chous_lab/Trisomy21_TMD">Go to project home</a></em>
+</div>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
