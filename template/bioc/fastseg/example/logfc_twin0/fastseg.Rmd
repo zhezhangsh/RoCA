@@ -194,9 +194,9 @@ smm <- data.frame(Description=names(smm), Value=as.vector(unlist(smm)), stringsA
 len <- sapply(prms$chromosome, function(c) max(end(gr0[seqnames(gr0)==c])));
 ttl <- sapply(1:length(len), function(i) sum(len[1:i]));
 mid <- (ttl + c(0, ttl[-length(ttl)]))/2;
-segPlot(gr0, seg0, plot.type = 'w', pt.cex=0.5);
+segPlot(gr0, seg0, plot.type = 'w', pt.cex=0.75);
 title(ylab=prms$variable);
-axis(3, at=mid, labels=sub('chr', '', prms$chromosome, ignore.case = TRUE), tick = FALSE, line=-1, cex.axis=0.75);
+axis(3, at=mid, labels=sub('chr', '', prms$chromosome, ignore.case = TRUE), tick = FALSE, line=-1, cex.axis=0.5);
 abline(v=c(0, ttl), col='grey');
 ```
 
