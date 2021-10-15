@@ -67,7 +67,7 @@ g1 <- prms$comparison$group1;
 s0 <- rownames(smpl)[as.vector(smpl[[prms$comparison$condition]])==g0];
 s1 <- rownames(smpl)[as.vector(smpl[[prms$comparison$condition]])==g1];
 
-cnt1 <- cnt0[rowSums(cnt0[, c(s0, s1), drop=FALSE])>=prms$count$total, , drop=FALSE];
+cnt1 <- cnt0[rowSums(cnt0[, c(s0, s1), drop=FALSE])>=prms$count$total, c(s0, s1), drop=FALSE];
 cnt1 <- cnt1[rowMeans(cnt1[, c(s0, s1), drop=FALSE])>=prms$count$mean, , drop=FALSE];
 cnt1 <- cnt1[rownames(cnt1) %in% rownames(anno), , drop=FALSE];
 anno <- anno[rownames(cnt1), , drop=FALSE]; 
@@ -116,7 +116,9 @@ fll <- cbind(stat, cnt2, rlg0);
 
 if (length(cnd) > 1) {
   adj0 <- rlg0;
-  for (i in 2:length(cnd)) adj0 <- ComBat(adj0, smpl[, cnd[i]]);
+  var0 <- apply(adj0, 1, sd);
+  for (i in 2:length(cnd)) 
+    adj0[var0>0, ] <- ComBat(adj0[var0>0, , drop=FALSE], as.vector(smpl[, cnd[i]]));
   colnames(adj0) <- paste0('adj_', colnames(cnt2));
   fll <- cbind(fll, adj0);
 } else adj0 <- NULL;
