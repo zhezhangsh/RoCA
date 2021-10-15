@@ -67,7 +67,7 @@ g1 <- prms$comparison$group1;
 s0 <- rownames(smpl)[as.vector(smpl[[prms$comparison$condition]])==g0];
 s1 <- rownames(smpl)[as.vector(smpl[[prms$comparison$condition]])==g1];
 
-cnt1 <- cnt0[rowSums(cnt0[, c(s0, s1), drop=FALSE])>=prms$count$total, c(s0, s1), drop=FALSE];
+cnt1 <- cnt0[rowSums(cnt0[, c(s0, s1), drop=FALSE])>=prms$count$total, , drop=FALSE];
 cnt1 <- cnt1[rowMeans(cnt1[, c(s0, s1), drop=FALSE])>=prms$count$mean, , drop=FALSE];
 cnt1 <- cnt1[rownames(cnt1) %in% rownames(anno), , drop=FALSE];
 anno <- anno[rownames(cnt1), , drop=FALSE]; 
