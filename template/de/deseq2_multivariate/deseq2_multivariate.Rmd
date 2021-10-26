@@ -308,11 +308,11 @@ heatmap.2(corr, key=TRUE, key.title='Correlation coefficient', keysize=1, key.xl
 
 if (length(cnd) == 1) ln <- '' else {
   corr <- cor(adj0[gns, , drop=FALSE]);
-  pdf(paste0(path.fig, '/heatmap_adjusted.pdf'), h=9.6, w=9.6);
+  pdf(paste0(path.fig, '/hier_clustering_adjusted-1.pdf'), h=9.6, w=9.6);
   heatmap.2(corr, key=TRUE, key.title='Correlation coefficient', keysize=1, key.xlab='', key.ylab='',
           trace='none', tracecol=NULL, margins=c(10, 10), col=rev(heat.colors(101)));
   try(dev.off());
-  ln <- paste0('  - [Clustering analysis](figure/heatmap_adjusted.pdf) after adjusting data for ***', 
+  ln <- paste0('  - [Clustering analysis](figure/hier_clustering_adjusted-1.pdf) after adjusting data for ***', 
                paste(cnd[-1], collapse=' + '), '***.')
 }
 ```
@@ -412,30 +412,30 @@ axis(1, at=-10:10, label=10^(-10:10));
 # axis(1, at=log10(1/3), label=0);
 ylab <- paste0("Log2(", prms$comparison$group1, '/', prms$comparison$group0, ')');
 xlab <- "Rlog-transformed read count";
-title(xlab = xlab, ylab = ylab, line = 1.6, cex.lab = 1);
+title(xlab = xlab, ylab = ylab, line = 1.8, cex.lab = 1);
 
 # Volcano Plot
 title <- 'B. Volcano Plot';
 x <- stat[,'AdjFC'];
 p <- stat[,'Pvalue'];
-y <- -1*log10(p);
-y[y==Inf] <- max(y[y<Inf]) + 1; 
+y <- pmin(10, -1*log10(p));
 z <- sqrt(abs(x*y));
 cx <- z/(max(z));
 xlim <- c(-max(abs(x)), max(abs(x)));
 ylim <- min(10, ceiling(max(y))); 
 xlab <- paste('Log2(', g1, '/', g0, ')', sep='');
 plot(x, y, main=title, pch=19, col='#CB4335',  cex=0.8*cx, 
-     xlab='', ylab='', cex.axis=.75, ylim=c(0, 1.1*ylim), yaxs='i', xlim=xlim, yaxt='n');
-title(xlab=xlab, ylab='P value', line=1.6, cex.lab=1);
-axis(2, at=0:ylim, labels=10^(-1*(0:ylim)), las=2, cex.axis=0.5);
+     xlab='', ylab='', cex.axis=.75, ylim=c(0, 0.1+ylim), yaxs='i', xlim=xlim, yaxt='n');
+title(xlab=xlab, ylab='P value', line=1.8, cex.lab=1);
+axis(2, at=0:9, labels=10^(-1*(0:9)), las=2, cex.axis=0.5);
+axis(2, at=10, labels="<= 10e-10", las=2, cex.axis=0.5);
 abline(h=-1*log10(0.01), v=c(-1,1), col='#2E86C1', lty=2);
 box();
 
 # P Value Distribution
 title <- 'C. P Value Distribution';
 hist(p[p<1], br=seq(0, 1, 0.01), cex.axis=.75, main=title, col='#D68910', xaxs='i', yaxs='i', xlab='', ylab='');
-title(xlab='P value', ylab='Count', line=1.6, cex.lab=1);
+title(xlab='P value', ylab='Count', line=1.8, cex.lab=1);
 box();
 
 # FDR
@@ -447,7 +447,7 @@ ylim <- c(1, nrow(cnt1));
 plot(1, type='n', log='y', xlab='', ylab='', cex.axis=.75, xlim=xlim, ylim=ylim, main=title, xaxs='i', yaxs='i');
 abline(v=seq(0, 1, .05), lty=3, col=8);
 lines(seq(min(q), 1, 0.01), n, lwd=2.5, col='#7D3C98');
-title(xlab='FDR cutoff', ylab='Count', line=1.6, cex.lab=1);
+title(xlab='FDR cutoff', ylab='Count', line=1.8, cex.lab=1);
 box();
 ```
 
