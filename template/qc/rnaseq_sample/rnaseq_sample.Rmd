@@ -540,7 +540,7 @@ atsm <- atsm[atsm %in% anno[, prms$annotation$chromosome]];
 if (length(atsm) == 0) atsm <- unique(as.vector(anno[, prms$annotation$chromosome]));
 atsm <- setdiff(atsm, c(prms$chromosome$f, prms$chromsome$m)); 
 if (length(atsm) > 0) e <- ct1[anno[, prms$annotation$chromosome] %in% atsm, , drop=FALSE] else e <- ct1;
-e <- log2(e[rowSums(e) > 0, , drop=FALSE]+1); 
+# e <- log2(e[rowSums(e) > 0, , drop=FALSE]+1); 
 
 plot(hclust(as.dist(1-cor(e))), xlab='', sub='', ylab='1 - correlation coefficient', 
      main='Hierarchical clustering using all autosomal genes', cex.lab=1.25);
