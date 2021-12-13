@@ -28,7 +28,8 @@ output:
 
 ```{r global_setup, eval=TRUE, include=FALSE}
 name.yaml <- 'summarize_fastqc.yaml'; 
-name.packages <- c('rmarkdown', 'knitr', 'yaml', 'DT', 'htmlwidgets', 'gplots', 'GtUtility', 'RoCA', 'awsomics'); 
+name.packages <- c('rmarkdown', 'knitr', 'kableExtra', 'yaml', 'DT', 'htmlwidgets', 'gplots', 
+                   'GtUtility', 'RoCA', 'awsomics'); 
 name.subfolders <- c('path.input'='input', 'path.r'='R', 'path.fig'='figure', 'path.tbl'='table'); # <full.path.to.subfolder>=<subfolder.name>
 
 ## Default knitr parameters
@@ -54,6 +55,10 @@ prms <- yml$parameter;
 f <- GenerateFolder(yml$output, name.subfolders);
 path <- yml$output;
 for (i in 1:length(name.subfolders)) assign(names(name.subfolders)[i], f[name.subfolders[i]]); 
+
+## Automatical figure/table ordering
+OrderFigure(reset=TRUE);
+OrderTable(reset=TRUE);
 
 ## URL to project home
 ## Use this line to add a link to project home in the report: `r home.url`
@@ -476,24 +481,28 @@ kmer.stat<-sapply(names(mer), function(m) {
   c(mean(s[, 1]), mean(s[, 3]), mean(s[, 4]), min(s[, 4]), max(s[, 4]));
 });
 tbl0<-cbind(as.vector(mer), t(kmer.stat));
-colnames(tbl0)<-c('Library', 'Count', 'Obs/Exp', 'Position_Mean', 'Position_Min', 'Position_Max'); 
-tbl0<-tbl0[order(rownames(tbl0)), ];
-tbl0<-tbl0[order(tbl0[, 1], decreasing = TRUE), ];
-saveRDS(k, paste(path.r, 'kmer_library.rds', sep='/'));
-saveRDS(tbl0, paste(path.r, 'kmer_summary.rds', sep='/')); 
+if (ncol(tbl0) == 6) {
+  colnames(tbl0)<-c('Library', 'Count', 'Obs/Exp', 'Position_Mean', 'Position_Min', 'Position_Max'); 
+  tbl0<-tbl0[order(rownames(tbl0)), ];
+  tbl0<-tbl0[order(tbl0[, 1], decreasing = TRUE), ];
+  saveRDS(k, paste(path.r, 'kmer_library.rds', sep='/'));
+  saveRDS(tbl0, paste(path.r, 'kmer_summary.rds', sep='/')); 
 
-tbl<-tbl0[tbl0[, 1]>=tbl0[min(nrow(tbl0), yml$parameter$kmer), 1], , drop=FALSE];
+  tbl<-tbl0[tbl0[, 1]>=tbl0[min(nrow(tbl0), yml$parameter$kmer), 1], , drop=FALSE];
 
-mtr<-matrix(NA, nr=nrow(tbl0), nc=length(k)+1, dimnames = list(rownames(tbl0), c('Num_library', snm)));
-mtr[, 1]<-tbl0[, 1];
-mtrs<-lapply(c(1, 3, 4), function(c) {
-  for (i in 1:length(k)) mtr[rownames(k[[i]]), snm[i]]<-k[[i]][, c];
-  mtr;
-});
-names(mtrs)<-c('count', 'enrichment', 'position'); 
-fn<-sapply(names(mtrs), function(nm) {
-  CreateDatatable(mtrs[[nm]], paste(path.tbl, '/kmer_', nm, sep='')); 
-});
+  mtr<-matrix(NA, nr=nrow(tbl0), nc=length(k)+1, dimnames = list(rownames(tbl0), c('Num_library', snm)));
+  mtr[, 1]<-tbl0[, 1];
+  mtrs<-lapply(c(1, 3, 4), function(c) {
+    for (i in 1:length(k)) mtr[rownames(k[[i]]), snm[i]]<-k[[i]][, c];
+    mtr;
+  });
+  names(mtrs)<-c('count', 'enrichment', 'position'); 
+  fn<-sapply(names(mtrs), function(nm) {
+    CreateDatatable(mtrs[[nm]], paste(path.tbl, '/kmer_', nm, sep='')); 
+  });
+} else {
+  tbl <- tbl0;
+}
 ```
 
 **FastQC** identifies top Kmers that were enriched in each library with their total occurance (count), significance (p value), enrichment (observed/expected), and the base position with maximum enrichment. Kmers of all libraries were summarized below. Use **Table 2** for details about Kmers in individual libraries.
@@ -502,14 +511,10 @@ fn<-sapply(names(mtrs), function(nm) {
   - [Kmer max enrichment](table/kmer_enrichment.html)
   - [Kmer max positioin](table/kmer_position.html)
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 1** Top `r nrow(tbl)` Kmers that were enriched in multiple libraries.
-</div>
+`r OrderTable()` Top `r nrow(tbl)` Kmers that were enriched in multiple libraries.
 
-<div align='center', style="padding:0 1cm">
-`r kable(tbl)`
-</div>
-
+`r kable(tbl) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), position='left', font=12, full_width=FALSE)`
 
 `r home.url`
 
@@ -555,13 +560,10 @@ rownames(tbl)<-names(fn.img);
 tbl<-cbind(Library=paste('[', snm, '](input/', fn, '/fastqc_report.html', ')', sep=''), t(tbl));
 ```
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 2** Click links to view full reports and individual plots of per read statistics.
-</div>
+`r OrderTable()` Click links to view full reports and individual plots of per read statistics.
 
-<div align='center', style="padding:0 1cm">
-`r kable(tbl, row.names=FALSE)`
-</div>
+`r kable(tbl, row.names=FALSE) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), position='left', font=12, full_width=FALSE)`
 
 `r home.url`
 
@@ -587,13 +589,10 @@ rownames(tbl)<-names(fn.img);
 tbl<-cbind(Library=paste('[', snm, '](input/', fn, '/fastqc_report.html', ')', sep=''), t(tbl));
 ```
 
-<div style="color:darkblue; padding:0 1cm">
-**Table 3** Click links to view full reports and individual plots of per base statistics.
-</div>
+`r OrderTable()` Click links to view full reports and individual plots of per base statistics.
 
-<div align='center', style="padding:0 1cm">
-`r kable(tbl, row.names=FALSE)`
-</div>
+`r kable(tbl, row.names=FALSE) %>% kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive"), position='left', font=12, full_width=FALSE)`
 
 `r home.url`
 

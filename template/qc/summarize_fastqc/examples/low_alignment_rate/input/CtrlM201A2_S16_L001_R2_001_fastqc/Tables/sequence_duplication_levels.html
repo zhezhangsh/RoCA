@@ -2,23 +2,27 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<script src="sequence_duplication_levels_files/htmlwidgets-0.5/htmlwidgets.js"></script>
-<script src="sequence_duplication_levels_files/jquery-1.11.1/jquery.min.js"></script>
-<script src="sequence_duplication_levels_files/datatables-binding-0.1/datatables.js"></script>
-<script src="sequence_duplication_levels_files/datatables-1.10.7/jquery.dataTables.min.js"></script>
-<link href="sequence_duplication_levels_files/datatables-default-1.10.7/dataTables.extra.css" rel="stylesheet" />
-<link href="sequence_duplication_levels_files/datatables-default-1.10.7/jquery.dataTables.min.css" rel="stylesheet" />
+<style>body{background-color:white;}</style>
+<script src="sequence_duplication_levels_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="sequence_duplication_levels_files/jquery-1.12.4/jquery.min.js"></script>
+<link href="sequence_duplication_levels_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="sequence_duplication_levels_files/datatables-binding-0.13/datatables.js"></script>
+<link href="sequence_duplication_levels_files/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="sequence_duplication_levels_files/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="sequence_duplication_levels_files/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
 <link href="sequence_duplication_levels_files/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
 <script src="sequence_duplication_levels_files/nouislider-7.0.10/jquery.nouislider.min.js"></script>
 <link href="sequence_duplication_levels_files/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
 <script src="sequence_duplication_levels_files/selectize-0.12.0/selectize.min.js"></script>
-
+<link href="sequence_duplication_levels_files/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="sequence_duplication_levels_files/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+  <title>datatables</title>
 </head>
-<body style="background-color:white;">
+<body>
 <div id="htmlwidget_container">
-  <div id="htmlwidget-9042" style="width:100%;height:auto;" class="datatables"></div>
+  <div id="htmlwidget-5a90d44987b960190d93" style="width:960px;height:500px;" class="datatables html-widget"></div>
 </div>
-<script type="application/json" data-for="htmlwidget-9042">{"x":{"data":[["1","2","3","4","5","6","7","8","9",">10",">50",">100",">500",">1k",">5k",">10k+"],["77.9799244313523","13.5870730302714","4.71947073489109","1.67873284728837","0.711435596985315","0.335816298327415","0.194159422864876","0.123135099111931","0.0918852687136123","0.49551564133121","0.0414026070556853","0.033821925677845","0.00414471145407498","0.00306547946827915","0.000196190685487185","0.000220714521173084"],["45.0176939884576","15.6875939630857","8.17363023419605","3.87651986886079","2.0535535415769","1.16319748689282","0.784615615246048","0.5686856714963","0.477407056398757","5.22991950497456","1.66002968076053","3.98508601678202","1.63311941446309","3.38234347399594","0.795372492680408","5.5112319901325"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>ID</th>\n      <th>Percentage of deduplicated</th>\n      <th>Percentage of total</th>\n    </tr>\n  </thead>\n</table>","options":{"pageLength":50,"server":true,"order":[],"autoWidth":false,"orderClasses":false},"callback":null,"caption":"<caption></caption>","filter":"bottom","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"></span>\n    </div>\n  </td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"></span>\n    </div>\n  </td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"></span>\n    </div>\n  </td>\n</tr>"},"evals":[]}</script>
-<script type="application/htmlwidget-sizing" data-for="htmlwidget-9042">{"viewer":{"width":"100%","height":"auto","padding":15,"fill":false},"browser":{"width":"100%","height":"auto","padding":40,"fill":false}}</script>
+<script type="application/json" data-for="htmlwidget-5a90d44987b960190d93">{"x":{"filter":"bottom","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption><\/caption>","data":[["1","2","3","4","5","6","7","8","9",">10",">50",">100",">500",">1k",">5k",">10k+"],["77.9799244313523","13.5870730302714","4.71947073489109","1.67873284728837","0.711435596985315","0.335816298327415","0.194159422864876","0.123135099111931","0.0918852687136123","0.49551564133121","0.0414026070556853","0.033821925677845","0.00414471145407498","0.00306547946827915","0.000196190685487185","0.000220714521173084"],["45.0176939884576","15.6875939630857","8.17363023419605","3.87651986886079","2.0535535415769","1.16319748689282","0.784615615246048","0.5686856714963","0.477407056398757","5.22991950497456","1.66002968076053","3.98508601678202","1.63311941446309","3.38234347399594","0.795372492680408","5.5112319901325"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>ID<\/th>\n      <th>Percentage of deduplicated<\/th>\n      <th>Percentage of total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":50,"server":true,"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/htmlwidget-sizing" data-for="htmlwidget-5a90d44987b960190d93">{"viewer":{"width":450,"height":350,"padding":15,"fill":true},"browser":{"width":960,"height":500,"padding":40,"fill":false}}</script>
 </body>
 </html>
