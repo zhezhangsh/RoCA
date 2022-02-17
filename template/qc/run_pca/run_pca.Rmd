@@ -217,14 +217,14 @@ l2 <- AddHref(o2, paste0('variable_pc', 1:length(o2), '.csv'));
 In case a PC is obviously related to a confounder, such as batch effect and gender, its impact can be removed by calculating the residuals of a linear fitting between each variable and each PC. A residual matrix is generated corresponding to the removal of each PC. 
 
 ```{r remove_pc}
-res <- lapply(1:ncol(cov), function(i) {
+res <- lapply(1:min(16, ncol(cov)), function(i) {
   x <- cov[, i];
   y <- apply(mtrx, 1, function(z) residuals(lm(z ~ x)));
   z <- t(y); 
   write.csv(z, paste0(path.tbl, '/residual_pc', i, '.csv'));
   z; 
 });
-names(res) <- paste('PC', 1:length(res));
+names(res) <- paste('PC', 1:min(16, length(res)));
 saveRDS(res, paste(path.r, 'residual.rds', sep='/'));
 
 tbl <- data.frame(Outlier_Sample=l1, High_Loading_Variable=l2,
